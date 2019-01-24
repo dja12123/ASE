@@ -100,6 +100,7 @@ public class ServerCore
 		libPathBuffer.append(System.getProperty("java.library.path"));
 		
 		System.setProperty("java.library.path", libPathBuffer.toString());
+		logger.log(Level.INFO, libPathBuffer.toString());
 		Field sysPathsField = null;
 		try
 		{
