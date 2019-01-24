@@ -55,7 +55,7 @@ public class ServerCore
 	{
 		this.appConnectManager.startModule();
 		this.sensorReadManager.startModule();
-		logger.log(Level.INFO, "시스템 시작 완료");
+		logger.log(Level.INFO, "시스템 시작 완료!");
 		return true;
 	}
 
