@@ -92,15 +92,23 @@ public class ServerCore
 	private static boolean initJNI()
 	{
 		//JNI링크 부분
-		File rawlib = FileHandler.getExtResourceFile("native");
-		logger.log(Level.INFO, rawlib.getAbsolutePath());
+		File lib = FileHandler.getExtResourceFile("lib");
+		File extlib = FileHandler.getExtResourceFile("extlib");
+		logger.log(Level.INFO, lib.getAbsolutePath());
 		StringBuffer libPathBuffer = new StringBuffer();
-		libPathBuffer.append(rawlib.toString());
+		libPathBuffer.append(lib.toString());
 		libPathBuffer.append(":");
 		libPathBuffer.append(System.getProperty("java.library.path"));
-		
 		System.setProperty("java.library.path", libPathBuffer.toString());
 		logger.log(Level.INFO, libPathBuffer.toString());
+		
+		libPathBuffer = new StringBuffer();
+		libPathBuffer.append(extlib.toString());
+		libPathBuffer.append(":");
+		libPathBuffer.append(System.getProperty("java.ext.dirs"));
+		System.setProperty("java.ext.dirs", libPathBuffer.toString());
+		logger.log(Level.INFO, libPathBuffer.toString());
+		
 		Field sysPathsField = null;
 		try
 		{
