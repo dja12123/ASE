@@ -93,6 +93,7 @@ public class ServerCore
 	{
 		//JNI링크 부분
 		File rawlib = FileHandler.getExtResourceFile("native");
+		logger.log(Level.INFO, rawlib.getAbsolutePath());
 		StringBuffer libPathBuffer = new StringBuffer();
 		libPathBuffer.append(rawlib.toString());
 		libPathBuffer.append(":");
