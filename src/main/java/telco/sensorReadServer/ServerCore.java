@@ -28,7 +28,11 @@ public class ServerCore
 	static Enumeration portList;
 	public static void main(String[] args)
 	{
-		initJNI();
+		if(!initJNI())
+		{
+			logger.log(Level.SEVERE, "JNI링크 실패");
+			return;
+		}
 		boolean portFound = false;
 		String defaultPort = "/dev/ttyACM0";
 
@@ -108,7 +112,7 @@ public class ServerCore
 			logger.log(Level.SEVERE, "JNI 라이브러리 폴더 링크 실패", e1);
 			return false;
 		}
-		System.loadLibrary("rocksaw");
+		System.loadLibrary("comm");
 		logger.log(Level.INFO, "JNI 라이브러리 로드");
 		return true;
 	}
