@@ -1,5 +1,7 @@
 package telco.sensorReadServer;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,6 +12,7 @@ import javax.comm.CommPortIdentifier;
 
 import telco.sensorReadServer.appConnect.AppConnectManager;
 import telco.sensorReadServer.console.LogWriter;
+import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorReader.SensorReadManager;
 import telco.sensorReadServer.sensorReader.SerialReader;
 
@@ -25,6 +28,7 @@ public class ServerCore
 	static Enumeration portList;
 	public static void main(String[] args)
 	{
+		initJNI();
 		boolean portFound = false;
 		String defaultPort = "/dev/ttyACM0";
 
@@ -57,9 +61,14 @@ public class ServerCore
 	
 	/*public static void main(String[] args)
 	{
-
+		
 		mainInst = new ServerCore();
 		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram));
+		if(!initJNI())
+		{
+			logger.log(Level.SEVERE, "JNI링크 실패");
+			return;
+		}
 		
 		if (!mainInst.start())
 		{
@@ -75,6 +84,34 @@ public class ServerCore
 			e.printStackTrace();
 		}
 	}*/
+	
+	private static boolean initJNI()
+	{
+		//JNI링크 부분
+		File rawlib = FileHandler.getExtResourceFile("native");
+		StringBuffer libPathBuffer = new StringBuffer();
+		libPathBuffer.append(rawlib.toString());
+		libPathBuffer.append(":");
+		libPathBuffer.append(System.getProperty("java.library.path"));
+		
+		System.setProperty("java.library.path", libPathBuffer.toString());
+		Field sysPathsField = null;
+		try
+		{
+			sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+			sysPathsField.setAccessible(true);
+			sysPathsField.set(null, null);
+		}
+		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e1)
+		{
+			// TODO Auto-generated catch blsock
+			logger.log(Level.SEVERE, "JNI 라이브러리 폴더 링크 실패", e1);
+			return false;
+		}
+		System.loadLibrary("rocksaw");
+		logger.log(Level.INFO, "JNI 라이브러리 로드");
+		return true;
+	}
 
 	public static void endProgram()
 	{
