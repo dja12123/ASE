@@ -122,7 +122,6 @@ public class ServerCore
 			logger.log(Level.SEVERE, "JNI 라이브러리 폴더 링크 실패", e1);
 			return false;
 		}
-		System.loadLibrary("Serial");
 		logger.log(Level.INFO, "JNI 라이브러리 로드");
 		return true;
 	}
