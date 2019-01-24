@@ -21,11 +21,25 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    
-    // https://mvnrepository.com/artifact/org.rxtx/rxtx
-	compile group: 'org.rxtx', name: 'rxtx', version: '2.1.7'
+sourceSets 
+{
+    main 
+    {
+        java 
+        {
+            srcDirs = ['src/main/java']
+        }
+        resources 
+        {
+            srcDirs = ['resources']
+        }
+    }
+}
 
+dependencies
+{
+
+	compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 ext 
