@@ -36,6 +36,18 @@ sourceSets
     }
 }
 
+task moveres(type: Copy){
+    from "./sensorReadServer/extResource/"
+    into "${buildDir}/libs/extResource/"
+    
+    doLast
+    {
+        println "------------------------------------------------"
+        println "resource moved."
+        println "------------------------------------------------"
+    }
+}
+
 dependencies
 {
 
