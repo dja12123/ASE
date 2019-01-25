@@ -1,14 +1,12 @@
 package telco.sensorReadServer;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.comm.CommPortIdentifier;
 
 import telco.sensorReadServer.appConnect.AppConnectManager;
 import telco.sensorReadServer.console.LogWriter;
@@ -22,43 +20,17 @@ public class ServerCore
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
 
 	private static ServerCore mainInst;
-	
-	
-	static CommPortIdentifier portId;
-	static Enumeration portList;
+
 	public static void main(String[] args)
 	{
-		if(!initJNI())
+		try
 		{
-			logger.log(Level.SEVERE, "JNI링크 실패");
-			return;
+			SerialReader.main(args);
 		}
-		boolean portFound = false;
-		String defaultPort = "/dev/ttyACM0";
-
-		if (args.length > 0)
+		catch (InterruptedException | IOException e)
 		{
-			defaultPort = args[0];
-		}
-
-		portList = CommPortIdentifier.getPortIdentifiers();
-
-		while (portList.hasMoreElements())
-		{
-			portId = (CommPortIdentifier) portList.nextElement();
-			if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL)
-			{
-				if (portId.getName().equals(defaultPort))
-				{
-					System.out.println("Found port: " + defaultPort);
-					portFound = true;
-					SerialReader reader = new SerialReader();
-				}
-			}
-		}
-		if (!portFound)
-		{
-			System.out.println("port " + defaultPort + " not found.");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

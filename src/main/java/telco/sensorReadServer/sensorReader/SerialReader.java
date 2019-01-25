@@ -1,212 +1,179 @@
 package telco.sensorReadServer.sensorReader;
 
+
+import java.io.IOException;
+import java.util.Date;
+
 /*
- * @(#)SimpleRead.java	1.12 98/06/25 SMI
- * 
- * Copyright 2003 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
- * Sun grants you ("Licensee") a non-exclusive, royalty free, license
- * to use, modify and redistribute this software in source and binary
- * code form, provided that i) this copyright notice and license appear
- * on all copies of the software; and ii) Licensee does not utilize the
- * software in a manner which is disparaging to Sun.
- * 
- * This software is provided "AS IS," without a warranty of any kind.
- * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES,
- * INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN AND
- * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY
- * LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING THE
- * SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS
- * BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT,
- * INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES,
- * HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING
- * OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN IF SUN HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- * 
- * This software is not designed or intended for use in on-line control
- * of aircraft, air traffic, aircraft navigation or aircraft
- * communications; or in the design, construction, operation or
- * maintenance of any nuclear facility. Licensee represents and
- * warrants that it will not use or redistribute the Software for such
- * purposes.
+ * #%L
+ * **********************************************************************
+ * ORGANIZATION  :  Pi4J
+ * PROJECT       :  Pi4J :: Java Examples
+ * FILENAME      :  SerialExample.java
+ *
+ * This file is part of the Pi4J project. More information about
+ * this project can be found here:  http://www.pi4j.com/
+ * **********************************************************************
+ * %%
+ * Copyright (C) 2012 - 2018 Pi4J
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
  */
-import java.io.*;
-import java.util.*;
-import java.io.*;
-import java.util.*;
-import javax.comm.*;
+import com.pi4j.io.serial.Baud;
+import com.pi4j.io.serial.DataBits;
+import com.pi4j.io.serial.FlowControl;
+import com.pi4j.io.serial.Parity;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialDataEvent;
+import com.pi4j.io.serial.SerialDataEventListener;
+import com.pi4j.io.serial.SerialFactory;
+import com.pi4j.io.serial.StopBits;
+import com.pi4j.util.CommandArgumentParser;
+import com.pi4j.util.Console;
 
 /**
- * Class declaration
+ * This example code demonstrates how to perform serial communications using the Raspberry Pi.
  *
- *
- * @author
- * @version 1.8, 08/03/00
+ * @author Robert Savage
  */
-public class SerialReader implements Runnable, SerialPortEventListener
-{
-	static CommPortIdentifier portId;
-	static Enumeration portList;
-	InputStream inputStream;
-	SerialPort serialPort;
-	Thread readThread;
+public class SerialReader {
 
-	/**
-	 * Method declaration
-	 *
-	 *
-	 * @param args
-	 *
-	 * @see
-	 */
-	public static void main(String[] args)
-	{
-		boolean portFound = false;
-		String defaultPort = "/dev/ttyACM0";
+    /**
+     * This example program supports the following optional command arguments/options:
+     *   "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
+     *   "--baud (baud-rate)"                       [DEFAULT: 38400]
+     *   "--data-bits (5|6|7|8)"                    [DEFAULT: 8]
+     *   "--parity (none|odd|even)"                 [DEFAULT: none]
+     *   "--stop-bits (1|2)"                        [DEFAULT: 1]
+     *   "--flow-control (none|hardware|software)"  [DEFAULT: none]
+     *
+     * @param args
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public static void main(String args[]) throws InterruptedException, IOException {
 
-		if (args.length > 0)
-		{
-			defaultPort = args[0];
-		}
+        // !! ATTENTION !!
+        // By default, the serial port is configured as a console port
+        // for interacting with the Linux OS shell.  If you want to use
+        // the serial port in a software program, you must disable the
+        // OS from using this port.
+        //
+        // Please see this blog article for instructions on how to disable
+        // the OS console for this port:
+        // https://www.cube-controls.com/2015/11/02/disable-serial-port-terminal-output-on-raspbian/
 
-		portList = CommPortIdentifier.getPortIdentifiers();
+        // create Pi4J console wrapper/helper
+        // (This is a utility class to abstract some of the boilerplate code)
+        final Console console = new Console();
 
-		while (portList.hasMoreElements())
-		{
-			portId = (CommPortIdentifier) portList.nextElement();
-			if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL)
-			{
-				if (portId.getName().equals(defaultPort))
-				{
-					System.out.println("Found port: " + defaultPort);
-					portFound = true;
-					SerialReader reader = new SerialReader();
-				}
-			}
-		}
-		if (!portFound)
-		{
-			System.out.println("port " + defaultPort + " not found.");
-		}
+        // print program title/header
+        console.title("<-- The Pi4J Project -->", "Serial Communication Example");
 
-	}
+        // allow for user to exit program using CTRL-C
+        console.promptForExit();
 
-	/**
-	 * Constructor declaration
-	 *
-	 *
-	 * @see
-	 */
-	public SerialReader()
-	{
-		try
-		{
-			serialPort = (SerialPort) portId.open("SimpleReadApp", 2000);
-		}
-		catch (PortInUseException e)
-		{
-		}
+        // create an instance of the serial communications class
+        final Serial serial = SerialFactory.createInstance();
 
-		try
-		{
-			inputStream = serialPort.getInputStream();
-		}
-		catch (IOException e)
-		{
-		}
+        // create and register the serial data listener
+        serial.addListener(new SerialDataEventListener() {
+            @Override
+            public void dataReceived(SerialDataEvent event) {
 
-		try
-		{
-			serialPort.addEventListener(this);
-		}
-		catch (TooManyListenersException e)
-		{
-		}
+                // NOTE! - It is extremely important to read the data received from the
+                // serial port.  If it does not get read from the receive buffer, the
+                // buffer will continue to grow and consume memory.
 
-		serialPort.notifyOnDataAvailable(true);
+                // print out the data received to the console
+                try {
+                    console.println("[HEX DATA]   " + event.getHexByteString());
+                    console.println("[ASCII DATA] " + event.getAsciiString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
-		try
-		{
-			serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-		}
-		catch (UnsupportedCommOperationException e)
-		{
-		}
+        try {
+            // create serial config object
+            SerialConfig config = new SerialConfig();
 
-		readThread = new Thread(this);
+            // set default serial settings (device, baud rate, flow control, etc)
+            //
+            // by default, use the DEFAULT com port on the Raspberry Pi (exposed on GPIO header)
+            // NOTE: this utility method will determine the default serial port for the
+            //       detected platform and board/model.  For all Raspberry Pi models
+            //       except the 3B, it will return "/dev/ttyAMA0".  For Raspberry Pi
+            //       model 3B may return "/dev/ttyS0" or "/dev/ttyAMA0" depending on
+            //       environment configuration.
+            config.device("/dev/ttyACM0")
+                  .baud(Baud._38400)
+                  .dataBits(DataBits._8)
+                  .parity(Parity.NONE)
+                  .stopBits(StopBits._1)
+                  .flowControl(FlowControl.NONE);
 
-		readThread.start();
-	}
+            // parse optional command argument options to override the default serial settings.
+            if(args.length > 0){
+                config = CommandArgumentParser.getSerialConfig(config, args);
+            }
 
-	/**
-	 * Method declaration
-	 *
-	 *
-	 * @see
-	 */
-	public void run()
-	{
-		try
-		{
-			Thread.sleep(20000);
-		}
-		catch (InterruptedException e)
-		{
-		}
-	}
+            // display connection details
+            console.box(" Connecting to: " + config.toString(),
+                    " We are sending ASCII data on the serial port every 1 second.",
+                    " Data received on serial port will be displayed below.");
 
-	/**
-	 * Method declaration
-	 *
-	 *
-	 * @param event
-	 *
-	 * @see
-	 */
-	public void serialEvent(SerialPortEvent event)
-	{
-		switch (event.getEventType())
-		{
 
-		case SerialPortEvent.BI:
+            // open the default serial device/port with the configuration settings
+            serial.open(config);
 
-		case SerialPortEvent.OE:
+            // continuous loop to keep the program running until the user terminates the program
+            while(console.isRunning()) {
+                try {
+                    // write a formatted string to the serial transmit buffer
+                    serial.write("CURRENT TIME: " + new Date().toString());
 
-		case SerialPortEvent.FE:
+                    // write a individual bytes to the serial transmit buffer
+                    serial.write((byte) 13);
+                    serial.write((byte) 10);
 
-		case SerialPortEvent.PE:
+                    // write a simple string to the serial transmit buffer
+                    serial.write("Second Line");
 
-		case SerialPortEvent.CD:
+                    // write a individual characters to the serial transmit buffer
+                    serial.write('\r');
+                    serial.write('\n');
 
-		case SerialPortEvent.CTS:
+                    // write a string terminating with CR+LF to the serial transmit buffer
+                    serial.writeln("Third Line");
+                }
+                catch(IllegalStateException ex){
+                    ex.printStackTrace();
+                }
 
-		case SerialPortEvent.DSR:
+                // wait 1 second before continuing
+                Thread.sleep(1000);
+            }
 
-		case SerialPortEvent.RI:
-
-		case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-			break;
-
-		case SerialPortEvent.DATA_AVAILABLE:
-			byte[] readBuffer = new byte[20];
-
-			try
-			{
-				while (inputStream.available() > 0)
-				{
-					int numBytes = inputStream.read(readBuffer);
-				}
-
-				System.out.print(new String(readBuffer));
-			}
-			catch (IOException e)
-			{
-			}
-
-			break;
-		}
-	}
-
+        }
+        catch(IOException ex) {
+            console.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
+            return;
+        }
+    }
 }
