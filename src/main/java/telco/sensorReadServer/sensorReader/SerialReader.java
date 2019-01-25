@@ -121,7 +121,7 @@ public class SerialReader {
             //       model 3B may return "/dev/ttyS0" or "/dev/ttyAMA0" depending on
             //       environment configuration.
             config.device("/dev/ttyACM0")
-                  .baud(Baud._38400)
+                  .baud(Baud._9600)
                   .dataBits(DataBits._8)
                   .parity(Parity.NONE)
                   .stopBits(StopBits._1)
@@ -149,5 +149,6 @@ public class SerialReader {
             console.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
             return;
         }
+        Thread.sleep(6000);
     }
 }
