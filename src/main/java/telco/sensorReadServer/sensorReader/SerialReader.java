@@ -2,7 +2,6 @@ package telco.sensorReadServer.sensorReader;
 
 
 import java.io.IOException;
-import java.util.Date;
 
 /*
  * #%L
@@ -143,32 +142,7 @@ public class SerialReader {
             serial.open(config);
 
             // continuous loop to keep the program running until the user terminates the program
-            while(console.isRunning()) {
-                try {
-                    // write a formatted string to the serial transmit buffer
-                    serial.write("CURRENT TIME: " + new Date().toString());
 
-                    // write a individual bytes to the serial transmit buffer
-                    serial.write((byte) 13);
-                    serial.write((byte) 10);
-
-                    // write a simple string to the serial transmit buffer
-                    serial.write("Second Line");
-
-                    // write a individual characters to the serial transmit buffer
-                    serial.write('\r');
-                    serial.write('\n');
-
-                    // write a string terminating with CR+LF to the serial transmit buffer
-                    serial.writeln("Third Line");
-                }
-                catch(IllegalStateException ex){
-                    ex.printStackTrace();
-                }
-
-                // wait 1 second before continuing
-                Thread.sleep(1000);
-            }
 
         }
         catch(IOException ex) {
