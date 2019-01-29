@@ -64,14 +64,11 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-
 		try
 		{
 			logger.log(Level.INFO, "1");
-			this.serial.discardData();
-			logger.log(Level.INFO, "2");
 			this.serial.close();
-			logger.log(Level.INFO, "3");
+			logger.log(Level.INFO, "2");
 		}
 		catch (IllegalStateException e)
 		{
