@@ -58,7 +58,7 @@ public class ServerCore
 			return;
 		}
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram));
+		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
