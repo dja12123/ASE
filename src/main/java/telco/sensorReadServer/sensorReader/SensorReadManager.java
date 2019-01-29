@@ -64,25 +64,22 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-		
-		if(this.serial.isOpen())
+
+		try
 		{
-			try
-			{
-				logger.log(Level.INFO, "1");
-				this.serial.discardData();
-				logger.log(Level.INFO, "2");
-				this.serial.close();
-				logger.log(Level.INFO, "3");
-			}
-			catch (IllegalStateException e)
-			{
-				logger.log(Level.SEVERE, "시리얼 닫기 실패", e);
-			}
-			catch(IOException e)
-			{
-				logger.log(Level.SEVERE, "시리얼 종료");
-			}
+			logger.log(Level.INFO, "1");
+			this.serial.discardData();
+			logger.log(Level.INFO, "2");
+			this.serial.close();
+			logger.log(Level.INFO, "3");
+		}
+		catch (IllegalStateException e)
+		{
+			logger.log(Level.SEVERE, "시리얼 닫기 실패", e);
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.SEVERE, "시리얼 종료");
 		}
 	
 		logger.log(Level.SEVERE, "SerialReadManager 종료");

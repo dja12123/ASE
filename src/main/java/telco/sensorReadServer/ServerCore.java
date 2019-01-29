@@ -158,10 +158,14 @@ public class ServerCore
 
 	private void shutdown()
 	{
-		logger.log(Level.INFO, "시스템 종료 시작");
-		this.appConnectManager.stopModule();
-		this.sensorReadManager.stopModule();
-		logger.log(Level.INFO, "시스템 종료 완료");
+		synchronized (this)
+		{
+			logger.log(Level.INFO, "시스템 종료 시작");
+			this.appConnectManager.stopModule();
+			logger.log(Level.INFO, "1");
+			this.sensorReadManager.stopModule();
+			logger.log(Level.INFO, "시스템 종료 완료");
+		}
 	}
 	
 	public static String getProp(String key)
