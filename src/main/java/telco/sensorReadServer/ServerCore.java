@@ -23,11 +23,22 @@ public class ServerCore
 	public static final Logger logger = LogWriter.createLogger(ServerCore.class, "main");// 메인 로거
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
 
+	private static Set<Thread> shutdownThreads;
+	
 	private static Thread mainThread;
 	private static ServerCore mainInst;
 	
+	
 	public static void main(String[] args)
 	{
+		shutdownThreads = getShutdownHookList();
+		
+		for(Thread beforeShutdownThread : getShutdownHookList())
+		{
+			Runtime.getRuntime().removeShutdownHook(beforeShutdownThread);
+		}
+		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
+		
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		
@@ -37,15 +48,9 @@ public class ServerCore
 		}
 		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
+
 		
-		System.out.println("셧타운 훅 리스트");
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
-		
-		
-		for(Thread t : getShutdownHookList())
-		{
-			System.out.println(t.getName());
-		}
+
 		
 		if (!mainInst.start())
 		{
@@ -178,6 +183,11 @@ public class ServerCore
 	public static void endProgram()
 	{
 		mainInst.shutdown();
+		
+		for(Thread nextShutdown : shutdownThreads)
+		{
+			nextShutdown.start();
+		}
 	}
 
 	private AppConnectManager appConnectManager;
