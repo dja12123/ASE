@@ -61,23 +61,6 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-		System.out.println(this.serial.isBufferingDataReceived());
-		SerialFactory.shutdown();
-		
-		/*try
-		{
-			logger.log(Level.INFO, "리더1");
-			logger.log(Level.INFO, "리더2");
-		}
-		catch (IllegalStateException e)
-		{
-			logger.log(Level.SEVERE, "시리얼 닫기 실패", e);
-		}
-		catch(IOException e)
-		{
-			logger.log(Level.SEVERE, "시리얼 종료");
-		}*/
-	
 		logger.log(Level.SEVERE, "SerialReadManager 종료");
 	}
 	
@@ -86,7 +69,6 @@ public class SensorReadManager
 		try
 		{
 			logger.log(Level.INFO, event.getHexByteString());
-			event.discardData();
 		}
 		catch (IOException e)
 		{
