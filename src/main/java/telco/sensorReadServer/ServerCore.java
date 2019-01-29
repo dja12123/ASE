@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +25,7 @@ public class ServerCore
 	public static final Logger logger = LogWriter.createLogger(ServerCore.class, "main");// 메인 로거
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
 
-	private static Set<Thread> shutdownThreads;
+	private static List<Thread> shutdownThreads;
 	
 	private static Thread mainThread;
 	private static ServerCore mainInst;
@@ -50,8 +52,6 @@ public class ServerCore
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
 
 		
-
-		
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
@@ -70,7 +70,7 @@ public class ServerCore
 		}
 	}
 	
-	private static Set<Thread> getShutdownHookList()
+	private static List<Thread> getShutdownHookList()
 	{
 		try
 		{
@@ -79,7 +79,9 @@ public class ServerCore
 
 			@SuppressWarnings("unchecked")
 			IdentityHashMap<Thread, Thread> currentHooks = (IdentityHashMap<Thread, Thread>) hooksField.get(null);
-			return currentHooks.keySet();
+			List<Thread> hookList = new ArrayList<Thread>();
+			hookList.addAll(currentHooks.keySet());
+			return hookList;
 		}
 		catch (Exception e)
 		{
