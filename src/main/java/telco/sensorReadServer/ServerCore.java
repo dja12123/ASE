@@ -169,7 +169,7 @@ public class ServerCore
 
 	private void shutdown()
 	{
-		synchronized (Logger.getGlobal())
+		synchronized (System.console())
 		{
 			logger.log(Level.INFO, "시스템 종료 시작");
 			this.appConnectManager.stopModule();
