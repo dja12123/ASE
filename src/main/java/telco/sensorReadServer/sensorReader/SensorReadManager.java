@@ -13,6 +13,7 @@ import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
+import com.pi4j.util.Console;
 
 import telco.sensorReadServer.ServerCore;
 import telco.sensorReadServer.console.LogWriter;
@@ -32,9 +33,13 @@ public class SensorReadManager
 	
 	public boolean startModule()
 	{
+		Console console = new Console();
+		console.promptForExit();
+		
 		this.serial = SerialFactory.createInstance();
 		
 		this.serial.addListener(this::dataReceived);
+		
 
 		try
 		{
