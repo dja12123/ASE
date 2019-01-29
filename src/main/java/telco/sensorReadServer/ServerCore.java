@@ -118,7 +118,6 @@ public class ServerCore
 
 	private void shutdown()
 	{
-
 		this.appConnectManager.stopModule();
 		this.sensorReadManager.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
