@@ -69,8 +69,11 @@ public class SensorReadManager
 		{
 			try
 			{
+				logger.log(Level.INFO, "1");
 				this.serial.discardData();
+				logger.log(Level.INFO, "2");
 				this.serial.close();
+				logger.log(Level.INFO, "3");
 			}
 			catch (IllegalStateException e)
 			{
