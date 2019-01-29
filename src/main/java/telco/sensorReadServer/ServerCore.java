@@ -38,7 +38,9 @@ public class ServerCore
 		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
 		
+		System.out.println("셧타운 훅 리스트");
 		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
+		
 		
 		for(Thread t : getShutdownHookList())
 		{
