@@ -68,8 +68,10 @@ public class ServerCore
 		{
 			return;
 		}
-		
+		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
+		shutdownThread.setPriority(Thread.MAX_PRIORITY);
 		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
+		
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");

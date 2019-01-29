@@ -16,12 +16,12 @@ public class AppConnectManager
 	
 	public boolean startModule()
 	{
-		logger.log(Level.SEVERE, "AppConnectManager 시작");
+		logger.log(Level.INFO, "AppConnectManager 시작");
 		return true;
 	}
 	
 	public void stopModule()
 	{
-		logger.log(Level.SEVERE, "AppConnectManager 종료");
+		logger.log(Level.INFO, "AppConnectManager 종료");
 	}
 }

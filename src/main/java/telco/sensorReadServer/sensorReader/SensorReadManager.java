@@ -55,7 +55,7 @@ public class SensorReadManager
 			logger.log(Level.SEVERE, "시리얼 열기 실패", e);
 			return false;
 		}
-		logger.log(Level.SEVERE, "SerialReadManager 시작");
+		logger.log(Level.INFO, "SerialReadManager 시작");
 		return true;
 	}
 	
