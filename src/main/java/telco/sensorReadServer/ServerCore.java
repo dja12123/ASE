@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -25,6 +26,30 @@ public class ServerCore
 	
 	public static void main(String[] args)
 	{
+		Thread monitoringThread = new Thread(()->{
+			
+			while(true)
+			{
+				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+				
+				for(Thread t : threadSet)
+				{
+					System.out.println(t.getName() + " " + t.getState());
+				}
+				try
+				{
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		monitoringThread.setDaemon(true);
+		monitoringThread.start();
+		
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		

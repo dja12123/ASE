@@ -37,7 +37,6 @@ public class SensorReadManager
 		
 		this.serial.addListener(this::dataReceived);
 		
-
 		try
 		{
 			SerialConfig config = new SerialConfig();
