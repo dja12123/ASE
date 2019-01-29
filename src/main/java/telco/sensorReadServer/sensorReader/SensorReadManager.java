@@ -64,10 +64,9 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-		try
+		/*try
 		{
 			logger.log(Level.INFO, "리더1");
-			this.serial.close();
 			logger.log(Level.INFO, "리더2");
 		}
 		catch (IllegalStateException e)
@@ -77,7 +76,7 @@ public class SensorReadManager
 		catch(IOException e)
 		{
 			logger.log(Level.SEVERE, "시리얼 종료");
-		}
+		}*/
 	
 		logger.log(Level.SEVERE, "SerialReadManager 종료");
 	}
