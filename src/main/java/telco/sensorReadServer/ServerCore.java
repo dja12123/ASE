@@ -2,6 +2,7 @@ package telco.sensorReadServer;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.Set;
@@ -31,9 +32,16 @@ public class ServerCore
 			while(true)
 			{
 				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-				
+				long[] thread = ManagementFactory.getThreadMXBean().findMonitorDeadlockedThreads();
 				for(Thread t : threadSet)
 				{
+					for(int i = 0; i < thread.length; ++i)
+					{
+						if(t.getId() == thread[i])
+						{
+							System.out.print("DEADLOCK: ");
+						}
+					}
 					System.out.println(t.getName() + " " + t.getState());
 				}
 				try
