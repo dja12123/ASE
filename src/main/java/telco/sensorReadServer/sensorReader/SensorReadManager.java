@@ -97,6 +97,7 @@ public class SensorReadManager
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			this.stopModule();
 		}
 	}
 }
