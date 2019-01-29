@@ -61,7 +61,7 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-		logger.log(Level.SEVERE, "SerialReadManager 종료");
+		logger.log(Level.INFO, "SerialReadManager 종료");
 	}
 	
 	private void dataReceived(SerialDataEvent event)
