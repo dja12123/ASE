@@ -47,7 +47,7 @@ public class SensorReadManager
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
 		try
 		{
-			this.serial.open(config);
+			this.serial.open(this.config);
 			logger.log(Level.INFO, "연결: " + config.toString());
 		}
 		catch (IOException e)
@@ -61,19 +61,9 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
-		
 		System.out.println(this.serial.isBufferingDataReceived());
-		this.serial.setBufferingDataReceived(false);
-		try
-		{
-			this.serial.close();
-		}
-		catch (IllegalStateException | IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		SerialFactory.shutdown();
+		
 		/*try
 		{
 			logger.log(Level.INFO, "리더1");
