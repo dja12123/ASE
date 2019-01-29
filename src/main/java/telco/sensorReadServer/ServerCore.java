@@ -184,6 +184,7 @@ public class ServerCore
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			logger.log(Level.INFO, "시스템 종료 완료");
 		}
 	}
 	
