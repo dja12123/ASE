@@ -39,7 +39,17 @@ public class ServerCore
 			logger.log(Level.SEVERE, "초기화 실패");
 			mainInst.shutdown();
 		}
-		logger.log(Level.SEVERE, "메인끝");
+		while(true)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				break;
+			}
+		}
 	}
 	
 	private static boolean initProp()
@@ -101,6 +111,7 @@ public class ServerCore
 	{
 		mainInst.shutdown();
 		mainThread.interrupt();
+		System.exit(0);
 	}
 
 	private AppConnectManager appConnectManager;
