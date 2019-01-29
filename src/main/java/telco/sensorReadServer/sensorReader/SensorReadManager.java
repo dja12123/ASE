@@ -28,13 +28,12 @@ public class SensorReadManager
 	
 	public SensorReadManager()
 	{
-		// TODO Auto-generated constructor stub
+		Console console = new Console();
+		console.promptForExit();
 	}
 	
 	public boolean startModule()
 	{
-		Console console = new Console();
-		console.promptForExit();
 		
 		this.serial = SerialFactory.createInstance();
 		
