@@ -118,7 +118,6 @@ public class ServerCore
 				}
 				catch (InterruptedException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -216,16 +215,6 @@ public class ServerCore
 			logger.log(Level.INFO, "시스템 종료 시작");
 			this.appConnectManager.stopModule();
 			this.sensorReadManager.stopModule();
-			logger.log(Level.INFO, "시스템 종료 완료");
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			logger.log(Level.INFO, "시스템 종료 완료");
 		}
 	}
