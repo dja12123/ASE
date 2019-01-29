@@ -24,34 +24,31 @@ public class SensorReadManager
 	public static final Logger logger = LogWriter.createLogger(SensorReadManager.class, "sensorReader");
 	
 	private Serial serial;
+	private SerialConfig config;
 	
 	public SensorReadManager()
 	{
+		this.serial = SerialFactory.createInstance();
+		
+		this.serial.addListener(this::dataReceived);
+	
+		this.config = new SerialConfig();
 
+		this.config
+		.baud(Baud._115200)
+		.dataBits(DataBits._8)
+		.parity(Parity.NONE)
+		.stopBits(StopBits._1)
+		.flowControl(FlowControl.NONE);
 	}
 	
 	public boolean startModule()
 	{
-		
-		this.serial = SerialFactory.createInstance();
-		
-		this.serial.addListener(this::dataReceived);
-		
+		this.config.device(ServerCore.getProp(PROP_SerialDevice));
 		try
 		{
-			SerialConfig config = new SerialConfig();
-
-			config
-			.device(ServerCore.getProp(PROP_SerialDevice))
-			.baud(Baud._115200)
-			.dataBits(DataBits._8)
-			.parity(Parity.NONE)
-			.stopBits(StopBits._1)
-			.flowControl(FlowControl.NONE);
-
-			logger.log(Level.INFO, "연결: " + config.toString());
-
 			this.serial.open(config);
+			logger.log(Level.INFO, "연결: " + config.toString());
 		}
 		catch (IOException e)
 		{
@@ -64,9 +61,19 @@ public class SensorReadManager
 	
 	public void stopModule()
 	{
+		
 		System.out.println(this.serial.isBufferingDataReceived());
 		this.serial.setBufferingDataReceived(false);
-		this.serial.close();
+		try
+		{
+			this.serial.close();
+		}
+		catch (IllegalStateException | IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SerialFactory.shutdown();
 		/*try
 		{
 			logger.log(Level.INFO, "리더1");
