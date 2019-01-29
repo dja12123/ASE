@@ -37,6 +37,18 @@ public class ServerCore
 			logger.log(Level.SEVERE, "초기화 실패");
 			return;
 		}
+		while(true)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private static boolean initProp()
