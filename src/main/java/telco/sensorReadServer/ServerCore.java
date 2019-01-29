@@ -174,7 +174,7 @@ public class ServerCore
 			logger.log(Level.INFO, "시스템 종료 시작");
 			this.appConnectManager.stopModule();
 			this.sensorReadManager.stopModule();
-			System.out.println("시스템 종료 완료");
+			logger.log(Level.INFO, "시스템 종료 완료");
 		}
 	}
 	
