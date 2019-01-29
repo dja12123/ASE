@@ -37,19 +37,9 @@ public class ServerCore
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
-			return;
+			mainInst.shutdown();
 		}
-		while(true)
-		{
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-				break;
-			}
-		}
+
 	}
 	
 	private static boolean initProp()
