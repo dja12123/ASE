@@ -72,9 +72,13 @@ public class SensorReadManager
 					this.serial.discardData();
 					this.serial.close();
 				}
-				catch (IllegalStateException | IOException e)
+				catch (IllegalStateException e)
 				{
 					logger.log(Level.SEVERE, "시리얼 닫기 실패", e);
+				}
+				catch(IOException e)
+				{
+					
 				}
 			}
 		}

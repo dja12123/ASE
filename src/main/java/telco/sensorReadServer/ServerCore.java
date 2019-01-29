@@ -20,10 +20,12 @@ public class ServerCore
 	public static final Logger logger = LogWriter.createLogger(ServerCore.class, "main");// 메인 로거
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
 
+	private static Thread mainThread;
 	private static ServerCore mainInst;
 	
 	public static void main(String[] args)
 	{
+		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		
 		if(!initProp())
@@ -45,8 +47,7 @@ public class ServerCore
 			}
 			catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				break;
 			}
 		}
 	}
@@ -109,6 +110,7 @@ public class ServerCore
 	public static void endProgram()
 	{
 		mainInst.shutdown();
+		mainThread.interrupt();
 	}
 
 	private AppConnectManager appConnectManager;
