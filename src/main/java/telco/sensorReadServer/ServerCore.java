@@ -35,13 +35,16 @@ public class ServerCore
 				long[] thread = ManagementFactory.getThreadMXBean().findMonitorDeadlockedThreads();
 				for(Thread t : threadSet)
 				{
-					for(int i = 0; i < thread.length; ++i)
-					{
-						if(t.getId() == thread[i])
+					if(thread != null) {
+						for(int i = 0; i < thread.length; ++i)
 						{
-							System.out.print("DEADLOCK: ");
+							if(t.getId() == thread[i])
+							{
+								System.out.print("DEADLOCK: ");
+							}
 						}
 					}
+
 					System.out.println(t.getName() + " " + t.getState());
 				}
 				try
