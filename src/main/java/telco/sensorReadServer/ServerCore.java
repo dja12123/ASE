@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.util.IdentityHashMap;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,61 @@ public class ServerCore
 	private static ServerCore mainInst;
 	
 	public static void main(String[] args)
+	{
+		mainThread = Thread.currentThread();
+		mainInst = new ServerCore();
+		
+		if(!initProp())
+		{
+			return;
+		}
+		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
+		shutdownThread.setPriority(Thread.MAX_PRIORITY);
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
+		
+		for(Thread t : getShutdownHookList())
+		{
+			System.out.println(t.getName());
+		}
+		
+		if (!mainInst.start())
+		{
+			logger.log(Level.SEVERE, "초기화 실패");
+			mainInst.shutdown();
+		}
+		while(true)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				break;
+			}
+		}
+	}
+	
+	private static Set<Thread> getShutdownHookList()
+	{
+		try
+		{
+			Field hooksField = Class.forName("java.lang.ApplicationShutdownHooks").getDeclaredField("hooks");
+			hooksField.setAccessible(true);
+
+			@SuppressWarnings("unchecked")
+			IdentityHashMap<Thread, Thread> currentHooks = (IdentityHashMap<Thread, Thread>) hooksField.get(null);
+			return currentHooks.keySet();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static void initMonitoringThread()
 	{
 		Thread monitoringThread = new Thread(()->{
 			
@@ -60,34 +116,6 @@ public class ServerCore
 		});
 		monitoringThread.setDaemon(true);
 		monitoringThread.start();
-		
-		mainThread = Thread.currentThread();
-		mainInst = new ServerCore();
-		
-		if(!initProp())
-		{
-			return;
-		}
-		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
-		shutdownThread.setPriority(Thread.MAX_PRIORITY);
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
-		
-		if (!mainInst.start())
-		{
-			logger.log(Level.SEVERE, "초기화 실패");
-			mainInst.shutdown();
-		}
-		while(true)
-		{
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-				break;
-			}
-		}
 	}
 	
 	private static boolean initProp()
