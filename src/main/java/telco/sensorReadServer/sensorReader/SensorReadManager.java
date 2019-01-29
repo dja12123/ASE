@@ -66,15 +66,7 @@ public class SensorReadManager
 	{
 		System.out.println(this.serial.isBufferingDataReceived());
 		this.serial.setBufferingDataReceived(false);
-		try
-		{
-			this.serial.setBreak(false);
-		}
-		catch (IllegalStateException | IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.serial.close();
 		/*try
 		{
 			logger.log(Level.INFO, "리더1");
