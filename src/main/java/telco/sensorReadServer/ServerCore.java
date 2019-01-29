@@ -175,6 +175,15 @@ public class ServerCore
 			this.appConnectManager.stopModule();
 			this.sensorReadManager.stopModule();
 			logger.log(Level.INFO, "시스템 종료 완료");
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
