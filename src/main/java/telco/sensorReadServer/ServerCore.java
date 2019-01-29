@@ -39,7 +39,7 @@ public class ServerCore
 			logger.log(Level.SEVERE, "초기화 실패");
 			mainInst.shutdown();
 		}
-
+		logger.log(Level.SEVERE, "메인끝");
 	}
 	
 	private static boolean initProp()

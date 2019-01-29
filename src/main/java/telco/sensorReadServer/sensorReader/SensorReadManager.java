@@ -78,7 +78,7 @@ public class SensorReadManager
 				}
 				catch(IOException e)
 				{
-					
+					logger.log(Level.SEVERE, "시리얼 종료");
 				}
 			}
 		}
