@@ -170,11 +170,9 @@ public class ServerCore
 		synchronized (this)
 		{
 			logger.log(Level.INFO, "시스템 종료 시작");
-			logger.log(Level.INFO, "메인1");
 			this.appConnectManager.stopModule();
-			logger.log(Level.INFO, "메인2");
 			this.sensorReadManager.stopModule();
-			logger.log(Level.INFO, "시스템 종료 완료");
+			System.out.println("시스템 종료 완료");
 		}
 	}
 	
