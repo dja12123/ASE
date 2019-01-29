@@ -1,8 +1,9 @@
 package telco.sensorReadServer;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -12,56 +13,51 @@ import telco.sensorReadServer.appConnect.AppConnectManager;
 import telco.sensorReadServer.console.LogWriter;
 import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorReader.SensorReadManager;
-import telco.sensorReadServer.sensorReader.SerialReader;
 
 public class ServerCore
 {
+	private static final Properties properties = new Properties();
 	public static final Logger logger = LogWriter.createLogger(ServerCore.class, "main");// 메인 로거
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
 
 	private static ServerCore mainInst;
-
+	
 	public static void main(String[] args)
 	{
-		try
-		{
-			SerialReader.main(args);
-		}
-		catch (InterruptedException | IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	
-	/*public static void main(String[] args)
-	{
-		
 		mainInst = new ServerCore();
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram));
-		if(!initJNI())
+		
+		if(!initProp())
 		{
-			logger.log(Level.SEVERE, "JNI링크 실패");
 			return;
 		}
 		
+		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram));
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
 			return;
 		}
+	}
+	
+	private static boolean initProp()
+	{
+		//CONFIG 로드 부분
 		try
 		{
-			Thread.sleep(10000);
+			InputStream stream = FileHandler.getResourceAsStream("/config.properties");
+            
+			properties.load(stream);
 		}
-		catch (InterruptedException e)
+		catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "config 로드 실패", e);
+			return false;
 		}
-	}*/
+		logger.log(Level.INFO, "config 로드");
+		return true;
+	}
 	
-	private static boolean initJNI()
+	private static boolean initJNIlib()
 	{
 		//JNI링크 부분
 		File lib = FileHandler.getExtResourceFile("lib");
@@ -114,8 +110,8 @@ public class ServerCore
 
 	private boolean start()
 	{
-		this.appConnectManager.startModule();
-		this.sensorReadManager.startModule();
+		if(!this.appConnectManager.startModule()) return false;
+		if(!this.sensorReadManager.startModule()) return false;
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
 	}
@@ -126,5 +122,10 @@ public class ServerCore
 		this.appConnectManager.stopModule();
 		this.sensorReadManager.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
+	}
+	
+	public static String getProp(String key)
+	{
+		return properties.getProperty(key);
 	}
 }

@@ -7,9 +7,9 @@ public class AppConnectManager
 		
 	}
 	
-	public void startModule()
+	public boolean startModule()
 	{
-		
+		return true;
 	}
 	
 	public void stopModule()
