@@ -69,23 +69,13 @@ public class ServerCore
 			return;
 		}
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
+		//Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
 			mainInst.shutdown();
 		}
-		while(true)
-		{
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-				break;
-			}
-		}
+
 	}
 	
 	private static boolean initProp()
