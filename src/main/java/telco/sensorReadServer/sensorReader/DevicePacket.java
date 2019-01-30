@@ -22,7 +22,7 @@ public class DevicePacket
 			return false;
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
-		buffer.position(4);
+		buffer.position(3);
 		int packetSize = buffer.getInt();
 		if(packetSize != FULL_PACKET_SIZE)
 		{
