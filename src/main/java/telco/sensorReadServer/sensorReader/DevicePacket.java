@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 
 public class DevicePacket
 {
+	public static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 	public static final int FULL_PACKET_SIZE = 32;
 	
 	public final int ID;
@@ -24,9 +25,8 @@ public class DevicePacket
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
 		buffer.position(4);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		buffer.order(BYTE_ORDER);
 		int packetSize = buffer.getInt();
-		System.out.println(packetSize);
 		if(packetSize != FULL_PACKET_SIZE)
 		{
 			return false;
@@ -37,7 +37,7 @@ public class DevicePacket
 	public DevicePacket(byte[] packet)
 	{
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		buffer.order(BYTE_ORDER);
 		
 		this.ID = buffer.getInt();
 		this.NSIZE = buffer.getInt();
