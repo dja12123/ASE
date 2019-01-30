@@ -1,6 +1,6 @@
 package telco.sensorReadServer.sensorReader;
 
-public class PacketAnalyzer
+public class Device
 {
 
 }

@@ -66,13 +66,24 @@ public class SensorReadManager
 	
 	private void dataReceived(SerialDataEvent event)
 	{
+		byte[] receiveData;
 		try
 		{
-			logger.log(Level.INFO, event.getHexByteString());
+			receiveData = event.getBytes();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			return;
 		}
+		
+		if(!DevicePacket.isDevicePacket(receiveData))
+		{
+			return;
+		}
+		
+		DevicePacket packet = new DevicePacket(receiveData);
+		System.out.println(packet.toString());
+		
 	}
 }
