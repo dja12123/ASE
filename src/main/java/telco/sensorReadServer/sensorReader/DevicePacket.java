@@ -40,7 +40,7 @@ public class DevicePacket
 	public DevicePacket(byte[] packet)
 	{
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		buffer.order(ByteOrder.BIG_ENDIAN);
 		
 		this.ID = buffer.getInt();
 		this.NSIZE = buffer.getInt();
