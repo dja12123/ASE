@@ -3,8 +3,6 @@ package telco.sensorReadServer.sensorReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import telco.sensorReadServer.appConnect.protocol.AppPacketDef;
-
 public class DevicePacket
 {
 	public static final int FULL_PACKET_SIZE = 32;
@@ -28,10 +26,9 @@ public class DevicePacket
 		buffer.position(4);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		int packetSize = buffer.getInt();
+		System.out.println(packetSize);
 		if(packetSize != FULL_PACKET_SIZE)
 		{
-			
-			System.out.println(packetSize + " " + AppPacketDef.bytesToHex(packet, packet.length));
 			return false;
 		}
 		return true;
