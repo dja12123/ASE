@@ -56,6 +56,7 @@ public class ServerCore
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
 			mainInst.shutdown();
+			return;
 		}
 		while(true)
 		{
@@ -67,6 +68,16 @@ public class ServerCore
 			{
 				break;
 			}
+		}
+	}
+	
+	public static void endProgram()
+	{
+		mainInst.shutdown();
+		
+		for(Thread nextShutdown : shutdownThreads)
+		{
+			nextShutdown.start();
 		}
 	}
 	
@@ -179,16 +190,6 @@ public class ServerCore
 		}
 		logger.log(Level.INFO, "JNI 라이브러리 로드");
 		return true;
-	}
-
-	public static void endProgram()
-	{
-		mainInst.shutdown();
-		
-		for(Thread nextShutdown : shutdownThreads)
-		{
-			nextShutdown.start();
-		}
 	}
 
 	private AppConnectManager appConnectManager;

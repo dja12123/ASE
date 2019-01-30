@@ -5,13 +5,13 @@ public class AppPacketDef
 	public static final byte CONTROL_MARK = 0x11;
 	public static final byte[] CONTROL_START = new byte[] { CONTROL_MARK, 0x01 };
 	public static final byte[] CONTROL_END = new byte[] { CONTROL_MARK, 0x02 };
-	public static final byte[] CONTROL_DATA_SEPARATOR = new byte[] {CONTROL_MARK, 0x12};
-	public static final byte[] CONTROL_DATA_TO_ZERO = new byte[] {CONTROL_MARK, 0x21};
+	public static final byte[] CONTROL_DATA_SEPARATOR = new byte[] {CONTROL_MARK, 0x03};
+	public static final byte[] CONTROL_DATA_TO_ZERO = new byte[] {CONTROL_MARK, 0x04};
 	// 데이터 분석시 혼동을 피하기 위해 데이터를 삽입할 때 0x7F을 0x0021로 항상 변환.
-	//0x1111은 금지 코드
+	// 코드 부여시 0x10이하로 할 것
 	
-	public static final short OPT_KEY_PACKET = 0b0100000000000000;
-	public static final short OPT_DATA_PACKET = 0b0010000000000000;
+	public static final short OPT_KEY_PACKET = 0b0101001000000000;
+	public static final short OPT_DATA_PACKET = 0b0011001000000000;
 	
 	public static final int CONTROL_SEQ_SIZE = 2;
 	
@@ -41,20 +41,19 @@ public class AppPacketDef
 	public static final int RANGE_PAYLOAD = MAX_SEGMENT_SIZE - PACKET_METADATA_SIZE;
 	public static final int FULL_PACKET_LIMIT = 1024 * 1024 * 100;// 100mbyte제한
 	
-	public static boolean checkOption(short optionArea, int option)
+	public static boolean checkOption(short optionArea, short option)
 	{
-		int checkPointer = 0b0100000000000000 >> (option - 1);
-		if((optionArea & checkPointer) != 0)
+		if((optionArea & option) != 0)
 		{
 			return true;
 		}
 		return false;
 	}
 	
-	public static short writeOption(short optionArea, int option)
+	public static short writeOption(short optionArea, short option)
 	{
-		int mask = 0b0100000000000000 >> (option - 1);
-		optionArea = (short)(optionArea | mask);
+		optionArea = (short)(optionArea | 0x1200);
+		optionArea = (short)(optionArea | option);
 		return optionArea;
 	}
 	

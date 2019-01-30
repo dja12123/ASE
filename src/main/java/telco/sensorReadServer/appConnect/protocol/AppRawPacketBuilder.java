@@ -1,5 +1,6 @@
 package telco.sensorReadServer.appConnect.protocol;
 
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ public class AppRawPacketBuilder
 	{
 		AppRawPacketBuilder builder = new AppRawPacketBuilder((short) 123);
 		builder.appendData(new byte[]{0x11, 0x11, 0x11,0x11, 0x11, 0x10,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11});
+		builder.appendData(new byte[]{0x11});
+		builder.appendData(new byte[]{0x22});
 		builder.appendData(new byte[]{0x11, 0x11, 0x11,0x11, 0x11, 0x10,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11});
 		builder.appendData(new byte[]{0x11, 0x11, 0x11,0x11, 0x11, 0x10,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11,0x11, 0x11, 0x11});
 		System.out.println(builder.createPacketInst().toString());
@@ -62,7 +65,6 @@ public class AppRawPacketBuilder
 			throw new Exception("payload size over");
 		}
 		
-	
 		byte[] convertPayload = new byte[payload.length + convertCount + AppPacketDef.CONTROL_SEQ_SIZE];
 		int nowChange = 0;
 		for(int i = 0; i < payload.length; ++i)
@@ -101,42 +103,52 @@ public class AppRawPacketBuilder
 		byte[] nowTaskPayload = null;
 		
 		while(true)
-		{
+		{// 재설계 필요 패이로드에 더 긴 이스케이프 시퀀스(4자리) 를 삽입하도록 변경 할 경우 길이조절에 복잡한 로직이 필요 없음 0x-7FFF0000을 이스케이프 시퀀스로 활용하면 잘려도 문제없음...
 			nowTaskPayload = this.payloadList.get(taskPayloadNo);
 			if(nowSegmentCapacity <= 0)
 			{
 				++taskSegNo;
 				if(remainingCapacity - AppPacketDef.RANGE_PAYLOAD < 0)
 				{
-					
 					nowTaskArray = new byte[remainingCapacity + AppPacketDef.PACKET_METADATA_SIZE];
 				}
 				else
 				{
-					nowTaskArray = new byte[AppPacketDef.MAX_SEGMENT_SIZE];
+					//제어 문자가 끝에 오지 않도록 해주는 로직 작성.
+					int findEndCount = AppPacketDef.RANGE_PAYLOAD - 1;
+					int findEndPayloadNo = 0;
+					int nowSize = this.payloadList.get(taskPayloadNo).length - nowPayloadPointer;
+					while(true)
+					{
+						if(findEndCount - nowSize <= 0)
+						{
+							break;
+						}
+						++findEndPayloadNo;
+						findEndCount -= nowSize;
+						nowSize = this.payloadList.get(taskPayloadNo + findEndPayloadNo).length;
+					}
+					if(this.payloadList.get(taskPayloadNo + findEndPayloadNo)[findEndCount + (findEndPayloadNo <= 0 ? nowPayloadPointer:0)] == AppPacketDef.CONTROL_MARK)
+					{
+						nowTaskArray = new byte[AppPacketDef.MAX_SEGMENT_SIZE - 1];
+					}
+					else
+					{
+						nowTaskArray = new byte[AppPacketDef.MAX_SEGMENT_SIZE];
+					}
 				}
-				assembledPacket.add(nowTaskArray);
-			}
-			
-			/*if(assembledPacket[taskSegNo] == null)
-			{
-				if(remainingCapacity >= AppPacketDef.RANGE_PAYLOAD)
-				{
-					assembledPacket[taskSegNo] = new byte[AppPacketDef.MAX_SEGMENT_SIZE];
-				}
-				else
-				{
-					assembledPacket[taskSegNo] = new byte[remainingCapacity + AppPacketDef.PACKET_METADATA_SIZE];
-				}
-				ByteBuffer buf = ByteBuffer.wrap(assembledPacket[taskSegNo]);
+				
+				ByteBuffer buf = ByteBuffer.wrap(nowTaskArray);
 				buf.put(AppPacketDef.CONTROL_START);
 				buf.putShort((short)(this.channelID + AppPacketDef.ADD_NUMBER_FIELD));
 				buf.putShort(this.option);
-				buf.putShort((short)(segmentCount + AppPacketDef.ADD_NUMBER_FIELD));
+				//buf.putShort((short)(segmentCount + AppPacketDef.ADD_NUMBER_FIELD));
 				buf.putShort((short)(taskSegNo + AppPacketDef.ADD_NUMBER_FIELD));
-				buf.position(assembledPacket[taskSegNo].length - AppPacketDef.CONTROL_END.length);
+				buf.position(nowTaskArray.length - AppPacketDef.CONTROL_END.length);
 				buf.put(AppPacketDef.CONTROL_END);
-			}*/
+				
+				assembledPacket.add(nowTaskArray);
+			}
 			
 			
 			int capPayload = nowTaskPayload.length - nowPayloadPointer;
