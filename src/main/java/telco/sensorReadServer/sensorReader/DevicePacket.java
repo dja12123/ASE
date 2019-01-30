@@ -19,12 +19,14 @@ public class DevicePacket
 	{
 		if(packet.length != FULL_PACKET_SIZE)
 		{
+			System.out.println("걸림1");
 			return false;
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
 		buffer.position(4);
 		if(buffer.getInt() != FULL_PACKET_SIZE)
 		{
+			System.out.println("걸림2");
 			return false;
 		}
 		return true;
