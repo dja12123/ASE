@@ -1,6 +1,7 @@
 package telco.sensorReadServer.sensorReader;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import telco.sensorReadServer.appConnect.protocol.AppPacketDef;
 
@@ -38,6 +39,7 @@ public class DevicePacket
 	public DevicePacket(byte[] packet)
 	{
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
+		buffer.order(ByteOrder.BIG_ENDIAN);
 		
 		this.ID = buffer.getInt();
 		this.NSIZE = buffer.getInt();
