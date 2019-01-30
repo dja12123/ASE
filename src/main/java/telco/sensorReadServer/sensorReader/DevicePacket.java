@@ -26,7 +26,7 @@ public class DevicePacket
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
 		buffer.position(4);
-		buffer.order(ByteOrder.BIG_ENDIAN);
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		int packetSize = buffer.getInt();
 		if(packetSize != FULL_PACKET_SIZE)
 		{
@@ -40,7 +40,7 @@ public class DevicePacket
 	public DevicePacket(byte[] packet)
 	{
 		ByteBuffer buffer = ByteBuffer.wrap(packet);
-		buffer.order(ByteOrder.BIG_ENDIAN);
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		
 		this.ID = buffer.getInt();
 		this.NSIZE = buffer.getInt();
