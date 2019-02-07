@@ -45,8 +45,10 @@ public class SensorReadManager
 	public boolean startModule()
 	{
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
+		
 		try
 		{
+			this.serial.flush();
 			this.serial.open(this.config);
 			logger.log(Level.INFO, "연결: " + config.toString());
 		}
