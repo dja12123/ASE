@@ -55,7 +55,6 @@ public class ServerCore
 		if (!mainInst.start())
 		{
 			logger.log(Level.SEVERE, "초기화 실패");
-			mainInst.shutdown();
 			return;
 		}
 		while(true)
@@ -198,13 +197,13 @@ public class ServerCore
 	private ServerCore()
 	{
 		this.appConnectManager = new AppConnectManager();
-		this.sensorReadManager = new SensorReadManager();
+		//this.sensorReadManager = new SensorReadManager();
 	}
 
 	private boolean start()
 	{
 		if(!this.appConnectManager.startModule()) return false;
-		if(!this.sensorReadManager.startModule()) return false;
+		//if(!this.sensorReadManager.startModule()) return false;
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
 	}
@@ -214,7 +213,7 @@ public class ServerCore
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
 		this.appConnectManager.stopModule();
-		this.sensorReadManager.stopModule();
+		//this.sensorReadManager.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 	
 	}
