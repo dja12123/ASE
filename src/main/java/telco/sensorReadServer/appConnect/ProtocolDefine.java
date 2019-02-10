@@ -55,7 +55,7 @@ public class ProtocolDefine
 	
 	public static byte[] shortToByteArray(short value)
 	{
-		return new byte[] {(byte)(value & 0xff), (byte)((value >> 8) & 0xff)};
+		return new byte[] {(byte)(value & 0xff >> 8), (byte)((value) & 0xff)};
 	}
 	
 	

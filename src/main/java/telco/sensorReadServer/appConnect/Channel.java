@@ -11,6 +11,10 @@ public class Channel
 {
 	public static final Logger logger = LogWriter.createLogger(Channel.class, "channel");
 	
+	public static final int STATE_NORMAL = 1;
+	public static final int STATE_CLOSEING = 2;
+	public static final int STATE_CLOSE = 3;
+	
 	public final short id;
 	public final String key;
 	private final OutputStream output;
@@ -25,6 +29,51 @@ public class Channel
 		this.output = output;
 		this.user = null;
 		this.isOpen = true;
+	}
+	
+	boolean sendChannelOpenMsg(short id, String key)
+	{
+		byte option = ProtocolDefine.OPTION_CHANNEL;
+		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN);
+		logger.log(Level.INFO, "채널 열기 전송 " + option);
+		try
+		{
+			synchronized (this.output)
+			{
+				this.output.write(option);
+				this.output.write(ProtocolDefine.shortToByteArray(id));
+				this.output.write(ProtocolDefine.intToByteArray(key.length()));
+				this.output.write(key.getBytes());
+			}
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.WARNING, "채널 여는중 오류", e);
+			return false;
+		}
+		return true;
+	}
+	
+	void sendChannelCloseMessage()
+	{
+		byte option = ProtocolDefine.OPTION_CHANNEL;
+		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE);
+		
+		try
+		{
+			synchronized (this.output)
+			{
+				this.output.write(option);
+				this.output.write(ProtocolDefine.shortToByteArray(this.id));
+			}
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.WARNING, this.id + ": 채널 닫기 오류 ", e);
+		}
+		
+		this.alertClose();
+		
 	}
 	
 	public AppDataPacketBuilder getPacketBuilder()
@@ -61,11 +110,7 @@ public class Channel
 		if(this.closeCheck("receiveTask")) return;
 		try
 		{
-			
-			while(!analyser.readData())
-			{
-				
-			}
+			while(!analyser.readData());
 		}
 		catch (IOException e)
 		{
@@ -93,7 +138,7 @@ public class Channel
 	void alertClose()
 	{
 		if(this.closeCheck("alertClose")) return;
-		
+
 		if(this.user != null)
 		{
 			this.user.closeChannel(this);

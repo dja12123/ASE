@@ -103,17 +103,30 @@ public class AppConnectManager implements ConnectionUser
 	@Override
 	public void createChannel(Connection connection, Channel channel)
 	{
-		logger.log(Level.INFO, "채널 생성");
+		logger.log(Level.INFO, "채널 생성 " + channel.id + " " + channel.key);
 		channel.setUser(new ChannelUser() {
 
 			@Override
 			public void receiveData(Channel ch, byte[][] data)
 			{
 				System.out.println("receive: " + ch.id + " " + ch.key);
+				
+				AppDataPacketBuilder b = ch.getPacketBuilder();
 				for(int i = 0; i < data.length; ++i)
 				{
 					System.out.println(new String(data[i]));
+					try
+					{
+						b.appendData(new String(data[i]));
+					}
+					catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				
+				ch.sendData(b);
 				
 			}
 

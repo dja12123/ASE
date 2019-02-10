@@ -230,7 +230,6 @@ public class Connection
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN))
 		{
-			logger.log(Level.WARNING, "채널 열기 시도");
 			buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
 			int keySize = buf.getInt();
 			String key = new String(ProtocolDefine.fillBuffer(this.inputStream, keySize));
@@ -244,6 +243,7 @@ public class Connection
 			{
 				Channel channel = this.channels.get(id);
 				channel.alertClose();
+				this.assignID[channel.id] = false;
 				this.channels.remove(id);
 			}
 			else
@@ -266,6 +266,8 @@ public class Connection
 				break;
 			}
 		}
+		this.assignID[id] = true;
+		
 		if(id == -1)
 		{
 			logger.log(Level.SEVERE, "더이상 채널 ID를 할당할 수 없음");
@@ -273,9 +275,10 @@ public class Connection
 			return null;
 		}
 		Channel channel = new Channel(id, key, this.outputStream);
-		if(this.sendChannelOpenMsg(id, key))
+		if(channel.sendChannelOpenMsg(id, key))
 		{
 			this.channels.put(id, channel);
+			this.connectionUser.createChannel(this, channel);
 			return channel;
 		}
 		return null;
@@ -283,48 +286,12 @@ public class Connection
 	
 	public void closeChannel(Channel channel)
 	{
+		this.assignID[channel.id] = false;
 		this.channels.remove(channel.id);
 
-		byte option = ProtocolDefine.OPTION_CHANNEL;
-		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE);
-		
-		try
-		{
-			synchronized (this.outputStream)
-			{
-				this.outputStream.write(option);
-				this.outputStream.write(ProtocolDefine.shortToByteArray(channel.id));
-			}
-		}
-		catch (IOException e)
-		{
-			logger.log(Level.WARNING, channel.id + ": 채널 닫기 오류 ", e);
-		}
-		
-		channel.alertClose();
+		channel.sendChannelCloseMessage();
 	}
 	
-	private boolean sendChannelOpenMsg(short id, String key)
-	{
-		byte option = ProtocolDefine.OPTION_CHANNEL;
-		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN);
-		logger.log(Level.INFO, "채널 열기 전송 " + option);
-		try
-		{
-			synchronized (this.outputStream)
-			{
-				this.outputStream.write(option);
-				this.outputStream.write(ProtocolDefine.shortToByteArray(id));
-				this.outputStream.write(ProtocolDefine.intToByteArray(key.length()));
-				this.outputStream.write(key.getBytes());
-			}
-		}
-		catch (IOException e)
-		{
-			logger.log(Level.WARNING, "채널 여는중 오류", e);
-			return false;
-		}
-		return true;
-	}
+
 	
 }
