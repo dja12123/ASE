@@ -20,14 +20,16 @@ public class Channel
 	private final OutputStream output;
 	
 	private boolean isOpen;
-	private ChannelUser user;
+	private ChannelReceiveCallback recvCallback;
+	private ChannelCloseCallback closeCallback;
 	
 	public Channel(short id, String key, OutputStream output)
 	{
 		this.id = id;
 		this.key = key;
 		this.output = output;
-		this.user = null;
+		this.recvCallback = null;
+		this.closeCallback = null;
 		this.isOpen = true;
 	}
 	
@@ -117,17 +119,24 @@ public class Channel
 			logger.log(Level.WARNING, this.id + ": 수신중 오류 ", e);
 		}
 		
-		if(this.user != null)
+		if(this.recvCallback != null)
 		{
-			this.user.receiveData(this, analyser.payload);
+			this.recvCallback.receiveData(this, analyser.payload);
 		}
 	}
 	
-	public void setUser(ChannelUser user)
+	public void setReceiveCallback(ChannelReceiveCallback callback)
 	{
 		if(this.closeCheck("setReceiveCallback")) return;
 		
-		this.user = user;
+		this.recvCallback = callback;
+	}
+	
+	public void setCloseCallback(ChannelCloseCallback callback)
+	{
+		if(this.closeCheck("setReceiveCallback")) return;
+		
+		this.closeCallback = callback;
 	}
 	
 	public boolean isOpen()
@@ -139,9 +148,9 @@ public class Channel
 	{
 		if(this.closeCheck("alertClose")) return;
 
-		if(this.user != null)
+		if(this.closeCallback != null)
 		{
-			this.user.closeChannel(this);
+			this.closeCallback.closeChannel(this);
 		}
 		
 		this.isOpen = false;

@@ -24,11 +24,11 @@ public class ProtocolDefine
 	public static final int RANGE_CHANNEL = 2;
 	public static final int END_CHANNEL = 3;
 	
-	public static final short CHANNEL_OFFSET_SERVER = 0;
-	public static final short CHANNEL_OFFSET_CLIENT = 10000;
+	public static final short CHANNEL_ASSIGN_SERVER = 1;
+	public static final short CHANNEL_ASSIGN_CLIENT = 2;
 	
 	public static final short MAX_CHANNEL_COUNT = 1024;
-	public static final short CHANNEL_OFFSET = CHANNEL_OFFSET_SERVER;
+	public static final short CHANNEL_ASSIGN_ORDER = CHANNEL_ASSIGN_SERVER;
 
 	
 	public static byte[] fillBuffer(InputStream input, int size) throws IOException

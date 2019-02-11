@@ -43,6 +43,8 @@ public class Connection
 		try
 		{
 			this.inputStream = this.socket.getInputStream();
+			this.outputStream = this.socket.getOutputStream();
+			/*
 			OutputStream stream = this.socket.getOutputStream();
 			this.outputStream = new OutputStream()
 					{
@@ -72,7 +74,7 @@ public class Connection
 							System.out.println(ProtocolDefine.bytesToHex(new byte[] {(byte) b}, 1));
 						}
 					
-					};
+					};*/
 		}
 		catch (IOException e)
 		{
@@ -257,15 +259,7 @@ public class Connection
 	
 	public Channel channelOpen(String key)
 	{
-		short id = -1;
-		for(short i = 0; i < this.assignID.length; ++i)
-		{
-			if(!this.assignID[i])
-			{
-				id = i;
-				break;
-			}
-		}
+		short id = this.findEmptyChannel();
 		this.assignID[id] = true;
 		
 		if(id == -1)
@@ -282,6 +276,32 @@ public class Connection
 			return channel;
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unused")
+	private short findEmptyChannel()
+	{
+		if(ProtocolDefine.CHANNEL_ASSIGN_ORDER == ProtocolDefine.CHANNEL_ASSIGN_CLIENT)
+		{
+			for(int i = 0; i < this.assignID.length; ++i)
+			{
+				if(!this.assignID[i])
+				{
+					return (short)i;
+				}
+			}
+		}
+		else
+		{
+			for(int i = this.assignID.length - 1; i >=0 ; --i)
+			{
+				if(!this.assignID[i])
+				{
+					return (short)i;
+				}
+			}
+		}
+		return -1;
 	}
 	
 	public void closeChannel(Channel channel)

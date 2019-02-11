@@ -5,10 +5,8 @@ import java.util.logging.Logger;
 
 import telco.sensorReadServer.appConnect.AppDataPacketBuilder;
 import telco.sensorReadServer.appConnect.Channel;
-import telco.sensorReadServer.appConnect.ChannelUser;
 import telco.sensorReadServer.appConnect.Connection;
 import telco.sensorReadServer.appConnect.ConnectionUser;
-import telco.sensorReadServer.appConnect.ProtocolDefine;
 import telco.sensorReadServer.console.LogWriter;
 
 public class TestMain
@@ -17,7 +15,7 @@ public class TestMain
 	
 	public static void main(String[] args) throws Exception
 	{
-		Socket socket = new Socket("127.0.0.1", 1234);
+		Socket socket = new Socket("127.0.0.1", 50001);
 		Connection connection = new Connection(socket, new ConnectionUser()
 		{
 			
@@ -25,25 +23,30 @@ public class TestMain
 			public void createChannel(Connection connection, Channel channel)
 			{
 				System.out.println("채널 생성");
-				channel.setUser(new ChannelUser() {
-
-					@Override
-					public void receiveData(Channel ch, byte[][] data)
+				channel.setReceiveCallback((Channel ch, byte[][] data)->{
+					System.out.println("receive: " + ch.id + " " + ch.key);
+					
+					AppDataPacketBuilder b = ch.getPacketBuilder();
+					for(int i = 0; i < data.length; ++i)
 					{
-						System.out.println("receive: " + ch.id + " " + ch.key);
-						for(int i = 0; i < data.length; ++i)
+						System.out.println(new String(data[i]));
+						try
 						{
-							System.out.println(new String(data[i]));
+							b.appendData(new String(data[i]));
 						}
-						
+						catch (Exception e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-
-					@Override
-					public void closeChannel(Channel ch)
-					{
-						System.out.println("close: " + ch.id + " " + ch.key);
-						
-					}});
+					
+					ch.sendData(b);
+					
+				});
+				channel.setCloseCallback((Channel ch)->{
+					System.out.println("close: " + ch.id + " " + ch.key);
+				});
 			}
 			
 			@Override
