@@ -37,7 +37,7 @@ public class Channel
 	{
 		byte option = ProtocolDefine.OPTION_CHANNEL;
 		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN);
-		logger.log(Level.INFO, "채널 열기 전송 " + option);
+		logger.log(Level.INFO, "채널 열기 전송 " + id + " " + key);
 		try
 		{
 			synchronized (this.output)
