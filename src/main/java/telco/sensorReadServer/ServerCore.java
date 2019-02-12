@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import telco.appConnect.ServerSocketManager;
-import telco.sensorReadServer.console.LogWriter;
+import telco.console.LogWriter;
 import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorReader.SensorReadManager;
 

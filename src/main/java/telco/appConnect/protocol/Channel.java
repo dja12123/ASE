@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import telco.sensorReadServer.console.LogWriter;
+import telco.console.LogWriter;
 
 public class Channel
 {

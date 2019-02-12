@@ -6,8 +6,8 @@ import java.util.HashMap;
 import telco.appConnect.protocol.Channel;
 import telco.appConnect.protocol.Connection;
 import telco.appConnect.protocol.ConnectionUser;
-import telco.sensorReadServer.util.observer.Observable;
-import telco.sensorReadServer.util.observer.Observer;
+import telco.util.observer.Observable;
+import telco.util.observer.Observer;
 
 public class AppConnectObservable implements ConnectionUser
 {	

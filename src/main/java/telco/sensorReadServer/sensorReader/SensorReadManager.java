@@ -14,8 +14,8 @@ import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 
+import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
-import telco.sensorReadServer.console.LogWriter;
 
 public class SensorReadManager
 {

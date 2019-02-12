@@ -9,9 +9,9 @@ import telco.appConnect.ConnectionStateChangeEvent;
 import telco.appConnect.protocol.AppDataPacketBuilder;
 import telco.appConnect.protocol.Channel;
 import telco.appConnect.protocol.Connection;
-import telco.sensorReadServer.console.LogWriter;
-import telco.sensorReadServer.util.observer.Observable;
-import telco.sensorReadServer.util.observer.Observer;
+import telco.console.LogWriter;
+import telco.util.observer.Observable;
+import telco.util.observer.Observer;
 
 public class TestMain
 {

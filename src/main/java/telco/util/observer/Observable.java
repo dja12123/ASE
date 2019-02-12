@@ -1,4 +1,4 @@
-package telco.sensorReadServer.util.observer;
+package telco.util.observer;
 
 import java.util.LinkedList;
 import java.util.List;

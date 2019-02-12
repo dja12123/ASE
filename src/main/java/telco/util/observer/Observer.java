@@ -1,6 +1,6 @@
-package telco.sensorReadServer.util.observer;
+package telco.util.observer;
 
-import telco.sensorReadServer.util.observer.Observable;
+import telco.util.observer.Observable;
 
 public interface Observer<ObservedType>
 {

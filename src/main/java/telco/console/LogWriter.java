@@ -1,4 +1,4 @@
-package telco.sensorReadServer.console;
+package telco.console;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

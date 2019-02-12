@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 
 import telco.appConnect.protocol.Channel;
 import telco.appConnect.protocol.Connection;
+import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
-import telco.sensorReadServer.console.LogWriter;
-import telco.sensorReadServer.util.observer.Observable;
-import telco.sensorReadServer.util.observer.Observer;
+import telco.util.observer.Observable;
+import telco.util.observer.Observer;
 
 public class ServerSocketManager
 {
