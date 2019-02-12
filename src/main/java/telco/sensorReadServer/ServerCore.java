@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import telco.sensorReadServer.appConnect.AppConnectManager;
+import telco.sensorReadServer.appConnect.ServerSocketManager;
 import telco.sensorReadServer.console.LogWriter;
 import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorReader.SensorReadManager;
@@ -191,12 +191,12 @@ public class ServerCore
 		return true;
 	}
 
-	private AppConnectManager appConnectManager;
+	private ServerSocketManager appConnectManager;
 	private SensorReadManager sensorReadManager;
 
 	private ServerCore()
 	{
-		this.appConnectManager = new AppConnectManager();
+		this.appConnectManager = new ServerSocketManager();
 		//this.sensorReadManager = new SensorReadManager();
 	}
 

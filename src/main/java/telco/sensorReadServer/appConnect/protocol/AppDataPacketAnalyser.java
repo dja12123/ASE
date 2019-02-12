@@ -18,8 +18,9 @@ public class AppDataPacketAnalyser
 		
 		ByteBuffer buf;
 		int payloadCount;
-
-		buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.input, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
+		
+		byte[] readData = ProtocolDefine.fillBuffer(this.input, ProtocolDefine.RANGE_PAYLOAD_DATALEN);
+		buf = ByteBuffer.wrap(readData);
 		payloadCount = buf.getInt();
 		
 		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_PAYLOAD_SINGLE))
@@ -34,7 +35,7 @@ public class AppDataPacketAnalyser
 			this.payloadSize = new int[payloadCount];
 			for(int i = 0; i < payloadCount; ++i)
 			{
-				buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.input, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
+				buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.input, ProtocolDefine.RANGE_PAYLOAD_DATALEN));
 				this.payloadSize[i] = buf.getInt();
 			}
 		}

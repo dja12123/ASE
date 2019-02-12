@@ -8,14 +8,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import telco.sensorReadServer.ServerCore;
+import telco.sensorReadServer.appConnect.protocol.Channel;
 import telco.sensorReadServer.appConnect.protocol.Connection;
 import telco.sensorReadServer.console.LogWriter;
 import telco.sensorReadServer.util.observer.Observable;
 import telco.sensorReadServer.util.observer.Observer;
 
-public class AppConnectManager
+public class ServerSocketManager
 {
-	public static final Logger logger = LogWriter.createLogger(AppConnectManager.class, "appConnect");
+	public static final Logger logger = LogWriter.createLogger(ServerSocketManager.class, "appConnect");
 	
 	public static final String PROP_SERVERPORT = "Port";
 	
@@ -27,7 +28,7 @@ public class AppConnectManager
 	private Thread acceptThread;
 	private ArrayList<Connection> clientList;
 	
-	public AppConnectManager()
+	public ServerSocketManager()
 	{
 		this.eventProvider = new AppConnectObservable();
 		this.isRun = false;
@@ -70,14 +71,23 @@ public class AppConnectManager
 			if(data.hasChannel)
 			{
 				System.out.println("채널생성" +  data.connection.getInetAddress().toString() + " " + data.key + " " + data.channel.id);
+				data.channel.setReceiveCallback((Channel ch, byte[][] payload)->{
+					System.out.print(ch.toString() + "으로부터 수신 " + payload.length + "개, 데이타:");
+					for(int i = 0; i < payload.length; ++i)
+					{
+						System.out.print(new String(payload[i]) + " 다음데이타:");
+					}
+					System.out.println();
+				});
 			}
 			else
 			{
-				System.out.println("데이타수신" +  data.connection.getInetAddress().toString() + " " + data.key);
+				System.out.println("데이타수신" +  data.connection.getInetAddress().toString() + " " + data.key +" "+ data.payload.length);
 			}
 		};
 		eventProvider.addDataReceiveObserver("test", ob);
 		eventProvider.addDataReceiveObserver("test1", ob);
+		eventProvider.addDataReceiveObserver("onlyDataTest", ob);
 		return true;
 	}
 	

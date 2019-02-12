@@ -50,14 +50,18 @@ public class TestMain
 			System.out.println("정상 연결");
 			Channel c = connection.channelOpen("test");
 			Channel c1 = connection.channelOpen("test1");
+			
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
 			b.appendData("Hello World!!1");
 			b.appendData("Hello World!!2");
 			c.sendData(b);
+			c.sendData(b);
+			connection.sendData("onlyDataTest", b);
 			Thread.sleep(200);
 			connection.closeChannel(c1);
 			connection.closeChannel(c);
 			connection.closeSafe();
+			
 		}
 		
 		

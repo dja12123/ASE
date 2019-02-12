@@ -46,14 +46,14 @@ public class AppDataPacketBuilder
 		byte[] header;
 		if(this.payloadList.size() == 1)
 		{
-			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN];
+			header = new byte[ProtocolDefine.RANGE_PAYLOAD_DATALEN];
 			ByteBuffer buf = ByteBuffer.wrap(header);
 			buf.putInt(this.payloadList.get(0).length);
 		}
 		else if(this.payloadList.size() > 1)
 		{
-			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN
-			                         + (this.payloadList.size() * ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN)];
+			header = new byte[ProtocolDefine.RANGE_PAYLOAD_DATALEN
+			                         + (this.payloadList.size() * ProtocolDefine.RANGE_PAYLOAD_DATALEN)];
 			ByteBuffer buf = ByteBuffer.wrap(header);
 			buf.putInt(this.payloadList.size());
 			for(byte[] payloadSeg : this.payloadList)
@@ -63,7 +63,7 @@ public class AppDataPacketBuilder
 		}
 		else
 		{
-			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN];
+			header = new byte[ProtocolDefine.RANGE_PAYLOAD_DATALEN];
 			payload = new byte[1][];
 		}
 		payload[0] = header;

@@ -28,7 +28,7 @@ public class ProtocolDefine
 	public static final byte OPTION_SOCKET_CLOSE = 0b00000010;
 	
 	public static final int RANGE_CHANNEL_PAYLOAD_HEADER = 7;
-	public static final int RANGE_CHANNEL_PAYLOAD_DATALEN = 4;
+	public static final int RANGE_PAYLOAD_DATALEN = 4;
 	
 	public static final int START_OPTION = 0;
 	public static final int RANGE_OPTION = 1;
@@ -42,7 +42,30 @@ public class ProtocolDefine
 	
 	public static final short MAX_CHANNEL_COUNT = 1024;
 	public static final short CHANNEL_ASSIGN_ORDER = CHANNEL_ASSIGN_SERVER;
-
+	
+	public static String printOption(byte option)
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("OPTION_CHANNEL = ");
+		buf.append(checkOption(option, OPTION_CHANNEL));
+		buf.append('\n');
+		buf.append("OPTION_CHANNEL_OPEN = ");
+		buf.append(checkOption(option, OPTION_CHANNEL_OPEN));
+		buf.append('\n');
+		buf.append("OPTION_CHANNEL_CLOSE = ");
+		buf.append(checkOption(option, OPTION_CHANNEL_CLOSE));
+		buf.append('\n');
+		buf.append("OPTION_PAYLOAD = ");
+		buf.append(checkOption(option, OPTION_PAYLOAD));
+		buf.append('\n');
+		buf.append("OPTION_PAYLOAD_SINGLE = ");
+		buf.append(checkOption(option, OPTION_PAYLOAD_SINGLE));
+		buf.append('\n');
+		buf.append("OPTION_SOCKET_CLOSE = ");
+		buf.append(checkOption(option, OPTION_SOCKET_CLOSE));
+		buf.append('\n');
+		return buf.toString();
+	}
 	
 	public static byte[] fillBuffer(InputStream input, int size) throws IOException
 	{

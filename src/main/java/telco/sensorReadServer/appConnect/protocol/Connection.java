@@ -44,8 +44,8 @@ public class Connection
 		{
 			this.inputStream = this.socket.getInputStream();
 			this.outputStream = this.socket.getOutputStream();
-			/*
-			OutputStream stream = this.socket.getOutputStream();
+			
+			/*OutputStream stream = this.socket.getOutputStream();
 			this.outputStream = new OutputStream()
 					{
 				
@@ -124,8 +124,8 @@ public class Connection
 	
 	public synchronized void closeSafe()
 	{
-		if(!this.isRun) return;
-		this.isRun = false;
+		if(this.closeCheck("closeSafe")) return;
+		
 		
 		this.closeAllChannel();
 		
@@ -142,11 +142,13 @@ public class Connection
 		}
 		
 		this.connectionUser.closeConnection(this);
+		this.isRun = false;
 	}
 	
 	public void closeForce()
 	{
-		if(!this.isRun) return;
+		if(this.closeCheck("closeForce")) return;
+		
 		this.isRun = false;
 		
 		this.channels.clear();
@@ -163,7 +165,7 @@ public class Connection
 	}
 	
 	public InetAddress getInetAddress()
-	{
+	{	
 		return this.socket.getInetAddress();
 	}
 	
@@ -187,6 +189,7 @@ public class Connection
 					this.closeForce();
 					return;
 				}
+				
 				if(ProtocolDefine.checkOption(buffer[0], ProtocolDefine.OPTION_SOCKET_CLOSE))
 				{
 					this.closeForce();
@@ -200,7 +203,7 @@ public class Connection
 				{
 					this.noneChannelReceive(buffer[0]);
 				}
-
+				
 			}
 			catch (IOException e)
 			{
@@ -258,18 +261,20 @@ public class Connection
 	
 	private void noneChannelReceive(byte option) throws IOException
 	{
+		
 		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_PAYLOAD))
 		{
 			String key = this.getKeyFromStream();
+			
 			AppDataPacketAnalyser packetAnalyser = new AppDataPacketAnalyser(option, this.inputStream);
-			while(packetAnalyser.readData());
+			while(!packetAnalyser.readData());
 			this.connectionUser.receiveGeneralData(this, key, packetAnalyser.payload);
 		}
 	}
 	
 	private String getKeyFromStream() throws IOException
 	{
-		ByteBuffer buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
+		ByteBuffer buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_PAYLOAD_DATALEN));
 		int keySize = buf.getInt();
 		String key = new String(ProtocolDefine.fillBuffer(this.inputStream, keySize));
 		return key;
@@ -277,6 +282,8 @@ public class Connection
 	
 	public Channel channelOpen(String key)
 	{
+		if(this.closeCheck("channelOpen")) return null;
+		
 		short id = this.findEmptyChannel();
 		this.assignID[id] = true;
 		
@@ -298,6 +305,8 @@ public class Connection
 	
 	public void sendData(String key, AppDataPacketBuilder builder)
 	{
+		if(this.closeCheck("sendData")) return;
+		
 		byte[][] allPayload = builder.getPayload();
 		byte option = builder.writeOption((byte) 0);
 		try
@@ -348,6 +357,8 @@ public class Connection
 	
 	public void closeAllChannel()
 	{
+		if(this.closeCheck("closeAllChannel")) return;
+		
 		for(Channel channel : this.channels.values())
 		{
 			this.assignID[channel.id] = false;
@@ -358,10 +369,21 @@ public class Connection
 	
 	public void closeChannel(Channel channel)
 	{
+		if(this.closeCheck("closeChannel")) return;
+		
 		this.assignID[channel.id] = false;
 		this.channels.remove(channel.id);
 
 		channel.sendChannelCloseMessage();
+	}
+	
+	private boolean closeCheck(String func)
+	{
+		if(!this.isRun)
+		{
+			throw new RuntimeException(this.toString()+"연결은 이미 닫힘 " + func);
+		}
+		return false;
 	}
 	
 	@Override

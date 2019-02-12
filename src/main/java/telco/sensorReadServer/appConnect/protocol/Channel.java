@@ -156,8 +156,7 @@ public class Channel
 	{
 		if(!this.isOpen)
 		{
-			logger.log(Level.SEVERE, this.toString()+" 채널은 이미 닫힘 " + func);
-			return true;
+			throw new RuntimeException(this.toString()+" 채널은 이미 닫힘 " + func);
 		}
 		return false;
 	}
