@@ -329,6 +329,13 @@ public class Connection
 
 	}
 	
+	public void sendData(String key, String value)
+	{
+		AppDataPacketBuilder builder = new AppDataPacketBuilder();
+		builder.appendData(value);
+		this.sendData(key, builder);
+	}
+	
 	@SuppressWarnings("unused")
 	private short findEmptyChannel()
 	{

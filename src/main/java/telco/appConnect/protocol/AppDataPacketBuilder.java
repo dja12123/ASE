@@ -13,14 +13,14 @@ public class AppDataPacketBuilder
 		this.payloadList = new LinkedList<byte[]>();
 	}
 	
-	public AppDataPacketBuilder appendData(String strPayload) throws Exception
+	public AppDataPacketBuilder appendData(String strPayload)
 	{
 		this.appendData(strPayload.getBytes());
 		return this;
 	}
 	
 	
-	public AppDataPacketBuilder appendData(byte[] payload) throws Exception
+	public AppDataPacketBuilder appendData(byte[] payload)
 	{
 		this.payloadList.add(payload);
 		return this;
