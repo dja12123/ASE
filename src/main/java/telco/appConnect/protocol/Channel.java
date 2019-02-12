@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect.protocol;
+package telco.appConnect.protocol;
 
 import java.io.IOException;
 import java.io.OutputStream;

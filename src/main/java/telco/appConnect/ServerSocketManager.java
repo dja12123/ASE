@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect;
+package telco.appConnect;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import telco.appConnect.protocol.Channel;
+import telco.appConnect.protocol.Connection;
 import telco.sensorReadServer.ServerCore;
-import telco.sensorReadServer.appConnect.protocol.Channel;
-import telco.sensorReadServer.appConnect.protocol.Connection;
 import telco.sensorReadServer.console.LogWriter;
 import telco.sensorReadServer.util.observer.Observable;
 import telco.sensorReadServer.util.observer.Observer;

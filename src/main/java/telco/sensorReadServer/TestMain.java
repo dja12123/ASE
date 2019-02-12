@@ -3,12 +3,12 @@ package telco.sensorReadServer;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-import telco.sensorReadServer.appConnect.AppConnectObservable;
-import telco.sensorReadServer.appConnect.AppDataReceiveEvent;
-import telco.sensorReadServer.appConnect.ConnectionStateChangeEvent;
-import telco.sensorReadServer.appConnect.protocol.AppDataPacketBuilder;
-import telco.sensorReadServer.appConnect.protocol.Channel;
-import telco.sensorReadServer.appConnect.protocol.Connection;
+import telco.appConnect.AppConnectObservable;
+import telco.appConnect.AppDataReceiveEvent;
+import telco.appConnect.ConnectionStateChangeEvent;
+import telco.appConnect.protocol.AppDataPacketBuilder;
+import telco.appConnect.protocol.Channel;
+import telco.appConnect.protocol.Connection;
 import telco.sensorReadServer.console.LogWriter;
 import telco.sensorReadServer.util.observer.Observable;
 import telco.sensorReadServer.util.observer.Observer;

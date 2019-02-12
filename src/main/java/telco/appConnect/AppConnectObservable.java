@@ -1,11 +1,11 @@
-package telco.sensorReadServer.appConnect;
+package telco.appConnect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import telco.sensorReadServer.appConnect.protocol.Channel;
-import telco.sensorReadServer.appConnect.protocol.Connection;
-import telco.sensorReadServer.appConnect.protocol.ConnectionUser;
+import telco.appConnect.protocol.Channel;
+import telco.appConnect.protocol.Connection;
+import telco.appConnect.protocol.ConnectionUser;
 import telco.sensorReadServer.util.observer.Observable;
 import telco.sensorReadServer.util.observer.Observer;
 

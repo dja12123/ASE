@@ -1,7 +1,7 @@
-package telco.sensorReadServer.appConnect;
+package telco.appConnect;
 
-import telco.sensorReadServer.appConnect.protocol.Channel;
-import telco.sensorReadServer.appConnect.protocol.Connection;
+import telco.appConnect.protocol.Channel;
+import telco.appConnect.protocol.Connection;
 
 public class AppDataReceiveEvent
 {	

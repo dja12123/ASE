@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect.protocol;
+package telco.appConnect.protocol;
 
 public interface ConnectionUser
 {

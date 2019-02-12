@@ -1,6 +1,6 @@
-package telco.sensorReadServer.appConnect;
+package telco.appConnect;
 
-import telco.sensorReadServer.appConnect.protocol.Connection;
+import telco.appConnect.protocol.Connection;
 
 public class ConnectionStateChangeEvent
 {
