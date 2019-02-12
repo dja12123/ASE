@@ -3,11 +3,15 @@ package telco.sensorReadServer;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-import telco.sensorReadServer.appConnect.AppDataPacketBuilder;
-import telco.sensorReadServer.appConnect.Channel;
-import telco.sensorReadServer.appConnect.Connection;
-import telco.sensorReadServer.appConnect.ConnectionUser;
+import telco.sensorReadServer.appConnect.AppConnectObservable;
+import telco.sensorReadServer.appConnect.AppDataReceiveEvent;
+import telco.sensorReadServer.appConnect.ConnectionStateChangeEvent;
+import telco.sensorReadServer.appConnect.protocol.AppDataPacketBuilder;
+import telco.sensorReadServer.appConnect.protocol.Channel;
+import telco.sensorReadServer.appConnect.protocol.Connection;
 import telco.sensorReadServer.console.LogWriter;
+import telco.sensorReadServer.util.observer.Observable;
+import telco.sensorReadServer.util.observer.Observer;
 
 public class TestMain
 {
@@ -15,47 +19,49 @@ public class TestMain
 	
 	public static void main(String[] args) throws Exception
 	{
+		AppConnectObservable provider = new AppConnectObservable();
 		Socket socket = new Socket("127.0.0.1", 1234);
-		Connection connection = new Connection(socket, new ConnectionUser()
-		{
-			
-			@Override
-			public void createChannel(Connection connection, Channel channel)
+		Connection connection = new Connection(socket, provider);
+		provider.addConnectionStateChangeObserver((Observable<ConnectionStateChangeEvent> object, ConnectionStateChangeEvent data)->{
+			if(data.isOpen)
 			{
-				System.out.println("채널 생성");
-				channel.setReceiveCallback((Channel ch, byte[][] data)->{
-					System.out.println("receive: " + ch.id + " " + ch.key);
-					
-				});
-				channel.setCloseCallback((Channel ch)->{
-					System.out.println("close: " + ch.id + " " + ch.key);
-				});
+				System.out.println("연결생성" + data.connection.getInetAddress().toString());
 			}
-			
-			@Override
-			public void closeConnection(Connection connection)
+			else
 			{
-				System.out.println("연결 삭제");
-				
+				System.out.println("연결종료" + data.connection.getInetAddress().toString());
 			}
 		});
+		Observer<AppDataReceiveEvent> ob = (Observable<AppDataReceiveEvent> object, AppDataReceiveEvent data)->{
+			if(data.hasChannel)
+			{
+				System.out.println("채널생성" + data.connection.getInetAddress().toString() + " " + data.key + " " + data.channel.id);
+			}
+			else
+			{
+				System.out.println("데이타수신" + data.connection.getInetAddress().toString() + " " + data.key);
+			}
+		};
+		provider.addDataReceiveObserver("test", ob);
+		provider.addDataReceiveObserver("test1", ob);
+
 		if(connection.startConnection())
 		{
 			System.out.println("정상 연결");
 			Channel c = connection.channelOpen("test");
 			Channel c1 = connection.channelOpen("test1");
-			AppDataPacketBuilder b = c.getPacketBuilder();
+			AppDataPacketBuilder b = new AppDataPacketBuilder();
 			b.appendData("Hello World!!1");
 			b.appendData("Hello World!!2");
 			c.sendData(b);
 			Thread.sleep(200);
 			connection.closeChannel(c1);
 			connection.closeChannel(c);
-			connection.closeConnection();
+			connection.closeSafe();
 		}
 		
 		
-		
+		System.out.println("종료");
 		Thread.sleep(2000);
 
 	}

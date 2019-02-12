@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -7,12 +7,10 @@ import java.util.List;
 public class AppDataPacketBuilder
 {
 	private final List<byte[]> payloadList;
-	private final short channel;
 
-	AppDataPacketBuilder(short channel)
+	public AppDataPacketBuilder()
 	{// 채널을 새로 생성할때 ID를 새로 부여.
 		this.payloadList = new LinkedList<byte[]>();
-		this.channel = channel;
 	}
 	
 	public AppDataPacketBuilder appendData(String strPayload) throws Exception
@@ -28,42 +26,51 @@ public class AppDataPacketBuilder
 		return this;
 	}
 	
-	public byte[] getMetadata()
+	public byte writeOption(byte option)
 	{
-		byte option = ProtocolDefine.OPTION_CHANNEL;
-		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_PAYLOAD);
-		
-		if(this.payloadList.size() == 1)
+		if(this.payloadList.size() >= 1)
 		{
-			byte[] header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_HEADER];
-			ByteBuffer buf = ByteBuffer.wrap(header);
-			option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_PAYLOAD_SINGLE);
-			buf.put(option);
-			buf.putShort(this.channel);
-			buf.putInt(this.payloadList.get(0).length);
-			return header;
-		}
-		else if(this.payloadList.size() > 1)
-		{
-			byte[] header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_HEADER
-			                         + (this.payloadList.size() * ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN)];
-			ByteBuffer buf = ByteBuffer.wrap(header);
-			buf.put(option);
-			buf.putShort(this.channel);
-			buf.putInt(this.payloadList.size());
-			for(byte[] payload : this.payloadList)
+			option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_PAYLOAD);
+			if(this.payloadList.size() == 1)
 			{
-				buf.putInt(payload.length);
+				option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_PAYLOAD_SINGLE);
 			}
-			return header;
 		}
-		throw new RuntimeException("빈 패킷을 생성할수 없음");
+		return option;
 	}
 	
 	public byte[][] getPayload()
 	{
-		byte[][] payload = new byte[this.payloadList.size()][];
-		this.payloadList.toArray(payload);
+		byte[][] payload = new byte[this.payloadList.size() + 1][];
+		
+		byte[] header;
+		if(this.payloadList.size() == 1)
+		{
+			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN];
+			ByteBuffer buf = ByteBuffer.wrap(header);
+			buf.putInt(this.payloadList.get(0).length);
+		}
+		else if(this.payloadList.size() > 1)
+		{
+			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN
+			                         + (this.payloadList.size() * ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN)];
+			ByteBuffer buf = ByteBuffer.wrap(header);
+			buf.putInt(this.payloadList.size());
+			for(byte[] payloadSeg : this.payloadList)
+			{
+				buf.putInt(payloadSeg.length);
+			}
+		}
+		else
+		{
+			header = new byte[ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN];
+			payload = new byte[1][];
+		}
+		payload[0] = header;
+		for(int i = 0; i < this.payloadList.size(); ++i)
+		{
+			payload[i + 1] = this.payloadList.get(i);
+		}
 		return payload;
 	}
 }

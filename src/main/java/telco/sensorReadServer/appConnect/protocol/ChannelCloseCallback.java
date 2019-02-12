@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 public interface ChannelCloseCallback
 {

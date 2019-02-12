@@ -1,17 +1,30 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ProtocolDefine
 {
+	/*
+	 * 프로토콜 정의
+	 * 1. 채널 열기: 옵션1/채널2/키길이4/키
+	 * 2. 채널 닫기: 옵션1/채널2
+	 * 3. 채널 데이타: 옵션1/채널2/데이타개수4/데이타길이4/데이타길이4.../페이로드
+	 * 4. 채널 데이타 싱글: 옵션1/채널2/데이타길이4/페이로드
+	 * 5. 소켓 정상종료: 옵션1
+	 * 6. 소켓 정상오픈: 이것저것
+	 * 7. 일반 데이타: 옵션1/키길이4/키/데이타길이4/데이타
+	 * 8. 일반 데이타 싱글: 옵션1/키길이4/키/데이타개수4/데이타길이4.../페이로드
+	 * 
+	 */
+	
 	public static final byte[] CONTROL_SOCKET_STX = new byte[] { 0x11, 0x22, 0x33, 0x44};
 	
 	public static final byte OPTION_CHANNEL = 0b01000000;
 	public static final byte OPTION_CHANNEL_OPEN = 0b00100000;
 	public static final byte OPTION_CHANNEL_CLOSE = 0b00010000;
-	public static final byte OPTION_CHANNEL_PAYLOAD = 0b00001000;
-	public static final byte OPTION_CHANNEL_PAYLOAD_SINGLE = 0b00000100;
+	public static final byte OPTION_PAYLOAD = 0b00001000;
+	public static final byte OPTION_PAYLOAD_SINGLE = 0b00000100;
 	public static final byte OPTION_SOCKET_CLOSE = 0b00000010;
 	
 	public static final int RANGE_CHANNEL_PAYLOAD_HEADER = 7;

@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +37,7 @@ public class Channel
 	{
 		byte option = ProtocolDefine.OPTION_CHANNEL;
 		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN);
-		logger.log(Level.INFO, "채널 열기 전송 " + id + " " + key);
+		logger.log(Level.INFO, this.toString()+" 채널 열기 전송");
 		try
 		{
 			synchronized (this.output)
@@ -50,7 +50,7 @@ public class Channel
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, "채널 여는중 오류", e);
+			logger.log(Level.WARNING, this.toString()+" 채널 여는중 오류", e);
 			return false;
 		}
 		return true;
@@ -71,30 +71,26 @@ public class Channel
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, this.id + ": 채널 닫기 오류 ", e);
+			logger.log(Level.WARNING, this.toString()+ " 채널 닫기 오류 ", e);
 		}
 		
 		this.alertClose();
 		
 	}
 	
-	public AppDataPacketBuilder getPacketBuilder()
-	{
-		return new AppDataPacketBuilder(this.id);
-	}
-	
 	public void sendData(AppDataPacketBuilder builder)
 	{
 		if(this.closeCheck("sendData")) return;
 		
-		byte[] metadata = builder.getMetadata();
+		byte option = ProtocolDefine.writeOption((byte) 0, ProtocolDefine.OPTION_CHANNEL);
+		option = builder.writeOption(option);
 		byte[][] allPayload = builder.getPayload();
-
 		synchronized (this.output)
 		{
 			try
 			{
-				this.output.write(metadata);
+				this.output.write(option);
+				this.output.write(ProtocolDefine.shortToByteArray(this.id));
 				for(byte[] payload : allPayload)
 				{
 					this.output.write(payload);
@@ -102,7 +98,7 @@ public class Channel
 			}
 			catch (IOException e)
 			{
-				logger.log(Level.WARNING, this.id + ": 전송중 오류 ", e);
+				logger.log(Level.WARNING, this.toString()+ " 전송중 오류 ", e);
 			}
 		}
 	}
@@ -116,7 +112,7 @@ public class Channel
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, this.id + ": 수신중 오류 ", e);
+			logger.log(Level.WARNING, this.toString()+ ":수신중 오류 ", e);
 		}
 		
 		if(this.recvCallback != null)
@@ -160,9 +156,17 @@ public class Channel
 	{
 		if(!this.isOpen)
 		{
-			logger.log(Level.SEVERE, this.id + ": 채널은 이미 닫힘 " + func);
+			logger.log(Level.SEVERE, this.toString()+" 채널은 이미 닫힘 " + func);
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String str = "ch"+this.id+"("+this.key+")";
+		return str;
+		
 	}
 }

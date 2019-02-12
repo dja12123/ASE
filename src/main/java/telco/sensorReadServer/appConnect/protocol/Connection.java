@@ -1,11 +1,11 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ public class Connection
 	private Thread receiveThread;
 
 	public Connection(Socket socket, ConnectionUser connectionUser)
-	{	
+	{
 		this.socket = socket;
 		this.connectionUser = connectionUser;
 		this.channels = new HashMap<Short, Channel>();
@@ -78,34 +78,34 @@ public class Connection
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, "소켓 io스트림 가져오기 오류", e);
+			logger.log(Level.WARNING, this.toString()+" 소켓 io스트림 가져오기 오류", e);
 			return false;
 		}
 		
 		try
 		{
 			this.outputStream.write(ProtocolDefine.CONTROL_SOCKET_STX);
-			logger.log(Level.INFO, "stx전송완료");
+			logger.log(Level.INFO, this.toString()+" stx전송완료");
 		}
 		catch (IOException e1)
 		{
-			logger.log(Level.WARNING, "stx송신중 오류");
+			logger.log(Level.WARNING, this.toString()+" stx송신중 오류");
 		}
 		
 		byte[] stxSig;
 		try
 		{
-			logger.log(Level.INFO, "stx수신대기");
+			logger.log(Level.INFO, this.toString()+" stx수신대기");
 			stxSig = ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.CONTROL_SOCKET_STX.length);
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, "stx수신중 오류", e);
+			logger.log(Level.WARNING, this.toString()+" stx수신중 오류", e);
 			return false;
 		}
 		if(!Arrays.equals(stxSig, ProtocolDefine.CONTROL_SOCKET_STX))
 		{
-			logger.log(Level.WARNING, "stx가 아님");
+			logger.log(Level.WARNING, this.toString()+" stx가 아님");
 			return false;
 		}
 		
@@ -116,20 +116,18 @@ public class Connection
 		
 		this.isRun = true;
 		this.receiveThread = new Thread(this::receiveData, "connection");
+		this.receiveThread.setDaemon(true);
 		this.receiveThread.start();
+		this.connectionUser.startConnection(this);
 		return true;
 	}
 	
-	public synchronized void closeConnection()
+	public synchronized void closeSafe()
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
-		ArrayList<Channel> removeList = new ArrayList<Channel>();
-		removeList.addAll(this.channels.values());
-		for(Channel channel : removeList)
-		{
-			this.closeChannel(channel);
-		}
+		
+		this.closeAllChannel();
 		
 		try
 		{
@@ -137,11 +135,10 @@ public class Connection
 			{
 				this.outputStream.write(ProtocolDefine.OPTION_SOCKET_CLOSE);
 			}
-
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, "etx송신중 오류", e);
+			logger.log(Level.WARNING, this.toString()+" etx송신중 오류", e);
 		}
 		
 		this.connectionUser.closeConnection(this);
@@ -152,15 +149,22 @@ public class Connection
 		if(!this.isRun) return;
 		this.isRun = false;
 		
+		this.channels.clear();
+		
 		try
 		{
 			this.socket.close();
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.WARNING, "소켓 종료중 오류", e);
+			logger.log(Level.WARNING, this.toString()+" 소켓 종료중 오류", e);
 		}
 		this.connectionUser.closeConnection(this);
+	}
+	
+	public InetAddress getInetAddress()
+	{
+		return this.socket.getInetAddress();
 	}
 	
 	private void receiveData()
@@ -179,30 +183,28 @@ public class Connection
 			
 				if(readSize != 1)
 				{
-					logger.log(Level.WARNING, "소켓 읽기중 오류1: " + readSize);
+					logger.log(Level.WARNING, this.toString()+" 소켓 읽기중 오류1: " + readSize);
 					this.closeForce();
 					return;
 				}
-				
+				if(ProtocolDefine.checkOption(buffer[0], ProtocolDefine.OPTION_SOCKET_CLOSE))
+				{
+					this.closeForce();
+					return;
+				}
 				if(ProtocolDefine.checkOption(buffer[0], ProtocolDefine.OPTION_CHANNEL))
 				{
 					this.channelReceive(buffer[0]);
 				}
-				else if(ProtocolDefine.checkOption(buffer[0], ProtocolDefine.OPTION_SOCKET_CLOSE))
-				{
-					this.closeForce();
-					return;
-				}
 				else
 				{
-					logger.log(Level.WARNING, "소켓 읽기중 오류2 " + buffer[0]);
-					this.closeForce();
-					return;
+					this.noneChannelReceive(buffer[0]);
 				}
+
 			}
 			catch (IOException e)
 			{
-				logger.log(Level.WARNING, "소켓 읽기중 오류3", e);
+				logger.log(Level.WARNING, this.toString()+" 소켓 읽기중 오류3", e);
 				this.closeForce();
 				return;
 			}
@@ -215,7 +217,7 @@ public class Connection
 		ByteBuffer buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_CHANNEL));
 		short id = buf.getShort();
 		
-		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_PAYLOAD))
+		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_PAYLOAD))
 		{
 			AppDataPacketAnalyser packetAnalyser = new AppDataPacketAnalyser(option, this.inputStream);
 			if(this.channels.containsKey(id))
@@ -225,19 +227,16 @@ public class Connection
 			}
 			else
 			{
-				logger.log(Level.WARNING, "데이터가 왔는데 해당하는 채널이 없음");
-				this.closeForce();
+				logger.log(Level.WARNING, this.toString()+" 데이터가 왔는데 해당하는 채널이 없음");
 				return;
 			}
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN))
 		{
-			buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
-			int keySize = buf.getInt();
-			String key = new String(ProtocolDefine.fillBuffer(this.inputStream, keySize));
-			Channel channel = new Channel(id, key, this.outputStream);
+			Channel channel = new Channel(id, this.getKeyFromStream(), this.outputStream);
 			this.channels.put(id, channel);
 			this.connectionUser.createChannel(this, channel);
+			logger.log(Level.INFO, "채널 열기 " + this.getInetAddress().toString() + " " + id + " " + channel.key);
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE))
 		{
@@ -250,11 +249,30 @@ public class Connection
 			}
 			else
 			{
-				logger.log(Level.WARNING, "닫기를 시도하는 채널이 없음");
+				logger.log(Level.WARNING, this.toString()+" 닫기를 시도하는 채널이 없음");
 				this.closeForce();
 				return;
 			}
 		}
+	}
+	
+	private void noneChannelReceive(byte option) throws IOException
+	{
+		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_PAYLOAD))
+		{
+			String key = this.getKeyFromStream();
+			AppDataPacketAnalyser packetAnalyser = new AppDataPacketAnalyser(option, this.inputStream);
+			while(packetAnalyser.readData());
+			this.connectionUser.receiveGeneralData(this, key, packetAnalyser.payload);
+		}
+	}
+	
+	private String getKeyFromStream() throws IOException
+	{
+		ByteBuffer buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.inputStream, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
+		int keySize = buf.getInt();
+		String key = new String(ProtocolDefine.fillBuffer(this.inputStream, keySize));
+		return key;
 	}
 	
 	public Channel channelOpen(String key)
@@ -264,7 +282,7 @@ public class Connection
 		
 		if(id == -1)
 		{
-			logger.log(Level.SEVERE, "더이상 채널 ID를 할당할 수 없음");
+			logger.log(Level.SEVERE, this.toString()+" 더이상 채널 ID를 할당할 수 없음");
 			this.closeForce();
 			return null;
 		}
@@ -276,6 +294,30 @@ public class Connection
 			return channel;
 		}
 		return null;
+	}
+	
+	public void sendData(String key, AppDataPacketBuilder builder)
+	{
+		byte[][] allPayload = builder.getPayload();
+		byte option = builder.writeOption((byte) 0);
+		try
+		{
+			synchronized (this.outputStream)
+			{
+				this.outputStream.write(option);
+				this.outputStream.write(ProtocolDefine.intToByteArray(key.length()));
+				this.outputStream.write(key.getBytes());
+				for(byte[] payload : allPayload)
+				{
+					this.outputStream.write(payload);
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.WARNING, this.toString()+" 데이터 전송중 오류", e);
+		}
+
 	}
 	
 	@SuppressWarnings("unused")
@@ -304,6 +346,16 @@ public class Connection
 		return -1;
 	}
 	
+	public void closeAllChannel()
+	{
+		for(Channel channel : this.channels.values())
+		{
+			this.assignID[channel.id] = false;
+			channel.sendChannelCloseMessage();
+		}
+		this.channels.clear();
+	}
+	
 	public void closeChannel(Channel channel)
 	{
 		this.assignID[channel.id] = false;
@@ -312,6 +364,10 @@ public class Connection
 		channel.sendChannelCloseMessage();
 	}
 	
-
-	
+	@Override
+	public String toString()
+	{
+		String str = "connection:"+this.getInetAddress().getHostAddress();
+		return str;
+	}
 }

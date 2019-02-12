@@ -1,4 +1,4 @@
-package telco.sensorReadServer.appConnect;
+package telco.sensorReadServer.appConnect.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class AppDataPacketAnalyser
 		buf = ByteBuffer.wrap(ProtocolDefine.fillBuffer(this.input, ProtocolDefine.RANGE_CHANNEL_PAYLOAD_DATALEN));
 		payloadCount = buf.getInt();
 		
-		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_PAYLOAD_SINGLE))
+		if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_PAYLOAD_SINGLE))
 		{// 한개의 페이로드만 있을 때
 			this.payload = new byte[1][];
 			this.payloadSize = new int[1];
