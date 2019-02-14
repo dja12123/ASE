@@ -1,6 +1,5 @@
 package telco.sensorReadServer.sensorManager;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.sql.rowset.CachedRowSet;
 
 import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
@@ -59,7 +60,8 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		
 		try
 		{
-			ResultSet rs = this.dbHandler.query("select * from Device;");
+			CachedRowSet rs = this.dbHandler.query("select * from Device;");
+			DB_Handler.printResultSet(rs);
 			while(rs.next())
 			{
 				int id = rs.getInt(1);
@@ -91,6 +93,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
+		
 		logger.log(Level.INFO, "SensorManager관리자 종료");
 		this.timeoutCheckThread.interrupt();
 		
