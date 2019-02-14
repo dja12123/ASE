@@ -102,7 +102,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		for(Sensor s : this.sensorMap.values())
 		{
 			logger.log(Level.INFO, "장치 저장:"+s.id);
-			if(this.dbHandler.hasResult("select id from Device where id="+s.id+";"))
+			if(!this.dbHandler.hasResult("select id from Device where id="+s.id+";"))
 			{
 				StringBuffer query = new StringBuffer();
 				query.append("insert into Device values(");
