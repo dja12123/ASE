@@ -45,12 +45,11 @@ public class SerialReadManager extends Observable<DevicePacket>
 	
 	public boolean startModule()
 	{
+		logger.log(Level.INFO, "SerialReadManager 시작");
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
-		
 		try
 		{
 			this.serial.open(this.config);
-			this.serial.flush();
 			
 			logger.log(Level.INFO, "연결: " + config.toString());
 		}
@@ -59,7 +58,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 			logger.log(Level.SEVERE, "시리얼 열기 실패", e);
 			return false;
 		}
-		logger.log(Level.INFO, "SerialReadManager 시작");
+		logger.log(Level.INFO, "SerialReadManager 시작 완료");
 		return true;
 	}
 	
