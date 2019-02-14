@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import telco.appConnect.ServerSocketManager;
 import telco.console.LogWriter;
 import telco.sensorReadServer.db.DB_Handler;
 import telco.sensorReadServer.db.DB_Installer;
@@ -209,6 +208,7 @@ public class ServerCore
 	private boolean start()
 	{
 		DB_Installer dbInstaller = this.dbHandler.getInstaller();
+		System.out.println(dbInstaller);
 		if(!this.dbHandler.startModule()) return false;
 		if(!this.appConnectManager.startModule()) return false;
 		if(!this.sensorReadManager.startModule()) return false;

@@ -1,4 +1,4 @@
-package telco.appConnect;
+package telco.sensorReadServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,17 +7,19 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import telco.appConnect.AppConnectObservable;
+import telco.appConnect.AppDataReceiveEvent;
+import telco.appConnect.ConnectionStateChangeEvent;
 import telco.appConnect.protocol.AppDataPacketBuilder;
 import telco.appConnect.protocol.Channel;
 import telco.appConnect.protocol.Connection;
 import telco.console.LogWriter;
-import telco.sensorReadServer.ServerCore;
 import telco.util.observer.Observable;
 import telco.util.observer.Observer;
 
 public class ServerSocketManager
 {
-	public static final Logger logger = LogWriter.createLogger(ServerSocketManager.class, "appConnect");
+	public static final Logger logger = LogWriter.createLogger(ServerSocketManager.class, "serverSocket");
 	
 	public static final String PROP_SERVERPORT = "Port";
 	
