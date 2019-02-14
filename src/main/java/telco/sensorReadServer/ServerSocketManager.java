@@ -144,7 +144,6 @@ public class ServerSocketManager
 			}
 			catch (IOException e)
 			{
-				logger.log(Level.SEVERE, "소켓 accpet 오류", e);
 				continue;
 			}
 			connection = new Connection(clientSocket, this.eventProvider);
