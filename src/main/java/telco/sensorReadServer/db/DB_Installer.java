@@ -20,7 +20,7 @@ public class DB_Installer
 	private DB_Handler instance = null;
 	private ArrayList<String> _LtableName = new ArrayList<>();
 
-	DB_Installer(DB_Handler instance)
+	public DB_Installer(DB_Handler instance)
 	{
 		this.instance = instance;
 		getDBTableList();

@@ -59,8 +59,8 @@ public class ServerSocketManager
 		this.acceptThread = new Thread(this::socketAcceptThread);
 		this.acceptThread.setDaemon(true);
 		this.acceptThread.start();
-		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress()+":"+this.port);
 		
+		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress());
 		
 		eventProvider.addConnectionStateChangeObserver((Observable<ConnectionStateChangeEvent> object, ConnectionStateChangeEvent data)->{
 			if(data.isOpen)

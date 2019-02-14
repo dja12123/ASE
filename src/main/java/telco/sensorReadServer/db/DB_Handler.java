@@ -38,17 +38,9 @@ public class DB_Handler
 
 	public static final Logger databaseLogger = LogWriter.createLogger(DB_Handler.class, "db");
 
-	private static final String Variable_Property_Schema =
-					"CREATE TABLE variable_property(" +
-					"module varchar(128), " +
-					"key varchar(128), " +
-					"value varchar(128), " +
-					"primary key(module, key))";
-
 	private Connection connection;
 	private SQLiteConfig config;
 	private boolean isOpened = false;
-	private DB_Installer installer;
 
 	static
 	{// test22
@@ -140,11 +132,26 @@ public class DB_Handler
 		return crs;
 	}
 	
-	public DB_Installer getInstaller()
+	public boolean hasResult(String selectQuery)
 	{
-		return this.installer;
+		boolean hasData = false;
+		PreparedStatement prep = null;
+		try
+		{
+			prep = this.connection.prepareStatement(selectQuery);
+			if(prep.getResultSet().next())
+			{
+				hasData = true;
+			}
+			prep.close();
+		}
+		catch (SQLException e)
+		{
+			databaseLogger.log(Level.SEVERE, "질의 실패(" + selectQuery + ")", e);
+		}
+		return hasData;
 	}
-
+	
 	public boolean startModule()
 	{
 		if (this.isOpened) return true;
@@ -163,11 +170,6 @@ public class DB_Handler
 		}
         
 		this.isOpened = true;
-		this.installer = new DB_Installer(this);
-		
-		this.installer.checkAndCreateTable(Variable_Property_Schema);
-        
-        this.installer.complete();
         
 		return true;
 	}
@@ -185,44 +187,7 @@ public class DB_Handler
 		{
 			databaseLogger.log(Level.SEVERE, "데이터베이스 닫기 실패", e);
 		}
-		this.installer = null;
 		this.isOpened = false;
-	}
-
-	public void setVariableProperty(Class<?> classPath, String key, String value)
-	{
-		String module = classPath.toString();
-		CachedRowSet set = this.query(String.format("select module, key from variable_property where module='%s' and key='%s'", module, key));
-		if(set.size() == 0)
-		{
-			this.executeQuery(String.format("insert into variable_property values('%s','%s','%s')", module, key, value));
-		}
-		else
-		{
-			this.executeQuery(String.format("update variable_property set value='%s' where module='%s' and key='%s'", value, module, key));
-		}
-		
-	}
-	
-	public String getOrSetDefaultVariableProperty(Class<?> classPath, String key, String defaultValue)
-	{
-		String module = classPath.toString();
-		CachedRowSet set = this.query(String.format("select value from variable_property where module='%s' and key='%s'", module, key));
-		if(set.size() == 0)
-		{
-			this.executeQuery(String.format("insert into variable_property values('%s','%s','%s')", module, key, defaultValue));
-			return defaultValue;
-		}
-		try
-		{
-			set.next();
-			return set.getString(1);
-		}
-		catch (SQLException e)
-		{
-			databaseLogger.log(Level.SEVERE, "가변 프로퍼티 가져오기 실패.", e);
-			return null;
-		}
 	}
 
 	public static void printResultSet(CachedRowSet rs)

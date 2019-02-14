@@ -11,7 +11,7 @@ public class DataReceiveEvent
 	public final float Z_ACCEL;
 	public final float Altitiude;
 	
-	public DataReceiveEvent(Sensor sensor, int xg, int yg, int xa, int ya, int za, int al)
+	public DataReceiveEvent(Sensor sensor, float xg, float yg, float xa, float ya, float za, float al)
 	{
 		this.sensorInst = sensor;
 		

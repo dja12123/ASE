@@ -10,20 +10,30 @@ public class Sensor
 	public final int id;
 	
 	boolean isOnline;
-	Date lastDataReceiveTime;
+	private Date lastUpdateTime;
 	
 	public Sensor(int id)
 	{
-		this.id = id;
-		this.dataReceiveObservable = new Observable<DataReceiveEvent>();
-		this.lastDataReceiveTime = null;
+		this(id, new Date());
 	}
 	
-	void alartDataReceive(int xg, int yg, int xa, int ya, int za, int al)
+	public Sensor(int id, Date lastUpdateTime)
 	{
-		this.lastDataReceiveTime = new Date();
+		this.id = id;
+		this.dataReceiveObservable = new Observable<DataReceiveEvent>();
+		this.lastUpdateTime = lastUpdateTime;
+	}
+	
+	void alartDataReceive(float xg, float yg, float xa, float ya, float za, float al)
+	{
+		this.lastUpdateTime = new Date();
 		DataReceiveEvent e = new DataReceiveEvent(this, xg, yg, xa, ya, za, al);
 		this.dataReceiveObservable.notifyObservers(e);
+	}
+	
+	public Date getLastUpdateTime()
+	{
+		return this.lastUpdateTime;
 	}
 	
 	public boolean isOnline()

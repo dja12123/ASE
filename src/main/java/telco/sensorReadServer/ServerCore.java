@@ -208,7 +208,7 @@ public class ServerCore
 	private boolean start()
 	{
 		if(!this.dbHandler.startModule()) return false;
-		DB_Installer dbInstaller = this.dbHandler.getInstaller();
+		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		if(!this.appConnectManager.startModule()) return false;
 		if(!this.sensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
@@ -221,12 +221,12 @@ public class ServerCore
 	{
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
-		this.dbHandler.stopModule();
+		
 		this.appConnectManager.stopModule();
-		this.sensorReadManager.stopModule();
 		this.sensorManager.stopModule();
+		this.sensorReadManager.stopModule();
+		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
-	
 	}
 	
 	public static String getProp(String key)
