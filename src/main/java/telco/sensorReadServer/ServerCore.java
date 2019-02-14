@@ -207,9 +207,8 @@ public class ServerCore
 
 	private boolean start()
 	{
-		DB_Installer dbInstaller = this.dbHandler.getInstaller();
-		System.out.println(dbInstaller);
 		if(!this.dbHandler.startModule()) return false;
+		DB_Installer dbInstaller = this.dbHandler.getInstaller();
 		if(!this.appConnectManager.startModule()) return false;
 		if(!this.sensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
