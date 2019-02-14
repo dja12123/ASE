@@ -134,22 +134,18 @@ public class DB_Handler
 	
 	public boolean hasResult(String selectQuery)
 	{
-		boolean hasData = false;
-		PreparedStatement prep = null;
+		if(!this.isOpened) return false;
+		
+		CachedRowSet rs = this.query(selectQuery);
 		try
 		{
-			prep = this.connection.prepareStatement(selectQuery);
-			if(prep.getResultSet().next())
-			{
-				hasData = true;
-			}
-			prep.close();
+			return rs.next();
 		}
 		catch (SQLException e)
 		{
-			databaseLogger.log(Level.SEVERE, "질의 실패(" + selectQuery + ")", e);
+			databaseLogger.log(Level.SEVERE, "확인 실패", e);
 		}
-		return hasData;
+		return false;
 	}
 	
 	public boolean startModule()
