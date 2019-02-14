@@ -107,9 +107,9 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				StringBuffer query = new StringBuffer();
 				query.append("insert into Device values(");
 				query.append(s.id);
-				query.append(", ");
+				query.append(", '");
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
-				query.append(");");
+				query.append("');");
 				this.dbHandler.executeQuery(query.toString());
 				System.out.println("새장치추가");
 			}
