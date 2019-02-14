@@ -131,6 +131,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	public void update(Observable<DevicePacket> object, DevicePacket data)
 	{
 		Sensor s = this.sensorMap.getOrDefault(data.ID, null);
+		System.out.println(data.toString());
 		if(s != null)
 		{// 기존 장치 업데이트
 			if(!s.isOnline)
