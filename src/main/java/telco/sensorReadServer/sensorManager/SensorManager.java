@@ -1,6 +1,5 @@
 package telco.sensorReadServer.sensorManager;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -58,26 +57,9 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		
 		dbinit.checkAndCreateTable(DB_Schema);
 		
-		this.dbHandler.executeQuery("select * from Device;", this::queryAllDeviceCallback);
-		
-		this.sensorTimeout = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_TIMEOUT));
-		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
-		this.serialReader.addObserver(this);
-		
-		this.timeoutCheckThread = new Thread(this::timeoutCheck);
-		this.timeoutCheckThread.setDaemon(true);
-		this.timeoutCheckThread.start();
-		
-		logger.log(Level.INFO, "SensorManager 시작 완료");
-		return true;
-	}
-	
-	private void queryAllDeviceCallback(PreparedStatement prep)
-	{
 		try
 		{
-			ResultSet rs = prep.getResultSet();
-			System.out.println(rs.getInt(1));
+			ResultSet rs = this.dbHandler.query("select * from Device;");
 			while(rs.next())
 			{
 				int id = rs.getInt(1);
@@ -92,6 +74,17 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 			logger.log(Level.SEVERE, "장치 조회 실패", e);
 		}
 		this.checkTimeoutTask();
+		
+		this.sensorTimeout = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_TIMEOUT));
+		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
+		this.serialReader.addObserver(this);
+		
+		this.timeoutCheckThread = new Thread(this::timeoutCheck);
+		this.timeoutCheckThread.setDaemon(true);
+		this.timeoutCheckThread.start();
+		
+		logger.log(Level.INFO, "SensorManager 시작 완료");
+		return true;
 	}
 	
 	public void stopModule()

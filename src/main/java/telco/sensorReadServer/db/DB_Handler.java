@@ -188,6 +188,7 @@ public class DB_Handler
 			databaseLogger.log(Level.SEVERE, "데이터베이스 닫기 실패", e);
 		}
 		this.isOpened = false;
+		databaseLogger.log(Level.INFO, "DB_Handler 종료");
 	}
 
 	public static void printResultSet(CachedRowSet rs)
