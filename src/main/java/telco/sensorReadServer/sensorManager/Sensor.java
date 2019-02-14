@@ -28,7 +28,6 @@ public class Sensor
 	{
 	
 		this.lastUpdateTime = new Date();
-		System.out.println("수신시간:"+ this.lastUpdateTime.getTime());
 		DataReceiveEvent e = new DataReceiveEvent(this, xg, yg, xa, ya, za, al);
 		this.dataReceiveObservable.notifyObservers(e);
 	}

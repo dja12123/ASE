@@ -27,7 +27,8 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	private static final String DB_Schema = 
 			"CREATE TABLE Device(" + 
 			"id INTEGER," + 
-			"lastUpdateTime TEXT," + 
+			"lastUpdateTime TEXT," +
+			"online BOOL," +
 			"PRIMARY KEY(`id`)" + 
 			");";
 	
@@ -66,7 +67,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				int id = rs.getInt(1);
 				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
 				Sensor sensor = new Sensor(id, updateDate);
-				sensor.isOnline = true;
+				sensor.isOnline = rs.getBoolean(3);
 				this.sensorMap.put(id,  sensor);
 				logger.log(Level.INFO, "등록된 장치 로드:"+id);
 			}
@@ -109,6 +110,8 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				query.append(s.id);
 				query.append(", '");
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
+				query.append(", ");
+				query.append(s.isOnline());
 				query.append("');");
 				this.dbHandler.executeQuery(query.toString());
 			}
@@ -117,7 +120,9 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				StringBuffer query = new StringBuffer();
 				query.append("update device set lastUpdateTime='");
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
-				query.append("' where id=");
+				query.append("', online=");
+				query.append(s.isOnline);
+				query.append(" where id=");
 				query.append(s.id);
 				query.append(";");
 				this.dbHandler.executeQuery(query.toString());
