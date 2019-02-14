@@ -157,12 +157,12 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	
 	private void checkTimeoutTask()
 	{
-		long compareTime = new Date().getTime() - this.sensorTimeout;
+		long compareTime = new Date().getTime();
 		
 		for(Sensor sensor : this.sensorMap.values())
 		{
 			if(!sensor.isOnline) continue;
-			if(compareTime > sensor.getLastUpdateTime().getTime())
+			if(compareTime - sensor.getLastUpdateTime().getTime() > this.sensorTimeout)
 			{//타임아웃일때
 				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id);
 				sensor.isOnline = false;
