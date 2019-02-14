@@ -67,6 +67,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				int id = rs.getInt(1);
 				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
 				Sensor sensor = new Sensor(id, updateDate);
+				sensor.isOnline = true;
 				this.sensorMap.put(id,  sensor);
 				logger.log(Level.INFO, "등록된 장치 로드:"+id);
 			}
@@ -162,6 +163,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		
 		for(Sensor sensor : this.sensorMap.values())
 		{
+			if(!sensor.isOnline) continue;
 			if(compareTime > sensor.getLastUpdateTime().getTime())
 			{//타임아웃일때
 				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id);
