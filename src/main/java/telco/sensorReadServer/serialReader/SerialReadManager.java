@@ -49,8 +49,8 @@ public class SerialReadManager extends Observable<DevicePacket>
 		
 		try
 		{
-			this.serial.discardAll();
 			this.serial.open(this.config);
+			this.serial.discardAll();
 			
 			logger.log(Level.INFO, "연결: " + config.toString());
 		}
