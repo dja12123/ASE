@@ -54,7 +54,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		if(this.isRun) return true;
 		this.isRun = true;
 		
-		logger.log(Level.INFO, "센서 관리자 시작");
+		logger.log(Level.INFO, "SensorManager 시작");
 		
 		dbinit.checkAndCreateTable(DB_Schema);
 		
@@ -68,7 +68,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		this.timeoutCheckThread.setDaemon(true);
 		this.timeoutCheckThread.start();
 		
-		logger.log(Level.INFO, "센서 관리자 시작 완료");
+		logger.log(Level.INFO, "SensorManager 시작 완료");
 		return true;
 	}
 	
@@ -79,6 +79,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 			ResultSet rs = prep.getResultSet();
 			while(rs.next())
 			{
+				System.out.println("데이타 있음");
 				int id = rs.getInt(1);
 				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
 				Sensor sensor = new Sensor(id, updateDate);
@@ -97,7 +98,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
-		logger.log(Level.INFO, "센서 관리자 종료");
+		logger.log(Level.INFO, "SensorManager관리자 종료");
 		this.timeoutCheckThread.interrupt();
 		
 		this.serialReader.removeObserver(this);
@@ -126,7 +127,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				this.dbHandler.executeQuery(query.toString());
 			}
 		}
-		logger.log(Level.INFO, "센서 관리자 종료 완료");
+		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");
 		this.sensorMap.clear();
 	}
 
