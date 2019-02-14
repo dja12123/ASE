@@ -110,7 +110,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				query.append(", ");
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
 				query.append(");");
-				this.dbHandler.query(query.toString());
+				this.dbHandler.executeQuery(query.toString());
 			}
 			else
 			{
@@ -120,7 +120,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				query.append("' where id=");
 				query.append(s.id);
 				query.append(";");
-				this.dbHandler.query(query.toString());
+				this.dbHandler.executeQuery(query.toString());
 			}
 		}
 		
@@ -145,6 +145,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		else
 		{// 새 장치 접근
 			s = new Sensor(data.ID);
+			s.isOnline = true;
 			logger.log(Level.INFO, "새 장치 접근:"+s.id);
 			this.sensorMap.put(data.ID, s);
 			
