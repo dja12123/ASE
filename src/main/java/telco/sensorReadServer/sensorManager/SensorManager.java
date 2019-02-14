@@ -165,6 +165,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 			if(compareTime > sensor.getLastUpdateTime().getTime())
 			{//타임아웃일때
 				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id);
+				sensor.isOnline = false;
 				SensorStateChangeEvent e = new SensorStateChangeEvent(sensor, false);
 				this.notifyObservers(e);
 			}
