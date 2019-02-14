@@ -77,9 +77,9 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		try
 		{
 			ResultSet rs = prep.getResultSet();
+			System.out.println(rs.getInt(1));
 			while(rs.next())
 			{
-				System.out.println("데이타 있음");
 				int id = rs.getInt(1);
 				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
 				Sensor sensor = new Sensor(id, updateDate);
