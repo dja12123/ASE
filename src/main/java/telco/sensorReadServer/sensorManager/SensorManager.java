@@ -111,6 +111,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
 				query.append(");");
 				this.dbHandler.executeQuery(query.toString());
+				System.out.println("새장치추가");
 			}
 			else
 			{
