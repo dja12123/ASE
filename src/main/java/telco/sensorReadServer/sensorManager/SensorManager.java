@@ -110,9 +110,9 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				query.append(s.id);
 				query.append(", '");
 				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
-				query.append(", ");
+				query.append("', ");
 				query.append(s.isOnline());
-				query.append("');");
+				query.append(");");
 				this.dbHandler.executeQuery(query.toString());
 			}
 			else
