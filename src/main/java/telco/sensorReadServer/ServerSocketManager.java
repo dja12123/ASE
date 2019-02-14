@@ -42,9 +42,10 @@ public class ServerSocketManager
 	{
 		if(this.isRun) return false;
 		this.isRun = true;
+		logger.log(Level.INFO, "ServerSocketManager 시작");
 		
 		this.port = Integer.parseInt(ServerCore.getProp(PROP_SERVERPORT));
-		logger.log(Level.INFO, "서버 소켓 열기 " + this.port);
+		
 		try
 		{
 			this.socket = new ServerSocket(this.port);
@@ -58,8 +59,8 @@ public class ServerSocketManager
 		this.acceptThread = new Thread(this::socketAcceptThread);
 		this.acceptThread.setDaemon(true);
 		this.acceptThread.start();
+		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress()+":"+this.port);
 		
-		logger.log(Level.INFO, "AppConnectManager 시작");
 		
 		eventProvider.addConnectionStateChangeObserver((Observable<ConnectionStateChangeEvent> object, ConnectionStateChangeEvent data)->{
 			if(data.isOpen)
@@ -103,6 +104,7 @@ public class ServerSocketManager
 		eventProvider.addDataReceiveObserver("login", ob);
 		eventProvider.addDataReceiveObserver("test1", ob);
 		eventProvider.addDataReceiveObserver("onlyDataTest", ob);
+		logger.log(Level.INFO, "ServerSocketManager 시작 완료");
 		return true;
 	}
 	
@@ -128,7 +130,7 @@ public class ServerSocketManager
 			logger.log(Level.SEVERE, "서버 소켓 종료중 오류", e);
 		}
 		
-		logger.log(Level.INFO, "AppConnectManager 종료");
+		logger.log(Level.INFO, "ServerSocketManager 종료");
 	}
 	
 	public void socketAcceptThread()
