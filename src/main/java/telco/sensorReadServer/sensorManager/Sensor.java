@@ -26,7 +26,9 @@ public class Sensor
 	
 	void alartDataReceive(float xg, float yg, float xa, float ya, float za, float al)
 	{
+	
 		this.lastUpdateTime = new Date();
+		System.out.println("수신시간:"+ this.lastUpdateTime.getTime());
 		DataReceiveEvent e = new DataReceiveEvent(this, xg, yg, xa, ya, za, al);
 		this.dataReceiveObservable.notifyObservers(e);
 	}
