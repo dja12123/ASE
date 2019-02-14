@@ -132,7 +132,6 @@ public class DB_Installer
 
 	public void checkAndCreateTable(String schema)
 	{
-		databaseLogger.log(Level.INFO, "테이블 확인(" + schema + ")");
 		String tableName = getTableName(schema);
 		if (_LtableName.contains(tableName))
 			_LtableName.remove(tableName);
@@ -144,6 +143,10 @@ public class DB_Installer
 				instance.executeQuery(String.format("drop table %s", getTableName(schema)));
 				instance.executeQuery(schema);
 				databaseLogger.log(Level.INFO, "테이블 재생성(" + schema + ")");
+			}
+			else
+			{
+				databaseLogger.log(Level.INFO, "테이블 확인(" + schema + ")");
 			}
 			return;
 		}
