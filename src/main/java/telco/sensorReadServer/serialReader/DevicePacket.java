@@ -1,4 +1,4 @@
-package telco.sensorReadServer.sensorReader;
+package telco.sensorReadServer.serialReader;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

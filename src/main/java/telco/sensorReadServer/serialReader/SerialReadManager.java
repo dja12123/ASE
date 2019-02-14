@@ -1,4 +1,4 @@
-package telco.sensorReadServer.sensorReader;
+package telco.sensorReadServer.serialReader;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -16,17 +16,18 @@ import com.pi4j.io.serial.StopBits;
 
 import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
+import telco.util.observer.Observable;
 
-public class SensorReadManager
+public class SerialReadManager extends Observable<DevicePacket>
 {
 	public static final String PROP_SerialDevice = "SerialDevice";
 	
-	public static final Logger logger = LogWriter.createLogger(SensorReadManager.class, "sensorReader");
+	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "sensorReader");
 	
 	private Serial serial;
 	private SerialConfig config;
 	
-	public SensorReadManager()
+	public SerialReadManager()
 	{
 		this.serial = SerialFactory.createInstance();
 		
@@ -86,7 +87,6 @@ public class SensorReadManager
 		}
 		
 		DevicePacket packet = new DevicePacket(receiveData);
-		System.out.println(packet.toString());
-		
+		this.notifyObservers(packet);
 	}
 }

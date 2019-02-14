@@ -16,8 +16,11 @@ import java.util.logging.Logger;
 
 import telco.appConnect.ServerSocketManager;
 import telco.console.LogWriter;
+import telco.sensorReadServer.db.DB_Handler;
+import telco.sensorReadServer.db.DB_Installer;
 import telco.sensorReadServer.fileIO.FileHandler;
-import telco.sensorReadServer.sensorReader.SensorReadManager;
+import telco.sensorReadServer.sensorManager.SensorManager;
+import telco.sensorReadServer.serialReader.SerialReadManager;
 
 public class ServerCore
 {
@@ -29,7 +32,6 @@ public class ServerCore
 	
 	private static Thread mainThread;
 	private static ServerCore mainInst;
-	
 	
 	public static void main(String[] args)
 	{
@@ -191,19 +193,27 @@ public class ServerCore
 		return true;
 	}
 
+	private DB_Handler dbHandler;
 	private ServerSocketManager appConnectManager;
-	private SensorReadManager sensorReadManager;
+	private SerialReadManager sensorReadManager;
+	private SensorManager sensorManager;
 
 	private ServerCore()
 	{
+		this.dbHandler = new DB_Handler();
 		this.appConnectManager = new ServerSocketManager();
-		//this.sensorReadManager = new SensorReadManager();
+		this.sensorReadManager = new SerialReadManager();
+		this.sensorManager = new SensorManager(this.sensorReadManager, this.dbHandler);
 	}
 
 	private boolean start()
 	{
+		DB_Installer dbInstaller = this.dbHandler.getInstaller();
+		if(!this.dbHandler.startModule()) return false;
 		if(!this.appConnectManager.startModule()) return false;
-		//if(!this.sensorReadManager.startModule()) return false;
+		if(!this.sensorReadManager.startModule()) return false;
+		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		dbInstaller.complete();
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
 	}
@@ -212,8 +222,10 @@ public class ServerCore
 	{
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
+		this.dbHandler.stopModule();
 		this.appConnectManager.stopModule();
-		//this.sensorReadManager.stopModule();
+		this.sensorReadManager.stopModule();
+		this.sensorManager.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 	
 	}

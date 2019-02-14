@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import telco.appConnect.protocol.AppDataPacketBuilder;
 import telco.appConnect.protocol.Channel;
 import telco.appConnect.protocol.Connection;
 import telco.console.LogWriter;
@@ -53,6 +54,7 @@ public class ServerSocketManager
 		}
 		
 		this.acceptThread = new Thread(this::socketAcceptThread);
+		this.acceptThread.setDaemon(true);
 		this.acceptThread.start();
 		
 		logger.log(Level.INFO, "AppConnectManager 시작");
@@ -73,19 +75,30 @@ public class ServerSocketManager
 				System.out.println("채널생성" +  data.connection.getInetAddress().toString() + " " + data.key + " " + data.channel.id);
 				data.channel.setReceiveCallback((Channel ch, byte[][] payload)->{
 					System.out.print(ch.toString() + "으로부터 수신 " + payload.length + "개, 데이타:");
+					AppDataPacketBuilder builder = new AppDataPacketBuilder();
 					for(int i = 0; i < payload.length; ++i)
 					{
-						System.out.print(new String(payload[i]) + " 다음데이타:");
+						builder.appendData(payload[i]);
+						System.out.print(new String(payload[i]) + "("+payload[i].length+ ") 다음데이타:");
 					}
 					System.out.println();
+					builder.appendData("반사!!");
+					ch.sendData(builder);
+					System.out.println("반사완료");
 				});
 			}
 			else
 			{
-				System.out.println("데이타수신" +  data.connection.getInetAddress().toString() + " " + data.key +" "+ data.payload.length);
+				System.out.print("일반수신 " + data.payload.length + "개, 데이타:");
+				for(int i = 0; i < data.payload.length; ++i)
+				{
+					System.out.print(new String(data.payload[i]) + "("+data.payload[i].length+ ") 다음데이타:");
+				}
+				
+				System.out.println();
 			}
 		};
-		eventProvider.addDataReceiveObserver("test", ob);
+		eventProvider.addDataReceiveObserver("login", ob);
 		eventProvider.addDataReceiveObserver("test1", ob);
 		eventProvider.addDataReceiveObserver("onlyDataTest", ob);
 		return true;
