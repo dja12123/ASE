@@ -131,7 +131,6 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	public void update(Observable<DevicePacket> object, DevicePacket data)
 	{
 		Sensor s = this.sensorMap.getOrDefault(data.ID, null);
-		System.out.println(data.toString());
 		if(s != null)
 		{// 기존 장치 업데이트
 			if(!s.isOnline)
@@ -140,8 +139,8 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 				s.isOnline = true;
 				SensorStateChangeEvent e = new SensorStateChangeEvent(s, true);
 				this.notifyObservers(e);
-				s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
 			}
+			s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
 		}
 		else
 		{// 새 장치 접근
@@ -165,7 +164,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 			if(!sensor.isOnline) continue;
 			if(compareTime - sensor.getLastUpdateTime().getTime() > this.sensorTimeout)
 			{//타임아웃일때
-				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id + " 비교시간" + compareTime);
+				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id);
 				sensor.isOnline = false;
 				SensorStateChangeEvent e = new SensorStateChangeEvent(sensor, false);
 				this.notifyObservers(e);
