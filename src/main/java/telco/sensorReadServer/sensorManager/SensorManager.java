@@ -1,47 +1,39 @@
 package telco.sensorReadServer.sensorManager;
 
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sql.rowset.CachedRowSet;
-
 import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
 import telco.sensorReadServer.db.DB_Handler;
 import telco.sensorReadServer.db.DB_Installer;
+import telco.sensorReadServer.sensorManager.sensor.Sensor;
+import telco.sensorReadServer.sensorManager.sensor.SensorConfigAccess;
+import telco.sensorReadServer.sensorManager.sensor.SensorDBAccess;
 import telco.sensorReadServer.serialReader.DevicePacket;
 import telco.sensorReadServer.serialReader.SerialReadManager;
 import telco.util.observer.Observable;
 import telco.util.observer.Observer;
 
-public class SensorManager extends Observable<SensorStateChangeEvent> implements Observer<DevicePacket> 
+public class SensorManager extends Observable<SensorRegisterEvent> implements Observer<DevicePacket> 
 {
-	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
-	public static final String PROP_SENSOR_TIMEOUT = "SensorTimeout";
 	public static final String PROP_SENSOR_CHECK_INTERVAL = "SensorCheckInterval";
-	private static final String DB_Schema = 
-			"CREATE TABLE Device(" + 
-			"id INTEGER," + 
-			"lastUpdateTime TEXT," +
-			"online BOOL," +
-			"PRIMARY KEY(`id`)" + 
-			");";
 	
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-	
+	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
+
 	private SerialReadManager serialReader;
 	private DB_Handler dbHandler;
+	
+	private SensorDBAccess dbAccess;
+	private SensorConfigAccess configAccess;
+	
+	private int checkInterval;
 	
 	private boolean isRun;
 	private Thread timeoutCheckThread;
 	private HashMap<Integer, Sensor> sensorMap;
-	private int sensorTimeout;
-	private int checkInterval;
 	
 	public SensorManager(SerialReadManager serialReader, DB_Handler dbHandler)
 	{
@@ -56,29 +48,17 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		this.isRun = true;
 		
 		logger.log(Level.INFO, "SensorManager 시작");
+
+		this.dbAccess = new SensorDBAccess(dbHandler, dbinit);
+		this.configAccess = new SensorConfigAccess();
 		
-		dbinit.checkAndCreateTable(DB_Schema);
+		for(Sensor s : this.dbAccess.getSensorFromDB(this.configAccess))
+		{
+			this.sensorMap.put(s.id, s);
+		}
 		
-		try
-		{
-			CachedRowSet rs = this.dbHandler.query("select * from Device;");
-			while(rs.next())
-			{
-				int id = rs.getInt(1);
-				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
-				Sensor sensor = new Sensor(id, updateDate);
-				sensor.isOnline = rs.getBoolean(3);
-				this.sensorMap.put(id,  sensor);
-				logger.log(Level.INFO, "등록된 장치 로드:"+id);
-			}
-		}
-		catch (SQLException | ParseException e)
-		{
-			logger.log(Level.SEVERE, "장치 조회 실패", e);
-		}
 		this.checkTimeoutTask();
 		
-		this.sensorTimeout = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_TIMEOUT));
 		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
 		this.serialReader.addObserver(this);
 		
@@ -102,31 +82,7 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 		
 		for(Sensor s : this.sensorMap.values())
 		{
-			logger.log(Level.INFO, "장치 저장:"+s.id);
-			if(!this.dbHandler.hasResult("select id from Device where id="+s.id+";"))
-			{
-				StringBuffer query = new StringBuffer();
-				query.append("insert into Device values(");
-				query.append(s.id);
-				query.append(", '");
-				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
-				query.append("', ");
-				query.append(s.isOnline() ? 1 : 0);
-				query.append(");");
-				this.dbHandler.executeQuery(query.toString());
-			}
-			else
-			{
-				StringBuffer query = new StringBuffer();
-				query.append("update device set lastUpdateTime='");
-				query.append(DATE_FORMAT.format(s.getLastUpdateTime()));
-				query.append("', online=");
-				query.append(s.isOnline() ? 1 : 0);
-				query.append(" where id=");
-				query.append(s.id);
-				query.append(";");
-				this.dbHandler.executeQuery(query.toString());
-			}
+			s.save();
 		}
 		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");
 		this.sensorMap.clear();
@@ -136,58 +92,49 @@ public class SensorManager extends Observable<SensorStateChangeEvent> implements
 	public void update(Observable<DevicePacket> object, DevicePacket data)
 	{
 		Sensor s = this.sensorMap.getOrDefault(data.ID, null);
-		if(s != null)
-		{// 기존 장치 업데이트
-			if(!s.isOnline)
-			{
-				logger.log(Level.INFO, "장치 온라인:"+s.id);
-				s.isOnline = true;
-				SensorStateChangeEvent e = new SensorStateChangeEvent(s, true);
-				this.notifyObservers(e);
-			}
-			s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
-		}
-		else
+		if(s == null)
 		{// 새 장치 접근
-			s = new Sensor(data.ID);
-			s.isOnline = true;
-			logger.log(Level.INFO, "새 장치 접근:"+s.id);
-			this.sensorMap.put(data.ID, s);
-			
-			SensorStateChangeEvent e = new SensorStateChangeEvent(s, true);
-			this.notifyObservers(e);
-			s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
+			this.registerSensor(data.ID);
 		}
+		s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
 	}
 	
 	private void checkTimeoutTask()
 	{
-		long compareTime = new Date().getTime();
+		Date compareTime = new Date();
 		
 		for(Sensor sensor : this.sensorMap.values())
 		{
-			if(!sensor.isOnline) continue;
-			if(compareTime - sensor.getLastUpdateTime().getTime() > this.sensorTimeout)
-			{//타임아웃일때
-				logger.log(Level.WARNING, "장치 타임아웃:"+sensor.id);
-				sensor.isOnline = false;
-				SensorStateChangeEvent e = new SensorStateChangeEvent(sensor, false);
-				this.notifyObservers(e);
-			}
+			sensor.CheckDeviceTimeout(compareTime);
 		}
 	}
 	
-	public void registerDevice(int id)
+	public void registerSensor(int id)
 	{
-		if(!this.sensorMap.containsKey(id))
-		{
-			Sensor s = new Sensor(id);
-			this.sensorMap.put(id, s);
-		}
-		else
+		if(this.sensorMap.containsKey(id))
 		{
 			throw new RuntimeException("이미 있는 장치");
 		}
+		Sensor s = new Sensor(id, this.dbAccess, this.configAccess);
+		s.init();
+		this.sensorMap.put(id, s);
+		logger.log(Level.INFO, "새 센서 접근:"+s.id);
+		SensorRegisterEvent e = new SensorRegisterEvent(true, s);
+		this.notifyObservers(e);
+	}
+	
+	public void removeSensor(int id)
+	{
+		Sensor s = this.sensorMap.getOrDefault(id, null);
+		if(s == null)
+		{
+			throw new RuntimeException("존재하지 않는 장치");
+		}
+		s.destroy();
+		this.sensorMap.remove(s.id);
+		logger.log(Level.INFO, "센서 삭제:"+s.id);
+		SensorRegisterEvent e = new SensorRegisterEvent(false, s);
+		this.notifyObservers(e);
 	}
 	
 	private void timeoutCheck()

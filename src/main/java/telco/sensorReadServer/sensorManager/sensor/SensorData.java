@@ -1,9 +1,10 @@
-package telco.sensorReadServer.sensorManager;
+package telco.sensorReadServer.sensorManager.sensor;
 
-public class DataReceiveEvent
+import java.util.Date;
+
+public class SensorData
 {
-	public final Sensor sensorInst;
-	
+	public final Date time;
 	public final float X_GRADIANT;
 	public final float Y_GRADIANT;
 	public final float X_ACCEL;
@@ -11,10 +12,9 @@ public class DataReceiveEvent
 	public final float Z_ACCEL;
 	public final float Altitiude;
 	
-	public DataReceiveEvent(Sensor sensor, float xg, float yg, float xa, float ya, float za, float al)
+	public SensorData(Date time, float xg, float yg, float xa, float ya, float za, float al)
 	{
-		this.sensorInst = sensor;
-		
+		this.time = time;
 		this.X_GRADIANT = xg;
 		this.Y_GRADIANT = yg;
 		this.X_ACCEL = xa;

@@ -1,0 +1,117 @@
+package telco.sensorReadServer.sensorManager.sensor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+
+import telco.util.observer.Observable;
+
+public class Sensor
+{	
+	public final Observable<DataReceiveEvent> dataReceiveObservable;
+	public final Observable<SensorOnlineEvent> sensorOnlineEvent;
+	final List<SensorLog> _log;
+	public final List<SensorLog> log;
+	final List<SensorData> _data;
+	public final List<SensorData> data;
+	public final int id;
+	private SensorDBAccess dbAccess;
+	private SensorConfigAccess configAccess;
+	private boolean isOnline;
+	private Date lastUpdateTime;
+	
+	public Sensor(int id, SensorDBAccess dbAccess, SensorConfigAccess configAccess)
+	{
+		this(id, false, new Date(0), dbAccess, configAccess);
+	}
+	
+	Sensor(int id, boolean isOnline, Date lastUpdateTime, SensorDBAccess dbAccess, SensorConfigAccess configAccess)
+	{
+		this.id = id;
+		this.isOnline = isOnline;
+		this.lastUpdateTime = lastUpdateTime;
+		this.dbAccess = dbAccess;
+		this.configAccess = configAccess;
+		
+		this.dataReceiveObservable = new Observable<DataReceiveEvent>();
+		this.sensorOnlineEvent = new Observable<SensorOnlineEvent>();
+		this._log = new ArrayList<SensorLog>();
+		this.log = Collections.unmodifiableList(this._log);
+		this._data = new ArrayList<SensorData>();
+		this.data = Collections.unmodifiableList(this._data);
+	}
+	
+	public void init()
+	{
+		this.dbAccess.createSensor(this);
+	}
+	
+	public void destroy()
+	{
+		this.dbAccess.destroySensor(this);
+	}
+	
+	public void save()
+	{
+		this.dbAccess.saveSensorState(this);
+	}
+	
+	public void putLog(Level level, String msg)
+	{
+		SensorLog log = new SensorLog(level, new Date(), msg);
+		this._log.add(log);
+		if(this._log.size() >= this.configAccess.getMaxLog())
+		{
+			this._log.remove(0);
+		}
+	}
+	
+	public void alartDataReceive(float xg, float yg, float xa, float ya, float za, float al)
+	{
+		if(!this.isOnline)
+		{
+			this.putLog(Level.INFO, "장치 온라인");
+			this.isOnline = true;
+			SensorOnlineEvent e = new SensorOnlineEvent(this, true);
+			this.sensorOnlineEvent.notifyObservers(e);
+		}
+		
+		SensorData data = new SensorData(new Date(), xg, yg, xa, ya, za ,al);
+		this._data.add(data);
+		if(this._data.size() >= this.configAccess.getMaxLog())
+		{
+			this._data.remove(0);
+		}
+		
+		this.lastUpdateTime = new Date();
+		DataReceiveEvent e = new DataReceiveEvent(this, data);
+		this.dataReceiveObservable.notifyObservers(e);
+	}
+	
+	public void CheckDeviceTimeout(Date nowTime)
+	{
+		if(this.isOnline)
+		{
+			long compareTime = nowTime.getTime();
+			if(compareTime - this.lastUpdateTime.getTime() > this.configAccess.getTimeout())
+			{//타임아웃일때
+				this.putLog(Level.WARNING, "장치 타임아웃");
+				this.isOnline = false;
+				SensorOnlineEvent e = new SensorOnlineEvent(this, false);
+				this.sensorOnlineEvent.notifyObservers(e);
+			}
+		}
+	}
+
+	public Date getLastUpdateTime()
+	{
+		return this.lastUpdateTime;
+	}
+	
+	public boolean isOnline()
+	{
+		return this.isOnline;
+	}
+}
