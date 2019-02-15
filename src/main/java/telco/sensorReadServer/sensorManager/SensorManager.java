@@ -9,9 +9,11 @@ import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
 import telco.sensorReadServer.db.DB_Handler;
 import telco.sensorReadServer.db.DB_Installer;
+import telco.sensorReadServer.sensorManager.sensor.DataReceiveEvent;
 import telco.sensorReadServer.sensorManager.sensor.Sensor;
 import telco.sensorReadServer.sensorManager.sensor.SensorConfigAccess;
 import telco.sensorReadServer.sensorManager.sensor.SensorDBAccess;
+import telco.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
 import telco.sensorReadServer.serialReader.DevicePacket;
 import telco.sensorReadServer.serialReader.SerialReadManager;
 import telco.util.observer.Observable;
@@ -35,11 +37,17 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	private Thread timeoutCheckThread;
 	private HashMap<Integer, Sensor> sensorMap;
 	
+	public final Observable<DataReceiveEvent> publicDataReceiveObservable;
+	public final Observable<SensorOnlineEvent> publicSensorOnlineObservable;
+	
 	public SensorManager(SerialReadManager serialReader, DB_Handler dbHandler)
 	{
 		this.serialReader = serialReader;
 		this.dbHandler = dbHandler;
 		this.sensorMap = new HashMap<Integer, Sensor>();
+		
+		this.publicDataReceiveObservable = new Observable<DataReceiveEvent>();
+		this.publicSensorOnlineObservable = new Observable<SensorOnlineEvent>();
 	}
 	
 	public boolean startModule(DB_Installer dbinit)
@@ -52,7 +60,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.dbAccess = new SensorDBAccess(dbHandler, dbinit);
 		this.configAccess = new SensorConfigAccess();
 		
-		for(Sensor s : this.dbAccess.getSensorFromDB(this.configAccess))
+		for(Sensor s : this.dbAccess.getSensorFromDB(this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable))
 		{
 			this.sensorMap.put(s.id, s);
 		}
@@ -67,6 +75,14 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.timeoutCheckThread.start();
 		
 		logger.log(Level.INFO, "SensorManager 시작 완료");
+		
+		this.publicDataReceiveObservable.addObserver((Observable<DataReceiveEvent> o, DataReceiveEvent e)->{
+			System.out.println(e.data.toString());
+		});
+		
+		this.publicSensorOnlineObservable.addObserver((Observable<SensorOnlineEvent> o, SensorOnlineEvent e)->{
+			System.out.println(e.isOnline + " " + e.sensor.id);
+		});
 		return true;
 	}
 	
@@ -76,6 +92,10 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.isRun = false;
 		
 		logger.log(Level.INFO, "SensorManager관리자 종료");
+		
+		this.publicDataReceiveObservable.clearObservers();
+		this.publicSensorOnlineObservable.clearObservers();
+		
 		this.timeoutCheckThread.interrupt();
 		
 		this.serialReader.removeObserver(this);
@@ -115,7 +135,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		{
 			throw new RuntimeException("이미 있는 장치");
 		}
-		Sensor s = new Sensor(id, this.dbAccess, this.configAccess);
+		Sensor s = new Sensor(id, this.dbAccess, this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable);
 		s.init();
 		this.sensorMap.put(id, s);
 		logger.log(Level.INFO, "새 센서 접근:"+s.id);

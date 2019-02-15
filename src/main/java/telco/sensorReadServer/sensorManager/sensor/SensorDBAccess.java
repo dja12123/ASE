@@ -13,6 +13,7 @@ import javax.sql.rowset.CachedRowSet;
 import telco.console.LogWriter;
 import telco.sensorReadServer.db.DB_Handler;
 import telco.sensorReadServer.db.DB_Installer;
+import telco.util.observer.Observable;
 
 public class SensorDBAccess
 {
@@ -60,7 +61,10 @@ public class SensorDBAccess
 		dbInstaller.checkAndCreateTable(SCHEMA_Sensor_Data);
 	}
 	
-	public ArrayList<Sensor> getSensorFromDB(SensorConfigAccess config)
+	public ArrayList<Sensor> getSensorFromDB(
+			SensorConfigAccess config,
+			Observable<DataReceiveEvent> publicDataReceiveObservable,
+			Observable<SensorOnlineEvent> publicSensorOnlineObservable)
 	{
 		ArrayList<Sensor> sensorList = new ArrayList<Sensor>();
 		try
@@ -70,7 +74,7 @@ public class SensorDBAccess
 			{
 				int id = rs.getInt(1);
 				Date updateDate = DATE_FORMAT.parse(rs.getString(2));
-				Sensor sensor = new Sensor(id, rs.getBoolean(3), updateDate, this, config);
+				Sensor sensor = new Sensor(id, rs.getBoolean(3), updateDate, this, config, publicDataReceiveObservable, publicSensorOnlineObservable);
 				
 				CachedRowSet sensorLogRS = this.dbHandler.query("select * from Sensor_Log where id="+id+";");
 				while(sensorLogRS.next())

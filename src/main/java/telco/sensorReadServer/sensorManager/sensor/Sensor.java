@@ -11,7 +11,10 @@ import telco.util.observer.Observable;
 public class Sensor
 {	
 	public final Observable<DataReceiveEvent> dataReceiveObservable;
-	public final Observable<SensorOnlineEvent> sensorOnlineEvent;
+	public final Observable<SensorOnlineEvent> sensorOnlineObservable;
+	
+	private Observable<DataReceiveEvent> publicDataReceiveObservable;
+	private Observable<SensorOnlineEvent> publicSensorOnlineObservable;
 	
 	final List<SensorLog> _log;
 	public final List<SensorLog> log;
@@ -23,12 +26,22 @@ public class Sensor
 	private boolean isOnline;
 	private Date lastUpdateTime;
 	
-	public Sensor(int id, SensorDBAccess dbAccess, SensorConfigAccess configAccess)
+	public Sensor(int id,
+			SensorDBAccess dbAccess,
+			SensorConfigAccess configAccess,
+			Observable<DataReceiveEvent> publicDataReceiveObservable,
+			Observable<SensorOnlineEvent> publicSensorOnlineObservable)
 	{
-		this(id, false, new Date(0), dbAccess, configAccess);
+		this(id, false, new Date(0), dbAccess, configAccess, publicDataReceiveObservable, publicSensorOnlineObservable);
 	}
 	
-	Sensor(int id, boolean isOnline, Date lastUpdateTime, SensorDBAccess dbAccess, SensorConfigAccess configAccess)
+	Sensor(int id,
+			boolean isOnline,
+			Date lastUpdateTime,
+			SensorDBAccess dbAccess,
+			SensorConfigAccess configAccess,
+			Observable<DataReceiveEvent> publicDataReceiveObservable,
+			Observable<SensorOnlineEvent> publicSensorOnlineObservable)
 	{
 		this.id = id;
 		this.isOnline = isOnline;
@@ -37,7 +50,9 @@ public class Sensor
 		this.configAccess = configAccess;
 		
 		this.dataReceiveObservable = new Observable<DataReceiveEvent>();
-		this.sensorOnlineEvent = new Observable<SensorOnlineEvent>();
+		this.sensorOnlineObservable = new Observable<SensorOnlineEvent>();
+		this.publicDataReceiveObservable = publicDataReceiveObservable;
+		this.publicSensorOnlineObservable = publicSensorOnlineObservable;
 		this._log = new ArrayList<SensorLog>();
 		this.log = Collections.unmodifiableList(this._log);
 		this._data = new ArrayList<SensorData>();
@@ -76,7 +91,8 @@ public class Sensor
 			this.putLog(Level.INFO, "장치 온라인");
 			this.isOnline = true;
 			SensorOnlineEvent e = new SensorOnlineEvent(this, true);
-			this.sensorOnlineEvent.notifyObservers(e);
+			this.sensorOnlineObservable.notifyObservers(e);
+			this.publicSensorOnlineObservable.notifyObservers(e);
 		}
 		
 		SensorData data = new SensorData(new Date(), xg, yg, xa, ya, za ,al);
@@ -89,6 +105,7 @@ public class Sensor
 		this.lastUpdateTime = new Date();
 		DataReceiveEvent e = new DataReceiveEvent(this, data);
 		this.dataReceiveObservable.notifyObservers(e);
+		this.publicDataReceiveObservable.notifyObservers(e);
 	}
 	
 	public void CheckDeviceTimeout(Date nowTime)
@@ -101,7 +118,8 @@ public class Sensor
 				this.putLog(Level.WARNING, "장치 타임아웃");
 				this.isOnline = false;
 				SensorOnlineEvent e = new SensorOnlineEvent(this, false);
-				this.sensorOnlineEvent.notifyObservers(e);
+				this.sensorOnlineObservable.notifyObservers(e);
+				this.publicSensorOnlineObservable.notifyObservers(e);
 			}
 		}
 	}
