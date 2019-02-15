@@ -1,7 +1,9 @@
 package telco.sensorReadServer.sensorManager;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +37,8 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	
 	private boolean isRun;
 	private Thread timeoutCheckThread;
-	private HashMap<Integer, Sensor> sensorMap;
+	private HashMap<Integer, Sensor> _sensorMap;
+	public Map<Integer, Sensor> sensorMap;
 	
 	public final Observable<DataReceiveEvent> publicDataReceiveObservable;
 	public final Observable<SensorOnlineEvent> publicSensorOnlineObservable;
@@ -44,7 +47,8 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	{
 		this.serialReader = serialReader;
 		this.dbHandler = dbHandler;
-		this.sensorMap = new HashMap<Integer, Sensor>();
+		this._sensorMap = new HashMap<Integer, Sensor>();
+		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		
 		this.publicDataReceiveObservable = new Observable<DataReceiveEvent>();
 		this.publicSensorOnlineObservable = new Observable<SensorOnlineEvent>();
@@ -62,7 +66,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		for(Sensor s : this.dbAccess.getSensorFromDB(this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable))
 		{
-			this.sensorMap.put(s.id, s);
+			this._sensorMap.put(s.id, s);
 		}
 		
 		this.checkTimeoutTask();
@@ -100,18 +104,18 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		this.serialReader.removeObserver(this);
 		
-		for(Sensor s : this.sensorMap.values())
+		for(Sensor s : this._sensorMap.values())
 		{
 			s.save();
 		}
 		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");
-		this.sensorMap.clear();
+		this._sensorMap.clear();
 	}
 
 	@Override
 	public void update(Observable<DevicePacket> object, DevicePacket data)
 	{
-		Sensor s = this.sensorMap.getOrDefault(data.ID, null);
+		Sensor s = this._sensorMap.getOrDefault(data.ID, null);
 		if(s == null)
 		{// 새 장치 접근
 			s = this.registerSensor(data.ID);
@@ -123,7 +127,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	{
 		Date compareTime = new Date();
 		
-		for(Sensor sensor : this.sensorMap.values())
+		for(Sensor sensor : this._sensorMap.values())
 		{
 			sensor.CheckDeviceTimeout(compareTime);
 		}
@@ -131,13 +135,13 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	
 	public Sensor registerSensor(int id)
 	{
-		if(this.sensorMap.containsKey(id))
+		if(this._sensorMap.containsKey(id))
 		{
 			throw new RuntimeException("이미 있는 장치");
 		}
 		Sensor s = new Sensor(id, this.dbAccess, this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable);
 		s.init();
-		this.sensorMap.put(id, s);
+		this._sensorMap.put(id, s);
 		logger.log(Level.INFO, "새 센서 접근:"+s.id);
 		SensorRegisterEvent e = new SensorRegisterEvent(true, s);
 		this.notifyObservers(e);
@@ -146,13 +150,13 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	
 	public void removeSensor(int id)
 	{
-		Sensor s = this.sensorMap.getOrDefault(id, null);
+		Sensor s = this._sensorMap.getOrDefault(id, null);
 		if(s == null)
 		{
 			throw new RuntimeException("존재하지 않는 장치");
 		}
 		s.destroy();
-		this.sensorMap.remove(s.id);
+		this._sensorMap.remove(s.id);
 		logger.log(Level.INFO, "센서 삭제:"+s.id);
 		SensorRegisterEvent e = new SensorRegisterEvent(false, s);
 		this.notifyObservers(e);

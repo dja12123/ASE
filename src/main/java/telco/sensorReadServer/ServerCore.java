@@ -15,11 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import telco.console.LogWriter;
+import telco.sensorReadServer.appService.AppServiceManager;
 import telco.sensorReadServer.db.DB_Handler;
 import telco.sensorReadServer.db.DB_Installer;
 import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorManager.SensorManager;
 import telco.sensorReadServer.serialReader.SerialReadManager;
+import telco.sensorReadServer.serverSocket.ServerSocketManager;
 
 public class ServerCore
 {
@@ -193,25 +195,28 @@ public class ServerCore
 	}
 
 	private DB_Handler dbHandler;
-	private ServerSocketManager appConnectManager;
+	private ServerSocketManager serverSocketManager;
 	private SerialReadManager sensorReadManager;
 	private SensorManager sensorManager;
+	private AppServiceManager appServiceManager;
 
 	private ServerCore()
 	{
 		this.dbHandler = new DB_Handler();
-		this.appConnectManager = new ServerSocketManager();
+		this.serverSocketManager = new ServerSocketManager();
 		this.sensorReadManager = new SerialReadManager();
 		this.sensorManager = new SensorManager(this.sensorReadManager, this.dbHandler);
+		this.appServiceManager = new AppServiceManager(this.serverSocketManager, this.sensorManager);
 	}
 
 	private boolean start()
 	{
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
-		if(!this.appConnectManager.startModule()) return false;
+		if(!this.serverSocketManager.startModule()) return false;
 		if(!this.sensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
@@ -222,7 +227,8 @@ public class ServerCore
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
 		
-		this.appConnectManager.stopModule();
+		this.appServiceManager.stopModule();
+		this.serverSocketManager.stopModule();
 		this.sensorManager.stopModule();
 		this.sensorReadManager.stopModule();
 		this.dbHandler.stopModule();

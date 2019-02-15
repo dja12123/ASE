@@ -1,4 +1,4 @@
-package telco.appConnect.protocol;
+package telco.appConnect;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +11,20 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import telco.appConnect.channel.AppDataPacketAnalyser;
+import telco.appConnect.channel.AppDataPacketBuilder;
+import telco.appConnect.channel.Channel;
+import telco.appConnect.channel.ChannelEvent;
+import telco.appConnect.channel.ProtocolDefine;
 import telco.console.LogWriter;
+import telco.util.observer.Observable;
 
-public class Connection
+public class Connection extends Observable<ChannelEvent>
 {
 	public static final Logger logger = LogWriter.createLogger(Connection.class, "Connection");
 	
 	private final Socket socket;
-	private final ConnectionUser connectionUser;
+	private Observable<ConnectionStateChangeEvent> connectionStateChangeObservable;
 	private final HashMap<Short, Channel> channels;
 	private final boolean assignID[];
 	
@@ -26,13 +32,16 @@ public class Connection
 	private OutputStream outputStream;
 	private boolean isRun;
 	private Thread receiveThread;
+	
+	private GeneralDataReceiveCallback generalDataReceiveCallback;
 
-	public Connection(Socket socket, ConnectionUser connectionUser)
+	public Connection(Socket socket, Observable<ConnectionStateChangeEvent> connectionStateChangeObservable)
 	{
 		this.socket = socket;
-		this.connectionUser = connectionUser;
+		this.connectionStateChangeObservable = connectionStateChangeObservable;
 		this.channels = new HashMap<Short, Channel>();
 		this.assignID = new boolean[ProtocolDefine.MAX_CHANNEL_COUNT];
+		this.generalDataReceiveCallback = null;
 	}
 	
 	public synchronized boolean startConnection()
@@ -118,7 +127,7 @@ public class Connection
 		this.receiveThread = new Thread(this::receiveData, "connection");
 		this.receiveThread.setDaemon(true);
 		this.receiveThread.start();
-		this.connectionUser.startConnection(this);
+		this.connectionStateChangeObservable.notifyObservers(new ConnectionStateChangeEvent(this, true));
 		return true;
 	}
 	
@@ -141,8 +150,8 @@ public class Connection
 			logger.log(Level.WARNING, this.toString()+" etx송신중 오류", e);
 		}
 		
-		this.connectionUser.closeConnection(this);
 		this.isRun = false;
+		this.connectionStateChangeObservable.notifyObservers(new ConnectionStateChangeEvent(this, false));
 	}
 	
 	public void closeForce()
@@ -161,7 +170,12 @@ public class Connection
 		{
 			logger.log(Level.WARNING, this.toString()+" 소켓 종료중 오류", e);
 		}
-		this.connectionUser.closeConnection(this);
+		this.connectionStateChangeObservable.notifyObservers(new ConnectionStateChangeEvent(this, false));
+	}
+	
+	public void setGeneralDataReceiveCallback(GeneralDataReceiveCallback callback)
+	{
+		this.generalDataReceiveCallback = callback;
 	}
 	
 	public InetAddress getInetAddress()
@@ -236,9 +250,9 @@ public class Connection
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN))
 		{
-			Channel channel = new Channel(id, this.getKeyFromStream(), this.outputStream);
+			Channel channel = new Channel(id, this.getKeyFromStream(), this.outputStream, this);
 			this.channels.put(id, channel);
-			this.connectionUser.createChannel(this, channel);
+			this.notifyObservers(new ChannelEvent(channel, true));
 			logger.log(Level.INFO, "채널 열기 " + this.getInetAddress().toString() + " " + id + " " + channel.key);
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE))
@@ -268,7 +282,9 @@ public class Connection
 			
 			AppDataPacketAnalyser packetAnalyser = new AppDataPacketAnalyser(option, this.inputStream);
 			while(!packetAnalyser.readData());
-			this.connectionUser.receiveGeneralData(this, key, packetAnalyser.payload);
+			
+			if(this.generalDataReceiveCallback != null)
+				this.generalDataReceiveCallback.receiveData(this, key, packetAnalyser.payload);
 		}
 	}
 	
@@ -293,11 +309,11 @@ public class Connection
 			this.closeForce();
 			return null;
 		}
-		Channel channel = new Channel(id, key, this.outputStream);
+		Channel channel = new Channel(id, key, this.outputStream, this);
 		if(channel.sendChannelOpenMsg(id, key))
 		{
 			this.channels.put(id, channel);
-			this.connectionUser.createChannel(this, channel);
+			this.notifyObservers(new ChannelEvent(channel, true));
 			return channel;
 		}
 		return null;

@@ -1,4 +1,4 @@
-package telco.sensorReadServer;
+package telco.sensorReadServer.serverSocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,23 +7,17 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import telco.appConnect.AppConnectObservable;
-import telco.appConnect.AppDataReceiveEvent;
+import telco.appConnect.Connection;
 import telco.appConnect.ConnectionStateChangeEvent;
-import telco.appConnect.protocol.AppDataPacketBuilder;
-import telco.appConnect.protocol.Channel;
-import telco.appConnect.protocol.Connection;
 import telco.console.LogWriter;
+import telco.sensorReadServer.ServerCore;
 import telco.util.observer.Observable;
-import telco.util.observer.Observer;
 
-public class ServerSocketManager
+public class ServerSocketManager extends Observable<ConnectionStateChangeEvent>
 {
 	public static final Logger logger = LogWriter.createLogger(ServerSocketManager.class, "serverSocket");
 	
 	public static final String PROP_SERVERPORT = "Port";
-	
-	public final AppConnectObservable eventProvider;
 	
 	private boolean isRun;
 	private int port;
@@ -33,7 +27,6 @@ public class ServerSocketManager
 	
 	public ServerSocketManager()
 	{
-		this.eventProvider = new AppConnectObservable();
 		this.isRun = false;
 		this.clientList = new ArrayList<Connection>();
 	}
@@ -61,49 +54,6 @@ public class ServerSocketManager
 		this.acceptThread.start();
 		
 		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress());
-		
-		eventProvider.addConnectionStateChangeObserver((Observable<ConnectionStateChangeEvent> object, ConnectionStateChangeEvent data)->{
-			if(data.isOpen)
-			{
-				System.out.println("연결생성" + data.connection.getInetAddress().toString());
-			}
-			else
-			{
-				System.out.println("연결종료" +  data.connection.getInetAddress().toString());
-			}
-		});
-		Observer<AppDataReceiveEvent> ob = (Observable<AppDataReceiveEvent> object, AppDataReceiveEvent data)->{
-			if(data.hasChannel)
-			{
-				System.out.println("채널생성" +  data.connection.getInetAddress().toString() + " " + data.key + " " + data.channel.id);
-				data.channel.setReceiveCallback((Channel ch, byte[][] payload)->{
-					System.out.print(ch.toString() + "으로부터 수신 " + payload.length + "개, 데이타:");
-					AppDataPacketBuilder builder = new AppDataPacketBuilder();
-					for(int i = 0; i < payload.length; ++i)
-					{
-						builder.appendData(payload[i]);
-						System.out.print(new String(payload[i]) + "("+payload[i].length+ ") 다음데이타:");
-					}
-					System.out.println();
-					builder.appendData("반사!!");
-					ch.sendData(builder);
-					System.out.println("반사완료");
-				});
-			}
-			else
-			{
-				System.out.print("일반수신 " + data.payload.length + "개, 데이타:");
-				for(int i = 0; i < data.payload.length; ++i)
-				{
-					System.out.print(new String(data.payload[i]) + "("+data.payload[i].length+ ") 다음데이타:");
-				}
-				
-				System.out.println();
-			}
-		};
-		eventProvider.addDataReceiveObserver("login", ob);
-		eventProvider.addDataReceiveObserver("test1", ob);
-		eventProvider.addDataReceiveObserver("onlyDataTest", ob);
 		logger.log(Level.INFO, "ServerSocketManager 시작 완료");
 		return true;
 	}
@@ -113,7 +63,7 @@ public class ServerSocketManager
 		if(!this.isRun) return;
 		this.isRun = false;
 		
-		this.eventProvider.clearObservers();
+		this.clearObservers();
 		
 		for(Connection client : this.clientList)
 		{
@@ -148,12 +98,13 @@ public class ServerSocketManager
 			{
 				continue;
 			}
-			connection = new Connection(clientSocket, this.eventProvider);
+			connection = new Connection(clientSocket, this);
 			this.clientList.add(connection);
 			if(connection.startConnection())
 			{
 				logger.log(Level.INFO, "정상 연결");
 			}
+			this.notifyObservers(new ConnectionStateChangeEvent(connection, true));
 		}
 	}
 }

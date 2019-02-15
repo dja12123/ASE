@@ -1,4 +1,4 @@
-package telco.appConnect.protocol;
+package telco.appConnect.channel;
 
 import java.io.IOException;
 import java.io.InputStream;

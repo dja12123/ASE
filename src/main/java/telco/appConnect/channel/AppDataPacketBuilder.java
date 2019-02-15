@@ -1,4 +1,4 @@
-package telco.appConnect.protocol;
+package telco.appConnect.channel;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -19,6 +19,11 @@ public class AppDataPacketBuilder
 		return this;
 	}
 	
+	public AppDataPacketBuilder appendData(byte payload)
+	{
+		this.payloadList.add(new byte[] {payload});
+		return this;
+	}
 	
 	public AppDataPacketBuilder appendData(byte[] payload)
 	{

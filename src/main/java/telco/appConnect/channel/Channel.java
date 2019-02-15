@@ -1,4 +1,4 @@
-package telco.appConnect.protocol;
+package telco.appConnect.channel;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import telco.console.LogWriter;
+import telco.util.observer.Observable;
 
 public class Channel
 {
@@ -21,19 +22,19 @@ public class Channel
 	
 	private boolean isOpen;
 	private ChannelReceiveCallback recvCallback;
-	private ChannelCloseCallback closeCallback;
+	private Observable<ChannelEvent> openCloseProvider;
 	
-	public Channel(short id, String key, OutputStream output)
+	public Channel(short id, String key, OutputStream output, Observable<ChannelEvent> openCloseProvider)
 	{
 		this.id = id;
 		this.key = key;
 		this.output = output;
 		this.recvCallback = null;
-		this.closeCallback = null;
+		this.openCloseProvider = openCloseProvider;
 		this.isOpen = true;
 	}
 	
-	boolean sendChannelOpenMsg(short id, String key)
+	public boolean sendChannelOpenMsg(short id, String key)
 	{
 		byte option = ProtocolDefine.OPTION_CHANNEL;
 		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_OPEN);
@@ -56,7 +57,7 @@ public class Channel
 		return true;
 	}
 	
-	void sendChannelCloseMessage()
+	public void sendChannelCloseMessage()
 	{
 		byte option = ProtocolDefine.OPTION_CHANNEL;
 		option = ProtocolDefine.writeOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE);
@@ -128,28 +129,17 @@ public class Channel
 		this.recvCallback = callback;
 	}
 	
-	public void setCloseCallback(ChannelCloseCallback callback)
-	{
-		if(this.closeCheck("setReceiveCallback")) return;
-		
-		this.closeCallback = callback;
-	}
-	
 	public boolean isOpen()
 	{
 		return this.isOpen;
 	}
 	
-	void alertClose()
+	public void alertClose()
 	{
 		if(this.closeCheck("alertClose")) return;
-
-		if(this.closeCallback != null)
-		{
-			this.closeCallback.closeChannel(this);
-		}
 		
 		this.isOpen = false;
+		this.openCloseProvider.notifyObservers(new ChannelEvent(this, false));
 	}
 	
 	private boolean closeCheck(String func)
