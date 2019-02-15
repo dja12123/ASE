@@ -77,11 +77,11 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		this.publicDataReceiveObservable.addObserver((Observable<DataReceiveEvent> o, DataReceiveEvent e)->{
-			System.out.println(e.data.toString());
+			System.out.println(e.toString());
 		});
 		
 		this.publicSensorOnlineObservable.addObserver((Observable<SensorOnlineEvent> o, SensorOnlineEvent e)->{
-			System.out.println(e.isOnline + " " + e.sensor.id);
+			System.out.println(e.toString());
 		});
 		return true;
 	}

@@ -16,4 +16,13 @@ public class SensorLog
 		this.message = message;
 	}
 	
+	@Override
+	public String toString()
+	{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("["); buffer.append(this.time.toString()); buffer.append("][");
+		buffer.append(this.level.toString()); buffer.append("]");
+		buffer.append(this.message);
+		return buffer.toString();
+	}
 }

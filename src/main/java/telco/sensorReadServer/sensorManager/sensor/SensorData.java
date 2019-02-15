@@ -22,4 +22,20 @@ public class SensorData
 		this.Z_ACCEL = za;
 		this.Altitiude = al;
 	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("TIME: "); buffer.append(this.time.toString()); buffer.append('\n');
+		buffer.append("X_GRADIANT: "); buffer.append(this.X_GRADIANT); buffer.append('\n');
+		buffer.append("Y_GRADIANT: "); buffer.append(this.Y_GRADIANT); buffer.append('\n');
+		buffer.append("X_ACCEL: "); buffer.append(this.X_ACCEL); buffer.append('\n');
+		buffer.append("Y_ACCEL: "); buffer.append(this.Y_ACCEL); buffer.append('\n');
+		buffer.append("Z_ACCEL: "); buffer.append(this.Z_ACCEL); buffer.append('\n');
+		buffer.append("Altitiude: "); buffer.append(this.Altitiude);
+		
+		return buffer.toString();
+	}
 }

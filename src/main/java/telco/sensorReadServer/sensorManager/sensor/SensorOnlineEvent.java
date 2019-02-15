@@ -10,4 +10,16 @@ public class SensorOnlineEvent
 		this.sensor = sensor;
 		this.isOnline = isOnline;
 	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("sensor");
+		buffer.append(this.sensor.id);
+		buffer.append(" is ");
+		if(this.isOnline) buffer.append("online");
+		else buffer.append("offline");
+		return buffer.toString();
+	}
 }

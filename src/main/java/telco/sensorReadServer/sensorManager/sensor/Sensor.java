@@ -133,4 +133,10 @@ public class Sensor
 	{
 		return this.isOnline;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "sensor " + this.id;
+	}
 }

@@ -10,4 +10,10 @@ public class DataReceiveEvent
 		this.sensorInst = sensor;
 		this.data = data;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.sensorInst.toString() + "\n" + this.data.toString();
+	}
 }
