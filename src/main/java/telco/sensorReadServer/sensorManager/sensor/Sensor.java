@@ -12,6 +12,7 @@ public class Sensor
 {	
 	public final Observable<DataReceiveEvent> dataReceiveObservable;
 	public final Observable<SensorOnlineEvent> sensorOnlineEvent;
+	
 	final List<SensorLog> _log;
 	public final List<SensorLog> log;
 	final List<SensorData> _data;

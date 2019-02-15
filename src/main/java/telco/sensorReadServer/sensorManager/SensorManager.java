@@ -94,7 +94,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		Sensor s = this.sensorMap.getOrDefault(data.ID, null);
 		if(s == null)
 		{// 새 장치 접근
-			this.registerSensor(data.ID);
+			s = this.registerSensor(data.ID);
 		}
 		s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
 	}
@@ -109,7 +109,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		}
 	}
 	
-	public void registerSensor(int id)
+	public Sensor registerSensor(int id)
 	{
 		if(this.sensorMap.containsKey(id))
 		{
@@ -121,6 +121,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		logger.log(Level.INFO, "새 센서 접근:"+s.id);
 		SensorRegisterEvent e = new SensorRegisterEvent(true, s);
 		this.notifyObservers(e);
+		return s;
 	}
 	
 	public void removeSensor(int id)
