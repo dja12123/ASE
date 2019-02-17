@@ -28,7 +28,7 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	
 	public void destroy()
 	{
-		this.channel.setReceiveCallback(null);
+		if(this.channel.isOpen()) this.channel.setReceiveCallback(null);
 		if(this.sensor != null) this.sensor.dataReceiveObservable.removeObserver(this);
 	}
 
