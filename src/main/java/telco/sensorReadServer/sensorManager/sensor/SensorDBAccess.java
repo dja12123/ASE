@@ -102,7 +102,6 @@ public class SensorDBAccess
 					int za = sensorDataRS.getInt(7);
 					int al = sensorDataRS.getInt(8);
 					SensorData data = new SensorData(d, xg, yg, xa, ya, za, al);
-					logger.log(Level.INFO, "데이타 로드" + data.toString());
 					sensor._data.add(data);
 					if(sensor._data.size() >= config.getMaxData())
 					{
@@ -146,6 +145,7 @@ public class SensorDBAccess
 			buf.append(data.level.toString()); buf.append(", ");
 			buf.append(data.message);
 			buf.append(");");
+			this.dbHandler.executeQuery(buf.toString());
 		}
 		
 		for(SensorData data : s.data)
@@ -161,6 +161,7 @@ public class SensorDBAccess
 			buf.append(data.Z_ACCEL); buf.append(", ");
 			buf.append(data.Altitiude);
 			buf.append(");");
+			this.dbHandler.executeQuery(buf.toString());
 		}
 	}
 	
