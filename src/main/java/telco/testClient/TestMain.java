@@ -20,10 +20,13 @@ public class TestMain
 		socket.startConnection();
 		Channel ch = socket.getConenction().channelOpen(AppServiceDefine.REQ_SensorData);
 		ch.setReceiveCallback((Channel c, byte[][] data)->{
+			
 			if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_ALLDATA)
 			{
+				
 				ByteBuffer buf = ByteBuffer.wrap(data[1]);
 				int count = buf.getInt();
+				System.out.println("데이타 수신" + count);
 				for(int i = 0; i < count; ++i)
 				{
 					ByteBuffer b = ByteBuffer.wrap(data[i + 2]);
