@@ -252,8 +252,8 @@ public class Connection extends Observable<ChannelEvent>
 		{
 			Channel channel = new Channel(id, this.getKeyFromStream(), this.outputStream, this);
 			this.channels.put(id, channel);
-			this.notifyObservers(new ChannelEvent(channel, true));
 			logger.log(Level.INFO, "채널 열기 " + this.getInetAddress().toString() + " " + id + " " + channel.key);
+			this.notifyObservers(new ChannelEvent(channel, true));
 		}
 		else if(ProtocolDefine.checkOption(option, ProtocolDefine.OPTION_CHANNEL_CLOSE))
 		{

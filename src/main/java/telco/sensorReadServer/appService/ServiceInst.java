@@ -63,7 +63,6 @@ public class ServiceInst implements Observer<ChannelEvent>
 			this.sensorDataSender.destroy();
 		}
 		logger.log(Level.INFO, "센서 데이터 전송 요구");
-		new Exception().printStackTrace();
 		this.sensorDataSender = new SensorDataSender(channel, this.sensorManager);
 	}
 	

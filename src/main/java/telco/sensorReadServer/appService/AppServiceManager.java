@@ -50,8 +50,10 @@ public class AppServiceManager implements Observer<ConnectionStateChangeEvent>
 	@Override
 	public void update(Observable<ConnectionStateChangeEvent> object, ConnectionStateChangeEvent data)
 	{
+		
 		if(data.isOpen)
 		{
+			logger.log(Level.INFO, "앱 서비스 인스턴스 생성");
 			ServiceInst inst = new ServiceInst(data.connection, this.sensorManager);
 			this.serviceMap.put(data.connection, inst);
 		}
@@ -59,6 +61,7 @@ public class AppServiceManager implements Observer<ConnectionStateChangeEvent>
 		{
 			if(this.serviceMap.containsKey(data.connection))
 			{
+				logger.log(Level.INFO, "앱 서비스 인스턴스 삭제");
 				this.serviceMap.get(data.connection).destroy();
 				this.serviceMap.remove(data.connection);
 			}
