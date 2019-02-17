@@ -40,12 +40,12 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 			
 			ByteBuffer buf = ByteBuffer.wrap(data[1]);
 			int id = buf.getInt();
-			System.out.println(id + "에 대한 데이터 요청");
 			this.sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 			if(this.sensor == null)
 			{
 				return;
 			}
+			System.out.println(id + "에 대한 데이터 요청");
 			Thread t = new Thread(this::sendAllSensorDataTask);
 			t.setDaemon(true);
 			t.start();

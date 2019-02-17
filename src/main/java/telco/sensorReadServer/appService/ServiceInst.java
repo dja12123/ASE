@@ -68,7 +68,6 @@ public class ServiceInst implements Observer<ChannelEvent>
 	
 	private void reqSensorDataDestroyTask()
 	{
-		new Exception().printStackTrace();
 		logger.log(Level.INFO, "센서 데이터 전송 요구 종료");
 		if(this.sensorDataSender != null)
 		{
