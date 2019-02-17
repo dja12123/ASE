@@ -49,6 +49,14 @@ public class ClientSocketManager extends Observable<ConnectionStateChangeEvent>
 		this.connection.startConnection();
 	}
 	
+	public void closeConnection()
+	{
+		if(this.connection != null && this.connection.isOpen())
+		{
+			this.connection.closeSafe();
+		}
+	}
+	
 	public Connection getConenction()
 	{
 		return this.connection;
