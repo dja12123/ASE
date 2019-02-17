@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import telco.appConnect.Connection;
 import telco.appConnect.ConnectionStateChangeEvent;
 import telco.console.LogWriter;
-import telco.sensorReadServer.ServerCore;
 import telco.util.observer.Observable;
 
 public class ClientSocketManager extends Observable<ConnectionStateChangeEvent>
@@ -47,6 +46,7 @@ public class ClientSocketManager extends Observable<ConnectionStateChangeEvent>
 		}
 		
 		this.connection = new Connection(socket, this);
+		this.connection.startConnection();
 	}
 	
 	public Connection getConenction()

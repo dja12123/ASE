@@ -16,7 +16,8 @@ public class TestMain
 	
 	public static void main(String[] args) throws Exception
 	{
-		ClientSocketManager socket = new ClientSocketManager("127.0.0.1", 1234);
+		ClientSocketManager socket = new ClientSocketManager("192.168.0.68", 1234);
+		socket.startConnection();
 		Channel ch = socket.getConenction().channelOpen(AppServiceDefine.REQ_SensorData);
 		ch.setReceiveCallback((Channel c, byte[][] data)->{
 			if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_ALLDATA)

@@ -23,6 +23,7 @@ public class AppServiceManager implements Observer<ConnectionStateChangeEvent>
 	public AppServiceManager(ServerSocketManager serverSocket, SensorManager sensorManager)
 	{
 		this.serverSocket = serverSocket;
+		this.sensorManager = sensorManager;
 		this.serviceMap = new HashMap<Connection, ServiceInst>();
 	}
 	
