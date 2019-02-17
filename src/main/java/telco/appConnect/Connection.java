@@ -409,6 +409,11 @@ public class Connection extends Observable<ChannelEvent>
 		return false;
 	}
 	
+	public boolean isOpen()
+	{
+		return this.isRun;
+	}
+	
 	@Override
 	public String toString()
 	{

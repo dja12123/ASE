@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import telco.appConnect.channel.AppDataPacketBuilder;
 import telco.appConnect.channel.Channel;
 import telco.appConnect.channel.ChannelReceiveCallback;
+import telco.appConnect.channel.ProtocolDefine;
 import telco.sensorReadServer.sensorManager.SensorManager;
 import telco.sensorReadServer.sensorManager.sensor.DataReceiveEvent;
 import telco.sensorReadServer.sensorManager.sensor.Sensor;
@@ -14,10 +15,6 @@ import telco.util.observer.Observer;
 
 public class SensorDataSender implements ChannelReceiveCallback, Observer<DataReceiveEvent>
 {
-	public static final byte PROTO_REQ_DEVICEID = 0;
-	public static final byte PROTO_REP_ALLDATA = 1;
-	public static final byte PROTO_REP_REALTIMEDATA = 2;
-	
 	private Channel channel;
 	private SensorManager sensorManager;
 	private Sensor sensor;
@@ -38,7 +35,7 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	@Override
 	public void receiveData(Channel ch, byte[][] data)
 	{
-		if(data[0][0] == PROTO_REQ_DEVICEID)
+		if(data[0][0] == AppServiceDefine.SensorData_PROTO_REQ_DEVICEID)
 		{
 			ByteBuffer buf = ByteBuffer.wrap(data[1]);
 			int id = buf.getInt();
@@ -63,7 +60,8 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	private void sendAllSensorDataTask()
 	{
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(PROTO_REP_ALLDATA);
+		b.appendData(AppServiceDefine.SensorData_PROTO_REP_ALLDATA);
+		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size()));
 		for(SensorData d : this.sensor.data)
 		{
 			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
@@ -83,7 +81,7 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	{
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(PROTO_REP_REALTIMEDATA);
+			b.appendData(AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA);
 			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
 			buf.putLong(d.data.time.getTime());
 			buf.putFloat(d.data.X_GRADIANT);

@@ -33,7 +33,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		{
 			switch(data.channel.key)
 			{
-			case "reqSensorData":
+			case AppServiceDefine.REQ_SensorData:
 				this.reqSensorDataCreateTask(data.channel);
 				break;
 			}
@@ -42,7 +42,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		{
 			switch(data.channel.key)
 			{
-			case "reqSensorData":
+			case AppServiceDefine.REQ_SensorData:
 				this.reqSensorDataDestroyTask();
 				break;
 			}
