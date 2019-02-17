@@ -104,7 +104,6 @@ public class ServerSocketManager extends Observable<ConnectionStateChangeEvent>
 			{
 				logger.log(Level.INFO, "정상 연결");
 			}
-			this.notifyObservers(new ConnectionStateChangeEvent(connection, true));
 		}
 	}
 }
