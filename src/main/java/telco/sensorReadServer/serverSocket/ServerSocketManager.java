@@ -100,10 +100,22 @@ public class ServerSocketManager extends Observable<ConnectionStateChangeEvent>
 			}
 			connection = new Connection(clientSocket, this);
 			this.clientList.add(connection);
+			
 			if(connection.startConnection())
 			{
 				logger.log(Level.INFO, "정상 연결");
 			}
+		}
+	}
+	
+	@Override
+	public void notifyObservers(ConnectionStateChangeEvent e)
+	{
+		super.notifyObservers(e);
+		if(!e.isOpen)
+		{
+			logger.log(Level.INFO, e.connection.getInetAddress().toString() + " 연결 종료");
+			this.clientList.remove(e.connection);
 		}
 	}
 }

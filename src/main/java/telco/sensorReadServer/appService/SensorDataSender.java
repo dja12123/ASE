@@ -37,8 +37,10 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	{
 		if(data[0][0] == AppServiceDefine.SensorData_PROTO_REQ_DEVICEID)
 		{
+			
 			ByteBuffer buf = ByteBuffer.wrap(data[1]);
 			int id = buf.getInt();
+			System.out.println(id + "에 대한 데이터 요청");
 			this.sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 			if(this.sensor == null)
 			{
