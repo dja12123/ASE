@@ -81,8 +81,8 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 	{
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
 			b.appendData(AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA);
+			b.appendData(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
 			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
 			buf.putFloat(e.data.X_GRADIANT);
 			buf.putFloat(e.data.Y_GRADIANT);
