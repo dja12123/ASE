@@ -32,9 +32,12 @@ public class TestMain
 				{
 					
 					Date time;
+					String timeStr = new String(data[2 + (i * 2)]);
+					System.out.println(timeStr);
 					try
 					{
-						time = AppServiceDefine.DATE_FORMAT.parse(new String(data[2 + (i * 2)]));
+						
+						time = AppServiceDefine.DATE_FORMAT.parse(timeStr);
 					}
 					catch (ParseException e)
 					{
