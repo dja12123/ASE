@@ -65,7 +65,10 @@ public class ServerSocketManager extends Observable<ConnectionStateChangeEvent>
 		
 		this.clearObservers();
 		
-		for(Connection client : this.clientList)
+		ArrayList<Connection> closeList = new ArrayList<Connection>();
+		closeList.addAll(this.clientList);
+		
+		for(Connection client : closeList)
 		{
 			client.closeSafe();
 		}
