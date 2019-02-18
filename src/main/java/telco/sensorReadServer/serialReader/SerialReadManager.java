@@ -69,7 +69,6 @@ public class SerialReadManager extends Observable<DevicePacket>
 	
 	private void dataReceived(SerialDataEvent event)
 	{
-		System.out.println("데이터 수신");
 		byte[] receiveData;
 		try
 		{

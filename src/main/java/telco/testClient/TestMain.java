@@ -53,14 +53,33 @@ public class TestMain
 			}
 			else if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA)
 			{
+				ByteBuffer b = ByteBuffer.wrap(data[1]);
+				long time = b.getLong();
+				float xg = b.getFloat();
+				float yg = b.getFloat();
 				
+				float xa = b.getFloat();
+				float ya = b.getFloat();
+				float za = b.getFloat();
+				
+				float al = b.getFloat();
+				
+				StringBuffer strbuf = new StringBuffer();
+				strbuf.append(new Date(time).toString()); strbuf.append(' ');
+				strbuf.append(xg); strbuf.append(' ');
+				strbuf.append(yg); strbuf.append(' ');
+				strbuf.append(xa); strbuf.append(' ');
+				strbuf.append(ya); strbuf.append(' ');
+				strbuf.append(za); strbuf.append(' ');
+				strbuf.append(al);
+				System.out.println(strbuf.toString());
 			}
 		});
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_PROTO_REQ_DEVICEID);
 		b.appendData(ProtocolDefine.intToByteArray(1001));
 		ch.sendData(b);
-		Thread.sleep(500);
+		Thread.sleep(20000);
 		socket.closeConnection();
 		System.out.println("종료");
 		Thread.sleep(2000);
