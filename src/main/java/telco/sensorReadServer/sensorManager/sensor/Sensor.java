@@ -78,7 +78,7 @@ public class Sensor
 	{
 		SensorLog log = new SensorLog(level, new Date(), msg);
 		this._log.add(log);
-		if(this._log.size() >= this.configAccess.getMaxLog())
+		if(this._log.size() > this.configAccess.getMaxLog())
 		{
 			this._log.remove(0);
 		}
@@ -97,7 +97,7 @@ public class Sensor
 		
 		SensorData data = new SensorData(new Date(), xg, yg, xa, ya, za ,al);
 		this._data.add(data);
-		if(this._data.size() >= this.configAccess.getMaxData())
+		if(this._data.size() > this.configAccess.getMaxData())
 		{
 			this._data.remove(0);
 		}
