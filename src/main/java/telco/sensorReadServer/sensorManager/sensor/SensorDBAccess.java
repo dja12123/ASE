@@ -19,7 +19,7 @@ public class SensorDBAccess
 {
 	// 센서의 DB접근을 제어합니다.
 	private static final Logger logger = LogWriter.createLogger(SensorDBAccess.class, "sensorCreater");
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 
 	private static final String SCHEMA_Sensor = 
 			"CREATE TABLE Sensor(" + 
