@@ -1,6 +1,7 @@
 package telco.testClient;
 
 import java.nio.ByteBuffer;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -29,8 +30,18 @@ public class TestMain
 				System.out.println("데이타 수신" + count);
 				for(int i = 0; i < count; ++i)
 				{
-					ByteBuffer b = ByteBuffer.wrap(data[i + 2]);
-					long time = b.getLong();
+					
+					Date time;
+					try
+					{
+						time = AppServiceDefine.DATE_FORMAT.parse(new String(data[2 + (i * 2)]));
+					}
+					catch (ParseException e)
+					{
+						e.printStackTrace();
+						break;
+					}
+					ByteBuffer b = ByteBuffer.wrap(data[(2 + (i * 2)) + 1]);
 					float xg = b.getFloat();
 					float yg = b.getFloat();
 					
@@ -41,7 +52,7 @@ public class TestMain
 					float al = b.getFloat();
 							
 					StringBuffer strbuf = new StringBuffer();
-					strbuf.append(new Date(time).toString()); strbuf.append(' ');
+					strbuf.append(time.toString()); strbuf.append(' ');
 					strbuf.append(xg); strbuf.append(' ');
 					strbuf.append(yg); strbuf.append(' ');
 					strbuf.append(xa); strbuf.append(' ');
@@ -53,8 +64,19 @@ public class TestMain
 			}
 			else if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA)
 			{
-				ByteBuffer b = ByteBuffer.wrap(data[1]);
-				long time = b.getLong();
+				Date time;
+				try
+				{
+					time = AppServiceDefine.DATE_FORMAT.parse(new String(data[1]));
+				}
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				ByteBuffer b = ByteBuffer.wrap(data[2]);
+				
+				
 				float xg = b.getFloat();
 				float yg = b.getFloat();
 				
@@ -65,7 +87,7 @@ public class TestMain
 				float al = b.getFloat();
 				
 				StringBuffer strbuf = new StringBuffer();
-				strbuf.append(new Date(time).toString()); strbuf.append(' ');
+				strbuf.append(time.toString()); strbuf.append(' ');
 				strbuf.append(xg); strbuf.append(' ');
 				strbuf.append(yg); strbuf.append(' ');
 				strbuf.append(xa); strbuf.append(' ');

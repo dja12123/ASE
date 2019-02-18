@@ -64,8 +64,8 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size()));
 		for(SensorData d : this.sensor.data)
 		{
+			b.appendData(AppServiceDefine.DATE_FORMAT.format(d.time).getBytes());
 			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
-			buf.putLong(d.time.getTime());
 			buf.putFloat(d.X_GRADIANT);
 			buf.putFloat(d.Y_GRADIANT);
 			buf.putFloat(d.X_ACCEL);
@@ -77,19 +77,19 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 		this.channel.sendData(b);
 	}
 	
-	private void sendRealtimeSensorDataTask(DataReceiveEvent d)
+	private void sendRealtimeSensorDataTask(DataReceiveEvent e)
 	{
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
+			b.appendData(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
 			b.appendData(AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA);
 			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
-			buf.putLong(d.data.time.getTime());
-			buf.putFloat(d.data.X_GRADIANT);
-			buf.putFloat(d.data.Y_GRADIANT);
-			buf.putFloat(d.data.X_ACCEL);
-			buf.putFloat(d.data.Y_ACCEL);
-			buf.putFloat(d.data.Z_ACCEL);
-			buf.putFloat(d.data.Altitiude);
+			buf.putFloat(e.data.X_GRADIANT);
+			buf.putFloat(e.data.Y_GRADIANT);
+			buf.putFloat(e.data.X_ACCEL);
+			buf.putFloat(e.data.Y_ACCEL);
+			buf.putFloat(e.data.Z_ACCEL);
+			buf.putFloat(e.data.Altitiude);
 			b.appendData(buf.array());
 			this.channel.sendData(b);
 		});
