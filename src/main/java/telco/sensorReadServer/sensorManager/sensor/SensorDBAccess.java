@@ -91,11 +91,9 @@ public class SensorDBAccess
 				}
 				
 				CachedRowSet sensorDataRS = this.dbHandler.query("select * from Sensor_Data where id="+id+";");
-				DB_Handler.printResultSet(sensorDataRS);
 				while(sensorDataRS.next())
 				{
 					Date d = DATE_FORMAT.parse(sensorDataRS.getString(2));
-					System.out.println(d);
 					float xg = sensorDataRS.getFloat(3);
 					float yg = sensorDataRS.getFloat(4);
 					float xa = sensorDataRS.getFloat(5);
