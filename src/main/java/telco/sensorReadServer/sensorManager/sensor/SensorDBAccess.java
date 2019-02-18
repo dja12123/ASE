@@ -140,8 +140,8 @@ public class SensorDBAccess
 		{
 			StringBuffer buf = new StringBuffer();
 			buf.append("insert into Sensor_Log values(");
-			buf.append(s.id); buf.append(", ");
-			buf.append(DATE_FORMAT.format(data.time)); buf.append(", ");
+			buf.append(s.id); buf.append(", '");
+			buf.append(DATE_FORMAT.format(data.time)); buf.append("', ");
 			buf.append(data.level.toString()); buf.append(", ");
 			buf.append(data.message);
 			buf.append(");");
@@ -152,8 +152,8 @@ public class SensorDBAccess
 		{
 			StringBuffer buf = new StringBuffer();
 			buf.append("insert into Sensor_Data values(");
-			buf.append(s.id); buf.append(", ");
-			buf.append(DATE_FORMAT.format(data.time)); buf.append(", ");
+			buf.append(s.id); buf.append(", '");
+			buf.append(DATE_FORMAT.format(data.time)); buf.append("', ");
 			buf.append(data.X_GRADIANT); buf.append(", ");
 			buf.append(data.Y_GRADIANT); buf.append(", ");
 			buf.append(data.X_ACCEL); buf.append(", ");

@@ -60,7 +60,7 @@ public class TestMain
 		b.appendData(AppServiceDefine.SensorData_PROTO_REQ_DEVICEID);
 		b.appendData(ProtocolDefine.intToByteArray(1001));
 		ch.sendData(b);
-		Thread.sleep(100);
+		Thread.sleep(500);
 		socket.closeConnection();
 		System.out.println("종료");
 		Thread.sleep(2000);
