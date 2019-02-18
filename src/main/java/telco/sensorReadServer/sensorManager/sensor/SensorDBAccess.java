@@ -91,18 +91,16 @@ public class SensorDBAccess
 				}
 				
 				CachedRowSet sensorDataRS = this.dbHandler.query("select * from Sensor_Data where id="+id+";");
-				CachedRowSet sensorDataRS1 = this.dbHandler.query("select * from Sensor_Data where id="+id+";");
-				DB_Handler.printResultSet(sensorDataRS1);
 				
 				while(sensorDataRS.next())
 				{					
 					Date d = DATE_FORMAT.parse(sensorDataRS.getString(2));
-					int xg = sensorDataRS.getInt(3);
-					int yg = sensorDataRS.getInt(4);
-					int xa = sensorDataRS.getInt(5);
-					int ya = sensorDataRS.getInt(6);
-					int za = sensorDataRS.getInt(7);
-					int al = sensorDataRS.getInt(8);
+					float xg = sensorDataRS.getFloat(3);
+					float yg = sensorDataRS.getFloat(4);
+					float xa = sensorDataRS.getFloat(5);
+					float ya = sensorDataRS.getFloat(6);
+					float za = sensorDataRS.getFloat(7);
+					float al = sensorDataRS.getFloat(8);
 					SensorData data = new SensorData(d, xg, yg, xa, ya, za, al);
 					sensor._data.add(data);
 					if(sensor._data.size() >= config.getMaxData())
