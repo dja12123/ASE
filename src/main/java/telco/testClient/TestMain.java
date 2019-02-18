@@ -19,7 +19,7 @@ public class TestMain
 	{
 		ClientSocketManager socket = new ClientSocketManager("192.168.0.68", 1234);
 		socket.startConnection();
-		Channel ch = socket.getConenction().channelOpen(AppServiceDefine.REQ_SensorData);
+		Channel ch = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorData);
 		ch.setReceiveCallback((Channel c, byte[][] data)->{
 			
 			if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_ALLDATA)
@@ -104,6 +104,20 @@ public class TestMain
 		b.appendData(AppServiceDefine.SensorData_PROTO_REQ_DEVICEID);
 		b.appendData(ProtocolDefine.intToByteArray(1001));
 		ch.sendData(b);
+		
+		Channel ch1 = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorList);
+		ch1.setReceiveCallback((Channel c, byte[][] data)->{
+			ByteBuffer buf = ByteBuffer.wrap(data[0]);
+			int size = buf.getInt();
+			for(int i = 0; i < size; ++i)
+			{
+				ByteBuffer buf1 = ByteBuffer.wrap(data[i + 1]);
+				int id = buf1.getInt();
+				boolean isActive = buf1.get() == 1 ? true : false;
+				
+				System.out.println("센서"+id+" 활성여부:"+isActive);
+			}
+		});
 		Thread.sleep(2000000);
 		socket.closeConnection();
 		System.out.println("종료");
