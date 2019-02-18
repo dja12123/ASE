@@ -97,7 +97,7 @@ public class Sensor
 		
 		SensorData data = new SensorData(new Date(), xg, yg, xa, ya, za ,al);
 		this._data.add(data);
-		if(this._data.size() >= this.configAccess.getMaxLog())
+		if(this._data.size() >= this.configAccess.getMaxData())
 		{
 			this._data.remove(0);
 		}
