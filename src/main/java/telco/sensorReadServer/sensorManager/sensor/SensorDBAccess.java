@@ -94,9 +94,8 @@ public class SensorDBAccess
 				DB_Handler.printResultSet(sensorDataRS);
 				while(sensorDataRS.next())
 				{
-					String date = sensorDataRS.getString(2);
-					Date d = DATE_FORMAT.parse(date);
-					System.out.println(date);
+					Date d = DATE_FORMAT.parse(sensorDataRS.getString(2));
+					System.out.println(d);
 					float xg = sensorDataRS.getFloat(3);
 					float yg = sensorDataRS.getFloat(4);
 					float xa = sensorDataRS.getFloat(5);
