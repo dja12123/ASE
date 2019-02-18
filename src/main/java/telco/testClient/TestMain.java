@@ -28,23 +28,22 @@ public class TestMain
 				ByteBuffer buf = ByteBuffer.wrap(data[1]);
 				int count = buf.getInt();
 				System.out.println("데이타 수신" + count);
+				byte[] timeBuf = new byte[AppServiceDefine.DATE_FORMAT_SIZE];
 				for(int i = 0; i < count; ++i)
 				{
-					
+					ByteBuffer b = ByteBuffer.wrap(data[2 + i]);
+					b.get(timeBuf);
 					Date time;
-					String timeStr = new String(data[2 + (i * 2)]);
-					System.out.println(timeStr);
 					try
 					{
-						
-						time = AppServiceDefine.DATE_FORMAT.parse(timeStr);
+						time = AppServiceDefine.DATE_FORMAT.parse(new String(timeBuf));
 					}
 					catch (ParseException e)
 					{
 						e.printStackTrace();
 						break;
 					}
-					ByteBuffer b = ByteBuffer.wrap(data[(2 + (i * 2)) + 1]);
+					
 					float xg = b.getFloat();
 					float yg = b.getFloat();
 					
@@ -67,18 +66,19 @@ public class TestMain
 			}
 			else if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA)
 			{
+				ByteBuffer b = ByteBuffer.wrap(data[1]);
+				byte[] timeBuf = new byte[AppServiceDefine.DATE_FORMAT_SIZE];
+				b.get(timeBuf);
 				Date time;
 				try
 				{
-					time = AppServiceDefine.DATE_FORMAT.parse(new String(data[1]));
+					time = AppServiceDefine.DATE_FORMAT.parse(new String(timeBuf));
 				}
 				catch (ParseException e)
 				{
 					e.printStackTrace();
 					return;
 				}
-				ByteBuffer b = ByteBuffer.wrap(data[2]);
-				
 				
 				float xg = b.getFloat();
 				float yg = b.getFloat();
@@ -104,7 +104,7 @@ public class TestMain
 		b.appendData(AppServiceDefine.SensorData_PROTO_REQ_DEVICEID);
 		b.appendData(ProtocolDefine.intToByteArray(1001));
 		ch.sendData(b);
-		Thread.sleep(20000);
+		Thread.sleep(2000000);
 		socket.closeConnection();
 		System.out.println("종료");
 		Thread.sleep(2000);

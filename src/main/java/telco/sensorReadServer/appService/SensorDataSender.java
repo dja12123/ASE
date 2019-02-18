@@ -64,8 +64,8 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size()));
 		for(SensorData d : this.sensor.data)
 		{
-			b.appendData(AppServiceDefine.DATE_FORMAT.format(d.time).getBytes());
-			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
+			ByteBuffer buf = ByteBuffer.allocate(AppServiceDefine.DATE_FORMAT_SIZE+8+4+4+4+4+4+4);
+			buf.put(AppServiceDefine.DATE_FORMAT.format(d.time).getBytes());
 			buf.putFloat(d.X_GRADIANT);
 			buf.putFloat(d.Y_GRADIANT);
 			buf.putFloat(d.X_ACCEL);
@@ -82,8 +82,8 @@ public class SensorDataSender implements ChannelReceiveCallback, Observer<DataRe
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
 			b.appendData(AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA);
-			b.appendData(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
-			ByteBuffer buf = ByteBuffer.allocate(8+4+4+4+4+4+4);
+			ByteBuffer buf = ByteBuffer.allocate(AppServiceDefine.DATE_FORMAT_SIZE+8+4+4+4+4+4+4);
+			buf.put(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
 			buf.putFloat(e.data.X_GRADIANT);
 			buf.putFloat(e.data.Y_GRADIANT);
 			buf.putFloat(e.data.X_ACCEL);
