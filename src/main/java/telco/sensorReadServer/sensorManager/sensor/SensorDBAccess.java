@@ -141,10 +141,10 @@ public class SensorDBAccess
 			StringBuffer buf = new StringBuffer();
 			buf.append("insert into Sensor_Log values(");
 			buf.append(s.id); buf.append(", '");
-			buf.append(DATE_FORMAT.format(data.time)); buf.append("', ");
-			buf.append(data.level.toString()); buf.append(", ");
+			buf.append(DATE_FORMAT.format(data.time)); buf.append("', '");
+			buf.append(data.level.toString()); buf.append("', '");
 			buf.append(data.message);
-			buf.append(");");
+			buf.append("');");
 			this.dbHandler.executeQuery(buf.toString());
 		}
 		
