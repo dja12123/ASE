@@ -91,6 +91,8 @@ public class SensorDBAccess
 				}
 				
 				CachedRowSet sensorDataRS = this.dbHandler.query("select * from Sensor_Data where id="+id+";");
+				CachedRowSet sensorDataRS1 = this.dbHandler.query("select * from Sensor_Data where id="+id+";");
+				DB_Handler.printResultSet(sensorDataRS1);
 				
 				while(sensorDataRS.next())
 				{					
