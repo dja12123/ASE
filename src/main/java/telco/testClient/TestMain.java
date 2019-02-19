@@ -139,6 +139,9 @@ public class TestMain
 			}
 			
 		});
+		b = new AppDataPacketBuilder();
+		b.appendData(AppServiceDefine.SensorDeviceData_REQ_LIST);
+		ch1.sendData(b);
 		Thread.sleep(2000000);
 		socket.closeConnection();
 		System.out.println("종료");
