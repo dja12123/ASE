@@ -13,14 +13,14 @@ import telco.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
 import telco.util.observer.Observable;
 import telco.util.observer.Observer;
 
-public class SensorDeviceDataSender implements ChannelReceiveCallback
+public class AllSensorDataSender implements ChannelReceiveCallback
 {
 	private Channel channel;
 	private SensorManager sensorManager;
 	private Observer<SensorOnlineEvent> sensorOnlineObserver;
 	private Observer<SensorRegisterEvent> sensorRegisterObserver;
 	
-	SensorDeviceDataSender(Channel channel, SensorManager sensorManager)
+	AllSensorDataSender(Channel channel, SensorManager sensorManager)
 	{
 		this.channel = channel;
 		this.sensorManager = sensorManager;
@@ -60,6 +60,11 @@ public class SensorDeviceDataSender implements ChannelReceiveCallback
 			b.appendData(buf.array());
 		}
 		this.channel.sendData(b);
+	}
+	
+	public void sendAllSensorLogTask()
+	{
+		
 	}
 
 	public void sensorOnlineCallback(Observable<SensorOnlineEvent> object, SensorOnlineEvent data)

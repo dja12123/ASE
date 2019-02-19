@@ -22,7 +22,7 @@ public class TestMain
 		Channel ch = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorData);
 		ch.setReceiveCallback((Channel c, byte[][] data)->{
 			
-			if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_ALLDATA)
+			if(data[0][0] == AppServiceDefine.SensorData_REP_ALLDATA)
 			{
 				
 				ByteBuffer buf = ByteBuffer.wrap(data[1]);
@@ -64,7 +64,7 @@ public class TestMain
 					System.out.println(strbuf.toString());
 				}
 			}
-			else if(data[0][0] == AppServiceDefine.SensorData_PROTO_REP_REALTIMEDATA)
+			else if(data[0][0] == AppServiceDefine.SensorData_REP_REALTIMEDATA)
 			{
 				ByteBuffer b = ByteBuffer.wrap(data[1]);
 				byte[] timeBuf = new byte[AppServiceDefine.DATE_FORMAT_SIZE];
@@ -101,8 +101,12 @@ public class TestMain
 			}
 		});
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(AppServiceDefine.SensorData_PROTO_REQ_DEVICEID);
+		b.appendData(AppServiceDefine.SensorData_REQ_DEVICEID);
 		b.appendData(ProtocolDefine.intToByteArray(1001));
+		ch.sendData(b);
+		
+		b = new AppDataPacketBuilder();
+		b.appendData(AppServiceDefine.SensorData_REQ_ALLDATA);
 		ch.sendData(b);
 		
 		Channel ch1 = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorDeviceData);
@@ -146,7 +150,6 @@ public class TestMain
 		socket.closeConnection();
 		System.out.println("종료");
 		Thread.sleep(2000);
-
 	}
 
 }

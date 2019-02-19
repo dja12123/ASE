@@ -12,6 +12,7 @@ public class Sensor
 {	
 	public final Observable<DataReceiveEvent> dataReceiveObservable;
 	public final Observable<SensorOnlineEvent> sensorOnlineObservable;
+	public final Observable<SensorLog> sensorLogObservable;
 	
 	private Observable<DataReceiveEvent> publicDataReceiveObservable;
 	private Observable<SensorOnlineEvent> publicSensorOnlineObservable;
@@ -51,6 +52,8 @@ public class Sensor
 		
 		this.dataReceiveObservable = new Observable<DataReceiveEvent>();
 		this.sensorOnlineObservable = new Observable<SensorOnlineEvent>();
+		this.sensorLogObservable = new Observable<SensorLog>();
+		
 		this.publicDataReceiveObservable = publicDataReceiveObservable;
 		this.publicSensorOnlineObservable = publicSensorOnlineObservable;
 		this._log = new ArrayList<SensorLog>();
@@ -67,6 +70,9 @@ public class Sensor
 	public void destroy()
 	{
 		this.dbAccess.destroySensor(this);
+		this.dataReceiveObservable.clearObservers();
+		this.sensorOnlineObservable.clearObservers();
+		this.sensorLogObservable.clearObservers();
 	}
 	
 	public void save()
@@ -82,6 +88,7 @@ public class Sensor
 		{
 			this._log.remove(0);
 		}
+		this.sensorLogObservable.notifyObservers(log);
 	}
 	
 	public void alartDataReceive(float xg, float yg, float xa, float ya, float za, float al)

@@ -19,7 +19,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 	private SensorManager sensorManager;
 	
 	private SensorDataSender sensorDataSender;
-	private SensorDeviceDataSender sensorDeviceDataSender;
+	private AllSensorDataSender sensorDeviceDataSender;
 	
 	ServiceInst(Connection connection, SensorManager sensorManager)
 	{
@@ -92,7 +92,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 			this.sensorDeviceDataSender.destroy();
 		}
 		logger.log(Level.INFO, "센서 장치 정보 요구");
-		this.sensorDeviceDataSender = new SensorDeviceDataSender(ch, this.sensorManager);
+		this.sensorDeviceDataSender = new AllSensorDataSender(ch, this.sensorManager);
 	}
 	
 	private void chCloseSensorDeviceData()
