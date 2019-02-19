@@ -51,13 +51,13 @@ public class ServiceInst implements Observer<ChannelEvent>
 		}
 		else
 		{
+			System.out.println("닫힘신호확인");
 			switch(data.channel.key)
 			{
 			case AppServiceDefine.CHKEY_SensorData:
 				this.chCloseSensorData();
 				break;
 			case AppServiceDefine.CHKEY_SensorDeviceData:
-				System.out.println("닫힘신호확인");
 				this.chCloseSensorDeviceData();
 				break;
 			}
