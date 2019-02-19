@@ -71,7 +71,6 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 	{
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA);
 			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF);
 			b.appendData(ProtocolDefine.intToByteArray(data.sensor.id));
 			b.appendData((byte)(data.isOnline ? 1 : 0));
@@ -85,7 +84,6 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 	{
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA);
 			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE);
 			b.appendData(ProtocolDefine.intToByteArray(data.sensor.id));
 			b.appendData((byte)(data.isActive ? 1 : 0));

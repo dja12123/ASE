@@ -21,7 +21,6 @@ public class AppServiceDefine
 	public static final String CHKEY_SensorDeviceData = "reqSensorDeviceData";
 	public static final byte SensorDeviceData_REQ_LIST = 0x00;
 	public static final byte SensorDeviceData_REP_LIST = 0x01;
-	public static final byte SensorDeviceData_REP_REALTIMEDATA = 0x10;
 	public static final byte SensorDeviceData_REP_REALTIMEDATA_ONOFF = 0x11;
 	public static final byte SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE = 0x12;
 }

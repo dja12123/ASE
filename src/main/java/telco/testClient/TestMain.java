@@ -124,23 +124,22 @@ public class TestMain
 					System.out.println("센서"+id+" 활성여부:"+isActive);
 				}
 			}
-			else if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA)
+			
+			if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE)
 			{
-				if(data[1][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE)
-				{
-					ByteBuffer buf = ByteBuffer.wrap(data[2]);
-					int id = buf.getInt();
-					boolean isAdd = data[3][0] == 1 ? true : false;
-					System.out.println("센서"+id+" 추가됨여부"+isAdd);
-				}
-				if(data[1][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF)
-				{
-					ByteBuffer buf = ByteBuffer.wrap(data[2]);
-					int id = buf.getInt();
-					boolean isOnline = data[3][0] == 1 ? true : false;
-					System.out.println("센서"+id+" 활성 이벤트"+isOnline);
-				}
+				ByteBuffer buf = ByteBuffer.wrap(data[1]);
+				int id = buf.getInt();
+				boolean isAdd = data[2][0] == 1 ? true : false;
+				System.out.println("센서"+id+" 추가됨여부"+isAdd);
 			}
+			if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF)
+			{
+				ByteBuffer buf = ByteBuffer.wrap(data[2]);
+				int id = buf.getInt();
+				boolean isOnline = data[2][0] == 1 ? true : false;
+				System.out.println("센서"+id+" 활성 이벤트"+isOnline);
+			}
+		
 			
 		});
 		b = new AppDataPacketBuilder();
