@@ -159,11 +159,6 @@ public class Connection extends Observable<ChannelEvent>
 		if(this.closeCheck("closeForce")) return;
 		
 		this.isRun = false;
-		for(Channel ch : this.channels.values())
-		{
-			this.notifyObservers(new ChannelEvent(ch, false));
-		}
-		this.channels.clear();
 		
 		try
 		{
@@ -174,6 +169,12 @@ public class Connection extends Observable<ChannelEvent>
 			logger.log(Level.WARNING, this.toString()+" 소켓 종료중 오류", e);
 		}
 		this.connectionStateChangeObservable.notifyObservers(new ConnectionStateChangeEvent(this, false));
+		
+		for(Channel ch : this.channels.values())
+		{
+			this.notifyObservers(new ChannelEvent(ch, false));
+		}
+		this.channels.clear();
 	}
 	
 	public void setGeneralDataReceiveCallback(GeneralDataReceiveCallback callback)
