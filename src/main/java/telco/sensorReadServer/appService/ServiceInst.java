@@ -51,7 +51,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		}
 		else
 		{
-			System.out.println("닫힘신호확인");
+			logger.log(Level.INFO, "닫힘신호확인");
 			switch(data.channel.key)
 			{
 			case AppServiceDefine.CHKEY_SensorData:
