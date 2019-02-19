@@ -134,7 +134,7 @@ public class TestMain
 					ByteBuffer buf = ByteBuffer.wrap(data[2]);
 					int id = buf.getInt();
 					boolean isOnline = data[3][0] == 1 ? true : false;
-					System.out.println("센서"+id+" 활성여부"+isOnline);
+					System.out.println("센서"+id+" 활성 이벤트"+isOnline);
 				}
 			}
 			

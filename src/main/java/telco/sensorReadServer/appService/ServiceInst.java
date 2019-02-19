@@ -57,7 +57,8 @@ public class ServiceInst implements Observer<ChannelEvent>
 				this.chCloseSensorData();
 				break;
 			case AppServiceDefine.CHKEY_SensorDeviceData:
-				this.chCloseSensorList();
+				System.out.println("닫힘신호확인");
+				this.chCloseSensorDeviceData();
 				break;
 			}
 		}
@@ -94,7 +95,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		this.sensorDeviceDataSender = new SensorDeviceDataSender(ch, this.sensorManager);
 	}
 	
-	private void chCloseSensorList()
+	private void chCloseSensorDeviceData()
 	{
 		if(this.sensorDeviceDataSender != null)
 		{
