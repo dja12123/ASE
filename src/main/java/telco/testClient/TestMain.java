@@ -134,7 +134,7 @@ public class TestMain
 			}
 			if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF)
 			{
-				ByteBuffer buf = ByteBuffer.wrap(data[2]);
+				ByteBuffer buf = ByteBuffer.wrap(data[1]);
 				int id = buf.getInt();
 				boolean isOnline = data[2][0] == 1 ? true : false;
 				System.out.println("센서"+id+" 활성 이벤트"+isOnline);

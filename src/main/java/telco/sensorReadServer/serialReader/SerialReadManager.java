@@ -50,7 +50,15 @@ public class SerialReadManager extends Observable<DevicePacket>
 		try
 		{
 			this.serial.open(this.config);
-			
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			logger.log(Level.INFO, "연결: " + this.config.toString());
 		}
 		catch (IOException e)
