@@ -40,7 +40,6 @@ public class ClientSocketManager extends Observable<ConnectionStateChangeEvent>
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			logger.log(Level.WARNING, "연결 실패", e);
 			return;
 		}

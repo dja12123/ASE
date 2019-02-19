@@ -1,17 +1,13 @@
 package telco.sensorReadServer.appService;
 
-import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import telco.appConnect.Connection;
-import telco.appConnect.channel.AppDataPacketBuilder;
 import telco.appConnect.channel.Channel;
 import telco.appConnect.channel.ChannelEvent;
-import telco.appConnect.channel.ProtocolDefine;
 import telco.console.LogWriter;
 import telco.sensorReadServer.sensorManager.SensorManager;
-import telco.sensorReadServer.sensorManager.sensor.Sensor;
 import telco.util.observer.Observable;
 import telco.util.observer.Observer;
 
@@ -21,7 +17,9 @@ public class ServiceInst implements Observer<ChannelEvent>
 	
 	private Connection connection;
 	private SensorManager sensorManager;
+	
 	private SensorDataSender sensorDataSender;
+	private SensorDeviceDataSender sensorDeviceDataSender;
 	
 	ServiceInst(Connection connection, SensorManager sensorManager)
 	{
@@ -46,8 +44,8 @@ public class ServiceInst implements Observer<ChannelEvent>
 			case AppServiceDefine.CHKEY_SensorData:
 				this.chCreateSensorData(data.channel);
 				break;
-			case AppServiceDefine.CHKEY_SensorList:
-				this.chCreateSensorList(data.channel);
+			case AppServiceDefine.CHKEY_SensorDeviceData:
+				this.chCreateSensorDeviceData(data.channel);
 				break;
 			}
 		}
@@ -57,6 +55,9 @@ public class ServiceInst implements Observer<ChannelEvent>
 			{
 			case AppServiceDefine.CHKEY_SensorData:
 				this.chCloseSensorData();
+				break;
+			case AppServiceDefine.CHKEY_SensorDeviceData:
+				this.chCloseSensorList();
 				break;
 			}
 		}
@@ -83,18 +84,23 @@ public class ServiceInst implements Observer<ChannelEvent>
 		}
 	}
 	
-	private void chCreateSensorList(Channel ch)
+	private void chCreateSensorDeviceData(Channel ch)
 	{
-		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(ProtocolDefine.intToByteArray(this.sensorManager.sensorMap.size()));
-		for(Sensor sensor : this.sensorManager.sensorMap.values())
+		if(this.sensorDeviceDataSender != null)
 		{
-			ByteBuffer buf = ByteBuffer.allocate(4 + 1);
-			buf.putInt(sensor.id);
-			buf.put((byte)(sensor.isOnline() ? 1 : 0));
-			b.appendData(buf.array());
+			this.sensorDeviceDataSender.destroy();
 		}
-		
-		ch.sendData(b);
+		logger.log(Level.INFO, "센서 장치 정보 요구");
+		this.sensorDeviceDataSender = new SensorDeviceDataSender(ch, this.sensorManager);
+	}
+	
+	private void chCloseSensorList()
+	{
+		if(this.sensorDeviceDataSender != null)
+		{
+			logger.log(Level.INFO, "센서 장치 정보 요구 종료");
+			this.sensorDeviceDataSender.destroy();
+			this.sensorDeviceDataSender = null;
+		}
 	}
 }

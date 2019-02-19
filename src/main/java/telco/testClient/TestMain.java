@@ -105,18 +105,39 @@ public class TestMain
 		b.appendData(ProtocolDefine.intToByteArray(1001));
 		ch.sendData(b);
 		
-		Channel ch1 = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorList);
+		Channel ch1 = socket.getConenction().channelOpen(AppServiceDefine.CHKEY_SensorDeviceData);
 		ch1.setReceiveCallback((Channel c, byte[][] data)->{
-			ByteBuffer buf = ByteBuffer.wrap(data[0]);
-			int size = buf.getInt();
-			for(int i = 0; i < size; ++i)
+			if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_LIST)
 			{
-				ByteBuffer buf1 = ByteBuffer.wrap(data[i + 1]);
-				int id = buf1.getInt();
-				boolean isActive = buf1.get() == 1 ? true : false;
-				
-				System.out.println("센서"+id+" 활성여부:"+isActive);
+				ByteBuffer buf = ByteBuffer.wrap(data[1]);
+				int size = buf.getInt();
+				for(int i = 0; i < size; ++i)
+				{
+					ByteBuffer buf1 = ByteBuffer.wrap(data[i + 2]);
+					int id = buf1.getInt();
+					boolean isActive = buf1.get() == 1 ? true : false;
+					
+					System.out.println("센서"+id+" 활성여부:"+isActive);
+				}
 			}
+			else if(data[0][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA)
+			{
+				if(data[1][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE)
+				{
+					ByteBuffer buf = ByteBuffer.wrap(data[2]);
+					int id = buf.getInt();
+					boolean isAdd = data[3][0] == 1 ? true : false;
+					System.out.println("센서"+id+" 추가됨여부"+isAdd);
+				}
+				if(data[1][0] == AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF)
+				{
+					ByteBuffer buf = ByteBuffer.wrap(data[2]);
+					int id = buf.getInt();
+					boolean isOnline = data[3][0] == 1 ? true : false;
+					System.out.println("센서"+id+" 활성여부"+isOnline);
+				}
+			}
+			
 		});
 		Thread.sleep(2000000);
 		socket.closeConnection();
