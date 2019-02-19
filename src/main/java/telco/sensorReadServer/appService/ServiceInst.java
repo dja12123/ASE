@@ -32,6 +32,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 	{
 		this.connection.removeObserver(this);
 		this.chCloseSensorData();
+		this.chCloseSensorDeviceData();
 	}
 
 	@Override
@@ -51,7 +52,6 @@ public class ServiceInst implements Observer<ChannelEvent>
 		}
 		else
 		{
-			logger.log(Level.INFO, "닫힘신호확인");
 			switch(data.channel.key)
 			{
 			case AppServiceDefine.CHKEY_SensorData:

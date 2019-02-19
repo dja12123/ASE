@@ -159,7 +159,10 @@ public class Connection extends Observable<ChannelEvent>
 		if(this.closeCheck("closeForce")) return;
 		
 		this.isRun = false;
-		
+		for(Channel ch : this.channels.values())
+		{
+			this.notifyObservers(new ChannelEvent(ch, false));
+		}
 		this.channels.clear();
 		
 		try
