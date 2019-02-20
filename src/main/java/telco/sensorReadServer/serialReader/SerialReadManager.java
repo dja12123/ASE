@@ -22,7 +22,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 {
 	public static final String PROP_SerialDevice = "SerialDevice";	
 	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "sensorReader");
-	private static final byte[] SERIAL_STX = new byte[] {0x05, 0x05, 0x07, 0x07};
+	private static final byte[] SERIAL_STX = new byte[] {0x55, 0x77};
 	
 	private Serial serial;
 	private SerialConfig config;
@@ -57,6 +57,11 @@ public class SerialReadManager extends Observable<DevicePacket>
 			logger.log(Level.SEVERE, "시리얼 열기 실패", e);
 			return false;
 		}
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e1){}
 		try
 		{
 			this.serial.write(SERIAL_STX);
