@@ -20,9 +20,9 @@ import telco.util.observer.Observable;
 
 public class SerialReadManager extends Observable<DevicePacket>
 {
-	public static final String PROP_SerialDevice = "SerialDevice";
-	
+	public static final String PROP_SerialDevice = "SerialDevice";	
 	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "sensorReader");
+	private static final byte[] SERIAL_STX = new byte[] {0x55, 0x77};
 	
 	private Serial serial;
 	private SerialConfig config;
@@ -50,20 +50,20 @@ public class SerialReadManager extends Observable<DevicePacket>
 		try
 		{
 			this.serial.open(this.config);
-			try
-			{
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			logger.log(Level.INFO, "연결: " + this.config.toString());
 		}
 		catch (IOException e)
 		{
 			logger.log(Level.SEVERE, "시리얼 열기 실패", e);
+			return false;
+		}
+		try
+		{
+			this.serial.write(SERIAL_STX);
+		}
+		catch (IllegalStateException | IOException e)
+		{
+			logger.log(Level.SEVERE, "시리얼 STX전송중 오류", e);
 			return false;
 		}
 		logger.log(Level.INFO, "SerialReadManager 시작 완료");
