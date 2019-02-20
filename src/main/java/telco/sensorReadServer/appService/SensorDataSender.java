@@ -58,10 +58,10 @@ public class SensorDataSender implements ChannelReceiveCallback
 			this.reqDeviceIDTask(ch, data);
 			break;
 		case AppServiceDefine.SensorData_REQ_ALLDATA:
-			this.sendAllSensorDataTask();
+			this.sendAllSensorDataTask(data);
 			break;
 		case AppServiceDefine.SensorData_REQ_ALLLOG:
-			this.sendAllLogDataTask();
+			this.sendAllLogDataTask(data);
 			break;
 		}
 	}
@@ -140,13 +140,17 @@ public class SensorDataSender implements ChannelReceiveCallback
 		t.start();
 	}
 	
-	private void sendAllLogDataTask()
+	private void sendAllLogDataTask(byte[][] data)
 	{
+		int size = ByteBuffer.wrap(data[1]).getInt();
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_REP_ALLLOG);
 		b.appendData(ProtocolDefine.intToByteArray(this.sensor.log.size()));
-		for(SensorLog l : this.sensor.log)
+		int sendStart = this.sensor.data.size() - size;
+		if(sendStart < 0) sendStart = 0;
+		for(int i = sendStart; i < this.sensor.log.size(); ++i)
 		{
+			SensorLog l = this.sensor.log.get(i);
 			byte[] msg = l.message.getBytes();
 			ByteBuffer buf = ByteBuffer.allocate(4 + AppServiceDefine.DATE_FORMAT_SIZE+msg.length);
 			buf.putInt(l.level.intValue());
@@ -157,13 +161,17 @@ public class SensorDataSender implements ChannelReceiveCallback
 		this.channel.sendData(b);
 	}
 	
-	private void sendAllSensorDataTask()
+	private void sendAllSensorDataTask(byte[][] data)
 	{
+		int size = ByteBuffer.wrap(data[1]).getInt();
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_REP_ALLDATA);
 		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size()));
-		for(SensorData d : this.sensor.data)
+		int sendStart = this.sensor.data.size() - size;
+		if(sendStart < 0) sendStart = 0;
+		for(int i = sendStart; i < this.sensor.data.size(); ++i)
 		{
+			SensorData d = this.sensor.data.get(i);
 			ByteBuffer buf = ByteBuffer.allocate(AppServiceDefine.DATE_FORMAT_SIZE+4+4+4+4+4+4);
 			buf.put(AppServiceDefine.DATE_FORMAT.format(d.time).getBytes());
 			buf.putFloat(d.X_GRADIANT);
