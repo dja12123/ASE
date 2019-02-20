@@ -22,7 +22,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 {
 	public static final String PROP_SerialDevice = "SerialDevice";	
 	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "sensorReader");
-	private static final byte[] SERIAL_STX = new byte[] {0x77, 0x55};
+	private static final byte[] SERIAL_STX = new byte[] {0x55, 0x77};
 	
 	private Serial serial;
 	private SerialConfig config;
@@ -94,6 +94,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		}
 		
 		DevicePacket packet = new DevicePacket(receiveData);
+		System.out.println(packet.toString());
 		this.notifyObservers(packet);
 	}
 }
