@@ -52,17 +52,17 @@ public class SensorDataSender implements ChannelReceiveCallback
 	@Override
 	public void receiveData(Channel ch, byte[][] data)
 	{
-		if(data[0][0] == AppServiceDefine.SensorData_REQ_DEVICEID)
+		switch(data[0][0])
 		{
+		case AppServiceDefine.SensorData_REQ_DEVICEID:
 			this.reqDeviceIDTask(ch, data);
-		}
-		else if(data[0][0] == AppServiceDefine.SensorData_REQ_ALLDATA)
-		{
+			break;
+		case AppServiceDefine.SensorData_REQ_ALLDATA:
 			this.sendAllSensorDataTask();
-		}
-		else if(data[0][0] == AppServiceDefine.SensorData_REQ_ALLLOG)
-		{
+			break;
+		case AppServiceDefine.SensorData_REQ_ALLLOG:
 			this.sendAllLogDataTask();
+			break;
 		}
 	}
 
@@ -131,6 +131,7 @@ public class SensorDataSender implements ChannelReceiveCallback
 		}
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
+			b.appendData(AppServiceDefine.SensorData_REP_DEVICEID);
 			b.appendData((byte)(isValid ? 1 : 0));
 			b.appendData((byte)(isValid && this.sensor.isOnline() ? 1 : 0));
 			this.channel.sendData(b);
