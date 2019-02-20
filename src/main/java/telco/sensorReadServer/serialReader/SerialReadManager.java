@@ -14,6 +14,7 @@ import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 
+import telco.appConnect.channel.ProtocolDefine;
 import telco.console.LogWriter;
 import telco.sensorReadServer.ServerCore;
 import telco.util.observer.Observable;
@@ -96,7 +97,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		
 		if(!DevicePacket.isDevicePacket(receiveData))
 		{
-			logger.log(Level.INFO, "오류! 센서 패킷이 아님");
+			logger.log(Level.INFO, "오류! 센서 패킷이 아님" + ProtocolDefine.bytesToHex(receiveData, receiveData.length));
 			return;
 		}
 		
