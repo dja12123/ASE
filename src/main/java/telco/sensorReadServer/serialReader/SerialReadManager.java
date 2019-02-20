@@ -97,7 +97,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		
 		if(!DevicePacket.isDevicePacket(receiveData))
 		{
-			logger.log(Level.INFO, "오류! 센서 패킷이 아님" + ProtocolDefine.bytesToHex(receiveData, receiveData.length));
+			logger.log(Level.WARNING, "오류! 센서 패킷이 아님" + ProtocolDefine.bytesToHex(receiveData, receiveData.length));
 			return;
 		}
 		
