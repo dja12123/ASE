@@ -84,6 +84,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 	
 	private void dataReceived(SerialDataEvent event)
 	{
+		System.out.println("some read");
 		byte[] receiveData;
 		try
 		{
@@ -101,7 +102,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		}
 		
 		DevicePacket packet = new DevicePacket(receiveData);
-		System.out.println(packet.toString());
+		
 		this.notifyObservers(packet);
 	}
 }
