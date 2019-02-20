@@ -64,9 +64,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		catch (InterruptedException e1){}
 		try
 		{
-			this.serial.flush();
 			this.serial.write(SERIAL_STX);
-			this.serial.flush();
 		}
 		catch (IllegalStateException | IOException e)
 		{
@@ -84,7 +82,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 	
 	private void dataReceived(SerialDataEvent event)
 	{
-		System.out.println("some read");
+		
 		byte[] receiveData;
 		try
 		{
@@ -98,6 +96,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		
 		if(!DevicePacket.isDevicePacket(receiveData))
 		{
+			logger.log(Level.INFO, "오류! 센서 패킷이 아님");
 			return;
 		}
 		
