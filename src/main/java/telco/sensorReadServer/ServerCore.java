@@ -214,7 +214,7 @@ public class ServerCore
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		if(!this.serverSocketManager.startModule()) return false;
-		//if(!this.sensorReadManager.startModule()) return false;
+		if(!this.sensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
