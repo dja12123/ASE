@@ -64,8 +64,9 @@ public class SerialReadManager extends Observable<DevicePacket>
 		catch (InterruptedException e1){}
 		try
 		{
+			this.serial.flush();
 			this.serial.write(SERIAL_STX);
-			this.serial.sendBreak();
+			this.serial.flush();
 		}
 		catch (IllegalStateException | IOException e)
 		{
