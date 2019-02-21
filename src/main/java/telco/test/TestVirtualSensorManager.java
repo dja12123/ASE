@@ -47,6 +47,7 @@ public class TestVirtualSensorManager
 				member = r.nextInt(this.virtualSensorList.size());
 				
 				this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
+				this.virtualSensorList.get(member).sleep(200000);
 			}
 			else
 			{
