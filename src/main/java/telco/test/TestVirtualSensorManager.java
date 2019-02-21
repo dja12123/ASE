@@ -42,16 +42,17 @@ public class TestVirtualSensorManager
 		{
 			int member = r.nextInt(this.virtualSensorList.size());
 			this.virtualSensorList.get(member).sleep();
-			if(randomRemoveSensor == -1)
+			if(r.nextInt(3) == 2)
 			{
-				member = r.nextInt(this.virtualSensorList.size());
 				
-				this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
-				this.virtualSensorList.get(member).sleep();
-			}
-			else
-			{
-				randomRemoveSensor = -1;
+				member = r.nextInt(this.virtualSensorList.size());
+				if(member != 9000)
+				{
+					this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
+					this.virtualSensorList.get(member).sleep();
+				}
+
+				
 			}
 			try
 			{
