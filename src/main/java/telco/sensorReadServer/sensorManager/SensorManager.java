@@ -147,7 +147,8 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		Sensor s = this._sensorMap.getOrDefault(id, null);
 		if(s == null)
 		{
-			throw new RuntimeException("존재하지 않는 장치");
+			logger.log(Level.SEVERE, "존재하지 않는 장치"+id);
+			return;
 		}
 		s.destroy();
 		this._sensorMap.remove(s.id);
