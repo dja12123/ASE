@@ -123,7 +123,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		for(Sensor sensor : this._sensorMap.values())
 		{
-			sensor.CheckDeviceTimeout(compareTime);
+			sensor.checkDeviceTimeout(compareTime);
 		}
 	}
 	

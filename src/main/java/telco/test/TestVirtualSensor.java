@@ -54,6 +54,7 @@ public class TestVirtualSensor
 			{
 				if(sleepFlag)
 				{
+					System.out.println("10초대기(타임아웃)");
 					sleepFlag = false;
 					Thread.sleep(100000);
 				}

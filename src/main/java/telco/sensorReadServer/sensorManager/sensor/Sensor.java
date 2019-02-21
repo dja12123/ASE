@@ -115,7 +115,7 @@ public class Sensor
 		this.publicDataReceiveObservable.notifyObservers(e);
 	}
 	
-	public void CheckDeviceTimeout(Date nowTime)
+	public void checkDeviceTimeout(Date nowTime)
 	{
 		if(this.isOnline)
 		{
