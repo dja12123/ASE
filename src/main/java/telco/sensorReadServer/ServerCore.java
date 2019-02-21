@@ -224,7 +224,7 @@ public class ServerCore
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
 		
-		//this.testSensor.start();
+		this.testSensor.start();
 		
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
@@ -235,7 +235,7 @@ public class ServerCore
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
 		
-		//this.testSensor.stop();
+		this.testSensor.stop();
 		
 		this.appServiceManager.stopModule();
 		this.serverSocketManager.stopModule();
