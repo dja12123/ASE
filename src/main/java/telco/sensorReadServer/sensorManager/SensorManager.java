@@ -131,7 +131,8 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	{
 		if(this._sensorMap.containsKey(id))
 		{
-			throw new RuntimeException("이미 있는 장치");
+			logger.log(Level.SEVERE, "이미 있는 장치"+id);
+			return null;
 		}
 		Sensor s = new Sensor(id, this.dbAccess, this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable);
 		s.init();
