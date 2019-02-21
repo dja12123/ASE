@@ -41,13 +41,13 @@ public class TestVirtualSensorManager
 		while(true)
 		{
 			int member = r.nextInt(this.virtualSensorList.size());
-			this.virtualSensorList.get(member).sleep(200000);
+			this.virtualSensorList.get(member).sleep();
 			if(randomRemoveSensor == -1)
 			{
 				member = r.nextInt(this.virtualSensorList.size());
 				
 				this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
-				this.virtualSensorList.get(member).sleep(200000);
+				this.virtualSensorList.get(member).sleep();
 			}
 			else
 			{

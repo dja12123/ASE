@@ -12,7 +12,7 @@ public class TestVirtualSensor
 	
 	private SensorManager sensorManager;
 	private Thread thread;
-	private int sleepTime;
+	private boolean sleepFlag;
 	
 	public TestVirtualSensor(int id, SensorManager sensorManager)
 	{
@@ -23,9 +23,9 @@ public class TestVirtualSensor
 		this.thread.start();
 	}
 	
-	public void sleep(int time)
+	public void sleep()
 	{
-		this.sleepTime = time;
+		this.sleepFlag = true;
 	}
 	
 	private void run()
@@ -52,13 +52,18 @@ public class TestVirtualSensor
 			
 			try
 			{
-				Thread.sleep(TestVirtualSensorManager.SENSOR_DATA_SEND_INTERVAL + this.sleepTime);
+				if(sleepFlag)
+				{
+					sleepFlag = false;
+					Thread.sleep(100000);
+				}
+				Thread.sleep(TestVirtualSensorManager.SENSOR_DATA_SEND_INTERVAL);
 			}
 			catch (InterruptedException e)
 			{
 				break;
 			}
-			this.sleepTime = 0;
+			
 		}
 	}
 	
