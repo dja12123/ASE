@@ -99,6 +99,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		for(Sensor s : this._sensorMap.values())
 		{
+			logger.log(Level.INFO, s.id+"센서 정보 저장중...");
 			s.save();
 		}
 		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");

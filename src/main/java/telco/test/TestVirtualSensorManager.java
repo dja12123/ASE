@@ -1,6 +1,7 @@
 package telco.test;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import telco.sensorReadServer.sensorManager.SensorManager;
 
@@ -10,11 +11,15 @@ public class TestVirtualSensorManager
 	
 	private SensorManager sensorManager;
 	private ArrayList<TestVirtualSensor> virtualSensorList;
+	private Thread thread;
+	
+	private int randomRemoveSensor = -1;
 	
 	public TestVirtualSensorManager(SensorManager sensorManager)
 	{
 		this.sensorManager = sensorManager;
 		this.virtualSensorList = new ArrayList<>();
+		
 	}
 	
 	public void start()
@@ -24,10 +29,43 @@ public class TestVirtualSensorManager
 			TestVirtualSensor vs = new TestVirtualSensor(i, this.sensorManager);
 			this.virtualSensorList.add(vs);
 		}
+		
+		this.thread = new Thread(this::run);
+		this.thread.setDaemon(true);
+		this.thread.start();
+	}
+	
+	private void run()
+	{
+		Random r = new Random();
+		while(true)
+		{
+			int member = r.nextInt(this.virtualSensorList.size());
+			this.virtualSensorList.get(member).sleep(100000);
+			if(randomRemoveSensor == -1)
+			{
+				member = r.nextInt(this.virtualSensorList.size());
+				
+				this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
+			}
+			else
+			{
+				randomRemoveSensor = -1;
+			}
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				break;
+			}
+		}
 	}
 	
 	public void stop()
 	{
+		this.thread.interrupt();
 		for(TestVirtualSensor vs: this.virtualSensorList)
 		{
 			vs.stop();
