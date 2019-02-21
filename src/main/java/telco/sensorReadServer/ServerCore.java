@@ -22,6 +22,7 @@ import telco.sensorReadServer.fileIO.FileHandler;
 import telco.sensorReadServer.sensorManager.SensorManager;
 import telco.sensorReadServer.serialReader.SerialReadManager;
 import telco.sensorReadServer.serverSocket.ServerSocketManager;
+import telco.test.TestVirtualSensorManager;
 
 public class ServerCore
 {
@@ -199,6 +200,8 @@ public class ServerCore
 	private SerialReadManager sensorReadManager;
 	private SensorManager sensorManager;
 	private AppServiceManager appServiceManager;
+	
+	private TestVirtualSensorManager testSensor;
 
 	private ServerCore()
 	{
@@ -207,6 +210,8 @@ public class ServerCore
 		this.sensorReadManager = new SerialReadManager();
 		this.sensorManager = new SensorManager(this.sensorReadManager, this.dbHandler);
 		this.appServiceManager = new AppServiceManager(this.serverSocketManager, this.sensorManager);
+		
+		this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
 
 	private boolean start()
@@ -218,6 +223,8 @@ public class ServerCore
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
+		
+		this.testSensor.start();
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
 	}
@@ -226,6 +233,8 @@ public class ServerCore
 	{
 	
 		logger.log(Level.INFO, "시스템 종료 시작");
+		
+		this.testSensor.stop();
 		
 		this.appServiceManager.stopModule();
 		this.serverSocketManager.stopModule();

@@ -1,4 +1,4 @@
-package telco.testClient;
+package telco.test;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -1,4 +1,4 @@
-package telco.testClient;
+package telco.test;
 
 import java.nio.ByteBuffer;
 import java.text.ParseException;
