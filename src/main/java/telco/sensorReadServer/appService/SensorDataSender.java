@@ -145,7 +145,7 @@ public class SensorDataSender implements ChannelReceiveCallback
 		int size = ByteBuffer.wrap(data[1]).getInt();
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_REP_ALLLOG);
-		b.appendData(ProtocolDefine.intToByteArray(this.sensor.log.size()));
+		b.appendData(ProtocolDefine.intToByteArray(size));
 		int sendStart = this.sensor.data.size() - size;
 		if(sendStart < 0) sendStart = 0;
 		for(int i = sendStart; i < this.sensor.log.size(); ++i)
@@ -166,9 +166,10 @@ public class SensorDataSender implements ChannelReceiveCallback
 		int size = ByteBuffer.wrap(data[1]).getInt();
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_REP_ALLDATA);
-		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size()));
+		
 		int sendStart = this.sensor.data.size() - size;
 		System.out.println("send:" + size);
+		b.appendData(ProtocolDefine.intToByteArray(size));
 		if(sendStart < 0) sendStart = 0;
 		for(int i = sendStart; i < this.sensor.data.size(); ++i)
 		{
