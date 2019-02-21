@@ -41,7 +41,7 @@ public class TestVirtualSensorManager
 		while(true)
 		{
 			int member = r.nextInt(this.virtualSensorList.size());
-			this.virtualSensorList.get(member).sleep(100000);
+			this.virtualSensorList.get(member).sleep(200000);
 			if(randomRemoveSensor == -1)
 			{
 				member = r.nextInt(this.virtualSensorList.size());
@@ -54,7 +54,7 @@ public class TestVirtualSensorManager
 			}
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			}
 			catch (InterruptedException e)
 			{
