@@ -37,20 +37,26 @@ public class TestVirtualSensorManager
 	
 	private void run()
 	{
+		TestVirtualSensor s;
 		Random r = new Random();
 		while(true)
 		{
-			int member = r.nextInt(this.virtualSensorList.size());
-			this.virtualSensorList.get(member).sleep();
+			int index = r.nextInt(this.virtualSensorList.size());
+			s = this.virtualSensorList.get(index);
+			if(s.id != 9000) s.sleep();
 			if(r.nextInt(3) == 2)
 			{
 				
-				member = r.nextInt(this.virtualSensorList.size());
-				if(member != 9000)
+				index = r.nextInt(this.virtualSensorList.size());
+				
+				s = this.virtualSensorList.get(index);
+				if(s.id != 9000)
 				{
-					this.sensorManager.removeSensor(this.virtualSensorList.get(member).id);
-					this.virtualSensorList.get(member).sleep();
+					this.sensorManager.removeSensor(s.id);
+					s.sleep();
 				}
+					
+				
 
 				
 			}
