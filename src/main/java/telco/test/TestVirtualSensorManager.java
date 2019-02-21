@@ -6,7 +6,7 @@ import telco.sensorReadServer.sensorManager.SensorManager;
 
 public class TestVirtualSensorManager
 {
-	public static final int SENSOR_DATA_SEND_INTERVAL = 1000;
+	public static final int SENSOR_DATA_SEND_INTERVAL = 1500;
 	
 	private SensorManager sensorManager;
 	private ArrayList<TestVirtualSensor> virtualSensorList;

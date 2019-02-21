@@ -168,7 +168,6 @@ public class SensorDataSender implements ChannelReceiveCallback
 		b.appendData(AppServiceDefine.SensorData_REP_ALLDATA);
 		
 		int sendStart = this.sensor.data.size() - size;
-		System.out.println("send:" + size);
 	
 		if(sendStart < 0) sendStart = 0;
 		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size() - sendStart));
