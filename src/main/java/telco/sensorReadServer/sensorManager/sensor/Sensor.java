@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
+import telco.sensorReadServer.sensorManager.SensorManager;
 import telco.util.observer.Observable;
 
 public class Sensor
@@ -95,7 +96,8 @@ public class Sensor
 	{
 		if(!this.isOnline)
 		{
-			this.putLog(Level.INFO, "장치 온라인");
+			this.putLog(Level.INFO, "센서 온라인");
+			SensorManager.logger.log(Level.INFO, this.id+"센서 온라인");
 			this.isOnline = true;
 			SensorOnlineEvent e = new SensorOnlineEvent(this, true);
 			this.sensorOnlineObservable.notifyObservers(e);
@@ -122,7 +124,8 @@ public class Sensor
 			long compareTime = nowTime.getTime();
 			if(compareTime - this.lastUpdateTime.getTime() > this.configAccess.getTimeout())
 			{//타임아웃일때
-				this.putLog(Level.WARNING, "장치 타임아웃");
+				this.putLog(Level.WARNING, "센서 타임아웃");
+				SensorManager.logger.log(Level.WARNING, this.id+"센서 타임아웃");
 				this.isOnline = false;
 				SensorOnlineEvent e = new SensorOnlineEvent(this, false);
 				this.sensorOnlineObservable.notifyObservers(e);
