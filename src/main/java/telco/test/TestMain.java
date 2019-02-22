@@ -12,7 +12,7 @@ import telco.console.LogWriter;
 import telco.sensorReadServer.appService.AppServiceDefine;
 
 public class TestMain
-{
+{//testtest
 	public static final Logger logger = LogWriter.createLogger(TestMain.class, "main");// 메인 로거
 	
 	public static void main(String[] args) throws Exception
