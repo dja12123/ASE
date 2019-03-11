@@ -1,0 +1,35 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: lightgray;
+}
+
+.head {
+    margin: 0 0 31px 0;
+    height: 60px;
+    width: 100%;
+    border-bottom: 4px solid rgb(130, 191, 37);
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+.logo1 {
+    float: left;
+    margin: 16px 0 0 42px;
+    height: 80%;
+    /* border-left: 3px solid white; */
+    /* border-right: 3px solid white; */
+}
+
+.logo:hover {
+    cursor: pointer;
+}
+
+.head-right {
+    float: right;
+    height: 100%;
+    margin: 0 24px 0 0;
+    line-height: 100%;
+    font-size: 17px;
+    text-align: center;
+}
