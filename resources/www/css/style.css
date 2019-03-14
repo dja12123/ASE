@@ -1,5 +1,5 @@
 
-@import 'head.css';
-@import 'item.css';
-@import 'graph.css';
-@import 'toggle.css';
+@import url('head.css');
+@import url('item.css');
+@import url('graph.css');
+@import url('toggle.css');
