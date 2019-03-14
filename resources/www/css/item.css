@@ -29,7 +29,7 @@
 @media (min-width: 296px) {
     .item {
         padding: 0 15px 0 15px;
-        margin: 18px 26px 0 26px;
+        margin: 18px 26px 18px 26px;
     }
     .item td:nth-child(1) {
         font-weight: bold;
