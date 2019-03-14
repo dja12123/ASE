@@ -4,55 +4,54 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>sensor</title>
+    <title>Senser 9009</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="image/logo_telco.png">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 </head>
 
 <body>
 
     <head>
         <div class="head">
-            <!-- <div class="logo">logo</div> -->
-            <img class="logo1" src="image/logo_meerkeep.png" onclick="location.href='index.html'">
-            <table class="table-vertical head-right">
-                <td>Right Text</td>
-            </table>
+            <i class="fas fa-caret-square-left fa-2x back_btn" onclick="location.href='index.html'"></i>
+            <div class="right_empty"></div>
+            <span class="text2" >센서9009: 작동중</span>
         </div>
     </head>
     <section>
-        <div class="graph"></div>
-        <div class="">내용</div>
+        <div></div>
+        <div class="stat">
+            <div>
+                <div class="graph_item">기울기</div>
+                <!-- <input type="checkbox" id="c1" name="cc"> -->
+                <label class="pos" for="c1"> <span class="pos2">X</span> <span>011.01</span></label>
+                <!-- <input type="checkbox" id="c2" name="cc"> -->
+                <label class="pos" for="c2"> <span class="pos2">Y</span> <span>011.20</span></label>
+            </div>
+            <div>
+                <div class="graph_item">가속도</div>
+                <!-- <input type="checkbox" id="c3" name="cc"> -->
+                <label class="pos" for="c3"> <span class="pos2">X</span> <span>008.12</span></label>
+                <!-- <input type="checkbox" id="c4" name="cc"> -->
+                <label class="pos" for="c4"> <span class="pos2">Y</span> <span>002.97</span></label>
+                <!-- <input type="checkbox" id="c5" name="cc"> -->
+                <label class="pos" for="c5"> <span class="pos2">Z</span> <span>000.06</span></label>
+            </div>
+            <div>
+                <div class="graph_item">고도</div>
+                <!-- <input type="checkbox" id="c6" name="cc"> -->
+                <label class="pos" for="c6"> <span class="pos2">H</span> <span>014.21</span></label>
+            </div>
+        </div>
+        <hr/>
         <div>
-            <div class="">
-                <input type="checkbox" id="c1" name="cc">
-                <label for="c1"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c2" name="cc">
-                <label for="c2"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c3" name="cc">
-                <label for="c3"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c4" name="cc">
-                <label for="c4"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c5" name="cc">
-                <label for="c5"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c6" name="cc">
-                <label for="c6"> <span></span>Check Box</label>
-            </div>
-            <div class="">
-                <input type="checkbox" id="c7" name="cc">
-                <label for="c7"> <span></span>Check Box</label>
-            </div>
+            데이터 수집 시간<div>2019년 02월 22일 13시 32분 35초</div>
+        </div>
+        <hr/>
+        <div>
+            센서 로그<div>[NFO][19/02/22 13:32:17]센서 온라인</div>
         </div>
     </section>
 </body>

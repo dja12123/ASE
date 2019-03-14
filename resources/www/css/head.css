@@ -5,31 +5,72 @@ html, body {
 }
 
 .head {
-    margin: 0 0 31px 0;
+    display: inline-block;
+    margin: 0 0 14px 0;
     height: 60px;
     width: 100%;
-    border-bottom: 4px solid rgb(130, 191, 37);
-    background-color: rgb(255, 255, 255);
+    border-bottom: 3px solid rgb(75, 75, 75);
+    background-color: white;
     color: black;
 }
 
-.logo1 {
+.back_btn{
     float: left;
-    margin: 16px 0 0 42px;
-    height: 80%;
-    /* border-left: 3px solid white; */
-    /* border-right: 3px solid white; */
+
+    color: rgb(68, 150, 218);
 }
 
-.logo:hover {
+.back_btn:hover {
     cursor: pointer;
+    
+    color: rgba(70, 131, 180, 0.78);
 }
 
-.head-right {
-    float: right;
-    height: 100%;
-    margin: 0 24px 0 0;
-    line-height: 100%;
-    font-size: 17px;
-    text-align: center;
+@media (min-width: 501px) {
+    .logo {
+        float: left;
+        margin: 13px 0 0 40px;
+        height: 50%;
+    }
+    .text1, .text2 {
+        float: right;
+        margin: 19px 25px 0 0px;
+
+        font-size: 16px;
+    }
+    .back_btn{
+        margin: 15px 0 0 30px;
+        width: 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .logo {
+        display: block;
+        margin: 6px auto 0 auto;
+        height: 36%;
+    }
+    .text1, .text2 {
+        display: block;
+        text-align: center;
+    }
+    .text1 {
+        margin: 7px auto 0 auto;
+
+        font-size: 12px;
+    }
+    .text2 {
+        margin: 22px auto;
+
+        font-size: 12px;
+    }
+    .back_btn{
+        margin: 15px 3px 0 10px;
+    }    
+    .right_empty {
+        float: right;
+        margin: 15px 10px 0 3px;
+        height: 30px;
+        width: 30px;
+    }
 }
