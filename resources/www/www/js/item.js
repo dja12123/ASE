@@ -1,4 +1,7 @@
 /*
+서버 -> 클라이언트 -> 웹
+클라이언트 단에서 데이터 형식을 보내면 웹 형식 작성
+
 실시간 수치 변화 -> 데이터를 지속적으로 받음 -> roadData 
 데이터를 지속적으로 표시 -> js, DOM
 */
@@ -14,7 +17,8 @@ function creatArr(key, num) {
     creatItem(structItem[key].num);
 }
 
-//실시간으로 데이터를 받음 -> 한번에 여러 데디터를 수정
+//센서 속성값
+/*
 function roadData(key, sX, sY, aX, aY, aZ, aH) {
     structItem[key].num = num;
     structItem[key].slopX = sX;
@@ -24,6 +28,7 @@ function roadData(key, sX, sY, aX, aY, aZ, aH) {
     structItem[key].accZ = aZ;
     structItem[key].altiH = aH;
 }
+*/
 
 /*
 key값으로 graph에 띄울 데이터 구분 -> 어떤 key값의 버튼으로 눌러졌는지 확인 ->
