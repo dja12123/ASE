@@ -5,10 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,11 +22,44 @@ public class FileHandler
 			FileHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getPath()
 			+ "/";
 
-	public static File[] getExtFileList(String file)
+	public static List<String> getExtFileList(String file)
 	{
-		return getFileList(getExtResourceFile(file));
+		List<String> fileList = new ArrayList<>();
+		File[] files = getFileList(getExtResourceFile(file));
+		for(File f : files)
+		{
+			fileList.add(f.toString());
+		}
+		return fileList;
 	}
 
+	private static List<String> getResFileList(String path)
+	{
+		List<String> filenames = new ArrayList<>();
+
+		try
+		{
+			try (
+					InputStream in = getResInputStream(path);
+					BufferedReader br = new BufferedReader(new InputStreamReader(in));
+				)
+			{
+				String resource;
+
+				while ((resource = br.readLine()) != null)
+				{
+					filenames.add(resource);
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return filenames;
+	}
+	
 	public static File[] getFileList(File file)
 	{
 		File[] fileList = file.listFiles();
@@ -35,17 +69,9 @@ public class FileHandler
 			fileLogger.log(Level.SEVERE, "디렉토리를 찾을 수 없음");
 		}
 
-		// Test Code
-		if (fileList != null)
-		{
-			for (File f : fileList)
-			{
-				System.out.println(f.getName());
-			}
-		}
 		return fileList;
 	}
-
+	
 	public static File getExtResourceFile(String filePath)
 	{
 		StringBuffer dir = new StringBuffer(jarDir);
@@ -56,12 +82,12 @@ public class FileHandler
 		return new File(dir.toString());
 	}
 
-	public static InputStream getResourceAsStream(String path)
+	public static InputStream getResInputStream(String path)
 	{
 		return FileHandler.class.getResourceAsStream(path);
 	}
 
-	public static FileInputStream getInputStream(File file)
+	public static InputStream getInputStream(File file)
 	{
 		FileInputStream inputStream = null;
 		try
@@ -75,7 +101,7 @@ public class FileHandler
 		return inputStream;
 	}
 
-	public static FileInputStream getInputStream(String file)
+	public static InputStream getExtInputStream(String file)
 	{
 		return getInputStream(getExtResourceFile(file));
 	}
@@ -127,7 +153,7 @@ public class FileHandler
 		return fileReadString.toString();
 	}
 
-	public static String readExtResFileString(String file)
+	public static String readExtFileString(String file)
 	{
 		try
 		{
@@ -138,6 +164,28 @@ public class FileHandler
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static String readResFileString(String file)
+	{
+		try
+		{
+			return readFileString(getResInputStream(file));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void main(String[] args)
+	{
+		List<String> l = getResFileList("/");
+		for(String s : l)
+		{
+			System.out.println(s);
+		}
 	}
 
 }
