@@ -46,7 +46,7 @@ public class WebSocketHandler extends NanoWSD
 	protected WebSocket openWebSocket(IHTTPSession handshake) 
 	{
 		logger.log(Level.INFO, handshake.toString());
-		return new WebSocketData(handshake, this.observerMap);
+		return new WebSocketChannel(handshake, this.observerMap);
 	}
 	
 	public void addObserver(String key, Observer<WebEvent> observer) 

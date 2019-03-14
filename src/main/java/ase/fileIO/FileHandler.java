@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,7 @@ public class FileHandler
 			FileHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getPath()
 			+ "/";
 
-	public static File[] getFileList(String file)
+	public static File[] getExtFileList(String file)
 	{
 		return getFileList(getExtResourceFile(file));
 	}
@@ -93,24 +94,16 @@ public class FileHandler
 		return outputStream;
 	}
 
-	public static FileOutputStream getOutputStream(String file)
+	public static FileOutputStream getExtOutputStream(String file)
 	{
 		return getOutputStream(getExtResourceFile(file));
 	}
 
-	public static String readFileString(File file)
+	public static String readFileString(InputStream is) throws FileNotFoundException
 	{
 		BufferedReader bufRead;
 
-		try
-		{
-			bufRead = new BufferedReader(new FileReader(file));
-		}
-		catch (FileNotFoundException e)
-		{
-			fileLogger.log(Level.SEVERE, "파일을 찾을 수 없음", e);
-			return null;
-		}
+		bufRead = new BufferedReader(new InputStreamReader(is));
 
 		StringBuffer fileReadString = new StringBuffer();
 		String tempReadString = "";
@@ -134,10 +127,17 @@ public class FileHandler
 		return fileReadString.toString();
 	}
 
-	public static String readFileString(String file)
+	public static String readExtResFileString(String file)
 	{
-		return readFileString(getExtResourceFile(file));
+		try
+		{
+			return readFileString(new FileInputStream(getExtResourceFile(file)));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
-	
 
 }

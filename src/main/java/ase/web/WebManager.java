@@ -12,6 +12,7 @@ public class WebManager {
 	public final WebSocketHandler webSocketHandler;
 	// 옵저버 관련된 코드 이곳에 모두 추가
 	
+	
 	public WebManager() {
 		this.httpServer = new HTTPServer();
 		this.webSocketHandler = new WebSocketHandler(8080, true);

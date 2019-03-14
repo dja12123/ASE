@@ -4,14 +4,12 @@ package ase.web;
 
 public class WebEvent 
 {
-	public final WebSocketData channel;
+	public final WebSocketChannel channel;
 	public final String key;
-	public final String value;
 	
-	WebEvent(WebSocketData webSocketData, String key, String value) 
+	WebEvent(WebSocketChannel webSocketData, String key) 
 	{
 		this.key = key;
-		this.value = value;
 		this.channel = webSocketData;
 	}
 }

@@ -69,15 +69,15 @@ public class HTTPServer extends NanoHTTPD
 			}
 			else if (uri.contains(".js"))
 			{
-				msg = FileHandler.readFileString("www/index.js");
+				msg = FileHandler.readExtResFileString("www/index.js");
 			}
 			else if (uri.contains(".css"))
 			{
-				msg = FileHandler.readFileString("www/index.css");
+				msg = FileHandler.readExtResFileString("www/index.css");
 			}
 			else 
 			{
-				msg = FileHandler.readFileString("www/sockettest.html");
+				msg = FileHandler.readExtResFileString("www/index.html");
 			}
 		}
 

@@ -10,22 +10,31 @@ import org.nanohttpd.protocols.websockets.CloseCode;
 import org.nanohttpd.protocols.websockets.WebSocket;
 import org.nanohttpd.protocols.websockets.WebSocketFrame;
 
+import ase.appConnect.channel.ChannelReceiveCallback;
 import ase.util.observer.Observable;
 
 /*
  * WebSocket의 데이터를 정의한 클래스
  * @extends WebSocket
  */
-public class WebSocketData extends WebSocket
+public class WebSocketChannel extends WebSocket
 {
-	private static final String KEY_VALUE_SEPERATOR = "=";
 	public static final Logger logger = WebSocketHandler.logger;
-	private HashMap<String, Observable<WebEvent>> observerMap;
-
-	public WebSocketData(IHTTPSession handshakeRequest, HashMap<String, Observable<WebEvent>> observerMap)
+	private HashMap<String, Observable<WebEvent>> createWebSocketObserver;
+	private ChannelReceiveCallback recvCallback;
+	
+	public WebSocketChannel(IHTTPSession handshakeRequest, HashMap<String, Observable<WebEvent>> observerMap)
 	{
 		super(handshakeRequest);
-		this.observerMap = observerMap;
+		this.createWebSocketObserver = observerMap;
+		
+	}
+	
+	public void setReceiveCallback(ChannelReceiveCallback callback)
+	{
+		if(!this.isOpen()) return;
+		
+		this.recvCallback = callback;
 	}
 	
 	@Override
@@ -46,26 +55,10 @@ public class WebSocketData extends WebSocket
 	@Override
 	protected void onMessage(WebSocketFrame frame) 
 	{
-		String str = frame.getTextPayload();
-		String[] kv = str.split(KEY_VALUE_SEPERATOR);
-		WebEvent send;
+		String key = frame.getTextPayload();
+		WebEvent event = new WebEvent(this, key);
 		
-		if (kv.length == 1) 
-		{
-			send = new WebEvent(this, kv[0], null);
-		}
-		else if(kv.length == 2)
-		{
-			send = new WebEvent(this, kv[0], kv[1]);
-		}
-		else
-		{
-			logger.log(Level.SEVERE, "웹 소켓 Key-Value 에러");
-			return;
-		}
-		
-		observerMap.put(kv[0], new Observable<WebEvent>());
-		Observable<WebEvent> observable = observerMap.get(send.key);
+		Observable<WebEvent> observable = createWebSocketObserver.get(key);
 		
 		if (observable == null) 
 		{
@@ -75,10 +68,10 @@ public class WebSocketData extends WebSocket
 
 		logger.log(Level.INFO, "observable size >> " + observable.size());
 		
-		for (int i = 0; i < observerMap.size(); ++i)
+		for (int i = 0; i < createWebSocketObserver.size(); ++i)
 		{
-			logger.log(Level.INFO, i + " >> 옵저버에게 알림: " + send.key + ", " + send.value);
-			observable.notifyObservers(send);
+			logger.log(Level.INFO, i + " >> 옵저버에게 알림: " + key);
+			observable.notifyObservers(event);
 		}
 		
 		logger.log(Level.INFO, "보내자!" + frame.toString());
@@ -91,7 +84,7 @@ public class WebSocketData extends WebSocket
 	}
 	
 	@Override
-	protected void onException(IOException exception) 
+	protected void onException(IOException exception)
 	{
 		logger.log(Level.SEVERE, "웹 소켓 예외가 발생함", exception);
 	}
