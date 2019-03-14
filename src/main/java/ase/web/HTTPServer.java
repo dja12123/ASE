@@ -7,7 +7,6 @@ import org.nanohttpd.protocols.http.response.Status;
 import org.nanohttpd.util.ServerRunner;
 
 import ase.fileIO.FileHandler;
-import ase.web.MIME_TYPE;
 
 public class HTTPServer extends NanoHTTPD
 {
@@ -15,6 +14,7 @@ public class HTTPServer extends NanoHTTPD
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
 	
 	//private static WebSocketManager responseSocketHandler;
+	public static final String WEB_RES_DIR = "/www";
 	
 	public HTTPServer()
 	{
@@ -34,7 +34,7 @@ public class HTTPServer extends NanoHTTPD
 	{
 		String imageTypeStr = imageType.toString();
 		
-		return Response.newFixedLengthResponse(Status.OK, imageTypeStr, FileHandler.getInputStream(path), -1);
+		return Response.newFixedLengthResponse(Status.OK, imageTypeStr, FileHandler.getResInputStream(path), -1);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class HTTPServer extends NanoHTTPD
 		
 		//responseSocketHandler.openWebSocket(session); //소켓 세션
 		
-		HTTPServer.LOG.info(method + " '" + uri + "' ");
+		System.out.println(method + " '" + uri + "' ");
 
 		// 웹서비스 할 때 필요한 파일 스트림 모듈로 만들기(fileIO 패키지)
 		// StringBuffer 적극 사용
@@ -61,23 +61,24 @@ public class HTTPServer extends NanoHTTPD
 			if (uri.contains(".jpg"))
 			{
 				//System.out.println("uri path >> " + (rootDirectory + uri));
-				return HTTPServer.serveImage(MIME_TYPE.IMAGE_JPEG, "www" + uri);
+				return HTTPServer.serveImage(MIME_TYPE.MIME_JPEG, WEB_RES_DIR+uri);
 			}
 			else if (uri.contains(".png")) 
 			{
-				return HTTPServer.serveImage(MIME_TYPE.IMAGE_PNG, "www" + uri);
+				return HTTPServer.serveImage(MIME_TYPE.MIME_PNG, WEB_RES_DIR+uri);
 			}
 			else if (uri.contains(".js"))
 			{
-				msg = FileHandler.readExtResFileString("www/index.js");
+				msg = FileHandler.readResFileString(WEB_RES_DIR+uri);
 			}
 			else if (uri.contains(".css"))
 			{
-				msg = FileHandler.readExtResFileString("www/index.css");
+				return Response.newFixedLengthResponse(Status.OK, MIME_TYPE.MIME_CSS.toString(), FileHandler.getResInputStream(WEB_RES_DIR+uri), -1);
 			}
 			else 
 			{
-				msg = FileHandler.readExtResFileString("www/index.html");
+				msg = FileHandler.readResFileString(WEB_RES_DIR+uri);
+				
 			}
 		}
 
@@ -85,11 +86,13 @@ public class HTTPServer extends NanoHTTPD
 		return Response.newFixedLengthResponse(msg);
 	}
 
+	@Override
 	public void start()
 	{
 		ServerRunner.run(HTTPServer.class);
 	}
 
+	@Override
 	public void stop()
 	{
 	}
