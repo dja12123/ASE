@@ -1,117 +1,86 @@
 package ase.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.websockets.CloseCode;
 import org.nanohttpd.protocols.websockets.NanoWSD;
 import org.nanohttpd.protocols.websockets.WebSocket;
 
-import ase.web.WebEvent;
 import ase.console.LogWriter;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-//NanoWSD를 상속받아야 함 -> nanohttpd-websocket 라이브러리에 protocols.http.NanoHTTPD 클래스가 있어야 함
+
 public class WebSocketHandler extends NanoWSD
 {
 	public static final String KEY_DATA_SEPERATOR = "=";
 	
 	public static final Logger logger = LogWriter.createLogger(WebSocketHandler.class, "websocket");
 	
-	private HashMap<String, Observable<WebEvent>> observerMap;
+	private List<WebSocketChannel> channelList;
+	private Observable<ChannelEvent> channelObservable;
+	private Observer<ChannelEvent> channelEventCallback;
 	
-	private final boolean debug;
-	
-	public WebSocketHandler(int port, boolean debug) 
+	public WebSocketHandler(int port) 
 	{
 		super(port);
-		System.out.println("port open >> " + port);
-		this.observerMap = new HashMap<String, Observable<WebEvent>>();
-		this.debug = debug;
+		logger.log(Level.INFO, "웹소켓 열기 " + port);
+		this.channelList = new ArrayList<>();
+		this.channelObservable = new Observable<>();
+		this.channelEventCallback = this::channelEventCallback;
+		this.addChannelObserver(this.channelEventCallback);
 	}
 	
-	public boolean getDebug() 
+	private void channelEventCallback(Observable<ChannelEvent> provider, ChannelEvent event)
 	{
-		return this.debug;
+		if(!event.isOpen)
+		{
+			this.channelList.remove(event.channel);
+		}
 	}
 	
-	/*
-	 * @see org.nanohttpd.protocols.websockets.NanoWSD#openWebSocket(org.nanohttpd.protocols.http.IHTTPSession)
-	 * @param IHTTPSession handshake: 세션
-	 */
+	public void addChannelObserver(Observer<ChannelEvent> observer)
+	{
+		this.channelObservable.addObserver(observer);
+	}
+	
+	public void removeChannelObserver(Observer<ChannelEvent> observer)
+	{
+		this.channelObservable.removeObserver(observer);
+	}
+	
 	@Override
-	protected WebSocket openWebSocket(IHTTPSession handshake) 
+	protected synchronized WebSocket openWebSocket(IHTTPSession handshake) 
 	{
 		logger.log(Level.INFO, handshake.toString());
-		return new WebSocketChannel(handshake, this.observerMap);
+		WebSocketChannel channel = new WebSocketChannel(handshake, this.channelObservable);
+		this.channelList.add(channel);
+		return channel;
 	}
 	
-	public void addObserver(String key, Observer<WebEvent> observer) 
+	public synchronized void stopModule() 
 	{
-		Observable<WebEvent> ob = this.observerMap.getOrDefault(key, null);
-		if (ob == null) 
+		this.channelObservable.removeObserver(this.channelEventCallback);
+		
+		for(WebSocketChannel channel : this.channelList)
 		{
-			ob = new Observable<WebEvent>();
-			this.observerMap.put(key, ob);
-		}
-		
-		ob.addObserver(observer);
-		logger.log(Level.INFO, "소켓 옵저버 등록 완료 > " + key);
-	}
-	
-	public void removeObserver(String key, Observer<WebEvent> observer) 
-	{
-		Observable<WebEvent> ob = this.observerMap.getOrDefault(key, null);
-		
-		if (ob == null) 
-		{
-			return;
-		}
-		
-		ob.removeObserver(observer);
-		
-		if (ob.size() == 0) 
-		{
-			this.observerMap.remove(key);
-		}
-	}
-	
-	public void removeObserver(Observer<WebEvent> observer) 
-	{
-		Observable<WebEvent> ob;
-		ArrayList<String> removeObservableKey = new ArrayList<>();
-		
-		for (String key : this.observerMap.keySet()) 
-		{
-			ob = this.observerMap.get(key);
-			ob.removeObserver(observer);
-			
-			if (ob.size() == 0) 
+			try
 			{
-				removeObservableKey.add(key);
+				channel.close(CloseCode.NormalClosure, "normal close", false);
+			}
+			catch (IOException e)
+			{
+				logger.log(Level.WARNING, "웹소켓 종료중 오류");
 			}
 		}
+		logger.log(Level.INFO, "웹소켓 종료");
 		
-		for (int i = 0; i < removeObservableKey.size(); ++i) 
-		{
-			this.observerMap.remove(removeObservableKey.get(i));
-		}
-	}
-	
-	public boolean startModule() 
-	{
-		logger.log(Level.INFO, "웹소켓 매니저 로드");
-		
-		return true;
-	}
-	
-	public void stopModule() 
-	{
-		logger.log(Level.INFO, "웹소켓 매니저 종료");
-		
-		this.observerMap.clear();
+		this.channelObservable.clearObservers();
 	}
 }

@@ -21,11 +21,27 @@ public class FileHandler
 	public static final String jarDir = new File(
 			FileHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getPath()
 			+ "/";
-
-	public static List<String> getExtFileList(String file)
+	public static final String EXTRES_DIR = "extResource/";
+	
+	public static boolean isExistResFile(String dir)
+	{
+		InputStream is = getResInputStream(dir);
+		if(is == null)
+		{// 파일이나 디렉토리가 있는지 검사
+			return false;
+		}
+		if(is.getClass().getSimpleName().equals("ByteArrayInputStream"))
+		{// 디렉토리인지 검사
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static List<String> getExtFileList(String dir)
 	{
 		List<String> fileList = new ArrayList<>();
-		File[] files = getFileList(getExtResourceFile(file));
+		File[] files = getFileList(getExtResourceFile(dir));
 		for(File f : files)
 		{
 			fileList.add(f.toString());
@@ -33,14 +49,14 @@ public class FileHandler
 		return fileList;
 	}
 
-	private static List<String> getResFileList(String path)
+	private static List<String> getResFileList(String dir)
 	{
 		List<String> filenames = new ArrayList<>();
 
 		try
 		{
 			try (
-					InputStream in = getResInputStream(path);
+					InputStream in = getResInputStream(dir);
 					BufferedReader br = new BufferedReader(new InputStreamReader(in));
 				)
 			{
@@ -76,15 +92,15 @@ public class FileHandler
 	{
 		StringBuffer dir = new StringBuffer(jarDir);
 
-		dir.append("extResource/");
+		dir.append(EXTRES_DIR);
 		dir.append(filePath);
 
 		return new File(dir.toString());
 	}
 
-	public static InputStream getResInputStream(String path)
+	public static InputStream getResInputStream(String dir)
 	{
-		return FileHandler.class.getResourceAsStream(path);
+		return FileHandler.class.getResourceAsStream(dir);
 	}
 
 	public static InputStream getInputStream(File file)
@@ -101,9 +117,9 @@ public class FileHandler
 		return inputStream;
 	}
 
-	public static InputStream getExtInputStream(String file)
+	public static InputStream getExtInputStream(String dir)
 	{
-		return getInputStream(getExtResourceFile(file));
+		return getInputStream(getExtResourceFile(dir));
 	}
 
 	public static FileOutputStream getOutputStream(File file)
@@ -120,16 +136,17 @@ public class FileHandler
 		return outputStream;
 	}
 
-	public static FileOutputStream getExtOutputStream(String file)
+	public static FileOutputStream getExtOutputStream(String dir)
 	{
-		return getOutputStream(getExtResourceFile(file));
+		return getOutputStream(getExtResourceFile(dir));
 	}
 
 	public static String readFileString(InputStream is) throws FileNotFoundException
 	{
 		BufferedReader bufRead;
-
-		bufRead = new BufferedReader(new InputStreamReader(is));
+		
+		InputStreamReader isr = new InputStreamReader(is);
+		bufRead = new BufferedReader(isr);
 
 		StringBuffer fileReadString = new StringBuffer();
 		String tempReadString = "";
@@ -153,11 +170,11 @@ public class FileHandler
 		return fileReadString.toString();
 	}
 
-	public static String readExtFileString(String file)
+	public static String readExtFileString(String dir)
 	{
 		try
 		{
-			return readFileString(new FileInputStream(getExtResourceFile(file)));
+			return readFileString(new FileInputStream(getExtResourceFile(dir)));
 		}
 		catch (FileNotFoundException e)
 		{
@@ -166,11 +183,11 @@ public class FileHandler
 		return null;
 	}
 	
-	public static String readResFileString(String file)
+	public static String readResFileString(String dir)
 	{
 		try
 		{
-			return readFileString(getResInputStream(file));
+			return readFileString(getResInputStream(dir));
 		}
 		catch (FileNotFoundException e)
 		{

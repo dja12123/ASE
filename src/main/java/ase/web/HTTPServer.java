@@ -30,11 +30,21 @@ public class HTTPServer extends NanoHTTPD
 	}
 	*/
 
-	private static Response serveImage(MIME_TYPE imageType, String path)
+	private static Response serveImage(MIME_TYPE imageType, String dir)
 	{
 		String imageTypeStr = imageType.toString();
 		
-		return Response.newFixedLengthResponse(Status.OK, imageTypeStr, FileHandler.getResInputStream(path), -1);
+		return Response.newFixedLengthResponse(Status.OK, imageTypeStr, FileHandler.getResInputStream(dir), -1);
+	}
+	
+	private static Response serveStrFile(MIME_TYPE mimeType, String dir)
+	{
+		return Response.newFixedLengthResponse(Status.OK, mimeType.toString(), FileHandler.getResInputStream(dir), -1);
+	}
+	
+	private static Response serveError(Status status, String errorStr)
+	{
+		return Response.newFixedLengthResponse(status, errorStr, "");
 	}
 
 	@Override
@@ -56,33 +66,41 @@ public class HTTPServer extends NanoHTTPD
 		//System.out.println("root >> " + rootDirectory);
 		//
 		String msg = "";
+		
 		if (uri.startsWith("/"))
 		{ // Root Mapping
-			if (uri.contains(".jpg"))
+			String dir = WEB_RES_DIR+uri;
+			if(!FileHandler.isExistResFile(dir))
 			{
-				//System.out.println("uri path >> " + (rootDirectory + uri));
-				return HTTPServer.serveImage(MIME_TYPE.MIME_JPEG, WEB_RES_DIR+uri);
+				return HTTPServer.serveError(Status.NOT_FOUND, "Error 404: File not found");
 			}
-			else if (uri.contains(".png")) 
+			
+			int pos = uri.lastIndexOf( "." );
+			
+			if(pos == -1)
 			{
-				return HTTPServer.serveImage(MIME_TYPE.MIME_PNG, WEB_RES_DIR+uri);
+				return HTTPServer.serveError(Status.BAD_REQUEST, "Error 400: Bad Request");
 			}
-			else if (uri.contains(".js"))
+			String ext = uri.substring( pos + 1 );
+			
+			switch(ext)
 			{
-				msg = FileHandler.readResFileString(WEB_RES_DIR+uri);
-			}
-			else if (uri.contains(".css"))
-			{
-				return Response.newFixedLengthResponse(Status.OK, MIME_TYPE.MIME_CSS.toString(), FileHandler.getResInputStream(WEB_RES_DIR+uri), -1);
-			}
-			else 
-			{
-				msg = FileHandler.readResFileString(WEB_RES_DIR+uri);
+			case "html":
+				return serveStrFile(MIME_TYPE.MIME_HTML, dir);
+			case "jpg":
+				return HTTPServer.serveImage(MIME_TYPE.MIME_JPEG, dir);
+			case "png":
+				return HTTPServer.serveImage(MIME_TYPE.MIME_PNG, dir);
+			case "js":
+				return serveStrFile(MIME_TYPE.MIME_JS,  dir);
+			case "css":
+				return serveStrFile(MIME_TYPE.MIME_CSS,  dir);
+			default:
+				return serveStrFile(MIME_TYPE.MIME_PLAINTEXT,  dir);
 				
 			}
 		}
 
-		System.out.println("Response Data Recieve...");
 		return Response.newFixedLengthResponse(msg);
 	}
 

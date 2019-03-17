@@ -2,7 +2,7 @@ package ase.util.observer;
 
 import ase.util.observer.Observable;
 
-public interface Observer<ObservedType>
+public interface Observer<Event>
 {
-    public void update(Observable<ObservedType> object, ObservedType data);
+    public void update(Observable<Event> provider, Event event);
 }
