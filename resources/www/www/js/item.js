@@ -57,6 +57,6 @@ function delItem(key) {
 //  "작동상태" 변경(on/off)
 // ＊state(int, boolean) 센서 키, 작동상태(on/off)
 function state(key, on) {
-    var sencer = document.getElementById(key+"stat");
-    if(sencer.checked != on) sencer.checked = on;
+    var sensor = document.getElementById(key+"stat");
+    if(sensor.checked != on) sensor.checked = on;
 }

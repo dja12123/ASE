@@ -52,12 +52,12 @@ function clientLoad(input) {
     // var on = Math.floor(Math.random()*10)%2;
     var on = document.getElementById("state_check").checked;
     addItem(key, on);
-    senserData(key, false, elem);
+    sensorData(key, false, elem);
 }
 
 //key배열 전송
-//매개변수 -> senser 배열로 수정
-function senserData(key, state, elem) {
+//매개변수 -> sensor 배열로 수정
+function sensorData(key, state, elem) {
     var item = new Object();
     item.state = state;
     item.elem = elem;
