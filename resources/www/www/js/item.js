@@ -14,9 +14,9 @@ function setTotal() {
     document.getElementById("total").innerHTML = msg;
 }
 
-//table -> div 수정
-// *addItem(int, boolean) 추가할 센서 키, 작동여부(on, off)
-function addItem(key, on) {
+// "센서" 추가
+// *addItem(int, boolean) 센서 키, 작동상태(on/off)
+function addItem(key, on) { //table -> div 수정
     total++;
     setTotal();
     var state = on? "checked": "";
@@ -46,14 +46,16 @@ function addItem(key, on) {
     document.getElementById('items').append(eItem);
 }
 
-// ＊delItem(int) 삭제할 센서 키
+//  "센서" 지우기
+// ＊delItem(int) 센서 키
 function delItem(key) {
     total--;
     setTotal();
     document.getElementById(key).remove();
 }
 
-// ＊state(int, boolean) 센서 키, 작동상태(켜짐, 꺼짐) 
+//  "작동상태" 변경(on/off)
+// ＊state(int, boolean) 센서 키, 작동상태(on/off)
 function state(key, on) {
     var sencer = document.getElementById(key+"stat");
     if(sencer.checked != on) sencer.checked = on;
