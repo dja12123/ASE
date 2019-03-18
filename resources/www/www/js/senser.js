@@ -17,7 +17,7 @@ function setState(key, on) {
 // "센서 데이터 값" 설정
 // ＊setElem(float arr[6]) 기울기2, 가속도3, 고도1 6개 데이터
 function setElem(pos) {
-    var data = ["slopX", "slopY", "accX", "accY", "accZ", "altiH"];
+    var data = ["slopX", "slopY", "accX", "accY", "accZ", "alti", "temp"];
     for (let i = 0; i < pos.length; i++)
         document.getElementById(data[i]).innerHTML = pos[i].toFixed(2);
 }
