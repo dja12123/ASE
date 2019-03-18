@@ -16,6 +16,8 @@ public class HTTPServer extends NanoHTTPD
 	//private static WebSocketManager responseSocketHandler;
 	public static final String WEB_RES_DIR = "/www";
 	
+
+	
 	public HTTPServer()
 	{
 		super(80);
@@ -52,7 +54,7 @@ public class HTTPServer extends NanoHTTPD
 	{
 		Method method = session.getMethod();
 		String uri = session.getUri();
-		
+
 		//responseSocketHandler.openWebSocket(session); //소켓 세션
 		
 		System.out.println(method + " '" + uri + "' ");
@@ -110,9 +112,5 @@ public class HTTPServer extends NanoHTTPD
 		ServerRunner.run(HTTPServer.class);
 	}
 
-	@Override
-	public void stop()
-	{
-	}
 
 }

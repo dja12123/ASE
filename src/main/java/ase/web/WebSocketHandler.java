@@ -26,6 +26,7 @@ public class WebSocketHandler extends NanoWSD
 	private List<WebSocketChannel> channelList;
 	private Observable<ChannelEvent> channelObservable;
 	private Observer<ChannelEvent> channelEventCallback;
+	private HashMap<IHTTPSession, WebSocketChannel> sessionMap;
 	
 	public WebSocketHandler(int port) 
 	{
@@ -33,6 +34,7 @@ public class WebSocketHandler extends NanoWSD
 		logger.log(Level.INFO, "웹소켓 열기 " + port);
 		this.channelList = new ArrayList<>();
 		this.channelObservable = new Observable<>();
+		this.sessionMap = new HashMap<>();
 		this.channelEventCallback = this::channelEventCallback;
 		this.addChannelObserver(this.channelEventCallback);
 	}
@@ -56,10 +58,10 @@ public class WebSocketHandler extends NanoWSD
 	}
 	
 	@Override
-	protected synchronized WebSocket openWebSocket(IHTTPSession handshake) 
+	protected synchronized WebSocket openWebSocket(IHTTPSession session) 
 	{
-		logger.log(Level.INFO, handshake.toString());
-		WebSocketChannel channel = new WebSocketChannel(handshake, this.channelObservable);
+		logger.log(Level.INFO, session.toString());
+		WebSocketChannel channel = new WebSocketChannel(session, this.channelObservable);
 		this.channelList.add(channel);
 		return channel;
 	}

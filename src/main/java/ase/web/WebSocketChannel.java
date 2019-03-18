@@ -9,7 +9,6 @@ import org.nanohttpd.protocols.websockets.CloseCode;
 import org.nanohttpd.protocols.websockets.WebSocket;
 import org.nanohttpd.protocols.websockets.WebSocketFrame;
 
-import ase.web.ChannelEvent;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
@@ -24,9 +23,9 @@ public class WebSocketChannel extends WebSocket
 	private Observable<ChannelDataEvent> dataReceiveProvider;
 	private String key;
 	
-	public WebSocketChannel(IHTTPSession handshakeRequest, Observable<ChannelEvent> channelObservable)
+	public WebSocketChannel(IHTTPSession session, Observable<ChannelEvent> channelObservable)
 	{
-		super(handshakeRequest);
+		super(session);
 		this.dataReceiveProvider = new Observable<>();
 		this.openCloseWSProvider = channelObservable;
 		this.key = null;

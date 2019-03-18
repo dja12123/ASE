@@ -1,6 +1,8 @@
-package ase.sensorReadServer.serialReader;
+package ase.sensorReadServer.sensorReader;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,8 +23,10 @@ import ase.util.observer.Observable;
 
 public class SerialReadManager extends Observable<DevicePacket>
 {
-	public static final String PROP_SerialDevice = "SerialDevice";	
-	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "sensorReader");
+	public static final String PROP_SerialDevice = "SerialDevice";
+	public static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
+	public static final int FULL_PACKET_SIZE = 32;
+	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "serialSensorReader");
 	private static final byte[] SERIAL_STX = new byte[] {0x55, 0x77};
 	
 	private Serial serial;
@@ -95,14 +99,43 @@ public class SerialReadManager extends Observable<DevicePacket>
 			return;
 		}
 		
-		if(!DevicePacket.isDevicePacket(receiveData))
+		if(!this.isDevicePacket(receiveData))
 		{
 			logger.log(Level.WARNING, "오류! 센서 패킷이 아님" + ProtocolDefine.bytesToHex(receiveData, receiveData.length));
 			return;
 		}
 		
-		DevicePacket packet = new DevicePacket(receiveData);
+		ByteBuffer byteBuffer = ByteBuffer.wrap(receiveData);
+		byteBuffer.order(BYTE_ORDER);
 		
-		this.notifyObservers(packet);
+		int id = byteBuffer.getInt();
+		int nsize = byteBuffer.getInt();
+		float xg = byteBuffer.getFloat();
+		float yg = byteBuffer.getFloat();
+		float xa= byteBuffer.getFloat();
+		float ya = byteBuffer.getFloat();
+		float za = byteBuffer.getFloat();
+		float al = byteBuffer.getFloat();
+		
+		DevicePacket packet = new DevicePacket(id, xg, yg, xa, ya, za, al, -1);
+		
+		this.notifyObservers(ServerCore.mainThreadPool, packet);
+	}
+	
+	public boolean isDevicePacket(byte[] packet)
+	{
+		if(packet.length != FULL_PACKET_SIZE)
+		{
+			return false;
+		}
+		ByteBuffer buffer = ByteBuffer.wrap(packet);
+		buffer.position(4);
+		buffer.order(BYTE_ORDER);
+		int packetSize = buffer.getInt();
+		if(packetSize != FULL_PACKET_SIZE)
+		{
+			return false;
+		}
+		return true;
 	}
 }

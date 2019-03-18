@@ -1,10 +1,8 @@
 package ase.test;
 
-import java.nio.ByteBuffer;
 import java.util.Random;
 
 import ase.sensorReadServer.sensorManager.SensorManager;
-import ase.sensorReadServer.serialReader.DevicePacket;
 
 public class TestVirtualSensor
 {
@@ -33,7 +31,7 @@ public class TestVirtualSensor
 		Random r = new Random();
 		while(true)
 		{
-			ByteBuffer buf = ByteBuffer.allocate(4+4+4+4+4+4+4+4);
+			/*ByteBuffer buf = ByteBuffer.allocate(4+4+4+4+4+4+4+4);
 			buf.order(DevicePacket.BYTE_ORDER);
 			buf.putInt(this.id);
 			buf.putInt(32);
@@ -49,7 +47,7 @@ public class TestVirtualSensor
 			
 			DevicePacket dp = new DevicePacket(buf.array());
 			this.sensorManager.update(null, dp);
-			
+			*/
 			try
 			{
 				if(sleepFlag)

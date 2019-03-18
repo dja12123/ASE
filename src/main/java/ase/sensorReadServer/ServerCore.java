@@ -20,7 +20,8 @@ import ase.sensorReadServer.db.DB_Handler;
 import ase.sensorReadServer.db.DB_Installer;
 import ase.sensorReadServer.fileIO.FileHandler;
 import ase.sensorReadServer.sensorManager.SensorManager;
-import ase.sensorReadServer.serialReader.SerialReadManager;
+import ase.sensorReadServer.sensorReader.SerialReadManager;
+import ase.sensorReadServer.sensorReader.TcpSensorReadManager;
 import ase.sensorReadServer.serverSocket.ServerSocketManager;
 import ase.test.TestVirtualSensorManager;
 
@@ -197,7 +198,8 @@ public class ServerCore
 
 	private DB_Handler dbHandler;
 	private ServerSocketManager serverSocketManager;
-	private SerialReadManager sensorReadManager;
+	private SerialReadManager serialSensorReadManager;
+	private TcpSensorReadManager tcpSensorReadManager;
 	private SensorManager sensorManager;
 	private AppServiceManager appServiceManager;
 	
@@ -207,8 +209,9 @@ public class ServerCore
 	{
 		this.dbHandler = new DB_Handler();
 		this.serverSocketManager = new ServerSocketManager();
-		this.sensorReadManager = new SerialReadManager();
-		this.sensorManager = new SensorManager(this.sensorReadManager, this.dbHandler);
+		//this.serialSensorReadManager = new SerialReadManager();
+		this.tcpSensorReadManager = new TcpSensorReadManager();
+		this.sensorManager = new SensorManager(this.dbHandler, this.tcpSensorReadManager);
 		this.appServiceManager = new AppServiceManager(this.serverSocketManager, this.sensorManager);
 		
 		this.testSensor = new TestVirtualSensorManager(this.sensorManager);
@@ -219,7 +222,8 @@ public class ServerCore
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		if(!this.serverSocketManager.startModule()) return false;
-		if(!this.sensorReadManager.startModule()) return false;
+		//if(!this.serialSensorReadManager.startModule()) return false;
+		if(!this.tcpSensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
@@ -240,7 +244,8 @@ public class ServerCore
 		this.appServiceManager.stopModule();
 		this.serverSocketManager.stopModule();
 		this.sensorManager.stopModule();
-		this.sensorReadManager.stopModule();
+		this.tcpSensorReadManager.stopModule();
+		//this.serialSensorReadManager.stopModule();
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 	}

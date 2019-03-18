@@ -16,8 +16,7 @@ import ase.sensorReadServer.sensorManager.sensor.Sensor;
 import ase.sensorReadServer.sensorManager.sensor.SensorConfigAccess;
 import ase.sensorReadServer.sensorManager.sensor.SensorDBAccess;
 import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
-import ase.sensorReadServer.serialReader.DevicePacket;
-import ase.sensorReadServer.serialReader.SerialReadManager;
+import ase.sensorReadServer.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
@@ -27,7 +26,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
-	private SerialReadManager serialReader;
+	private Observable<DevicePacket> sensorReader;
 	private DB_Handler dbHandler;
 	
 	private SensorDBAccess dbAccess;
@@ -43,9 +42,9 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	public final Observable<DataReceiveEvent> publicDataReceiveObservable;
 	public final Observable<SensorOnlineEvent> publicSensorOnlineObservable;
 	
-	public SensorManager(SerialReadManager serialReader, DB_Handler dbHandler)
+	public SensorManager(DB_Handler dbHandler, Observable<DevicePacket> sensorReader)
 	{
-		this.serialReader = serialReader;
+		this.sensorReader = sensorReader;
 		this.dbHandler = dbHandler;
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
@@ -72,7 +71,10 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.checkTimeoutTask();
 		
 		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
-		this.serialReader.addObserver(this);
+		
+		
+		this.sensorReader.addObserver(this);
+		
 		
 		this.timeoutCheckThread = new Thread(this::timeoutCheck);
 		this.timeoutCheckThread.setDaemon(true);
@@ -95,7 +97,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		this.timeoutCheckThread.interrupt();
 		
-		this.serialReader.removeObserver(this);
+		this.sensorReader.removeObserver(this);
 		
 		for(Sensor s : this._sensorMap.values())
 		{
