@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 
-public class LogWriter {//노혜진테스트
+public class LogWriter {//노혜진테스트ㅇㅇ
 	public static final String logFormat = "[%1$tT][%2$s][%3$s] %4$s %5$s %n";// 로그 포맷
 	
 	public static void initLogger(Logger logger, String loggerName)
