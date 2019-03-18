@@ -16,38 +16,40 @@
 </head>
 
 <body>
-    <head>
-        <div class="head">
+    <section class="senser">
+        <header>
             <div>
                 <i class="fas fa-caret-square-left fa-2x back_btn" onclick="location.href='index.html'"></i>
                 <div class="right_empty"></div>
                 <span id="state" class="text2"></span>
             </div>
-        </div>
-    </head>
-    <section>
+        </header>
         <div></div>
         <div class="state">
             <div>
                 <div class="graph_item">기울기</div>
                 <!-- <input type="checkbox" id="c1" name="cc"> -->
-                <label class="pos" for="c1"> <span class="pos2">X</span> <span id="slopX"></span></label>
+                <label class="pos" for="c1"> <span class="pos2">X</span> <span id="slopX"></span> <span class="unit">deg</span></label>
                 <!-- <input type="checkbox" id="c2" name="cc"> -->
-                <label class="pos" for="c2"> <span class="pos2">Y</span> <span id="slopY" ></span></label>
+                <label class="pos" for="c2"> <span class="pos2">Y</span> <span id="slopY" ></span> <span class="unit">deg</span></label>
             </div>
             <div>
                 <div class="graph_item">가속도</div>
                 <!-- <input type="checkbox" id="c3" name="cc"> -->
-                <label class="pos" for="c3"> <span class="pos2">X</span> <span id="accX"></span></label>
+                <label class="pos" for="c3"> <span class="pos2">X</span> <span id="accX"></span> <span class="unit">deg</span></label>
                 <!-- <input type="checkbox" id="c4" name="cc"> -->
-                <label class="pos" for="c4"> <span class="pos2">Y</span> <span id="accY"></span></label>
+                <label class="pos" for="c4"> <span class="pos2">Y</span> <span id="accY"></span> <span class="unit">mG</span></label>
                 <!-- <input type="checkbox" id="c5" name="cc"> -->
-                <label class="pos" for="c5"> <span class="pos2">Z</span> <span id="accZ"></span></label>
+                <label class="pos" for="c5"> <span class="pos2">Z</span> <span id="accZ"></span> <span class="unit">mG</span></label>
             </div>
             <div>
                 <div class="graph_item">고도</div>
                 <!-- <input type="checkbox" id="c6" name="cc"> -->
-                <label class="pos" for="c6"> <span class="pos2">H</span> <span id="altiH"></span></label>
+                <label class="pos" for="c6"> <span class="pos2">A</span> <span id="alti"></span> <span class="unit">M</span></label>
+            
+                <div class="graph_item">온도</div>
+                <!-- <input type="checkbox" id="c6" name="cc"> -->
+                <label class="pos" for="c6"> <span class="pos2">T</span> <span id="temp"></span> <span class="unitT">˚</span></label>
             </div>
         </div>
         <hr/>
@@ -56,11 +58,11 @@
             <div id="uptime"></div>
         </div>
         <hr/>
-        <div>
-            <div>센서 로그</div>
-            <div id="log" class="logs"></div>
-        </div>
     </section>
+    <article>
+        <div>센서 로그</div>
+        <div id="log" class="logs"></div>
+    </article>
 </body>
 
 </html>

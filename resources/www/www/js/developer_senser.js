@@ -1,9 +1,9 @@
-var pos = [];
+var pos = [], posMax = 7;
 
 window.onload = function() {
     setState();
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < posMax; i++) {
         pos[i] = Math.random()*100;
     }
     setElem(pos);
@@ -17,7 +17,7 @@ setInterval(function() {
 }, 300)
 
 setInterval(function() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < posMax; i++) {
         pos[i] += Math.random()/10;
     }
 }, 150)
