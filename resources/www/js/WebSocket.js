@@ -1,4 +1,4 @@
-// 연결(onopen), 종료(onclose), 발신(send), 수신(onmessage), 로그
+// ì—°ê²°(onopen), ì¢…ë£Œ(onclose), ë°œì‹ (send), ìˆ˜ì‹ (onmessage), ë¡œê·¸
 
 var wsUrl =  "ws://localhost:8080"; // webSocket Address
 
@@ -17,11 +17,9 @@ function testWebSocket()
 {
     console.log("in function");
     webSocket = new WebSocket(wsUrl);
-    webSocket.onopen = function(evt) //함수 오타 고쳤다고!!!!!!
+    webSocket.onopen = fucntion(evt)
     {
         onOpen(evt);
-        
-        //왜 안 될까....?
     };
     
     webSocket.onclose = function(evt)
@@ -48,13 +46,13 @@ function testWebSocket()
     function onClose(evt)
     {
         webSocket.send("final send Message");
-        console.log("연결해제");
+        console.log("ì—°ê²°í•´ì œ");
     }
 
 
     function doSend(message)
     {
-        console.log("발신: " + message);
+        console.log("ë°œì‹ : " + message);
         webSocket.send(message);    //testMessage To Server
     };
 
