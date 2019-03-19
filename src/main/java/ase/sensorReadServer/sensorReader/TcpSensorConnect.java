@@ -39,7 +39,7 @@ public class TcpSensorConnect
 			this.close();
 			return;
 		}
-		
+		this.isRun = true;
 		this.receiveThread = new Thread(this::receiveData, "sensorReadConnection");
 		this.receiveThread.setDaemon(true);
 		this.receiveThread.start();
