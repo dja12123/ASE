@@ -17,7 +17,7 @@ function testWebSocket()
 {
     console.log("in function");
     webSocket = new WebSocket(wsUrl);
-    webSocket.onopen = fucntion(evt)
+    webSocket.onopen = function(evt)
     {
         onOpen(evt);
     };
