@@ -117,7 +117,7 @@ public class TcpSensorConnect
 			logger.log(Level.WARNING, this.toString()+" 소켓 종료중 오류 close1", e);
 			return;
 		}
-		logger.log(Level.WARNING, this.toString()+" 소켓 정상 종료");
+		logger.log(Level.INFO, this.toString()+" 소켓 정상 종료");
 	}
 
 }
