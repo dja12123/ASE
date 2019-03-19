@@ -46,7 +46,7 @@ function testWebSocket()
     function onClose(evt)
     {
         webSocket.send("final send Message");
-        console.log("ì—°ê²°í•´ì œ");
+        console.log("소켓이 닫힙니다.");
     }
 
 
