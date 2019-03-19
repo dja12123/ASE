@@ -39,7 +39,7 @@ public class TcpSensorConnect
 			this.close();
 			return;
 		}
-		
+		this.isRun = true;
 		this.receiveThread = new Thread(this::receiveData, "sensorReadConnection");
 		this.receiveThread.setDaemon(true);
 		this.receiveThread.start();
@@ -49,15 +49,17 @@ public class TcpSensorConnect
 	{
 		while(true)
 		{
-			
-			byte[] buffer = this.readData(4+4+4);
-			if(buffer == null) return;
-			ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+			byte[] headerBuffer = this.readData(4+4+4);
+			if(headerBuffer == null) return;
+			ByteBuffer byteBuffer = ByteBuffer.wrap(headerBuffer);
 			byteBuffer.order(BYTE_ORDER);
+			
 			int id = byteBuffer.getInt();
 			int size = byteBuffer.getInt();
 			int count = byteBuffer.getInt();
-			
+			byte[] rawData = new byte[headerBuffer.length+(size*count)];
+			System.arraycopy(headerBuffer, 0, rawData, 0, headerBuffer.length);
+			System.out.printf("id%d size%d count%d", id, size, count);
 			for(int i = 0; i < count; ++i)
 			{
 				byte[] sensorDataBuffer = this.readData(size);
@@ -74,10 +76,13 @@ public class TcpSensorConnect
 				float tmp = sensorDataByteBuffer.getFloat();
 				
 				DevicePacket packet = new DevicePacket(id, xg, yg, xa, ya, za, al, tmp);
-				
+				System.out.println("receive: "+packet.toString());
 				this.sensorReadManager.notifyObservers(ServerCore.mainThreadPool, packet);
+				System.arraycopy(sensorDataBuffer, 0, rawData, headerBuffer.length+(i*size), sensorDataBuffer.length);
 			}
+			this.sensorReadManager.rawDataObservable.notifyObservers(ServerCore.mainThreadPool, rawData);
 		}
+		
 	}
 	
 	private byte[] readData(int size)
@@ -110,7 +115,9 @@ public class TcpSensorConnect
 		catch (IOException e)
 		{
 			logger.log(Level.WARNING, this.toString()+" 소켓 종료중 오류 close1", e);
+			return;
 		}
+		logger.log(Level.INFO, this.toString()+" 소켓 정상 종료");
 	}
 
 }

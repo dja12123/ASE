@@ -17,6 +17,8 @@ public class TcpSensorReadManager extends Observable<DevicePacket>
 	
 	public static final String PROP_SERVERPORT = "TCPSensorPort";
 	
+	public final Observable<byte[]> rawDataObservable;
+	
 	private boolean isRun;
 	private int port;
 	private ServerSocket socket;
@@ -27,6 +29,7 @@ public class TcpSensorReadManager extends Observable<DevicePacket>
 	{
 		this.isRun = false;
 		this.clientList = new ArrayList<>();
+		this.rawDataObservable = new Observable<>();
 	}
 	
 	public synchronized boolean startModule()
@@ -51,7 +54,7 @@ public class TcpSensorReadManager extends Observable<DevicePacket>
 		this.acceptThread.setDaemon(true);
 		this.acceptThread.start();
 		
-		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress());
+		logger.log(Level.INFO, "서버 소켓 열기 "+this.socket.getInetAddress()+":"+this.port);
 		logger.log(Level.INFO, "TcpSensorReadManager 시작 완료");
 		return true;
 	}
@@ -62,6 +65,7 @@ public class TcpSensorReadManager extends Observable<DevicePacket>
 		this.isRun = false;
 		
 		this.clearObservers();
+		this.rawDataObservable.clearObservers();
 		
 		ArrayList<TcpSensorConnect> closeList = new ArrayList<>();
 		closeList.addAll(this.clientList);
