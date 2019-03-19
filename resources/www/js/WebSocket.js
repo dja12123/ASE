@@ -4,14 +4,18 @@ var wsUrl =  "ws://localhost:8080"; // webSocket Address
 
 var output;
 
+init();
+
 function init()
 {
-    output = document.getElementById("output");
+    console.log("in function");
+    //output = document.getElementById("output");
     testWebSocket();
 }
 
 function testWebSocket()
 {
+    console.log("in function");
     webSocket = new WebSocket(wsUrl);
     webSocket.onopen = fucntion(evt)
     {
@@ -35,35 +39,24 @@ function testWebSocket()
 
     function onOpen(evt)
     {
-        writeToScreen("connect sucessful!");
+        console.log("connect sucessful!");
         doSend("testMessage");
     }
 
     function onClose(evt)
     {
         webSocket.send("final send Message");
-        writeToScreen("연결해제");
+        console.log("연결해제");
     }
 
-    function onMessage(evt)
-    {
-        writeToScreen('<span style="color : red">error:</span>'+evt.data);
-    }
 
     function doSend(message)
     {
-        wruteToScreen("발신: " + message);
+        console.log("발신: " + message);
         webSocket.send(message);    //testMessage To Server
     };
 
-    function writeToScreen(message)
-    {
-        var pre = document.createElement("p");
-        pre.style.wordwrap = "break-word";
-        pre.innerHTML = message;
-        output.appendChild(pre);
-    }
-
+   
     window.addEventListener("load", init, false);
 
 }
