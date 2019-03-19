@@ -17,7 +17,7 @@ function testWebSocket()
 {
     console.log("in function");
     webSocket = new WebSocket(wsUrl);
-    webSocket.onopen = function(evt)
+    webSocket.onopen = function(evt) //함수 오타 고쳤다고!!!!!!
     {
         onOpen(evt);
         
