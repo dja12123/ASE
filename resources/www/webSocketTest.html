@@ -1,60 +1,13 @@
 <!DOCTYPE html>
 <html>
    <head>
-      
 
-      javaScript Client WebSocket Test
-
-      <script type = "text/javascript">
-         function WebSocketTest() {
-            
-            if ("WebSocket" in window) {
-
-               // Let us open a web socket
-               var ws = new WebSocket("ws://localhost:8080");
-			   var ws1 = new WebSocket("ws://localhost:8080");
-               ws.onopen = function() {
-                  
-                  // Web Socket is connected, send data using send()
-                  ws.send("test");
-                  ws.send("hello");
-                  ws.send("world!!");
-               };
-                ws1.onopen = function() {
-                  
-                  // Web Socket is connected, send data using send()
-                  ws1.send("test1");
-                  ws1.send("hello1");
-                  ws1.send("world!!1");
-                  ws.send("world!!2");
-				  ws.send("world!!2");
-				  ws1.send("world!!1");
-				  ws1.send("world!!1");
-				  ws1.send("world!!1");
-				  ws.send("world!!2");
-				  ws.send("world!!2");
-				  ws.send("worldasdasdasdassdsad!!2");
-               };
-				
-               ws.onmessage = function (evt) { 
-                  var received_msg = evt.data;
-               };
-				
-               ws.onclose = function() { 
-                  
-                  // websocket is closed.
-               };
-            } else {
-              
-               // The browser doesn't support WebSocket
-            }
-         }
-      </script>
+      <script type = "WebSocket/javascript"></script>
 		
    </head>
    
    <body>
-      <div id = "sse">
+      <div id = "output">
          <a href = "javascript:WebSocketTest()">Run WebSocket</a>
       </div>
       
