@@ -57,7 +57,7 @@ public class TcpSensorConnect
 			int id = byteBuffer.getInt();
 			int size = byteBuffer.getInt();
 			int count = byteBuffer.getInt();
-			
+			System.out.printf("id%d size%d count%d");
 			for(int i = 0; i < count; ++i)
 			{
 				byte[] sensorDataBuffer = this.readData(size);
@@ -74,7 +74,7 @@ public class TcpSensorConnect
 				float tmp = sensorDataByteBuffer.getFloat();
 				
 				DevicePacket packet = new DevicePacket(id, xg, yg, xa, ya, za, al, tmp);
-				
+				System.out.println("receive: "+packet.toString());
 				this.sensorReadManager.notifyObservers(ServerCore.mainThreadPool, packet);
 			}
 		}
