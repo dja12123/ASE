@@ -20,6 +20,8 @@ function testWebSocket()
     webSocket.onopen = function(evt)
     {
         onOpen(evt);
+        
+        //너는 언제되니ㅠㅠ
     };
     
     webSocket.onclose = function(evt)
