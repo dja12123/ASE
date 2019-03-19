@@ -51,6 +51,7 @@ public class TcpSensorConnect
 		{
 			System.out.println("데이타 수신중...");
 			byte[] buffer = this.readData(4+4+4);
+			System.out.println("데이타 수신완료...");
 			if(buffer == null) return;
 			ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 			byteBuffer.order(BYTE_ORDER);
@@ -79,6 +80,7 @@ public class TcpSensorConnect
 				this.sensorReadManager.notifyObservers(ServerCore.mainThreadPool, packet);
 			}
 		}
+		
 	}
 	
 	private byte[] readData(int size)
