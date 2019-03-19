@@ -54,10 +54,11 @@ public class TcpSensorConnect
 			if(buffer == null) return;
 			ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 			byteBuffer.order(BYTE_ORDER);
+			System.out.printf("데이타 수신중...");
 			int id = byteBuffer.getInt();
 			int size = byteBuffer.getInt();
 			int count = byteBuffer.getInt();
-			System.out.printf("id%d size%d count%d");
+			System.out.printf("id%d size%d count%d", id, size, count);
 			for(int i = 0; i < count; ++i)
 			{
 				byte[] sensorDataBuffer = this.readData(size);
