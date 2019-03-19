@@ -21,7 +21,7 @@ function testWebSocket()
     {
         onOpen(evt);
         
-        //너는 언제되니ㅠㅠ
+        //왜 안 될까....?
     };
     
     webSocket.onclose = function(evt)
