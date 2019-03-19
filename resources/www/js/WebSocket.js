@@ -52,7 +52,7 @@ function testWebSocket()
 
     function doSend(message)
     {
-        console.log("ë°œì‹ : " + message);
+        console.log("발신 : " + message);
         webSocket.send(message);    //testMessage To Server
     };
 
