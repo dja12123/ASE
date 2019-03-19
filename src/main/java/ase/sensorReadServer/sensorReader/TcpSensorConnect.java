@@ -49,12 +49,12 @@ public class TcpSensorConnect
 	{
 		while(true)
 		{
-			
+			System.out.printf("데이타 수신중...");
 			byte[] buffer = this.readData(4+4+4);
 			if(buffer == null) return;
 			ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 			byteBuffer.order(BYTE_ORDER);
-			System.out.printf("데이타 수신중...");
+			
 			int id = byteBuffer.getInt();
 			int size = byteBuffer.getInt();
 			int count = byteBuffer.getInt();
