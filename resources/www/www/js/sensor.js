@@ -52,4 +52,4 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
 function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
-}z
+}

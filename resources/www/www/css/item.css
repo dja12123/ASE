@@ -1,3 +1,4 @@
+
 .item {
     border-radius: 7px;
     height: 44px;
@@ -8,6 +9,11 @@
     background-color: white;
 }
 
+.item td:nth-child(1) {
+    font-weight: bold;
+    font-size: 14px;
+}
+
 .item td:nth-child(2) {
     width: 100%;
 }
@@ -16,6 +22,7 @@
     float: right;
     border-radius: 3px;
     border: 0px;
+    height: 28px;
     color: white;
     background-color: steelblue;
     outline: 0px;
@@ -25,36 +32,47 @@
     background-color: rgba(70, 131, 180, 0.78);
 }
 
-@media (min-width: 801px) {
-    .item {
-        padding: 0 15px 0 15px;
-        width: 750px;
-        margin: 18px auto 18px auto;
+@media (min-width: 621px) {
+    .items {
+        margin: auto;
+        width: 620px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
     }
-    .item td:nth-child(1) {
-        font-weight: bold;
-        font-size: 15px;
+    .item {
+        padding: 0 3% 0 3%;
+        margin: 18px 11px 18px 11px;
     }
     .item-btn {
         margin: 0 0 0 12px;
-        height: 28px;
-        width: 68px;
+        width: 60px;
         font-size: 14px;
     }
 }
 
-@media (min-width: 296px) and (max-width: 800px) {
+@media (min-width: 401px) and (max-width: 620px) {
+    .items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        padding: 0 5% 0 5%;
+        margin: 18px 10px 18px 10px;
+    }
+    .item-btn {
+        margin: 0 0 0 12px;
+        width: 60px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 296px) and (max-width: 400px) {
     .item {
         padding: 0 15px 0 15px;
         margin: 18px 26px 18px 26px;
     }
-    .item td:nth-child(1) {
-        font-weight: bold;
-        font-size: 15px;
-    }
     .item-btn {
         margin: 0 0 0 12px;
-        height: 28px;
         width: 68px;
         font-size: 14px;
     }
@@ -65,13 +83,8 @@
         padding: 0 6px 0 6px;
         margin: 18px 5px 0 5px;
     }
-    .item td:nth-child(1) {
-        font-weight: bold;
-        font-size: 14px;
-    }
     .item-btn {
         margin: 0 0 0 10px;
-        height: 26px;
         width: 43px;
         font-size: 11px;
     }

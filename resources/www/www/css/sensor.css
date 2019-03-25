@@ -12,13 +12,14 @@
     background-color: lightgray;
 }
 
-section>div:nth-child(n + 2) {
+section>div:nth-child(n + 2), article {
     margin-left: 20px;
     margin-right: 20px;
 }
 
 .state {
-    margin: 13px 20px 30px 20px;
+    margin-top: 13px;
+    margin-bottom: 20px;
     padding: 2px 4px 3px 4px;
     border-radius: 10px;
     border-top: 2px solid rgb(100, 100, 100);
@@ -70,9 +71,17 @@ label>span:nth-child(1) {
     margin: 3px 0 3px 0px;
 }
 
+@media (min-width: 601px) {
+    section>div:nth-child(n + 2), article {
+        max-width: 550px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 @media (min-width: 401px) {
     article {
-        padding: 430px 0 0 20px;
+        padding-top: 430px;
         font-size: 16px;
     }
     .pos{
@@ -92,7 +101,7 @@ label>span:nth-child(1) {
         font-size: 12px;
     }
     article {
-        padding: 370px 0 0 20px;
+        padding-top: 370px;
         font-size: 12px;
     }
     .pos{
@@ -108,13 +117,12 @@ label>span:nth-child(1) {
 }
 
 @media (max-width: 270px) {
-    section>div:nth-child(n + 2) {
+    section>div:nth-child(n + 2), article {
         margin: 0 7px;
         font-size: 11px;
     }
     article {
-        padding: 340px 0 0 6px;
-        font-size: 11px;
+        padding-top: 340px;
     }
     .pos {
         padding: 1px 3px 1px 5px;

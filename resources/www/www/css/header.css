@@ -23,7 +23,6 @@ header {
 }
 
 header>div {
-    display: inline-block;
     height: 60px;
     width: 100%;
 }
@@ -41,6 +40,10 @@ header>div {
 }
 
 @media (min-width: 501px) {
+    header>div {
+        margin: 0 auto;
+        max-width: 700px;
+    }
     .logo {
         float: left;
         margin: 13px 0 0 40px;
@@ -59,6 +62,9 @@ header>div {
 }
 
 @media (max-width: 500px) {
+    header>div {
+        display: inline-block;
+    }
     .logo {
         display: block;
         margin: 6px auto 0 auto;
