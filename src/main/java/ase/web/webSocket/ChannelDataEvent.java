@@ -1,6 +1,7 @@
-package ase.web;
+package ase.web.webSocket;
 
 import ase.appConnect.channel.ProtocolDefine;
+import ase.util.BinUtil;
 
 public class ChannelDataEvent
 {
@@ -16,6 +17,6 @@ public class ChannelDataEvent
 	@Override
 	public String toString()
 	{
-		return "Channel Data count:"+this.data.length+" raw:"+ProtocolDefine.bytesToHex(data, data.length);
+		return "Channel Data count:"+this.data.length+" raw:"+BinUtil.bytesToHex(data);
 	}
 }

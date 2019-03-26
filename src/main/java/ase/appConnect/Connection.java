@@ -17,6 +17,7 @@ import ase.appConnect.channel.Channel;
 import ase.appConnect.channel.ChannelEvent;
 import ase.appConnect.channel.ProtocolDefine;
 import ase.console.LogWriter;
+import ase.util.BinUtil;
 import ase.util.observer.Observable;
 
 public class Connection extends Observable<ChannelEvent>
@@ -334,7 +335,7 @@ public class Connection extends Observable<ChannelEvent>
 			synchronized (this.outputStream)
 			{
 				this.outputStream.write(option);
-				this.outputStream.write(ProtocolDefine.intToByteArray(key.length()));
+				this.outputStream.write(BinUtil.intToByteArray(key.length()));
 				this.outputStream.write(key.getBytes());
 				for(byte[] payload : allPayload)
 				{

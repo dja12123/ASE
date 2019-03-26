@@ -1,4 +1,4 @@
-package ase.web;
+package ase.web.httpServer;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;

@@ -12,6 +12,7 @@ import ase.sensorReadServer.sensorManager.sensor.Sensor;
 import ase.sensorReadServer.sensorManager.sensor.SensorData;
 import ase.sensorReadServer.sensorManager.sensor.SensorLog;
 import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
+import ase.util.BinUtil;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
@@ -147,7 +148,7 @@ public class SensorDataSender implements ChannelReceiveCallback
 		b.appendData(AppServiceDefine.SensorData_REP_ALLLOG);
 		int sendStart = this.sensor.log.size() - size;
 		if(sendStart < 0) sendStart = 0;
-		b.appendData(ProtocolDefine.intToByteArray(this.sensor.log.size() - sendStart));
+		b.appendData(BinUtil.intToByteArray(this.sensor.log.size() - sendStart));
 		for(int i = sendStart; i < this.sensor.log.size(); ++i)
 		{
 			SensorLog l = this.sensor.log.get(i);
@@ -168,7 +169,7 @@ public class SensorDataSender implements ChannelReceiveCallback
 		b.appendData(AppServiceDefine.SensorData_REP_ALLDATA);
 		int sendStart = this.sensor.data.size() - size;
 		if(sendStart < 0) sendStart = 0;
-		b.appendData(ProtocolDefine.intToByteArray(this.sensor.data.size() - sendStart));
+		b.appendData(BinUtil.intToByteArray(this.sensor.data.size() - sendStart));
 		for(int i = sendStart; i < this.sensor.data.size(); ++i)
 		{
 			SensorData d = this.sensor.data.get(i);

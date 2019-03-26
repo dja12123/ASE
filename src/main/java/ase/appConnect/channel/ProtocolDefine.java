@@ -84,18 +84,6 @@ public class ProtocolDefine
 		return buffer;
 	}
 	
-	public static final byte[] intToByteArray(int value)
-	{
-		return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value };
-	}
-	
-	public static byte[] shortToByteArray(short value)
-	{
-		return new byte[] {(byte)(value >>> 8), (byte)(value)};
-	}
-	
-	
-	
 	/*public static final int CONTROL_SEQ_SIZE = 3;
 	public static final byte[] CONTROL_MARK = new byte[] {-0x7D, -0x7E};
 	public static final byte[] CONTROL_START = new byte[] { CONTROL_MARK[0], CONTROL_MARK[1], 0x00};
@@ -138,20 +126,5 @@ public class ProtocolDefine
 	{
 		optionArea = (byte)(optionArea | option);
 		return optionArea;
-	}
-	
-	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-	public static String bytesToHex(byte[] bytes, int end)
-	{
-		StringBuffer buf = new StringBuffer();
-		for (int j = 0; j < end; j++)
-		{
-			int v = bytes[j] & 0xFF;
-			buf.append(hexArray[v >>> 4]);
-			buf.append(hexArray[v & 0x0F]);
-			buf.append(' ');
-		}
-		return buf.toString();
 	}
 }

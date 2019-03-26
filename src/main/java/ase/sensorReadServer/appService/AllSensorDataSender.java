@@ -10,6 +10,7 @@ import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorManager.SensorRegisterEvent;
 import ase.sensorReadServer.sensorManager.sensor.Sensor;
 import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
+import ase.util.BinUtil;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
@@ -51,7 +52,7 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 	{
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorDeviceData_REP_LIST);
-		b.appendData(ProtocolDefine.intToByteArray(this.sensorManager.sensorMap.size()));
+		b.appendData(BinUtil.intToByteArray(this.sensorManager.sensorMap.size()));
 		for(Sensor sensor : this.sensorManager.sensorMap.values())
 		{
 			ByteBuffer buf = ByteBuffer.allocate(4 + 1);
@@ -72,7 +73,7 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
 			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF);
-			b.appendData(ProtocolDefine.intToByteArray(data.sensor.id));
+			b.appendData(BinUtil.intToByteArray(data.sensor.id));
 			b.appendData((byte)(data.isOnline ? 1 : 0));
 			this.channel.sendData(b);
 		});
@@ -85,7 +86,7 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 		Thread t = new Thread(()->{
 			AppDataPacketBuilder b = new AppDataPacketBuilder();
 			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE);
-			b.appendData(ProtocolDefine.intToByteArray(data.sensor.id));
+			b.appendData(BinUtil.intToByteArray(data.sensor.id));
 			b.appendData((byte)(data.isActive ? 1 : 0));
 			this.channel.sendData(b);
 		});

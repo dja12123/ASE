@@ -1,4 +1,4 @@
-package ase.web;
+package ase.web.httpServer;
 
 public enum MIME_TYPE
 {

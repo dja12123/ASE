@@ -1,4 +1,4 @@
-package ase.web;
+package ase.web.webSocket;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -112,5 +112,17 @@ public class WebSocketChannel extends WebSocket
 	public String toString()
 	{
 		return "WS Channel key:"+this.key+" isOpen:"+this.isOpen()+" hashcode:"+this.hashCode();
+	}
+	
+	public void normalClose()
+	{
+		try
+		{
+			this.close(CloseCode.NormalClosure, "normal Close", false);
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.SEVERE, "웹 소켓 종료중 오류", e);
+		}
 	}
 }

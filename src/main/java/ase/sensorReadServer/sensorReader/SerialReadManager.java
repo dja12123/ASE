@@ -19,6 +19,7 @@ import com.pi4j.io.serial.StopBits;
 import ase.appConnect.channel.ProtocolDefine;
 import ase.console.LogWriter;
 import ase.sensorReadServer.ServerCore;
+import ase.util.BinUtil;
 import ase.util.observer.Observable;
 
 public class SerialReadManager extends Observable<DevicePacket>
@@ -101,7 +102,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		
 		if(!this.isDevicePacket(receiveData))
 		{
-			logger.log(Level.WARNING, "오류! 센서 패킷이 아님" + ProtocolDefine.bytesToHex(receiveData, receiveData.length));
+			logger.log(Level.WARNING, "오류! 센서 패킷이 아님" + BinUtil.bytesToHex(receiveData));
 			return;
 		}
 		

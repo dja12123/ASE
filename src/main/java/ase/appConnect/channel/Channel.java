@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ase.console.LogWriter;
+import ase.util.BinUtil;
 import ase.util.observer.Observable;
 
 public class Channel
@@ -44,8 +45,8 @@ public class Channel
 			synchronized (this.output)
 			{
 				this.output.write(option);
-				this.output.write(ProtocolDefine.shortToByteArray(id));
-				this.output.write(ProtocolDefine.intToByteArray(key.length()));
+				this.output.write(BinUtil.shortToByteArray(id));
+				this.output.write(BinUtil.intToByteArray(key.length()));
 				this.output.write(key.getBytes());
 			}
 		}
@@ -67,7 +68,7 @@ public class Channel
 			synchronized (this.output)
 			{
 				this.output.write(option);
-				this.output.write(ProtocolDefine.shortToByteArray(this.id));
+				this.output.write(BinUtil.shortToByteArray(this.id));
 			}
 		}
 		catch (IOException e)
@@ -91,7 +92,7 @@ public class Channel
 			try
 			{
 				this.output.write(option);
-				this.output.write(ProtocolDefine.shortToByteArray(this.id));
+				this.output.write(BinUtil.shortToByteArray(this.id));
 				for(byte[] payload : allPayload)
 				{
 					this.output.write(payload);

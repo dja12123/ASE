@@ -1,4 +1,4 @@
-package ase.web;
+package ase.web.webSocket;
 
 public class ChannelEvent
 {

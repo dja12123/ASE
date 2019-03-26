@@ -10,6 +10,7 @@ import ase.appConnect.channel.Channel;
 import ase.appConnect.channel.ProtocolDefine;
 import ase.console.LogWriter;
 import ase.sensorReadServer.appService.AppServiceDefine;
+import ase.util.BinUtil;
 
 public class TestMain
 {//testtest
@@ -102,7 +103,7 @@ public class TestMain
 		});
 		AppDataPacketBuilder b = new AppDataPacketBuilder();
 		b.appendData(AppServiceDefine.SensorData_REQ_DEVICEID);
-		b.appendData(ProtocolDefine.intToByteArray(1001));
+		b.appendData(BinUtil.intToByteArray(1001));
 		ch.sendData(b);
 		
 		b = new AppDataPacketBuilder();

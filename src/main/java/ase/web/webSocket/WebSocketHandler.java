@@ -1,4 +1,4 @@
-package ase.web;
+package ase.web.webSocket;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class WebSocketHandler extends NanoWSD
 	public static final Logger logger = LogWriter.createLogger(WebSocketHandler.class, "websocket");
 	
 	private List<WebSocketChannel> channelList;
-	private Observable<ChannelEvent> channelObservable;
+	public final Observable<ChannelEvent> channelObservable;
 	private Observer<ChannelEvent> channelEventCallback;
 	private HashMap<IHTTPSession, WebSocketChannel> sessionMap;
 	
