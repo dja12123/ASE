@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.websockets.CloseCode;
@@ -15,25 +16,22 @@ import ase.web.webSocket.ChannelEvent;
 import ase.web.webSocket.WebSocketChannel;
 import ase.web.webSocket.WebSocketHandler;
 
-public class Session
+public class Session extends Observable<ChannelEvent>
 {
 	public final IHTTPSession httpSession;
-	private WebSocketHandler webSocketHandler;
 	private final SessionConfigAccess sessionConfigAccess;
-	private Observer<ChannelEvent> channelObserver;
-	private List<WebSocketChannel> wsChannelList;
+	private final Consumer<Session> sessionCloseCallback;
+	private final List<WebSocketChannel> wsChannelList;
 	
 	private Timer closeTimer;
 	private TimerTask closeTimerTask;
 	private boolean isActive;
-
 	
-	public Session(IHTTPSession httpSession, WebSocketHandler wsHandler, SessionConfigAccess config)
+	public Session(IHTTPSession httpSession, SessionConfigAccess config, Consumer<Session> sessionCloseCallback)
 	{
 		this.httpSession = httpSession;
-		this.webSocketHandler = wsHandler;
 		this.sessionConfigAccess = config;
-		this.channelObserver = this::channelObserver;
+		this.sessionCloseCallback = sessionCloseCallback;
 		this.wsChannelList = new ArrayList<>();
 		this.closeTimerTask = new TimerTask()
 		{
@@ -44,10 +42,25 @@ public class Session
 			}
 		};
 		this.isActive = true;
-		this.webSocketHandler.channelObservable.addObserver(this.channelObserver);
 	}
 	
-	public synchronized void startCloseTimer()
+	public synchronized void OnCreateChannel(WebSocketChannel ch)
+	{
+		if(!this.isActive) return;
+		if(this.wsChannelList.size() == 0) this.killCloseTimer();
+		this.wsChannelList.add(ch);
+		this.notifyObservers(new ChannelEvent(ch, true));
+	}
+	
+	public synchronized void OnCloseChannel(WebSocketChannel ch)
+	{
+		if(!this.isActive) return;
+		this.wsChannelList.remove(ch);
+		this.notifyObservers(new ChannelEvent(ch, false));
+		if(this.wsChannelList.size() == 0) this.startCloseTimer();
+	}
+	
+	private synchronized void startCloseTimer()
 	{
 		if(this.closeTimer != null)
 		{
@@ -60,34 +73,19 @@ public class Session
 	
 	private synchronized void killCloseTimer()
 	{
-		if(this.isActive) return;
+		if(!this.isActive) return;
 		if(this.closeTimer != null) this.closeTimer.cancel();
 	}
 	
 	public synchronized void close()
 	{
 		if(!this.isActive) return;
-		this.webSocketHandler.removeChannelObserver(this.channelObserver);
 		for(WebSocketChannel ch : this.wsChannelList)
 		{
 			ch.normalClose();
 		}
 		this.isActive = false;
+		this.sessionCloseCallback.accept(this);
 	}
 	
-	private synchronized void channelObserver(Observable<ChannelEvent> provider, ChannelEvent e)
-	{
-		if(!this.isActive) return;
-		if(e.channel.getHandshakeRequest() != this.httpSession) return;
-		if(e.isOpen)
-		{
-			this.wsChannelList.add(e.channel);
-			this.killCloseTimer();
-		}
-		else
-		{
-			this.wsChannelList.remove(e.channel);
-			this.startCloseTimer();
-		}
-	}
 }
