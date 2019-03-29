@@ -1,48 +1,48 @@
 package ase.sensorReadServer.appService;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-import ase.appConnect.channel.AppDataPacketBuilder;
-import ase.appConnect.channel.Channel;
-import ase.appConnect.channel.ChannelReceiveCallback;
-import ase.appConnect.channel.ProtocolDefine;
+import ase.clientSession.ChannelDataEvent;
+import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorManager.SensorRegisterEvent;
 import ase.sensorReadServer.sensorManager.sensor.Sensor;
 import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
-import ase.util.BinUtil;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class AllSensorDataSender implements ChannelReceiveCallback
+public class AllSensorDataSender
 {
-	private Channel channel;
+	private IChannel channel;
 	private SensorManager sensorManager;
 	private Observer<SensorOnlineEvent> sensorOnlineObserver;
 	private Observer<SensorRegisterEvent> sensorRegisterObserver;
+	private Observer<ChannelDataEvent> channelDataObserver;
 	
-	AllSensorDataSender(Channel channel, SensorManager sensorManager)
+	AllSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
 		this.channel = channel;
 		this.sensorManager = sensorManager;
 		this.sensorOnlineObserver = this::sensorOnlineCallback;
 		this.sensorRegisterObserver = this::sensorRegisterCallback;
+		this.channelDataObserver = this::channelDataObserver;
 		this.sensorManager.publicSensorOnlineObservable.addObserver(this.sensorOnlineObserver);
 		this.sensorManager.addObserver(this.sensorRegisterObserver);
-		this.channel.setReceiveCallback(this);
+		this.channel.addDataReceiveObserver(this.channelDataObserver);
 	}
 	
 	public void destroy()
 	{
-		if(this.channel.isOpen()) this.channel.setReceiveCallback(null);
+		this.channel.removeDataReceiveObserver(this.channelDataObserver);
 		this.sensorManager.publicSensorOnlineObservable.removeObserver(this.sensorOnlineObserver);
 		this.sensorManager.removeObserver(this.sensorRegisterObserver);
 	}
 
-	@Override
-	public void receiveData(Channel ch, byte[][] data)
+	public void channelDataObserver(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
-		if(data[0][0] == AppServiceDefine.SensorDeviceData_REQ_LIST)
+		if(event.data[0] == AppServiceDefine.SensorDeviceData_REQ_LIST)
 		{
 			this.sendAllSensorDataTask();
 		}
@@ -50,47 +50,34 @@ public class AllSensorDataSender implements ChannelReceiveCallback
 	
 	private void sendAllSensorDataTask()
 	{
-		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(AppServiceDefine.SensorDeviceData_REP_LIST);
-		b.appendData(BinUtil.intToByteArray(this.sensorManager.sensorMap.size()));
-		for(Sensor sensor : this.sensorManager.sensorMap.values())
+		List<Sensor> sensorList = new ArrayList<>(this.sensorManager.sensorMap.size());
+		sensorList.addAll(this.sensorManager.sensorMap.values());
+		ByteBuffer buf = ByteBuffer.allocate(1+4+(sensorList.size()*(4 + 1)));
+		buf.put(AppServiceDefine.SensorDeviceData_REP_LIST);
+		buf.putInt(sensorList.size());
+		for(Sensor sensor : sensorList)
 		{
-			ByteBuffer buf = ByteBuffer.allocate(4 + 1);
 			buf.putInt(sensor.id);
 			buf.put((byte)(sensor.isOnline() ? 1 : 0));
-			b.appendData(buf.array());
 		}
-		this.channel.sendData(b);
-	}
-	
-	public void sendAllSensorLogTask()
-	{
-		
+		this.channel.sendData(buf.array());
 	}
 
 	public void sensorOnlineCallback(Observable<SensorOnlineEvent> object, SensorOnlineEvent data)
 	{
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF);
-			b.appendData(BinUtil.intToByteArray(data.sensor.id));
-			b.appendData((byte)(data.isOnline ? 1 : 0));
-			this.channel.sendData(b);
-		});
-		t.setDaemon(true);
-		t.start();
+		ByteBuffer buf = ByteBuffer.allocate(1+4+1);
+		buf.put(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ONOFF);
+		buf.putInt(data.sensor.id);
+		buf.put((byte)(data.isOnline ? 1 : 0));
+		this.channel.sendData(buf.array());
 	}
 	
 	public void sensorRegisterCallback(Observable<SensorRegisterEvent> object, SensorRegisterEvent data)
-	{
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE);
-			b.appendData(BinUtil.intToByteArray(data.sensor.id));
-			b.appendData((byte)(data.isActive ? 1 : 0));
-			this.channel.sendData(b);
-		});
-		t.setDaemon(true);
-		t.start();
+	{	
+		ByteBuffer buf = ByteBuffer.allocate(1+4+1);
+		buf.put(AppServiceDefine.SensorDeviceData_REP_REALTIMEDATA_ADDREMOVE);
+		buf.putInt(data.sensor.id);
+		buf.put((byte)(data.isActive ? 1 : 0));
+		this.channel.sendData(buf.array());
 	}
 }

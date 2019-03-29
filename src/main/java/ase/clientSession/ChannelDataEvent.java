@@ -1,14 +1,14 @@
-package ase.web.webSocket;
+package ase.clientSession;
 
-import ase.appConnect.channel.ProtocolDefine;
 import ase.util.BinUtil;
+import ase.web.webSocket.WebChannel;
 
 public class ChannelDataEvent
 {
-	public final WebSocketChannel channel;
+	public final WebChannel channel;
 	public final byte[] data;
 	
-	public ChannelDataEvent(WebSocketChannel channel, byte[] data)
+	public ChannelDataEvent(WebChannel channel, byte[] data)
 	{
 		this.channel = channel;
 		this.data = data;

@@ -1,4 +1,4 @@
-package ase.web.session;
+package ase.clientSession;
 
 import ase.sensorReadServer.ServerCore;
 

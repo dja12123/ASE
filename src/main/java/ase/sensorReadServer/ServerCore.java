@@ -14,16 +14,18 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ase.clientSession.ClientSessionManager;
 import ase.console.LogWriter;
+import ase.fileIO.FileHandler;
 import ase.sensorReadServer.appService.AppServiceManager;
 import ase.sensorReadServer.db.DB_Handler;
 import ase.sensorReadServer.db.DB_Installer;
-import ase.sensorReadServer.fileIO.FileHandler;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorReader.SerialReadManager;
 import ase.sensorReadServer.sensorReader.TcpSensorReadManager;
-import ase.sensorReadServer.serverSocket.ServerSocketManager;
 import ase.test.TestVirtualSensorManager;
+import ase.web.WebManager;
+import ase.web.webSocket.WebSessionManager;
 
 public class ServerCore
 {
@@ -146,7 +148,7 @@ public class ServerCore
 		//CONFIG 로드 부분
 		try
 		{
-			InputStream stream = FileHandler.getResourceAsStream("/config.properties");
+			InputStream stream = FileHandler.getExtInputStream("/config.properties");
             
 			properties.load(stream);
 		}
@@ -197,10 +199,12 @@ public class ServerCore
 	}
 
 	private DB_Handler dbHandler;
-	private ServerSocketManager serverSocketManager;
 	private SerialReadManager serialSensorReadManager;
 	private TcpSensorReadManager tcpSensorReadManager;
 	private SensorManager sensorManager;
+	private WebManager webManager;
+	private ClientSessionManager clientSessionManager;
+	
 	private AppServiceManager appServiceManager;
 	
 	private TestVirtualSensorManager testSensor;
@@ -208,11 +212,13 @@ public class ServerCore
 	private ServerCore()
 	{
 		this.dbHandler = new DB_Handler();
-		this.serverSocketManager = new ServerSocketManager();
-		//this.serialSensorReadManager = new SerialReadManager();
-		this.tcpSensorReadManager = new TcpSensorReadManager();
+		this.serialSensorReadManager = new SerialReadManager();
+		//this.tcpSensorReadManager = new TcpSensorReadManager();
 		this.sensorManager = new SensorManager(this.dbHandler, this.tcpSensorReadManager);
-		this.appServiceManager = new AppServiceManager(this.serverSocketManager, this.sensorManager);
+		this.webManager = new WebManager();
+		this.clientSessionManager = new ClientSessionManager();
+		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
+		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
 		
 		this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
@@ -221,10 +227,11 @@ public class ServerCore
 	{
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
-		if(!this.serverSocketManager.startModule()) return false;
 		//if(!this.serialSensorReadManager.startModule()) return false;
 		if(!this.tcpSensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		if(!this.webManager.startModule()) return false;
+		if(!this.clientSessionManager.startModule()) return false;
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
 		
@@ -240,9 +247,9 @@ public class ServerCore
 		logger.log(Level.INFO, "시스템 종료 시작");
 		
 		//this.testSensor.stop();
-		
 		this.appServiceManager.stopModule();
-		this.serverSocketManager.stopModule();
+		this.clientSessionManager.stopModule();
+		this.webManager.stopModule();
 		this.sensorManager.stopModule();
 		this.tcpSensorReadManager.stopModule();
 		//this.serialSensorReadManager.stopModule();

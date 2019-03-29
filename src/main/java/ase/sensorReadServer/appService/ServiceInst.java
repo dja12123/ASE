@@ -3,56 +3,58 @@ package ase.sensorReadServer.appService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ase.appConnect.Connection;
-import ase.appConnect.channel.Channel;
-import ase.appConnect.channel.ChannelEvent;
+import ase.clientSession.ChannelEvent;
+import ase.clientSession.IChannel;
+import ase.clientSession.ISession;
 import ase.console.LogWriter;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class ServiceInst implements Observer<ChannelEvent>
+public class ServiceInst
 {
 	public static final Logger logger = LogWriter.createLogger(ServiceInst.class, "serviceInst");
 	
-	private Connection connection;
+	private ISession session;
 	private SensorManager sensorManager;
 	
 	private SensorDataSender sensorDataSender;
 	private AllSensorDataSender sensorDeviceDataSender;
 	
-	ServiceInst(Connection connection, SensorManager sensorManager)
+	private Observer<ChannelEvent> channelObserver;
+	
+	public ServiceInst(ISession session, SensorManager sensorManager)
 	{
-		this.connection = connection;
+		this.session = session;
 		this.sensorManager = sensorManager;
-		this.connection.addObserver(this);
+		this.channelObserver = this::channelObserver;
+		this.session.addChannelObserver(this.channelObserver);
 	}
 	
-	void destroy()
+	public void destroy()
 	{
-		this.connection.removeObserver(this);
+		this.session.removeChannelObserver(this.channelObserver);
 		this.chCloseSensorData();
 		this.chCloseSensorDeviceData();
 	}
 
-	@Override
-	public void update(Observable<ChannelEvent> object, ChannelEvent data)
+	private void channelObserver(Observable<ChannelEvent> provider, ChannelEvent event)
 	{
-		if(data.channel.isOpen())
+		if(event.isOpen)
 		{
-			switch(data.channel.key)
+			switch(event.channel.getKey())
 			{
 			case AppServiceDefine.CHKEY_SensorData:
-				this.chCreateSensorData(data.channel);
+				this.chCreateSensorData(event.channel);
 				break;
 			case AppServiceDefine.CHKEY_SensorDeviceData:
-				this.chCreateSensorDeviceData(data.channel);
+				this.chCreateSensorDeviceData(event.channel);
 				break;
 			}
 		}
 		else
 		{
-			switch(data.channel.key)
+			switch(event.channel.getKey())
 			{
 			case AppServiceDefine.CHKEY_SensorData:
 				this.chCloseSensorData();
@@ -65,7 +67,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		
 	}
 	
-	private void chCreateSensorData(Channel ch)
+	private void chCreateSensorData(IChannel ch)
 	{
 		if(this.sensorDataSender != null)
 		{
@@ -85,7 +87,7 @@ public class ServiceInst implements Observer<ChannelEvent>
 		}
 	}
 	
-	private void chCreateSensorDeviceData(Channel ch)
+	private void chCreateSensorDeviceData(IChannel ch)
 	{
 		if(this.sensorDeviceDataSender != null)
 		{

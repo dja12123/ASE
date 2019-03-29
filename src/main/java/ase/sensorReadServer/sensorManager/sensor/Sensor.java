@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
+import ase.sensorReadServer.ServerCore;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.util.observer.Observable;
 
@@ -113,7 +114,7 @@ public class Sensor
 		
 		this.lastUpdateTime = new Date();
 		DataReceiveEvent e = new DataReceiveEvent(this, data);
-		this.dataReceiveObservable.notifyObservers(e);
+		this.dataReceiveObservable.notifyObservers(ServerCore.mainThreadPool, e);
 		this.publicDataReceiveObservable.notifyObservers(e);
 	}
 	

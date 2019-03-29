@@ -1,11 +1,11 @@
-package ase.appConnect.channel;
+package ase.clientSession;
 
 public class ChannelEvent
 {
-	public final Channel channel;
+	public final IChannel channel;
 	public final boolean isOpen;
 
-	public ChannelEvent(Channel channel, boolean isOpen)
+	public ChannelEvent(IChannel channel, boolean isOpen)
 	{
 		this.channel = channel;
 		this.isOpen = isOpen;

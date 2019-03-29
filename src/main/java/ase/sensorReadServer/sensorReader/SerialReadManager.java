@@ -16,7 +16,6 @@ import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 
-import ase.appConnect.channel.ProtocolDefine;
 import ase.console.LogWriter;
 import ase.sensorReadServer.ServerCore;
 import ase.util.BinUtil;

@@ -1,32 +1,32 @@
 package ase.sensorReadServer.appService;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-import ase.appConnect.channel.AppDataPacketBuilder;
-import ase.appConnect.channel.Channel;
-import ase.appConnect.channel.ChannelReceiveCallback;
-import ase.appConnect.channel.ProtocolDefine;
+import ase.clientSession.ChannelDataEvent;
+import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorManager.sensor.DataReceiveEvent;
 import ase.sensorReadServer.sensorManager.sensor.Sensor;
 import ase.sensorReadServer.sensorManager.sensor.SensorData;
 import ase.sensorReadServer.sensorManager.sensor.SensorLog;
 import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
-import ase.util.BinUtil;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class SensorDataSender implements ChannelReceiveCallback
+public class SensorDataSender
 {
-	private Channel channel;
+	private IChannel channel;
 	private SensorManager sensorManager;
 	private Sensor sensor;
 	
 	private Observer<DataReceiveEvent> dataReceiveObserver;
 	private Observer<SensorLog> sensorLogObserver;
 	private Observer<SensorOnlineEvent> sensorOnlineObserver;
+	private Observer<ChannelDataEvent> channelDataObserver;
 	
-	SensorDataSender(Channel channel, SensorManager sensorManager)
+	SensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
 		this.channel = channel;
 		this.sensorManager = sensorManager;
@@ -34,94 +34,78 @@ public class SensorDataSender implements ChannelReceiveCallback
 		this.dataReceiveObserver = this::dataReceiveCallback;
 		this.sensorLogObserver = this::logReceiveCallback;
 		this.sensorOnlineObserver = this::onlineEventCallback;
+		this.channelDataObserver = this::channelDataObserver;
 		
-		this.channel.setReceiveCallback(this);
+		this.channel.addDataReceiveObserver(this.channelDataObserver);
 	}
 	
 	public void destroy()
 	{
-		if(this.channel.isOpen()) this.channel.setReceiveCallback(null);
+		this.channel.removeDataReceiveObserver(this.channelDataObserver);
 		if(this.sensor != null)
 		{
 			this.sensor.dataReceiveObservable.removeObserver(this.dataReceiveObserver);
 			this.sensor.sensorLogObservable.removeObserver(this.sensorLogObserver);
 			this.sensor.sensorOnlineObservable.removeObserver(this.sensorOnlineObserver);
 		}
-			
 	}
 
-	@Override
-	public void receiveData(Channel ch, byte[][] data)
+	public void channelDataObserver(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
-		switch(data[0][0])
+		switch(event.data[0])
 		{
 		case AppServiceDefine.SensorData_REQ_DEVICEID:
-			this.reqDeviceIDTask(ch, data);
+			this.reqDeviceIDTask(event.channel, event.data);
 			break;
 		case AppServiceDefine.SensorData_REQ_ALLDATA:
-			this.sendAllSensorDataTask(data);
+			this.sendAllSensorDataTask(event.data);
 			break;
 		case AppServiceDefine.SensorData_REQ_ALLLOG:
-			this.sendAllLogDataTask(data);
+			this.sendAllLogDataTask(event.data);
 			break;
 		}
 	}
 
 	public void dataReceiveCallback(Observable<DataReceiveEvent> object, DataReceiveEvent e)
 	{
-		if(this.sensor == null) return;
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorData_REP_REALTIMEDATA);
-			ByteBuffer buf = ByteBuffer.allocate(AppServiceDefine.DATE_FORMAT_SIZE+8+4+4+4+4+4+4);
-			buf.put(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
-			buf.putFloat(e.data.X_GRADIANT);
-			buf.putFloat(e.data.Y_GRADIANT);
-			buf.putFloat(e.data.X_ACCEL);
-			buf.putFloat(e.data.Y_ACCEL);
-			buf.putFloat(e.data.Z_ACCEL);
-			buf.putFloat(e.data.Altitiude);
-			b.appendData(buf.array());
-			this.channel.sendData(b);
-		});
-		
-		t.setDaemon(true);
-		t.start();
+		ByteBuffer buf = ByteBuffer.allocate(1+AppServiceDefine.DATE_FORMAT_SIZE+8+4+4+4+4+4+4);
+		buf.put(AppServiceDefine.SensorData_REP_REALTIMEDATA);
+		buf.put(AppServiceDefine.DATE_FORMAT.format(e.data.time).getBytes());
+		buf.putFloat(e.data.X_GRADIANT);
+		buf.putFloat(e.data.Y_GRADIANT);
+		buf.putFloat(e.data.X_ACCEL);
+		buf.putFloat(e.data.Y_ACCEL);
+		buf.putFloat(e.data.Z_ACCEL);
+		buf.putFloat(e.data.Altitiude);
+		this.channel.sendData(buf.array());
 	}
 	
 	public void logReceiveCallback(Observable<SensorLog> object, SensorLog l)
 	{
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorData_REP_REALTIMELOG);
-			byte[] msg = l.message.getBytes();
-			ByteBuffer buf = ByteBuffer.allocate(4 + AppServiceDefine.DATE_FORMAT_SIZE+msg.length);
-			buf.putInt(l.level.intValue());
-			buf.put(AppServiceDefine.DATE_FORMAT.format(l.time).getBytes());
-			buf.put(msg);
-			b.appendData(buf.array());
-			this.channel.sendData(b);
-		});
-		t.setDaemon(true);
-		t.start();
+		byte[] msg = l.message.getBytes();
+		ByteBuffer buf = ByteBuffer.allocate(1+4+AppServiceDefine.DATE_FORMAT_SIZE+msg.length);
+		buf.put(AppServiceDefine.SensorData_REP_REALTIMELOG);
+		buf.putInt(l.level.intValue());
+		buf.put(AppServiceDefine.DATE_FORMAT.format(l.time).getBytes());
+		buf.put(msg);
+		buf.put(buf.array());
+		this.channel.sendData(buf.array());
 	}
 	
 	public void onlineEventCallback(Observable<SensorOnlineEvent> object, SensorOnlineEvent e)
 	{
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorData_REP_REALTIMEONOFF);
-			b.appendData((byte)(e.isOnline ? 1 : 0));
-			this.channel.sendData(b);
-		});
-		t.setDaemon(true);
-		t.start();
+		ByteBuffer buf = ByteBuffer.allocate(1+1);
+		buf.put(AppServiceDefine.SensorData_REP_REALTIMEONOFF);
+		buf.put((byte)(e.isOnline ? 1 : 0));
+		this.channel.sendData(buf.array());
 	}
 	
-	private void reqDeviceIDTask(Channel ch, byte[][] data)
+	private void reqDeviceIDTask(IChannel ch, byte[] data)
 	{
-		ByteBuffer buf = ByteBuffer.wrap(data[1]);
-		int id = buf.getInt();
+		ByteBuffer getIdBuf = ByteBuffer.wrap(data);
+		getIdBuf.position(1);
+		int id = getIdBuf.getInt();
+		
 		this.sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 		boolean isValid = this.sensor != null ? true : false;
 		if(isValid)
@@ -130,50 +114,70 @@ public class SensorDataSender implements ChannelReceiveCallback
 			this.sensor.sensorLogObservable.addObserver(this.sensorLogObserver);
 			this.sensor.sensorOnlineObservable.addObserver(this.sensorOnlineObserver);
 		}
-		Thread t = new Thread(()->{
-			AppDataPacketBuilder b = new AppDataPacketBuilder();
-			b.appendData(AppServiceDefine.SensorData_REP_DEVICEID);
-			b.appendData((byte)(isValid ? 1 : 0));
-			b.appendData((byte)(isValid && this.sensor.isOnline() ? 1 : 0));
-			this.channel.sendData(b);
-		});
-		t.setDaemon(true);
-		t.start();
+		ByteBuffer buf = ByteBuffer.allocate(1+1+1);
+		buf.put(AppServiceDefine.SensorData_REP_DEVICEID);
+		buf.put((byte)(isValid ? 1 : 0));
+		buf.put((byte)(isValid && this.sensor.isOnline() ? 1 : 0));
+		this.channel.sendData(buf.array());
+
 	}
 	
-	private void sendAllLogDataTask(byte[][] data)
+	private void sendAllLogDataTask(byte[] data)
 	{
-		int size = ByteBuffer.wrap(data[1]).getInt();
-		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(AppServiceDefine.SensorData_REP_ALLLOG);
-		int sendStart = this.sensor.log.size() - size;
+		ByteBuffer getSizeBuf = ByteBuffer.wrap(data);
+		getSizeBuf.position(1);
+		int size = getSizeBuf.getInt();
+		
+		List<SensorLog> logs = new ArrayList<>(this.sensor.log.size());
+		logs.addAll(this.sensor.log);
+		
+		int sendStart = logs.size() - size;
 		if(sendStart < 0) sendStart = 0;
-		b.appendData(BinUtil.intToByteArray(this.sensor.log.size() - sendStart));
-		for(int i = sendStart; i < this.sensor.log.size(); ++i)
+		
+	
+		byte[][] byteLogs = new byte[logs.size()-sendStart][];
+		int allSize = 0;
+		
+		for(int i = sendStart; i < logs.size(); ++i)
 		{
-			SensorLog l = this.sensor.log.get(i);
-			byte[] msg = l.message.getBytes();
-			ByteBuffer buf = ByteBuffer.allocate(4 + AppServiceDefine.DATE_FORMAT_SIZE+msg.length);
-			buf.putInt(l.level.intValue());
-			buf.put(AppServiceDefine.DATE_FORMAT.format(l.time).getBytes());
-			buf.put(msg);
-			b.appendData(buf.array());
+			byte[] blog = logs.get(i).message.getBytes();
+			byteLogs[i - sendStart] = blog;
+			allSize += (short)blog.length;
 		}
-		this.channel.sendData(b);
+		
+		ByteBuffer buf = ByteBuffer.allocate(1+4+(byteLogs.length*2)+allSize);
+		ByteBuffer dataInput = ByteBuffer.wrap(buf.array());
+		buf.put(AppServiceDefine.SensorData_REP_ALLLOG);
+		buf.putInt(byteLogs.length);
+		dataInput.position(1+4+(byteLogs.length*2));
+		for(byte[] logData : byteLogs)
+		{
+			buf.putShort((short)logData.length);
+			dataInput.put(logData);
+		}
+		this.channel.sendData(buf.array());
 	}
 	
-	private void sendAllSensorDataTask(byte[][] data)
+	private void sendAllSensorDataTask(byte[] data)
 	{
-		int size = ByteBuffer.wrap(data[1]).getInt();
-		AppDataPacketBuilder b = new AppDataPacketBuilder();
-		b.appendData(AppServiceDefine.SensorData_REP_ALLDATA);
-		int sendStart = this.sensor.data.size() - size;
+		ByteBuffer getSizeBuf = ByteBuffer.wrap(data);
+		getSizeBuf.position(1);
+		int size = getSizeBuf.getInt();
+		
+		List<SensorData> sensorDatas = new ArrayList<>(this.sensor.data.size());
+		sensorDatas.addAll(this.sensor.data);
+		
+		int sendStart = sensorDatas.size() - size;
 		if(sendStart < 0) sendStart = 0;
-		b.appendData(BinUtil.intToByteArray(this.sensor.data.size() - sendStart));
-		for(int i = sendStart; i < this.sensor.data.size(); ++i)
+		
+		ByteBuffer buf = ByteBuffer.allocate(1+4+((sensorDatas.size()-sendStart)*(AppServiceDefine.DATE_FORMAT_SIZE+4+4+4+4+4+4)));
+		
+		buf.put(AppServiceDefine.SensorData_REP_ALLDATA);
+		buf.putInt(sensorDatas.size() - sendStart);
+		
+		for(int i = sendStart; i < sensorDatas.size(); ++i)
 		{
-			SensorData d = this.sensor.data.get(i);
-			ByteBuffer buf = ByteBuffer.allocate(AppServiceDefine.DATE_FORMAT_SIZE+4+4+4+4+4+4);
+			SensorData d = sensorDatas.get(i);
 			buf.put(AppServiceDefine.DATE_FORMAT.format(d.time).getBytes());
 			buf.putFloat(d.X_GRADIANT);
 			buf.putFloat(d.Y_GRADIANT);
@@ -181,8 +185,7 @@ public class SensorDataSender implements ChannelReceiveCallback
 			buf.putFloat(d.Y_ACCEL);
 			buf.putFloat(d.Z_ACCEL);
 			buf.putFloat(d.Altitiude);
-			b.appendData(buf.array());
 		}
-		this.channel.sendData(b);
+		this.channel.sendData(buf.array());
 	}
 }

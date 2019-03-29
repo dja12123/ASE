@@ -1,11 +1,11 @@
-package ase.web.session;
+package ase.clientSession;
 
 public class SessionEvent
 {
-	public final Session session;
+	public final ISession session;
 	public final boolean isActive;
 	
-	public SessionEvent(Session session, boolean isActive)
+	public SessionEvent(ISession session, boolean isActive)
 	{
 		this.session = session;
 		this.isActive = isActive;

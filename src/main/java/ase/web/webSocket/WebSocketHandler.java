@@ -23,15 +23,15 @@ public class WebSocketHandler extends NanoWSD
 	
 	public static final Logger logger = LogWriter.createLogger(WebSocketHandler.class, "websocket");
 	
-	private List<WebSocketChannel> channelList;
-	public final Observable<ChannelEvent> channelObservable;
-	private Observer<ChannelEvent> channelEventCallback;
-	private HashMap<IHTTPSession, WebSocketChannel> sessionMap;
+	private List<WebChannel> channelList;
+	public final Observable<WebChannelEvent> channelObservable;
+	private Observer<WebChannelEvent> channelEventCallback;
+	private HashMap<IHTTPSession, WebChannel> sessionMap;
 	
 	public WebSocketHandler(int port) 
 	{
 		super(port);
-		logger.log(Level.INFO, "웹소켓 열기 " + port);
+		logger.log(Level.INFO, "웹소켓 포트 " + port);
 		this.channelList = new ArrayList<>();
 		this.channelObservable = new Observable<>();
 		this.sessionMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class WebSocketHandler extends NanoWSD
 		this.addChannelObserver(this.channelEventCallback);
 	}
 	
-	private void channelEventCallback(Observable<ChannelEvent> provider, ChannelEvent event)
+	private void channelEventCallback(Observable<WebChannelEvent> provider, WebChannelEvent event)
 	{
 		if(!event.isOpen)
 		{
@@ -47,12 +47,12 @@ public class WebSocketHandler extends NanoWSD
 		}
 	}
 	
-	public void addChannelObserver(Observer<ChannelEvent> observer)
+	public void addChannelObserver(Observer<WebChannelEvent> observer)
 	{
 		this.channelObservable.addObserver(observer);
 	}
 	
-	public void removeChannelObserver(Observer<ChannelEvent> observer)
+	public void removeChannelObserver(Observer<WebChannelEvent> observer)
 	{
 		this.channelObservable.removeObserver(observer);
 	}
@@ -61,7 +61,7 @@ public class WebSocketHandler extends NanoWSD
 	protected synchronized WebSocket openWebSocket(IHTTPSession session) 
 	{
 		logger.log(Level.INFO, session.toString());
-		WebSocketChannel channel = new WebSocketChannel(session, this.channelObservable);
+		WebChannel channel = new WebChannel(session, this.channelObservable);
 		this.channelList.add(channel);
 		return channel;
 	}
@@ -70,7 +70,7 @@ public class WebSocketHandler extends NanoWSD
 	{
 		this.channelObservable.removeObserver(this.channelEventCallback);
 		
-		for(WebSocketChannel channel : this.channelList)
+		for(WebChannel channel : this.channelList)
 		{
 			try
 			{

@@ -15,9 +15,10 @@ import java.util.logging.Logger;
 
 import ase.console.LogWriter;
 
+
 public class FileHandler
 {
-	public static final Logger fileLogger = LogWriter.createLogger(FileHandler.class, "file");
+	public static final Logger fileLogger = LogWriter.createLogger(FileHandler.class, "FileHandler");
 	public static final String jarDir = new File(
 			FileHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getPath()
 			+ "/";
@@ -82,7 +83,7 @@ public class FileHandler
 
 		if (fileList == null)
 		{
-			fileLogger.log(Level.SEVERE, "디렉토리를 찾을 수 없음");
+			fileLogger.log(Level.SEVERE, "directory not found");
 		}
 
 		return fileList;
@@ -102,7 +103,12 @@ public class FileHandler
 	{
 		return FileHandler.class.getResourceAsStream(dir);
 	}
-
+	
+	public static InputStream getExtInputStream(String dir)
+	{
+		return getInputStream(getExtResourceFile(dir));
+	}
+	
 	public static InputStream getInputStream(File file)
 	{
 		FileInputStream inputStream = null;
@@ -112,14 +118,9 @@ public class FileHandler
 		}
 		catch (FileNotFoundException e)
 		{
-			fileLogger.log(Level.SEVERE, "인풋 스트림을 가져올 수 없음", e);
+			fileLogger.log(Level.SEVERE, "Could not get input stream", e);
 		}
 		return inputStream;
-	}
-
-	public static InputStream getExtInputStream(String dir)
-	{
-		return getInputStream(getExtResourceFile(dir));
 	}
 
 	public static FileOutputStream getOutputStream(File file)
@@ -131,7 +132,7 @@ public class FileHandler
 		}
 		catch (FileNotFoundException e)
 		{
-			fileLogger.log(Level.SEVERE, "아웃풋 스트림을 가져올 수 없음", e);
+			fileLogger.log(Level.SEVERE, "Could not get output stream", e);
 		}
 		return outputStream;
 	}
@@ -163,7 +164,7 @@ public class FileHandler
 		}
 		catch (IOException e)
 		{
-			fileLogger.log(Level.SEVERE, "파일 버퍼 오류: 파일을 찾을 수 없음", e);
+			fileLogger.log(Level.SEVERE, "file not found", e);
 			return null;
 		}
 

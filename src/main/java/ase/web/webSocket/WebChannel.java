@@ -9,6 +9,8 @@ import org.nanohttpd.protocols.websockets.CloseCode;
 import org.nanohttpd.protocols.websockets.WebSocket;
 import org.nanohttpd.protocols.websockets.WebSocketFrame;
 
+import ase.clientSession.ChannelDataEvent;
+import ase.clientSession.IChannel;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
@@ -16,14 +18,14 @@ import ase.util.observer.Observer;
  * WebSocket의 데이터를 정의한 클래스
  * @extends WebSocket
  */
-public class WebSocketChannel extends WebSocket
+public class WebChannel extends WebSocket implements IChannel
 {
 	public static final Logger logger = WebSocketHandler.logger;
-	private Observable<ChannelEvent> openCloseWSProvider;
+	private Observable<WebChannelEvent> openCloseWSProvider;
 	private Observable<ChannelDataEvent> dataReceiveProvider;
 	private String key;
 	
-	public WebSocketChannel(IHTTPSession session, Observable<ChannelEvent> channelObservable)
+	public WebChannel(IHTTPSession session, Observable<WebChannelEvent> channelObservable)
 	{
 		super(session);
 		this.dataReceiveProvider = new Observable<>();
@@ -36,11 +38,13 @@ public class WebSocketChannel extends WebSocket
 		return this.key;
 	}
 	
+	@Override
 	public void addDataReceiveObserver(Observer<ChannelDataEvent> observer)
 	{
 		this.dataReceiveProvider.addObserver(observer);
 	}
 	
+	@Override
 	public void removeDataReceiveObserver(Observer<ChannelDataEvent> observer)
 	{
 		this.dataReceiveProvider.removeObserver(observer);
@@ -58,7 +62,7 @@ public class WebSocketChannel extends WebSocket
 		if(this.key != null)
 		{
 			this.dataReceiveProvider.clearObservers();
-			ChannelEvent channelEvent = new ChannelEvent(this, false);
+			WebChannelEvent channelEvent = new WebChannelEvent(this, false);
 			this.openCloseWSProvider.notifyObservers(channelEvent);
 		}
 		
@@ -75,7 +79,7 @@ public class WebSocketChannel extends WebSocket
 		{
 			String key = frame.getTextPayload();
 			this.key = key;
-			ChannelEvent channelEvent = new ChannelEvent(this, true);
+			WebChannelEvent channelEvent = new WebChannelEvent(this, true);
 			this.openCloseWSProvider.notifyObservers(channelEvent);
 			return;
 		}
@@ -113,16 +117,31 @@ public class WebSocketChannel extends WebSocket
 	{
 		return "WS Channel key:"+this.key+" isOpen:"+this.isOpen()+" hashcode:"+this.hashCode();
 	}
-	
-	public void normalClose()
+
+	@Override
+	public void close()
 	{
 		try
 		{
-			this.close(CloseCode.NormalClosure, "normal Close", false);
+			super.close(CloseCode.NormalClosure, "normal Close", false);
 		}
 		catch (IOException e)
 		{
 			logger.log(Level.SEVERE, "웹 소켓 종료중 오류", e);
 		}
+	}
+
+	@Override
+	public void sendData(byte[] data)
+	{
+		try
+		{
+			this.send(data);
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.SEVERE, "웹 소켓 기록중 오류", e);
+		}
+		
 	}
 }
