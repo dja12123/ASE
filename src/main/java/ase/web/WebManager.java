@@ -59,7 +59,7 @@ public class WebManager
 		}
 		catch (IOException e)
 		{
-			logger.log(Level.SEVERE, "웹 서비스 시작중 오류", e);
+			logger.log(Level.SEVERE, "웹 소켓 시작중 오류", e);
 			return false;
 		}
 		this.httpServer.start();
