@@ -109,7 +109,7 @@ public class HTTPServer extends NanoHTTPD
 	@Override
 	public void start()
 	{
-		ServerRunner.run(HTTPServer.class);
+		ServerRunner.executeInstance(this);
 	}
 
 
