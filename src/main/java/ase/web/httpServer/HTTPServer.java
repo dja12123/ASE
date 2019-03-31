@@ -113,7 +113,8 @@ public class HTTPServer extends NanoHTTPD
 		{
 			ServerRunner.executeInstance(this);
 		});
-		this.serviceThread.start();
 		this.serviceThread.setDaemon(true);
+		this.serviceThread.start();
+		
 	}
 }
