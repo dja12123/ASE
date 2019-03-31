@@ -42,6 +42,13 @@ public class WebSessionManager extends Observable<SessionEvent>
 	private synchronized void channelObserver(Observable<WebChannelEvent> provider, WebChannelEvent e)
 	{
 		System.out.println("웹소켓 이벤트" + e.channel.getHandshakeRequest());
+		for(IHTTPSession httpSession : this._sessionMap.keySet())
+		{
+			if(e.channel.getHandshakeRequest().equals(httpSession))
+			{
+				System.out.println("같은세션");
+			}
+		}
 		if(e.isOpen)
 		{
 			WebSession session = this._sessionMap.getOrDefault(e.channel.getHandshakeRequest(), null);
