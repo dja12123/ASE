@@ -16,7 +16,7 @@ public class HTTPServer extends NanoHTTPD
 	//private static WebSocketManager responseSocketHandler;
 	public static final String WEB_RES_DIR = "/www";
 	
-
+	private Thread serviceThread;
 	
 	public HTTPServer(int port)
 	{
@@ -109,8 +109,11 @@ public class HTTPServer extends NanoHTTPD
 	@Override
 	public void start()
 	{
-		ServerRunner.executeInstance(this);
+		this.serviceThread = new Thread(()->
+		{
+			ServerRunner.executeInstance(this);
+		});
+		this.serviceThread.start();
+		this.serviceThread.setDaemon(true);
 	}
-
-
 }
