@@ -10,7 +10,6 @@ import org.nanohttpd.protocols.http.IHTTPSession;
 
 import ase.clientSession.ChannelEvent;
 import ase.clientSession.ISession;
-import ase.clientSession.SessionConfigAccess;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 

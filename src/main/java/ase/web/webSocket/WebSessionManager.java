@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 
-import ase.clientSession.SessionConfigAccess;
 import ase.clientSession.SessionEvent;
 import ase.console.LogWriter;
 import ase.util.observer.Observable;
