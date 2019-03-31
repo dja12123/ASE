@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.content.CookieHandler;
 
 import ase.clientSession.SessionEvent;
 import ase.console.LogWriter;
@@ -44,10 +45,10 @@ public class WebSessionManager extends Observable<SessionEvent>
 		System.out.println("웹소켓 이벤트" + e.channel.getHandshakeRequest());
 		for(IHTTPSession httpSession : this._sessionMap.keySet())
 		{
-			if(e.channel.getHandshakeRequest().equals(httpSession))
-			{
-				System.out.println("같은세션");
-			}
+			CookieHandler cookies = e.channel.getHandshakeRequest().getCookies();
+			System.out.println("cookies:"+cookies);
+			cookies.forEach((str)->{System.out.println(str);});
+			System.out.println();
 		}
 		if(e.isOpen)
 		{
