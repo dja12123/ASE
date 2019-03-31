@@ -259,6 +259,13 @@ public class ServerCore
 	
 	public static String getProp(String key)
 	{
-		return properties.getProperty(key);
+		String prop = properties.getProperty(key);
+		if(prop == null)
+		{
+			logger.log(Level.SEVERE, "properties 로드 실패 key:"+key);
+			return null;
+		}
+		
+		return prop;
 	}
 }
