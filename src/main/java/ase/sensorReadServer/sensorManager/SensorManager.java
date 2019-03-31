@@ -72,7 +72,6 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
 		
-		
 		this.sensorReader.addObserver(this);
 		
 		

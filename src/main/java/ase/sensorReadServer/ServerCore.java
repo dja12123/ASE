@@ -214,13 +214,13 @@ public class ServerCore
 		this.dbHandler = new DB_Handler();
 		this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
-		this.sensorManager = new SensorManager(this.dbHandler, this.tcpSensorReadManager);
+		this.sensorManager = new SensorManager(this.dbHandler, this.serialSensorReadManager);
 		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
 		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
 		
-		this.testSensor = new TestVirtualSensorManager(this.sensorManager);
+		//this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
 
 	private boolean start()
