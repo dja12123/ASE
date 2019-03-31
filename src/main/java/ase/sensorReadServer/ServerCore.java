@@ -57,7 +57,6 @@ public class ServerCore
 		}
 		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
-
 		
 		if (!mainInst.start())
 		{
@@ -225,6 +224,7 @@ public class ServerCore
 
 	private boolean start()
 	{
+		System.out.println(getProp("SerialDevice"));
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		//if(!this.serialSensorReadManager.startModule()) return false;
