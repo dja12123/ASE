@@ -210,6 +210,7 @@ public class ServerCore
 
 	private ServerCore()
 	{
+		System.out.println(getProp("SerialDevice"));
 		this.dbHandler = new DB_Handler();
 		this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
@@ -224,7 +225,7 @@ public class ServerCore
 
 	private boolean start()
 	{
-		System.out.println(getProp("SerialDevice"));
+		
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		//if(!this.serialSensorReadManager.startModule()) return false;
