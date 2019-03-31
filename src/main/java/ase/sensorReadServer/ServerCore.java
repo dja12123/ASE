@@ -48,13 +48,14 @@ public class ServerCore
 		}
 		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
 		
-		mainThread = Thread.currentThread();
-		mainInst = new ServerCore();
-		
 		if(!initProp())
 		{
 			return;
 		}
+		
+		mainThread = Thread.currentThread();
+		mainInst = new ServerCore();
+		
 		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
 		
@@ -210,7 +211,6 @@ public class ServerCore
 
 	private ServerCore()
 	{
-		System.out.println(getProp("SerialDevice"));
 		this.dbHandler = new DB_Handler();
 		this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();

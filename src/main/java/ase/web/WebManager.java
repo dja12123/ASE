@@ -63,15 +63,6 @@ public class WebManager
 			return false;
 		}
 		this.httpServer.start();
-		try
-		{
-			this.webSocketHandler.start();
-		}
-		catch (IOException e)
-		{
-			logger.log(Level.SEVERE, "웹 서비스 시작중 오류", e);
-			return false;
-		}
 		this.webSessionManager.start();
 		return true;
 	}
