@@ -228,8 +228,8 @@ public class ServerCore
 		
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
-		//if(!this.serialSensorReadManager.startModule()) return false;
-		if(!this.tcpSensorReadManager.startModule()) return false;
+		if(!this.serialSensorReadManager.startModule()) return false;
+		//if(!this.tcpSensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
 		if(!this.webManager.startModule()) return false;
 		if(!this.clientSessionManager.startModule()) return false;
@@ -252,8 +252,8 @@ public class ServerCore
 		this.clientSessionManager.stopModule();
 		this.webManager.stopModule();
 		this.sensorManager.stopModule();
-		this.tcpSensorReadManager.stopModule();
-		//this.serialSensorReadManager.stopModule();
+		//this.tcpSensorReadManager.stopModule();
+		this.serialSensorReadManager.stopModule();
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 	}
