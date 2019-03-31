@@ -88,9 +88,12 @@ public class WebSessionManager extends Observable<SessionEvent>
 	public void stop()
 	{
 		this.channelProvider.removeObserver(this.channelObserver);
-		for(WebSession session : this._sessionMap.values())
+		List<WebSession> closeList = new ArrayList<>();
+		closeList.addAll(this._sessionMap.values());
+		for(WebSession session : closeList)
 		{
 			session.close();
 		}
+		this._sessionMap.clear();
 	}
 }
