@@ -85,7 +85,7 @@ public class HTTPServer extends NanoHTTPD
 				return HTTPServer.serveError(Status.BAD_REQUEST, "Error 400: Bad Request");
 			}
 			String ext = uri.substring( pos + 1 );
-			
+			session.getCookies().set("TEST", "test", 100);
 			switch(ext)
 			{
 			case "html":
@@ -103,7 +103,7 @@ public class HTTPServer extends NanoHTTPD
 				
 			}
 		}
-
+		
 		return Response.newFixedLengthResponse(msg);
 	}
 

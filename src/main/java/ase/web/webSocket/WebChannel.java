@@ -33,6 +33,7 @@ public class WebChannel extends WebSocket implements IChannel
 		this.key = null;
 	}
 	
+	@Override
 	public String getKey()
 	{
 		return this.key;
