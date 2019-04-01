@@ -46,7 +46,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 		System.out.println("cookies");
 		request.getCookies().set("TEST", "test", 100);
 		request.getCookies().forEach((str)->{
-			System.out.println(str);
+			System.out.println(HTTPServer.getCookie(request, str));
 		});
 		
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
