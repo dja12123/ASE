@@ -101,7 +101,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 	
 	private void setCookie(IHTTPSession session, String key, String value, int dayTimeout)
 	{
-		Cookie cookie = new Cookie(key, value, dayTimeout);
+		Cookie cookie = new Cookie(key, value);
 		session.getCookies().set(cookie);
 	}
 	
