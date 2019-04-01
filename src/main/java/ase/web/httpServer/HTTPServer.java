@@ -1,37 +1,34 @@
 package ase.web.httpServer;
+import java.util.UUID;
+
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
+import org.nanohttpd.protocols.http.content.Cookie;
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 import org.nanohttpd.util.ServerRunner;
 
 import ase.fileIO.FileHandler;
+import ase.sensorReadServer.ServerCore;
+import ase.web.webSocket.WebSession;
+import ase.web.webSocket.WebSessionManager;
 
 public class HTTPServer extends NanoHTTPD
 {
-	// private static final int MAXIMUM_SIZE_OF_IMAGE = 1000000;
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
-	
-	//private static WebSocketManager responseSocketHandler;
+	private static final String PROP_SESSION_COOKIE_TIMEOUT_DAY = "SessionCookieTimeoutDay";
 	public static final String WEB_RES_DIR = "/www";
 	
+	private final WebSessionManager webSessionManager;
+	private int sessionCookieTimeout;
 	private Thread serviceThread;
 	
-	public HTTPServer(int port)
+	public HTTPServer(int port, WebSessionManager webSessionManager)
 	{
 		super(port);
-	
-		//responseSocketHandler = new WebSocketManager(8080, true); //소켓
+		this.webSessionManager = webSessionManager;
 	}
-//
-	/*
-	public static void main(String[] args)
-	{
-		WebServiceMain main = new WebServiceMain();
-		main.startModule();
-	}
-	*/
 
 	private static Response serveImage(MIME_TYPE imageType, String dir)
 	{
@@ -51,10 +48,10 @@ public class HTTPServer extends NanoHTTPD
 	}
 
 	@Override
-	public Response serve(IHTTPSession session)
+	public Response serve(IHTTPSession request)
 	{
-		Method method = session.getMethod();
-		String uri = session.getUri();
+		Method method = request.getMethod();
+		String uri = request.getUri();
 
 		//responseSocketHandler.openWebSocket(session); //소켓 세션
 		
@@ -85,7 +82,26 @@ public class HTTPServer extends NanoHTTPD
 				return HTTPServer.serveError(Status.BAD_REQUEST, "Error 400: Bad Request");
 			}
 			String ext = uri.substring( pos + 1 );
-			session.getCookies().set("TEST", "test", 100);
+			
+			String sessionUIDStr = getCookie(request, WebSessionManager.COOKIE_KEY_SESSION);
+			UUID sessionUID;
+			if(sessionUIDStr == null)
+			{
+				sessionUID = UUID.randomUUID();
+				setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout);
+			}
+			else
+			{
+				sessionUID = UUID.fromString(sessionUIDStr);
+				setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr, this.sessionCookieTimeout);
+			}
+			
+			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
+			if(s!= null)
+			{
+				System.out.println("존재하는 세션에 대한 요청"+s.toString());
+			}
+			
 			switch(ext)
 			{
 			case "html":
@@ -106,10 +122,23 @@ public class HTTPServer extends NanoHTTPD
 		
 		return Response.newFixedLengthResponse(msg);
 	}
+	
+	public static String getCookie(IHTTPSession session, String key)
+	{
+		String value = session.getCookies().read(key);
+		return value;
+	}
+	
+	public static void setCookie(IHTTPSession session, String key, String value, int dayTimeout)
+	{
+		Cookie cookie = new Cookie(key, value, dayTimeout);
+		session.getCookies().set(cookie);
+	}
 
 	@Override
 	public void start()
 	{
+		this.sessionCookieTimeout = Integer.parseInt(ServerCore.getProp(PROP_SESSION_COOKIE_TIMEOUT_DAY));
 		this.serviceThread = new Thread(()->
 		{
 			ServerRunner.executeInstance(this);

@@ -7,24 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
-import org.nanohttpd.protocols.http.content.Cookie;
 
 import ase.clientSession.SessionEvent;
 import ase.console.LogWriter;
-import ase.sensorReadServer.ServerCore;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
+import ase.web.httpServer.HTTPServer;
 
 public class WebSessionManager extends Observable<SessionEvent>
 {
 	private static final Logger logger = LogWriter.createLogger(WebSessionManager.class, "SessionManager");
-	private static final String COOKIE_KEY_SESSION = "sessionUID";
-	private static final String PROP_SESSION_COOKIE_TIMEOUT_DAY = "SessionCookieTimeoutDay";
-	
-	private int sessionCookieTimeout;
+	public static final String COOKIE_KEY_SESSION = "sessionUID";
 	
 	private final Observable<WebChannelEvent> channelProvider;
 	private final SessionConfigAccess sessionConfigAccess;
@@ -52,10 +49,11 @@ public class WebSessionManager extends Observable<SessionEvent>
 			System.out.println(str);
 		});
 		
-		String sessionUIDStr = this.getCookie(request, COOKIE_KEY_SESSION);
+		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
 		if(sessionUIDStr == null)
 		{
-			if(e.isOpen) this.newRequest(request, e.channel);
+			logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
+			e.channel.close();
 		}
 		else
 		{
@@ -76,7 +74,6 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{
 		UUID sessionUID = UUID.randomUUID();
 		WebSession session = new WebSession(sessionUID, this.sessionConfigAccess, this.sessionCloseCallback);
-		this.setCookie(request, COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout);
 		this._sessionMap.put(sessionUID, session);
 		this.notifyObservers(new SessionEvent(session, true));
 		session.onCreateChannel(ch);
@@ -86,7 +83,6 @@ public class WebSessionManager extends Observable<SessionEvent>
 	private void requestService(IHTTPSession request, WebSession session, WebChannel channel, boolean isOpen)
 	{
 		System.out.println("헌 웹소켓 요청" + session.toString());
-		this.setCookie(request, COOKIE_KEY_SESSION, session.sessionUID.toString(), this.sessionCookieTimeout);
 		if(isOpen) session.onCreateChannel(channel);
 		else session.onCloseChannel(channel);
 	}
@@ -98,21 +94,8 @@ public class WebSessionManager extends Observable<SessionEvent>
 		this.notifyObservers(new SessionEvent(session, false));
 	}
 	
-	private String getCookie(IHTTPSession session, String key)
-	{
-		String value = session.getCookies().read(key);
-		return value;
-	}
-	
-	private void setCookie(IHTTPSession session, String key, String value, int dayTimeout)
-	{
-		Cookie cookie = new Cookie(key, value);
-		session.getCookies().set(cookie);
-	}
-	
 	public boolean start()
 	{
-		this.sessionCookieTimeout = Integer.parseInt(ServerCore.getProp(PROP_SESSION_COOKIE_TIMEOUT_DAY));
 		this.sessionConfigAccess.updateFromConfig();
 		this.channelProvider.addObserver(this.channelObserver);
 		return true;

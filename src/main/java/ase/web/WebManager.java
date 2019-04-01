@@ -33,9 +33,11 @@ public class WebManager
 		this.webServerPort = Integer.parseInt(ServerCore.getProp(PROP_WEBSERVERPORT));
 		this.webSocketPort = Integer.parseInt(ServerCore.getProp(PROP_WEBSOCKETPORT));
 		
-		this.httpServer = new HTTPServer(this.webServerPort);
 		this.webSocketHandler = new WebSocketHandler(this.webSocketPort);
 		this.webSessionManager = new WebSessionManager(this.webSocketHandler.channelObservable);
+		this.httpServer = new HTTPServer(this.webServerPort, this.webSessionManager);
+		
+		
 	}
 
 	public static void main(String[] args)
