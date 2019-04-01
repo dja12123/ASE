@@ -21,6 +21,7 @@ public class HTTPServer extends NanoHTTPD
 	public HTTPServer(int port)
 	{
 		super(port);
+	
 		//responseSocketHandler = new WebSocketManager(8080, true); //소켓
 	}
 //

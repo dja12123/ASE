@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.function.Consumer;
-
-import org.nanohttpd.protocols.http.IHTTPSession;
 
 import ase.clientSession.ChannelEvent;
 import ase.clientSession.ISession;
@@ -15,7 +14,7 @@ import ase.util.observer.Observer;
 
 public class WebSession implements ISession
 {
-	public final IHTTPSession subLayerSession;
+	public final UUID sessionUID;
 	private final SessionConfigAccess sessionConfigAccess;
 	private final Consumer<WebSession> sessionCloseCallback;
 	private final List<WebChannel> channelList;
@@ -25,9 +24,9 @@ public class WebSession implements ISession
 	private TimerTask closeTimerTask;
 	private boolean isActive;
 	
-	public WebSession(IHTTPSession subLayerSession, SessionConfigAccess config, Consumer<WebSession> sessionCloseCallback)
+	public WebSession(UUID sessionUID, SessionConfigAccess config, Consumer<WebSession> sessionCloseCallback)
 	{
-		this.subLayerSession = subLayerSession;
+		this.sessionUID = sessionUID;
 		this.sessionConfigAccess = config;
 		this.sessionCloseCallback = sessionCloseCallback;
 		this.channelList = new ArrayList<>();
@@ -76,6 +75,7 @@ public class WebSession implements ISession
 		if(this.closeTimer != null) this.closeTimer.cancel();
 	}
 	
+	@Override
 	public synchronized void close()
 	{
 		if(!this.isActive) return;
@@ -97,6 +97,16 @@ public class WebSession implements ISession
 	public void removeChannelObserver(Observer<ChannelEvent> observer)
 	{
 		this.channelObservable.removeObserver(observer);
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("Session UID: ");
+		buf.append(this.sessionUID.toString());
+		return buf.toString();
+		
 	}
 	
 }

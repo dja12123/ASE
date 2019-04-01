@@ -2,7 +2,6 @@ package ase.web.webSocket;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +25,6 @@ public class WebSocketHandler extends NanoWSD
 	private List<WebChannel> channelList;
 	public final Observable<WebChannelEvent> channelObservable;
 	private Observer<WebChannelEvent> channelEventCallback;
-	private HashMap<IHTTPSession, WebChannel> sessionMap;
 	
 	public WebSocketHandler(int port) 
 	{
@@ -34,12 +32,11 @@ public class WebSocketHandler extends NanoWSD
 		logger.log(Level.INFO, "웹소켓 포트 " + port);
 		this.channelList = new ArrayList<>();
 		this.channelObservable = new Observable<>();
-		this.sessionMap = new HashMap<>();
-		this.channelEventCallback = this::channelEventCallback;
+		this.channelEventCallback = this::channelEventObserver;
 		this.addChannelObserver(this.channelEventCallback);
 	}
 	
-	private void channelEventCallback(Observable<WebChannelEvent> provider, WebChannelEvent event)
+	private void channelEventObserver(Observable<WebChannelEvent> provider, WebChannelEvent event)
 	{
 		if(!event.isOpen)
 		{
