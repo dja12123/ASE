@@ -65,14 +65,13 @@ public class WebSessionManager extends Observable<SessionEvent>
 			}
 			else
 			{
-				if(e.isOpen) this.newRequest(request, e.channel);
+				if(e.isOpen) this.newRequest(sessionUID, request, e.channel);
 			}
 		}
 	}
 	
-	private void newRequest(IHTTPSession request, WebChannel ch)
+	private void newRequest(UUID sessionUID, IHTTPSession request, WebChannel ch)
 	{
-		UUID sessionUID = UUID.randomUUID();
 		WebSession session = new WebSession(sessionUID, this.sessionConfigAccess, this.sessionCloseCallback);
 		this._sessionMap.put(sessionUID, session);
 		this.notifyObservers(new SessionEvent(session, true));
