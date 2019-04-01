@@ -47,6 +47,11 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{
 		IHTTPSession request = e.channel.getHandshakeRequest();
 		
+		System.out.println("cookies");
+		request.getCookies().forEach((str)->{
+			System.out.println(str);
+		});
+		
 		String sessionUIDStr = this.getCookie(request, COOKIE_KEY_SESSION);
 		if(sessionUIDStr == null)
 		{
