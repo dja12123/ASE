@@ -23,7 +23,6 @@ public class WebSession implements ISession
 	private Observable<ChannelEvent> channelObservable;
 	
 	private Timer closeTimer;
-	private TimerTask closeTimerTask;
 	private boolean isActive;
 	
 	public WebSession(UUID sessionUID, SessionConfigAccess config, Consumer<WebSession> sessionCloseCallback)
@@ -34,14 +33,6 @@ public class WebSession implements ISession
 		this._channelList = new ArrayList<>();
 		this.channelList = Collections.unmodifiableList(this._channelList);
 		this.channelObservable = new Observable<ChannelEvent>();
-		this.closeTimerTask = new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				WebSession.this.close();
-			}
-		};
 		this.isActive = true;
 	}
 	
@@ -76,7 +67,15 @@ public class WebSession implements ISession
 			this.closeTimer.cancel();
 		}
 		this.closeTimer = new Timer();
-		this.closeTimer.schedule(this.closeTimerTask, this.sessionConfigAccess.getSessionTimeout());
+		TimerTask closeTimerTask = new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				WebSession.this.close();
+			}
+		};
+		this.closeTimer.schedule(closeTimerTask, this.sessionConfigAccess.getSessionTimeout());
 		
 	}
 	
