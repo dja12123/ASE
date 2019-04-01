@@ -48,7 +48,11 @@ public class WebSession implements ISession
 	public synchronized void onCreateChannel(WebChannel ch)
 	{
 		if(!this.isActive) return;
-		if(this._channelList.size() == 0) this.killCloseTimer();
+		if(this._channelList.size() == 0)
+		{
+			this.killCloseTimer();
+			System.out.println("클로즈 타이머 죽임");
+		}
 		this._channelList.add(ch);
 		this.channelObservable.notifyObservers(new ChannelEvent(ch, true));
 	}
@@ -58,7 +62,11 @@ public class WebSession implements ISession
 		if(!this.isActive) return;
 		this._channelList.remove(ch);
 		this.channelObservable.notifyObservers(new ChannelEvent(ch, false));
-		if(this._channelList.size() == 0) this.startCloseTimer();
+		if(this._channelList.size() == 0)
+		{
+			this.startCloseTimer();
+			System.out.println("클로즈 타이머 시작");
+		}
 	}
 	
 	private synchronized void startCloseTimer()
