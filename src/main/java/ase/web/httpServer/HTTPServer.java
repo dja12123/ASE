@@ -1,19 +1,10 @@
 package ase.web.httpServer;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
-import org.nanohttpd.protocols.http.content.Cookie;
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
@@ -34,11 +25,6 @@ public class HTTPServer extends NanoHTTPD
 	public static final String WEB_RES_DIR = "/www";
 	private static final String CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 	private static final String CONTROL_GET_UUID_REQUEST_date = "date";
-	private static final DateFormat REQ_COOKIE_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/hh/mm/ss");
-	static
-	{
-		REQ_COOKIE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-	}
 	
 	private final WebSessionManager webSessionManager;
 	private int sessionCookieTimeout;
@@ -151,29 +137,8 @@ public class HTTPServer extends NanoHTTPD
 	{
 		logger.log(Level.INFO, "service UUID");
 		UUID sessionUID = UUID.randomUUID();
-		List<String> params = request.getParameters().get(CONTROL_GET_UUID_REQUEST_date);
-		if(params == null || params.size() != 1)
-		{
-			logger.log(Level.WARNING, "UUID 서비스중 오류1");
-			return HTTPServer.serveError(Status.BAD_REQUEST, "get date error");
-		}
-		Date reqDate;
-		logger.log(Level.INFO, params.get(0));
-		try
-		{
-			reqDate = REQ_COOKIE_DATE_FORMAT.parse(params.get(0));
-		}
-		catch (ParseException e)
-		{
-			logger.log(Level.WARNING, "UUID 서비스중 오류2", e);
-			return HTTPServer.serveError(Status.BAD_REQUEST, "parse date error");
-		}
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		System.out.println(dateFormat.format(reqDate));
-		//setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), reqDate, this.sessionCookieTimeout);
 		Response response = Response.newFixedLengthResponse(sessionUID.toString());
-		response.addCookieHeader(String.format("%s=%s; max-age=%d", WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout));
+		setCookie(response, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout);
 		return response;
 	}
 	
@@ -183,23 +148,12 @@ public class HTTPServer extends NanoHTTPD
 		return value;
 	}
 	
-	public static void setCookie(IHTTPSession request, String key, String value, Date clientDate, int second)
+	public static Response setCookie(Response response, String key, String value, int timeSec)
 	{
-		Cookie cookie = new Cookie(key, value, getCookieTime(clientDate, second));
-		request.getCookies().set(cookie);
+		response.addCookieHeader(String.format("%s=%s; max-age=%d", key, value, timeSec));
+		return response;
 	}
 	
-	private static String getCookieTime(Date date, int second)
-	{
-		Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.add(Calendar.SECOND, second);
-        System.out.println("change:"+dateFormat.format(calendar.getTime()));
-        return dateFormat.format(calendar.getTime());
-    }
-
 	@Override
 	public void start()
 	{
