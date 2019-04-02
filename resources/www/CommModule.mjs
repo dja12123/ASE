@@ -10,7 +10,7 @@ export class CommModule
 		this.ip = location.host;
 		var storage = window.sessionStorage;
 		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
-		console.log(typeof(storageSession));
+		console.log(storageSession);
 		if(storageSession === null || typeof(storageSession) != Session)
 		{
 			console.log("loaded6");
