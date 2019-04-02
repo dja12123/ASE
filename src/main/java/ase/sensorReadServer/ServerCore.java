@@ -3,6 +3,7 @@ package ase.sensorReadServer;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ase.bash.CommandExecutor;
 import ase.clientSession.ClientSessionManager;
 import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
@@ -74,7 +76,7 @@ public class ServerCore
 				break;
 			}
 		}
-		logger.log(Level.SEVERE, "메인 쓰레드 종료");
+		System.out.println("메인 쓰레드 종료");
 	}
 	
 	public static void endProgram()
@@ -93,10 +95,16 @@ public class ServerCore
 			e.printStackTrace();
 		}
 		mainThread.interrupt();
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		for(Thread t : threadSet)
+		RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+        String jvmName = bean.getName();
+        long pid = Long.valueOf(jvmName.split("@")[0]);
+		try
 		{
-			t.interrupt();
+			CommandExecutor.executeCommand("kill -9 " + pid);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 	
