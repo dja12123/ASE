@@ -17,7 +17,7 @@ window.onload = function()
 	console.log("loaded2");
 }
 
-function WebSocketTest()
+window.WebSocketTest = function WebSocketTest()
 {
 	console.log(commModule);
 	if("WebSocket" in window)
@@ -57,7 +57,7 @@ function WebSocketTest()
 	<body>
 	
 		<div id = "sse">
-			<a href = "module:WebSocketTest()">Run WebSocket</a>
+			<a href = "javascript:WebSocketTest()">Run WebSocket</a>
 		</div>
 		<div id = "test">Test div</div>
 	</body>
