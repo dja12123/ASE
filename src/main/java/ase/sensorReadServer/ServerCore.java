@@ -74,15 +74,29 @@ public class ServerCore
 				break;
 			}
 		}
+		logger.log(Level.SEVERE, "메인 쓰레드 종료");
 	}
 	
 	public static void endProgram()
 	{
 		mainInst.shutdown();
-		mainThread.interrupt();
 		for(Thread nextShutdown : shutdownThreads)
 		{
 			nextShutdown.start();
+		}
+		try
+		{
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		mainThread.interrupt();
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		for(Thread t : threadSet)
+		{
+			t.interrupt();
 		}
 	}
 	
