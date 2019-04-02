@@ -25,6 +25,7 @@ export class CommModule
 	getUUIDCallback(uid)
 	{
 		console.log("loaded7");
+		var test = new Session(uid);
 		this.storageSession = new Session(uid);
 		storage.setItem(INNO_STORAGE_SESSION, storageSession);
 		this.session = storageSession;
@@ -62,7 +63,6 @@ export class CommModule
 	{
 		var search = cookieName + "=";
 		var cookie = document.cookie;
-
 		if(cookie.length > 0)
 		{
 			startIndex = cookie.indexOf(cookieName);
