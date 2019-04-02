@@ -144,6 +144,7 @@ public class HTTPServer extends NanoHTTPD
 	
 	private Response serviceUUID(IHTTPSession request)
 	{
+		logger.log(Level.INFO, "service UUID");
 		UUID sessionUID = UUID.randomUUID();
 		List<String> params = request.getParameters().get(CONTROL_GET_UUID_REQUEST_date);
 		if(params == null || params.size() != 1)
