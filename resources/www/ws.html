@@ -3,14 +3,14 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script type="module" src="CommModule.mjs"></script>
-		<script>
+		<script type="module">
+import COMM from './CommModule.js';
 var commModule;
 var ip = location.host;
 window.onload = function()
 {
 	console.log("loaded1");
-	commModule = new CommModule(function()
+	commModule = new COMM.CommModule(function()
 	{
 		console.log("loaded3");
 	});
@@ -57,7 +57,7 @@ function WebSocketTest()
 	<body>
 	
 		<div id = "sse">
-			<a href = "javascript:WebSocketTest()">Run WebSocket</a>
+			<a href = "module:WebSocketTest()">Run WebSocket</a>
 		</div>
 		<div id = "test">Test div</div>
 	</body>
