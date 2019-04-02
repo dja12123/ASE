@@ -11,7 +11,7 @@ export class CommModule
 		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
 		if(!storageSession)
 		{
-			httpGet(CONTROL_GET_UUID_REQUEST, function(uid)
+			this.httpGet(CONTROL_GET_UUID_REQUEST, function(uid)
 			{
 				storageSession = new Session(uid);
 				storage.setItem(INNO_STORAGE_SESSION, storageSession);
