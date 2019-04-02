@@ -10,13 +10,12 @@ window.onload = function()
 	console.log("loaded1");
 	var commModule = new COMM.CommModule(function()
 	{
+		console.log("loaded3");
 		print("loaded");
 	});
 	print(commModule.ip);
 	console.log("loaded2");
 }
-		</script>
-		<script type="text/javascript">
 
 function WebSocketTest()
 {
@@ -51,14 +50,13 @@ function WebSocketTest()
 		// The browser doesn't support WebSocket
 	}
 }
-			</script>
+		</script>
+	</head>
 
-		</head>
-
-		<body>
-			<div id = "sse">
-				<a href = "javascript:WebSocketTest()">Run WebSocket</a>
-			</div>
-			<div id = "test">Test div</div>
-		</body>
-	</html>
+	<body>
+		<div id = "sse">
+			<a href = "javascript:WebSocketTest()">Run WebSocket</a>
+		</div>
+		<div id = "test">Test div</div>
+	</body>
+</html>
