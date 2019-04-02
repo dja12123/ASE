@@ -79,7 +79,7 @@ public class ServerCore
 	public static void endProgram()
 	{
 		mainInst.shutdown();
-		System.exit(0);
+		mainThread.interrupt();
 		for(Thread nextShutdown : shutdownThreads)
 		{
 			nextShutdown.start();
