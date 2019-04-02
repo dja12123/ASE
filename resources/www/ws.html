@@ -103,7 +103,7 @@ function httpGet(theUrl, params)
 	{
 		paramStr = "?"+paramStr.slice(0, -1);
 	}
-	xmlHttp.open("GET", theUrl+paramStr, false); // false for synchronous request
+	xmlHttp.open("GET", theUrl+paramStr); // false for synchronous request
 	xmlHttp.send(null);
 	return xmlHttp.responseText;
 }
