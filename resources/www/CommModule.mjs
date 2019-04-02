@@ -6,6 +6,7 @@ export class CommModule
 {
 	constructor(readyCallback)
 	{
+		this.session = null;
 		this.readyCallback = readyCallback;
 		console.log("loaded4");
 		this.ip = location.host;
