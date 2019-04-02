@@ -11,7 +11,7 @@ export class CommModule
 		var storage = window.sessionStorage;
 		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
 		
-		if(storageSession === null)
+		if(storageSession === null || typeof(storageSession) != Session)
 		{
 			console.log("loaded6");
 			this.httpGet(CONTROL_GET_UUID_REQUEST, (uid) =>
