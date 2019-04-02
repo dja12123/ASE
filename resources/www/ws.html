@@ -5,21 +5,19 @@
 		<meta charset="utf-8">
 		<script type="module">
 import * as COMM from "./CommModule.mjs";
-var test;
+export var commModule;
+export var ip = location.host;
 window.onload = function()
 {
 	console.log("loaded1");
-	var commModule = new COMM.CommModule(function()
+	commModule = new COMM.CommModule(function()
 	{
 		console.log("loaded3");
 	});
-	test = commModule;
 	console.log("loaded2");
 }
-		</script>
-		<script>
 
-function WebSocketTest()
+export function WebSocketTest()
 {
 	console.log(test);
 	if("WebSocket" in window)
