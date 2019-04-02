@@ -5,16 +5,13 @@
 		<meta charset="utf-8">
 		<script type="module">
 import * as COMM from "./CommModule.mjs";
-console.log(COMM);
 window.onload = function()
 {
 	console.log("loaded1");
 	var commModule = new COMM.CommModule(function()
 	{
 		console.log("loaded3");
-		print("loaded");
 	});
-	print(commModule.ip);
 	console.log("loaded2");
 }
 
