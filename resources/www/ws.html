@@ -1,44 +1,193 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset="utf-8">
-      <script type = "text/javascript">
-      var ip = location.host;
-    	alert(ip);
-         function WebSocketTest() {
-            
-            if ("WebSocket" in window) {
+	<head>
+		<meta charset="utf-8">
+			<script type = "text/javascript">
 
-               // Let us open a web socket
-               var ws = new WebSocket("ws://"+ip+":8080");
+const REQ_COOKIE_DATE_FORMAT = "yyyy/MM/dd/hh/mm/ss";
+const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
+window.onload = function()
+{
+	var ip = location.host;
+	print(ip);
+	var utcDate = new Date();
+	print(utcDate.format(REQ_COOKIE_DATE_FORMAT));
+	httpGet(CONTROL_GET_UUID_REQUEST, {"date":utcDate.format(REQ_COOKIE_DATE_FORMAT)});
+	print(utcDate.getFullYear());
+	print(utcDate.getMonth());
+	print(utcDate.getDate());
+	print(utcDate.getHours());
+	print(utcDate.getMinutes());
+	print(utcDate.getSeconds());
+}
 
-               ws.onopen = function() {
-                  
-                  // Web Socket is connected, send data using send()
-                  ws.send("test");
-               };
+Date.prototype.format = function(f)
+{
+	if(!this.valueOf()) return " ";
 
-               ws.onmessage = function (evt) { 
-                  var received_msg = evt.data;
-               };
-				
-               ws.onclose = function() { 
-                  
-                  // websocket is closed.
-               };
-            } else {
-              
-               // The browser doesn't support WebSocket
-            }
-         }
-      </script>
-		
-   </head>
-   
-   <body>
-      <div id = "sse">
-         <a href = "javascript:WebSocketTest()">Run WebSocket</a>
-      </div>
-      
-   </body>
-</html>
+	var weekName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var d = this;
+
+	return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1)
+	{
+		switch ($1)
+		{
+			case "yyyy":
+				return d.getFullYear();
+			case "yy":
+				return (d.getFullYear() % 1000)
+					.zf(2);
+			case "MM":
+				return (d.getMonth() + 1)
+					.zf(2);
+			case "dd":
+				return d.getDate()
+					.zf(2);
+			case "E":
+				return weekName[d.getDay()];
+			case "HH":
+				return d.getHours()
+					.zf(2);
+			case "hh":
+				return ((h = d.getHours() % 12) ? h : 12)
+					.zf(2);
+			case "mm":
+				return d.getMinutes()
+					.zf(2);
+			case "ss":
+				return d.getSeconds()
+					.zf(2);
+			case "a/p":
+				return d.getHours() < 12 ? "AM" : "PM";
+			default:
+				return $1;
+		}
+	});
+};
+
+String.prototype.string = function(len)
+{
+	var s = '',
+		i = 0;
+	while(i++ < len)
+	{
+		s += this;
+	}
+	return s;
+};
+String.prototype.zf = function(len)
+{
+	return "0".string(len - this.length) + this;
+};
+Number.prototype.zf = function(len)
+{
+	return this.toString()
+		.zf(len);
+};
+
+function print(str)
+{
+	var testDiv = document.getElementById('test');
+	testDiv.innerHTML += str+"<br>";
+}
+
+function httpGet(theUrl, params)
+{
+	var xmlHttp = new XMLHttpRequest();
+	var paramStr="";
+	for(var key in params)
+	{
+		paramStr+=key+"="+params[key]+"&";
+	}
+	if(params)
+	{
+		paramStr = "?"+paramStr.slice(0, -1);
+	}
+	xmlHttp.open("GET", theUrl+paramStr, false); // false for synchronous request
+	xmlHttp.send(null);
+	return xmlHttp.responseText;
+}
+
+function getCookie(cookieName)
+{
+	var search = cookieName + "=";
+	var cookie = document.cookie;
+
+	// 현재 쿠키가 존재할 경우
+	if(cookie.length > 0)
+	{
+		// 해당 쿠키명이 존재하는지 검색한 후 존재하면 위치를 리턴.
+		startIndex = cookie.indexOf(cookieName);
+
+		// 만약 존재한다면
+		if(startIndex != -1)
+		{
+			// 값을 얻어내기 위해 시작 인덱스 조절
+			startIndex += cookieName.length;
+
+			// 값을 얻어내기 위해 종료 인덱스 추출
+			endIndex = cookie.indexOf(";", startIndex);
+
+			// 만약 종료 인덱스를 못찾게 되면 쿠키 전체길이로 설정
+			if(endIndex == -1) endIndex = cookie.length;
+
+			// 쿠키값을 추출하여 리턴
+			return unescape(cookie.substring(startIndex + 1, endIndex));
+		}
+		else
+		{
+			// 쿠키 내에 해당 쿠키가 존재하지 않을 경우
+			return false;
+		}
+	}
+	else
+	{
+		// 쿠키 자체가 없을 경우
+		return false;
+	}
+}
+
+function WebSocketTest()
+{
+
+	if("WebSocket" in window)
+	{
+
+		// Let us open a web socket
+		var ws = new WebSocket("ws://" + ip + ":8080");
+
+		ws.onopen = function()
+		{
+
+			// Web Socket is connected, send data using send()
+			ws.send("test");
+		};
+
+		ws.onmessage = function(evt)
+		{
+			var received_msg = evt.data;
+		};
+
+		ws.onclose = function()
+		{
+
+			// websocket is closed.
+		};
+	}
+	else
+	{
+
+		// The browser doesn't support WebSocket
+	}
+}
+			</script>
+
+		</head>
+
+		<body>
+			<div id = "sse">
+				<a href = "javascript:WebSocketTest()">Run WebSocket</a>
+			</div>
+			<div id = "test">Test div</div>
+		</body>
+	</html>

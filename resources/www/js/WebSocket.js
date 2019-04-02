@@ -1,4 +1,4 @@
-// ì—°ê²°(onopen), ì¢…ë£Œ(onclose), ë°œì‹ (send), ìˆ˜ì‹ (onmessage), ë¡œê·¸
+// 유니코드
 
 var wsUrl =  "ws://localhost:8080"; // webSocket Address
 

@@ -1,5 +1,15 @@
 package ase.web.httpServer;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
@@ -9,6 +19,7 @@ import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 import org.nanohttpd.util.ServerRunner;
 
+import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
 import ase.sensorReadServer.ServerCore;
 import ase.web.webSocket.WebSession;
@@ -16,9 +27,14 @@ import ase.web.webSocket.WebSessionManager;
 
 public class HTTPServer extends NanoHTTPD
 {
+	private static final Logger logger = LogWriter.createLogger(HTTPServer.class, "HTTPServer");
+	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
-	private static final String PROP_SESSION_COOKIE_TIMEOUT_DAY = "SessionCookieTimeoutDay";
+	private static final String PROP_SESSION_COOKIE_TIMEOUT = "SessionCookieTimeoutSecond";
 	public static final String WEB_RES_DIR = "/www";
+	private static final String CONTROL_GET_UUID_REQUEST = "control_get_uuid";
+	private static final String CONTROL_GET_UUID_REQUEST_date = "date";
+	private static final DateFormat REQ_COOKIE_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/hh/mm/ss");
 	
 	private final WebSessionManager webSessionManager;
 	private int sessionCookieTimeout;
@@ -66,6 +82,12 @@ public class HTTPServer extends NanoHTTPD
 		//System.out.println("root >> " + rootDirectory);
 		//
 		String msg = "";
+
+		switch(uri)
+		{
+		case CONTROL_GET_UUID_REQUEST:
+			return this.serviceUUID(request);
+		}
 		
 		if (uri.startsWith("/"))
 		{ // Root Mapping
@@ -85,21 +107,15 @@ public class HTTPServer extends NanoHTTPD
 			
 			String sessionUIDStr = getCookie(request, WebSessionManager.COOKIE_KEY_SESSION);
 			UUID sessionUID;
-			if(sessionUIDStr == null)
-			{
-				sessionUID = UUID.randomUUID();
-				setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout);
-			}
-			else
+			if(sessionUIDStr != null)
 			{
 				sessionUID = UUID.fromString(sessionUIDStr);
-				setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr, this.sessionCookieTimeout);
-			}
-			
-			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
-			if(s!= null)
-			{
-				System.out.println("존재하는 세션에 대한 요청"+s.toString());
+				//setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr, this.sessionCookieTimeout);
+				WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
+				if(s!= null)
+				{
+					System.out.println("존재하는 세션에 대한 요청"+s.toString());
+				}
 			}
 			
 			switch(ext)
@@ -123,22 +139,56 @@ public class HTTPServer extends NanoHTTPD
 		return Response.newFixedLengthResponse(msg);
 	}
 	
-	public static String getCookie(IHTTPSession session, String key)
+	private Response serviceUUID(IHTTPSession request)
 	{
-		String value = session.getCookies().read(key);
+		UUID sessionUID = UUID.randomUUID();
+		List<String> params = request.getParameters().get(CONTROL_GET_UUID_REQUEST_date);
+		if(params == null || params.size() != 1)
+		{
+			logger.log(Level.WARNING, "UUID 서비스중 오류1");
+			return HTTPServer.serveError(Status.BAD_REQUEST, "get date error");
+		}
+		Date reqDate;
+		try
+		{
+			reqDate = REQ_COOKIE_DATE_FORMAT.parse(params.get(0));
+		}
+		catch (ParseException e)
+		{
+			logger.log(Level.WARNING, "UUID 서비스중 오류2", e);
+			return HTTPServer.serveError(Status.BAD_REQUEST, "parse date error");
+		}
+		
+		setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), reqDate, this.sessionCookieTimeout);
+		return Response.newFixedLengthResponse(sessionUID.toString());
+	}
+	
+	public static String getCookie(IHTTPSession request, String key)
+	{
+		String value = request.getCookies().read(key);
 		return value;
 	}
 	
-	public static void setCookie(IHTTPSession session, String key, String value, int dayTimeout)
+	public static void setCookie(IHTTPSession request, String key, String value, Date clientDate, int second)
 	{
-		Cookie cookie = new Cookie(key, value, dayTimeout);
-		session.getCookies().set(cookie);
+		Cookie cookie = new Cookie(key, value, getCookieTime(clientDate, second));
+		request.getCookies().set(cookie);
 	}
+	
+	private static String getCookieTime(Date date, int second)
+	{
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.add(Calendar.SECOND, second);
+        return dateFormat.format(calendar.getTime());
+    }
 
 	@Override
 	public void start()
 	{
-		this.sessionCookieTimeout = Integer.parseInt(ServerCore.getProp(PROP_SESSION_COOKIE_TIMEOUT_DAY));
+		this.sessionCookieTimeout = Integer.parseInt(ServerCore.getProp(PROP_SESSION_COOKIE_TIMEOUT));
 		this.serviceThread = new Thread(()->
 		{
 			ServerRunner.executeInstance(this);
