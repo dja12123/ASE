@@ -27,7 +27,7 @@ export class CommModule
 			var storageSession = storage.getItem(INNO_STORAGE_SESSION);
 			console.log(storageSession);
 			this.session = JSON.parse(storageSession);
-			console.log(session.uuid);
+			console.log(this.session.uuid);
 		}
 		
 	}
