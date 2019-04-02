@@ -15,7 +15,7 @@ export class CommModule
 			{
 				storageSession = new Session(uid);
 				storage.setItem(INNO_STORAGE_SESSION, storageSession);
-				this.session = storageSession;
+				CommModule.this.session = storageSession;
 				readyCallback();
 			});
 			return;
