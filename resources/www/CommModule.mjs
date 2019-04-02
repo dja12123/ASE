@@ -85,5 +85,6 @@ export class Session
 	constructor(sessionUID)
 	{
 		this.uuid = sessionUID;
+		this.ws = new WebSocket("ws://" + location.host + ":8080");
 	}
 }
