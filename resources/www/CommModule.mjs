@@ -15,7 +15,7 @@ export class CommModule
 		if(storageSession === null)
 		{
 			console.log("loaded6");
-			this.httpGet(CONTROL_GET_UUID_REQUEST, getUUIDCallback);
+			this.httpGet(CONTROL_GET_UUID_REQUEST, this.getUUIDCallback);
 			return;
 		}
 		this.session = storageSession;
