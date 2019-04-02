@@ -176,7 +176,7 @@ public class HTTPServer extends NanoHTTPD
 	
 	public static void setCookie(IHTTPSession request, String key, String value, Date clientDate, int second)
 	{
-		Cookie cookie = new Cookie(key, value, getCookieTime(clientDate, second));
+		Cookie cookie = new Cookie(key, value);
 		request.getCookies().set(cookie);
 	}
 	
