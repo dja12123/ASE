@@ -89,10 +89,11 @@ public class HTTPServer extends NanoHTTPD
 			{
 				switch(uri)
 				{
-				case CONTROL_GET_UUID_REQUEST:
+				case "/"+CONTROL_GET_UUID_REQUEST:
 					return this.serviceUUID(request);
-				}	
+				}
 			}
+			
 			String dir = WEB_RES_DIR+uri;
 			if(!FileHandler.isExistResFile(dir))
 			{
