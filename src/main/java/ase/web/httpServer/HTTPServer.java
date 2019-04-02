@@ -24,7 +24,6 @@ public class HTTPServer extends NanoHTTPD
 	private static final String PROP_SESSION_COOKIE_TIMEOUT = "SessionCookieTimeoutSecond";
 	public static final String WEB_RES_DIR = "/www";
 	private static final String CONTROL_GET_UUID_REQUEST = "control_get_uuid";
-	private static final String CONTROL_GET_UUID_REQUEST_date = "date";
 	
 	private final WebSessionManager webSessionManager;
 	private int sessionCookieTimeout;
@@ -61,7 +60,7 @@ public class HTTPServer extends NanoHTTPD
 
 		//responseSocketHandler.openWebSocket(session); //소켓 세션
 		
-		System.out.println(method + " '" + uri + "' ");
+		logger.log(Level.INFO, method + " '" + uri + "' ");
 
 		// 웹서비스 할 때 필요한 파일 스트림 모듈로 만들기(fileIO 패키지)
 		// StringBuffer 적극 사용
@@ -110,7 +109,6 @@ public class HTTPServer extends NanoHTTPD
 					System.out.println("존재하는 세션에 대한 요청"+s.toString());
 				}
 			}
-			
 			
 			switch(ext)
 			{

@@ -5,13 +5,18 @@
 			<script type = "text/javascript">
 
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
+const COOKIE_KEY_SESSION = "sessionUID";
 var ip = location.host;
 window.onload = function()
 {
 	print(ip);
 	var utcDate = new Date();
 	print(utcDate);
-	httpGet(CONTROL_GET_UUID_REQUEST);
+	if(!getCookie(COOKIE_KEY_SESSION))
+	{
+		httpGet(CONTROL_GET_UUID_REQUEST);
+	}
+	
 	print(utcDate.getFullYear());
 	print(utcDate.getMonth());
 	print(utcDate.getDate());
