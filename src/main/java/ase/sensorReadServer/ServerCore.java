@@ -25,7 +25,6 @@ import ase.sensorReadServer.sensorReader.SerialReadManager;
 import ase.sensorReadServer.sensorReader.TcpSensorReadManager;
 import ase.test.TestVirtualSensorManager;
 import ase.web.WebManager;
-import ase.web.webSocket.WebSessionManager;
 
 public class ServerCore
 {
@@ -80,7 +79,7 @@ public class ServerCore
 	public static void endProgram()
 	{
 		mainInst.shutdown();
-		
+		System.exit(0);
 		for(Thread nextShutdown : shutdownThreads)
 		{
 			nextShutdown.start();
