@@ -9,9 +9,8 @@ export class CommModule
 		console.log("loaded4");
 		this.ip = location.host;
 		var storage = window.sessionStorage;
-		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
-		console.log(storageSession);
-		if(storageSession === null)
+		
+		if(!storage.hasOwnProperty(INNO_STORAGE_SESSION))
 		{
 			console.log("loaded6");
 			this.httpGet(CONTROL_GET_UUID_REQUEST, (uid) =>
@@ -22,10 +21,15 @@ export class CommModule
 				readyCallback();
 			});
 			
-			return;
 		}
-		this.session = JSON.parse(storageSession);
-		console.log(session.uuid);
+		else
+		{
+			var storageSession = storage.getItem(INNO_STORAGE_SESSION);
+			console.log(storageSession);
+			this.session = JSON.parse(storageSession);
+			console.log(session.uuid);
+		}
+		
 	}
 	
 
