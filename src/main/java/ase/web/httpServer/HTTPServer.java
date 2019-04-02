@@ -153,6 +153,7 @@ public class HTTPServer extends NanoHTTPD
 			return HTTPServer.serveError(Status.BAD_REQUEST, "get date error");
 		}
 		Date reqDate;
+		logger.log(Level.INFO, params.get(0));
 		try
 		{
 			reqDate = REQ_COOKIE_DATE_FORMAT.parse(params.get(0));
