@@ -6,9 +6,9 @@
 
 const REQ_COOKIE_DATE_FORMAT = "yyyy/MM/dd/hh/mm/ss";
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
+var ip = location.host;
 window.onload = function()
 {
-	var ip = location.host;
 	print(ip);
 	var utcDate = new Date();
 	print(utcDate.format(REQ_COOKIE_DATE_FORMAT));
@@ -152,7 +152,7 @@ function WebSocketTest()
 
 	if("WebSocket" in window)
 	{
-
+		
 		// Let us open a web socket
 		var ws = new WebSocket("ws://" + ip + ":8080");
 
