@@ -6,7 +6,6 @@ export class CommModule
 {
 	constructor(readyCallback)
 	{
-		this.readyCallback = readyCallback;
 		console.log("loaded4");
 		this.ip = location.host;
 		var storage = window.sessionStorage;
@@ -15,22 +14,22 @@ export class CommModule
 		if(storageSession === null)
 		{
 			console.log("loaded6");
-			this.httpGet(CONTROL_GET_UUID_REQUEST, this.getUUIDCallback);
+			this.httpGet(CONTROL_GET_UUID_REQUEST, (uid) =>
+			{
+				console.log("loaded7");
+				console.log(this);
+				this.session = new Session(uid);
+				storage.setItem(INNO_STORAGE_SESSION, this.session);
+				readyCallback();
+			});
+			
 			return;
 		}
 		this.session = storageSession;
 		console.log(storageSession.uuid);
 	}
 	
-	getUUIDCallback(uid)
-	{
-		console.log("loaded7");
-		console.log(this);
-		this.session = new Session(uid);
-		storage.setItem(INNO_STORAGE_SESSION, this.session);
-		readyCallback();
-	}
-	
+
 	getSession()
 	{
 		return this.session;
