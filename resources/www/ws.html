@@ -11,19 +11,6 @@ window.onload = function()
 		print("loaded");
 	});
 	print(commModule.ip);
-	var utcDate = new Date();
-	print(utcDate);
-	if(!getCookie(COOKIE_KEY_SESSION))
-	{
-		httpGet(CONTROL_GET_UUID_REQUEST);
-	}
-	
-	print(utcDate.getFullYear());
-	print(utcDate.getMonth());
-	print(utcDate.getDate());
-	print(utcDate.getHours());
-	print(utcDate.getMinutes());
-	print(utcDate.getSeconds());
 }
 
 function WebSocketTest()
