@@ -3,23 +3,20 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script type="module">
-import * as COMM from "./CommModule.mjs";
-export var commModule;
-export var ip = location.host;
+		<script type="module" src="CommModule.mjs"></script>
+		<script>
+var commModule;
+var ip = location.host;
 window.onload = function()
 {
 	console.log("loaded1");
-	commModule = new COMM.CommModule(function()
+	commModule = new CommModule(function()
 	{
 		console.log("loaded3");
 	});
 	console.log("loaded2");
 }
 
-
-		</script>
-		<script>
 function WebSocketTest()
 {
 	console.log(commModule);
