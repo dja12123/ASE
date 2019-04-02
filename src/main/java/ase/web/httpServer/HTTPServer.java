@@ -163,7 +163,8 @@ public class HTTPServer extends NanoHTTPD
 			logger.log(Level.WARNING, "UUID 서비스중 오류2", e);
 			return HTTPServer.serveError(Status.BAD_REQUEST, "parse date error");
 		}
-		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+		System.out.println(dateFormat.format(reqDate));
 		setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), reqDate, this.sessionCookieTimeout);
 		return Response.newFixedLengthResponse(sessionUID.toString());
 	}
