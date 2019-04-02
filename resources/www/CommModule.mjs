@@ -25,10 +25,8 @@ export class CommModule
 	getUUIDCallback(uid)
 	{
 		console.log("loaded7");
-		var test = new Session(uid);
-		this.storageSession = new Session(uid);
-		storage.setItem(INNO_STORAGE_SESSION, storageSession);
-		this.session = storageSession;
+		this.session = new Session(uid);
+		storage.setItem(INNO_STORAGE_SESSION, this.session);
 		readyCallback();
 	}
 	
