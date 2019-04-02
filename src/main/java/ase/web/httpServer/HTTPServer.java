@@ -176,7 +176,8 @@ public class HTTPServer extends NanoHTTPD
 	
 	public static void setCookie(IHTTPSession request, String key, String value, Date clientDate, int second)
 	{
-		Cookie cookie = new Cookie(key, value);
+		Cookie cookie = new Cookie(key, value, getCookieTime(clientDate, second));
+		
 		request.getCookies().set(cookie);
 	}
 	
@@ -187,6 +188,7 @@ public class HTTPServer extends NanoHTTPD
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.add(Calendar.SECOND, second);
+        System.out.println(dateFormat.format(calendar.getTime()));
         return dateFormat.format(calendar.getTime());
     }
 
