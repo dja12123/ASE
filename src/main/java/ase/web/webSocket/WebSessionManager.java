@@ -53,7 +53,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 		if(sessionUIDStr == null)
 		{
 			logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
-			e.channel.close();
+			return;
 		}
 		else
 		{
