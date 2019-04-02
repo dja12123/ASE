@@ -83,14 +83,16 @@ public class HTTPServer extends NanoHTTPD
 		//
 		String msg = "";
 
-		switch(uri)
-		{
-		case CONTROL_GET_UUID_REQUEST:
-			return this.serviceUUID(request);
-		}
-		
 		if (uri.startsWith("/"))
 		{ // Root Mapping
+			if(method == Method.GET)
+			{
+				switch(uri)
+				{
+				case CONTROL_GET_UUID_REQUEST:
+					return this.serviceUUID(request);
+				}	
+			}
 			String dir = WEB_RES_DIR+uri;
 			if(!FileHandler.isExistResFile(dir))
 			{
