@@ -125,6 +125,7 @@ public class HTTPServer extends NanoHTTPD
 				}
 			}
 			
+			
 			switch(ext)
 			{
 			case "html":
@@ -170,8 +171,10 @@ public class HTTPServer extends NanoHTTPD
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		System.out.println(dateFormat.format(reqDate));
-		setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), reqDate, this.sessionCookieTimeout);
-		return Response.newFixedLengthResponse(sessionUID.toString());
+		//setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), reqDate, this.sessionCookieTimeout);
+		Response response = Response.newFixedLengthResponse(sessionUID.toString());
+		response.addCookieHeader(String.format("%s=%s; max-age=%d", WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout));
+		return response;
 	}
 	
 	public static String getCookie(IHTTPSession request, String key)
