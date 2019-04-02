@@ -118,7 +118,7 @@ public class HTTPServer extends NanoHTTPD
 				return HTTPServer.serveImage(MIME_TYPE.MIME_JPEG, dir);
 			case "png":
 				return HTTPServer.serveImage(MIME_TYPE.MIME_PNG, dir);
-			case "js":
+			case "js": case "mjs":
 				return serveStrFile(MIME_TYPE.MIME_JS,  dir);
 			case "css":
 				return serveStrFile(MIME_TYPE.MIME_CSS,  dir);
