@@ -10,7 +10,7 @@ export class CommModule
 		this.ip = location.host;
 		var storage = window.sessionStorage;
 		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
-		console.log(storageSession);
+		
 		if(storageSession === null)
 		{
 			console.log("loaded6");
@@ -25,7 +25,7 @@ export class CommModule
 			return;
 		}
 		this.session = storageSession;
-		console.log("loaded5");
+		console.log(storageSession.uuid);
 	}
 	
 	getSession()
