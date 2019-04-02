@@ -6,7 +6,6 @@ export class CommModule
 {
 	constructor(readyCallback)
 	{
-		this.session = null;
 		this.readyCallback = readyCallback;
 		console.log("loaded4");
 		this.ip = location.host;
@@ -26,6 +25,7 @@ export class CommModule
 	getUUIDCallback(uid)
 	{
 		console.log("loaded7");
+		console.log(this);
 		this.session = new Session(uid);
 		storage.setItem(INNO_STORAGE_SESSION, this.session);
 		readyCallback();
