@@ -10,14 +10,13 @@ export class CommModule
 		this.ip = location.host;
 		var storage = window.sessionStorage;
 		var storageSession = storage.getItem(INNO_STORAGE_SESSION);
-		
+		console.log(typeof(storageSession));
 		if(storageSession === null || typeof(storageSession) != Session)
 		{
 			console.log("loaded6");
 			this.httpGet(CONTROL_GET_UUID_REQUEST, (uid) =>
 			{
 				console.log("loaded7");
-				console.log(this);
 				this.session = new Session(uid);
 				storage.setItem(INNO_STORAGE_SESSION, this.session);
 				readyCallback();
