@@ -2,7 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script type="module">
+	</head>
+
+	<body>
+	<script type="module">
 import * as COMM from "./CommModule.mjs";
 console.log(COMM);
 window.onload = function()
@@ -51,9 +54,6 @@ function WebSocketTest()
 	}
 }
 		</script>
-	</head>
-
-	<body>
 		<div id = "sse">
 			<a href = "javascript:WebSocketTest()">Run WebSocket</a>
 		</div>
