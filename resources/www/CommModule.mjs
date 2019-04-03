@@ -3,15 +3,12 @@ const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
 export class CommModule
 {
-	constructor(readyCallback)
+	constructor(startCallback)
 	{
 		console.log("loaded4");
 		this.ip = location.host;
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
-		this.controlChannel = this.createChannel(()=>
-		{
-			this.controlChannel.send(CONTROL_CHANNEL_KEY);
-		});
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback);
 	}
 
 	httpGet(theUrl, callback, params)
@@ -55,10 +52,14 @@ export class CommModule
 		return false;
 	}
 	
-	createChannel(onOpen, onMessage, onClose)
+	createChannel(key, onOpen, onMessage, onClose)
 	{
 		var ws = new WebSocket("ws://" + this.ip + ":8080");
-		ws.onopen = onOpen;
+		ws.onopen = () =>
+		{
+			ws.send(key);
+			onOpen();
+		};
 		ws.onmessage = onMessage;
 		ws.onclose = onClose;
 		return ws;

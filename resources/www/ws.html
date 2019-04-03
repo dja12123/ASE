@@ -9,46 +9,20 @@ var commModule;
 var ip = location.host;
 window.onload = function()
 {
-	console.log("loaded1");
 	commModule = new COMM.CommModule(function()
 	{
-		console.log("loaded3");
+		console.log("commModule load");
+		console.log(commModule.sessionUUID);
 	});
-	console.log(commModule.sessionUUID);
+	
 }
 
 window.WebSocketTest = function WebSocketTest()
 {
-	console.log(commModule);
-	if("WebSocket" in window)
+	commModule.createChannel("SensorListRequest", , (e)=>
 	{
-		
-		// Let us open a web socket
-		var ws = new WebSocket("ws://" + ip + ":8080");
-
-		ws.onopen = function()
-		{
-
-			// Web Socket is connected, send data using send()
-			ws.send("test");
-		};
-
-		ws.onmessage = function(evt)
-		{
-			var received_msg = evt.data;
-		};
-
-		ws.onclose = function()
-		{
-
-			// websocket is closed.
-		};
-	}
-	else
-	{
-
-		// The browser doesn't support WebSocket
-	}
+		console.log("data:"+e.data);
+	});
 }
 		</script>
 		
