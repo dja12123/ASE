@@ -43,12 +43,6 @@ public class WebSessionManager extends Observable<SessionEvent>
 	private synchronized void channelObserver(Observable<WebChannelEvent> provider, WebChannelEvent e)
 	{
 		IHTTPSession request = e.channel.getHandshakeRequest();
-		System.out.println("cookies");
-		request.getCookies().set("TEST", "test", 100);
-		request.getCookies().forEach((str)->{
-			System.out.println(HTTPServer.getCookie(request, str));
-		});
-		
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
 		if(sessionUIDStr == null)
 		{
@@ -76,22 +70,21 @@ public class WebSessionManager extends Observable<SessionEvent>
 		this._sessionMap.put(sessionUID, session);
 		this.notifyObservers(new SessionEvent(session, true));
 		session.onCreateChannel(ch);
-		System.out.println("새 웹소켓 요청" + session.toString()+" 남은채널:"+session.channelList.size());
+		logger.log(Level.INFO, "세션 수립:"+session.toString()+" 채널개수:"+session.channelList.size());
 	}
 	
 	private void requestService(IHTTPSession request, WebSession session, WebChannel channel, boolean isOpen)
 	{
-		
 		if(isOpen) session.onCreateChannel(channel);
 		else session.onCloseChannel(channel);
-		System.out.println("헌 웹소켓 요청" + session.toString()+" 남은채널:"+session.channelList.size());
+		logger.log(Level.INFO, "웹소켓 개설:"+session.toString()+" 채널개수:"+session.channelList.size());
 	}
 	
 	private synchronized void sessionCloseCallback(WebSession session)
 	{
 		this._sessionMap.remove(session.sessionUID);
 		this.notifyObservers(new SessionEvent(session, false));
-		System.out.println("세션종료" + session.toString()+" 남은채널:"+session.channelList.size());
+		logger.log(Level.INFO, "세션 종료:"+session.toString());
 	}
 	
 	public boolean start()
