@@ -23,7 +23,6 @@ public class HTTPServer extends NanoHTTPD
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
 	private static final String PROP_SESSION_COOKIE_TIMEOUT = "SessionCookieTimeoutSecond";
 	public static final String WEB_RES_DIR = "/www";
-	private static final String CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 	
 	private final WebSessionManager webSessionManager;
 	private int sessionCookieTimeout;

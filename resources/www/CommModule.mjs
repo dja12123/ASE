@@ -1,6 +1,5 @@
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
-const INNO_STORAGE_SESSION = "commSession";
 
 export class CommModule
 {
@@ -8,34 +7,7 @@ export class CommModule
 	{
 		console.log("loaded4");
 		this.ip = location.host;
-		var storage = window.sessionStorage;
-		
-		if(!storage.hasOwnProperty(INNO_STORAGE_SESSION))
-		{
-			console.log("loaded6");
-			this.httpGet(CONTROL_GET_UUID_REQUEST, (uid) =>
-			{
-				console.log("loaded7");
-				this.session = new Session(uid);
-				storage.setItem(INNO_STORAGE_SESSION, JSON.stringify(this.session));
-				readyCallback();
-			});
-			
-		}
-		else
-		{
-			var storageSession = storage.getItem(INNO_STORAGE_SESSION);
-			console.log(storageSession);
-			this.session = JSON.parse(storageSession);
-			console.log(this.session.uuid);
-		}
-		
-	}
-	
-
-	getSession()
-	{
-		return this.session;
+		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
 	}
 
 	httpGet(theUrl, callback, params)
@@ -77,14 +49,5 @@ export class CommModule
 			}
 		}
 		return false;
-	}
-}
-
-export class Session
-{
-	constructor(sessionUID)
-	{
-		this.uuid = sessionUID;
-		this.ws = new WebSocket("ws://" + location.host + ":8080");
 	}
 }
