@@ -58,7 +58,7 @@ export class CommModule
 		ws.onopen = () =>
 		{
 			ws.send(key);
-			onOpen();
+			if(onOpen != null) onOpen();
 		};
 		ws.onmessage = onMessage;
 		ws.onclose = onClose;
