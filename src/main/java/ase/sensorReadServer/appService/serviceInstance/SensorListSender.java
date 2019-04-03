@@ -47,7 +47,7 @@ public class SensorListSender extends ServiceInstance
 			dataSensorList.add(data);
 		}
 		System.out.println(json.toString());
-		this.channel.sendData(json.toString().getBytes());
+		this.channel.sendData(json.toString());
 		this.destroy();
 	}
 }
