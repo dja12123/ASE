@@ -90,7 +90,7 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected void onPong(WebSocketFrame pong) 
 	{
-		logger.log(Level.INFO, "웹 소켓 Pong " + pong);
+
 	}
 	
 	@Override
@@ -102,13 +102,13 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected void debugFrameReceived(WebSocketFrame frame) 
 	{
-		logger.log(Level.INFO, "프레임 받음 >> " + frame);
+
 	}
 	
 	@Override
 	protected void debugFrameSent(WebSocketFrame frame) 
 	{
-		logger.log(Level.INFO, "프레임 보냄 >> " + frame);
+
 	}
 	
 	@Override

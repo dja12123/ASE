@@ -22,6 +22,8 @@ window.WebSocketTest = function WebSocketTest()
 	commModule.createChannel("SensorListRequest",null, (e)=>
 	{
 		console.log("data:"+e.data);
+		data = JSON.parse(e.data);
+		console.log(data);
 	});
 }
 		</script>
