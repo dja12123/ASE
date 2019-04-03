@@ -1,6 +1,6 @@
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
-
+const CONTROL_CHANNEL_KEY = "control";
 export class CommModule
 {
 	constructor(readyCallback)
@@ -8,7 +8,10 @@ export class CommModule
 		console.log("loaded4");
 		this.ip = location.host;
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
-		this.controlChannel = this.createChannel();
+		this.controlChannel = this.createChannel(()=>
+		{
+			this.controlChannel.send(CONTROL_CHANNEL_KEY);
+		});
 	}
 
 	httpGet(theUrl, callback, params)
