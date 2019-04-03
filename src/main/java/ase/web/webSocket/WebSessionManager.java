@@ -77,7 +77,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{
 		if(isOpen) session.onCreateChannel(channel);
 		else session.onCloseChannel(channel);
-		logger.log(Level.INFO, "웹소켓 개설:"+session.toString()+" 채널개수:"+session.channelList.size());
+		logger.log(Level.INFO, "웹소켓 "+isOpen+":"+session.toString()+" 채널개수:"+session.channelList.size());
 	}
 	
 	private synchronized void sessionCloseCallback(WebSession session)
