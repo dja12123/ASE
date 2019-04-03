@@ -12,7 +12,6 @@ import org.nanohttpd.util.ServerRunner;
 
 import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
-import ase.sensorReadServer.ServerCore;
 import ase.web.webSocket.WebSession;
 import ase.web.webSocket.WebSessionManager;
 
@@ -21,11 +20,9 @@ public class HTTPServer extends NanoHTTPD
 	private static final Logger logger = LogWriter.createLogger(HTTPServer.class, "HTTPServer");
 	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
-	private static final String PROP_SESSION_COOKIE_TIMEOUT = "SessionCookieTimeoutSecond";
 	public static final String WEB_RES_DIR = "/www";
 	
 	private final WebSessionManager webSessionManager;
-	private int sessionCookieTimeout;
 	private Thread serviceThread;
 	
 	public HTTPServer(int port, WebSessionManager webSessionManager)
@@ -147,13 +144,11 @@ public class HTTPServer extends NanoHTTPD
 	@Override
 	public void start()
 	{
-		this.sessionCookieTimeout = Integer.parseInt(ServerCore.getProp(PROP_SESSION_COOKIE_TIMEOUT));
 		this.serviceThread = new Thread(()->
 		{
 			ServerRunner.executeInstance(this);
 		});
 		this.serviceThread.setDaemon(true);
 		this.serviceThread.start();
-		
 	}
 }
