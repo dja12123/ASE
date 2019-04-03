@@ -18,14 +18,14 @@ public class AppServiceManager
 	
 	private ClientSessionManager sessionManager;
 	private SensorManager sensorManager;
-	private HashMap<ISession, ServiceInst> serviceMap;
+	private HashMap<ISession, SessionServiceInstance> serviceMap;
 	private Observer<SessionEvent> sessionObserver;
 	
 	public AppServiceManager(ClientSessionManager sessionManager, SensorManager sensorManager)
 	{
 		this.sessionManager = sessionManager;
 		this.sensorManager = sensorManager;
-		this.serviceMap = new HashMap<ISession, ServiceInst>();
+		this.serviceMap = new HashMap<ISession, SessionServiceInstance>();
 		this.sessionObserver = this::sessionObserver;
 	}
 	
@@ -34,7 +34,7 @@ public class AppServiceManager
 		if(event.isActive)
 		{
 			logger.log(Level.INFO, "앱 서비스 인스턴스 생성");
-			ServiceInst inst = new ServiceInst(event.session, this.sensorManager);
+			SessionServiceInstance inst = new SessionServiceInstance(event.session, this.sensorManager);
 			this.serviceMap.put(event.session, inst);
 		}
 		else
@@ -58,7 +58,7 @@ public class AppServiceManager
 	public void stopModule()
 	{
 		this.sessionManager.removeObserver(this.sessionObserver);
-		for(ServiceInst inst : this.serviceMap.values())
+		for(SessionServiceInstance inst : this.serviceMap.values())
 		{
 			inst.destroy();
 		}

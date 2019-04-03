@@ -23,12 +23,14 @@ public class WebChannel extends WebSocket implements IChannel
 	public static final Logger logger = WebSocketHandler.logger;
 	private Observable<WebChannelEvent> openCloseWSProvider;
 	private Observable<ChannelDataEvent> dataReceiveProvider;
+	private Observable<IChannel> channelCloseEventProvider;
 	private String key;
 	
 	public WebChannel(IHTTPSession session, Observable<WebChannelEvent> channelObservable)
 	{
 		super(session);
 		this.dataReceiveProvider = new Observable<>();
+		this.channelCloseEventProvider = new Observable<>();
 		this.openCloseWSProvider = channelObservable;
 		this.key = null;
 	}
@@ -65,6 +67,7 @@ public class WebChannel extends WebSocket implements IChannel
 			this.dataReceiveProvider.clearObservers();
 			WebChannelEvent channelEvent = new WebChannelEvent(this, false);
 			this.openCloseWSProvider.notifyObservers(channelEvent);
+			this.channelCloseEventProvider.notifyObservers(this);
 		}
 	}
 	
@@ -125,6 +128,7 @@ public class WebChannel extends WebSocket implements IChannel
 		{
 			logger.log(Level.SEVERE, "웹 소켓 종료중 오류", e);
 		}
+		this.channelCloseEventProvider.notifyObservers(this);
 	}
 
 	@Override
@@ -139,5 +143,17 @@ public class WebChannel extends WebSocket implements IChannel
 			logger.log(Level.SEVERE, "웹 소켓 기록중 오류", e);
 		}
 		
+	}
+
+	@Override
+	public void addChannelCloseObserver(Observer<IChannel> observer)
+	{
+		this.channelCloseEventProvider.addObserver(observer);
+	}
+
+	@Override
+	public void removeChannelCloseObserver(Observer<IChannel> observer)
+	{
+		this.channelCloseEventProvider.removeObserver(observer);
 	}
 }

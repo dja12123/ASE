@@ -13,7 +13,7 @@ import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class AllSensorDataSender
+public class A1llSensorDataSender
 {
 	private IChannel channel;
 	private SensorManager sensorManager;
@@ -21,7 +21,7 @@ public class AllSensorDataSender
 	private Observer<SensorRegisterEvent> sensorRegisterObserver;
 	private Observer<ChannelDataEvent> channelDataObserver;
 	
-	AllSensorDataSender(IChannel channel, SensorManager sensorManager)
+	A1llSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
 		this.channel = channel;
 		this.sensorManager = sensorManager;

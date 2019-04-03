@@ -17,23 +17,25 @@ public class WebSession implements ISession
 {
 	public final UUID sessionUID;
 	private final SessionConfigAccess sessionConfigAccess;
-	private final Consumer<WebSession> sessionCloseCallback;
 	private final List<WebChannel> _channelList;
 	public final List<WebChannel> channelList;
 	private Observable<ChannelEvent> channelObservable;
+	private Observable<ISession> sessionCloseProvider;
+	private Consumer<WebSession> closeCallback;
 	
 	private Timer closeTimer;
 	private boolean isActive;
 	
-	public WebSession(UUID sessionUID, SessionConfigAccess config, Consumer<WebSession> sessionCloseCallback)
+	public WebSession(UUID sessionUID, SessionConfigAccess config, Consumer<WebSession> closeCallback)
 	{
 		this.sessionUID = sessionUID;
 		this.sessionConfigAccess = config;
-		this.sessionCloseCallback = sessionCloseCallback;
 		this._channelList = new ArrayList<>();
 		this.channelList = Collections.unmodifiableList(this._channelList);
-		this.channelObservable = new Observable<ChannelEvent>();
+		this.channelObservable = new Observable<>();
+		this.sessionCloseProvider = new Observable<>();
 		this.isActive = true;
+		this.closeCallback = closeCallback;
 	}
 	
 	public synchronized void onCreateChannel(WebChannel ch)
@@ -92,7 +94,8 @@ public class WebSession implements ISession
 			ch.close();
 		}
 		this.isActive = false;
-		this.sessionCloseCallback.accept(this);
+		this.sessionCloseProvider.notifyObservers(this);
+		this.closeCallback.accept(this);
 	}
 
 	@Override
@@ -114,7 +117,17 @@ public class WebSession implements ISession
 		buf.append("Session UID: ");
 		buf.append(this.sessionUID.toString());
 		return buf.toString();
-		
 	}
-	
+
+	@Override
+	public void addSessionCloseObserver(Observer<ISession> observer)
+	{
+		this.sessionCloseProvider.addObserver(observer);
+	}
+
+	@Override
+	public void removeSessionCloseObserver(Observer<ISession> observer)
+	{
+		this.sessionCloseProvider.removeObserver(observer);
+	}
 }

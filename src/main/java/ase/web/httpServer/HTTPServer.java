@@ -113,13 +113,11 @@ public class HTTPServer extends NanoHTTPD
 			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
 			if(s != null)
 			{
-				logger.log(Level.INFO, "존재하는 세션에 대한 요청"+s.toString());
 				return;
 			}
 		}
 		sessionUID = UUID.randomUUID();
 		sessionUIDStr = sessionUID.toString();
-		logger.log(Level.INFO, "쿠키 할당"+sessionUIDStr);
 		setCookie(response, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr);
 	}
 	
