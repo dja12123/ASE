@@ -54,7 +54,7 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected void onOpen() 
 	{
-		logger.log(Level.INFO, "웹소켓 열림");
+		
 	}
 	
 	@Override
@@ -66,11 +66,6 @@ public class WebChannel extends WebSocket implements IChannel
 			WebChannelEvent channelEvent = new WebChannelEvent(this, false);
 			this.openCloseWSProvider.notifyObservers(channelEvent);
 		}
-		
-		String logMsg = "웹소켓 닫힘 [" + (initiatedByRemote ? "Remote" : "Self") + "]"
-						+ (code != null ? code : "UnknownCloseCode[" + code + "]")
-						+ (reason != null && !reason.isEmpty() ? ": " + reason : "");
-		logger.log(Level.INFO, logMsg);
 	}
 	
 	@Override
