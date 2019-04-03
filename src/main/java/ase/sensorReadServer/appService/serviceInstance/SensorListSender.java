@@ -46,7 +46,7 @@ public class SensorListSender extends ServiceInstance
 			data.addProperty("on", sensor.isOnline());
 			dataSensorList.add(data);
 		}
-		
+		System.out.println(json.toString());
 		this.channel.sendData(json.toString().getBytes());
 		this.destroy();
 	}
