@@ -144,6 +144,20 @@ public class WebChannel extends WebSocket implements IChannel
 		}
 		
 	}
+	
+	@Override
+	public void sendData(String data)
+	{
+		try
+		{
+			this.send(data);
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.SEVERE, "웹 소켓 기록중 오류", e);
+		}
+		
+	}
 
 	@Override
 	public void addChannelCloseObserver(Observer<IChannel> observer)

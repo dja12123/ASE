@@ -11,5 +11,6 @@ public interface IChannel
 	public void addChannelCloseObserver(Observer<IChannel> observer);
 	public void removeChannelCloseObserver(Observer<IChannel> observer);
 	public void sendData(byte[] data);
+	public void sendData(String data);
 	public void close();
 }
