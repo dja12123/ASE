@@ -38,7 +38,7 @@ export class CommModule
 		var cookie = document.cookie;
 		if(cookie.length > 0)
 		{
-			startIndex = cookie.indexOf(cookieName);
+			var startIndex = cookie.indexOf(cookieName);
 
 			if(startIndex != -1)
 			{
