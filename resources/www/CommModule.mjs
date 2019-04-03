@@ -43,7 +43,7 @@ export class CommModule
 			if(startIndex != -1)
 			{
 				startIndex += cookieName.length;
-				endIndex = cookie.indexOf(";", startIndex);
+				var endIndex = cookie.indexOf(";", startIndex);
 				if(endIndex == -1) endIndex = cookie.length;
 				return unescape(cookie.substring(startIndex + 1, endIndex));
 			}
