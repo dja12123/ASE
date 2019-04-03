@@ -8,7 +8,7 @@ export class CommModule
 		console.log("loaded4");
 		this.ip = location.host;
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
-		this.controlWS = this.openWebSocket();
+		this.controlChannel = this.createChannel();
 	}
 
 	httpGet(theUrl, callback, params)
@@ -52,7 +52,7 @@ export class CommModule
 		return false;
 	}
 	
-	openWebSocket(onOpen, onMessage, onClose)
+	createChannel(onOpen, onMessage, onClose)
 	{
 		var ws = new WebSocket("ws://" + this.ip + ":8080");
 		ws.onopen = onOpen;
