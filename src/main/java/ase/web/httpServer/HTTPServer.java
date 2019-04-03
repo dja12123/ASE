@@ -58,92 +58,85 @@ public class HTTPServer extends NanoHTTPD
 		Method method = request.getMethod();
 		String uri = request.getUri();
 
-		//responseSocketHandler.openWebSocket(session); //소켓 세션
-		
 		logger.log(Level.INFO, method + " '" + uri + "' ");
 
-		// 웹서비스 할 때 필요한 파일 스트림 모듈로 만들기(fileIO 패키지)
-		// StringBuffer 적극 사용
-		// url이용해서 어떤 요청인지 구분 ->
-		// refer::
-		// https://github.com/Teaonly/android-eye/blob/master/src/teaonly/droideye/TeaServer.java
-		
-		//System.out.println("root >> " + rootDirectory);
-		//
 		String msg = "";
+		Response response;
 
 		if (uri.startsWith("/"))
-		{ // Root Mapping
-			if(method == Method.GET)
-			{
-				switch(uri)
-				{
-				case "/"+CONTROL_GET_UUID_REQUEST:
-					return this.serviceUUID(request);
-				}
-			}
-			
+		{
 			String dir = WEB_RES_DIR+uri;
 			if(!FileHandler.isExistResFile(dir))
 			{
-				return HTTPServer.serveError(Status.NOT_FOUND, "Error 404: File not found");
+				response = HTTPServer.serveError(Status.NOT_FOUND, "Error 404: File not found");
+				this.sessionService(request, response);
+				return response;
 			}
 			
 			int pos = uri.lastIndexOf( "." );
 			
 			if(pos == -1)
 			{
-				return HTTPServer.serveError(Status.BAD_REQUEST, "Error 400: Bad Request");
+				response = HTTPServer.serveError(Status.BAD_REQUEST, "Error 400: Bad Request");
+				this.sessionService(request, response);
+				return response;
 			}
+			
 			String ext = uri.substring( pos + 1 );
-			
-			String sessionUIDStr = getCookie(request, WebSessionManager.COOKIE_KEY_SESSION);
-			UUID sessionUID;
-			if(sessionUIDStr != null)
-			{
-				sessionUID = UUID.fromString(sessionUIDStr);
-				//setCookie(request, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr, this.sessionCookieTimeout);
-				WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
-				if(s!= null)
-				{
-					System.out.println("존재하는 세션에 대한 요청"+s.toString());
-				}
-			}
-			
 			switch(ext)
 			{
 			case "html":
-				return serveStrFile(MIME_TYPE.MIME_HTML, dir);
+				response = serveStrFile(MIME_TYPE.MIME_HTML, dir); break;
 			case "jpg":
-				return HTTPServer.serveImage(MIME_TYPE.MIME_JPEG, dir);
+				response = serveImage(MIME_TYPE.MIME_JPEG, dir); break;
 			case "png":
-				return HTTPServer.serveImage(MIME_TYPE.MIME_PNG, dir);
+				response = serveImage(MIME_TYPE.MIME_PNG, dir); break;
 			case "js": case "mjs":
-				return serveStrFile(MIME_TYPE.MIME_JS,  dir);
+				response = serveStrFile(MIME_TYPE.MIME_JS,  dir); break;
 			case "css":
-				return serveStrFile(MIME_TYPE.MIME_CSS,  dir);
+				response = serveStrFile(MIME_TYPE.MIME_CSS,  dir); break;
 			default:
-				return serveStrFile(MIME_TYPE.MIME_PLAINTEXT,  dir);
-				
+				response = serveStrFile(MIME_TYPE.MIME_PLAINTEXT,  dir); break;
 			}
 		}
-		
-		return Response.newFixedLengthResponse(msg);
+		else
+		{
+			response = Response.newFixedLengthResponse(msg);
+		}
+		this.sessionService(request, response);
+		return response;
 	}
 	
-	private Response serviceUUID(IHTTPSession request)
+	private void sessionService(IHTTPSession request, Response response)
 	{
-		logger.log(Level.INFO, "service UUID");
-		UUID sessionUID = UUID.randomUUID();
-		Response response = Response.newFixedLengthResponse(sessionUID.toString());
-		setCookie(response, WebSessionManager.COOKIE_KEY_SESSION, sessionUID.toString(), this.sessionCookieTimeout);
-		return response;
+		String sessionUIDStr = getCookie(request, WebSessionManager.COOKIE_KEY_SESSION);
+		UUID sessionUID;
+		if(sessionUIDStr != null)
+		{
+			sessionUID = UUID.fromString(sessionUIDStr);
+			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
+			if(s != null)
+			{
+				logger.log(Level.INFO, "존재하는 세션에 대한 요청"+s.toString());
+				return;
+			}
+		}
+		sessionUID = UUID.randomUUID();
+		sessionUIDStr = sessionUID.toString();
+		logger.log(Level.INFO, "쿠키 할당"+sessionUIDStr);
+		setCookie(response, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr);
 	}
 	
 	public static String getCookie(IHTTPSession request, String key)
 	{
 		String value = request.getCookies().read(key);
 		return value;
+	}
+
+	public static Response setCookie(Response response, String key, String value)
+	{
+		response.addCookieHeader(String.format("%s=%s", key, value));
+		return response;
 	}
 	
 	public static Response setCookie(Response response, String key, String value, int timeSec)
