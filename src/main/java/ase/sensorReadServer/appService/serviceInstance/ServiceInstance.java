@@ -1,5 +1,7 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
+import java.text.SimpleDateFormat;
+
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.util.observer.Observable;
@@ -7,6 +9,8 @@ import ase.util.observer.Observer;
 
 public abstract class ServiceInstance
 {
+	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
+	
 	public final String key;
 	protected final IChannel channel;
 	private Observer<ChannelDataEvent> onDataRecieve;

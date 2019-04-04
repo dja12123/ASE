@@ -1,7 +1,6 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
@@ -15,7 +14,6 @@ public class RealtimeSensorDataSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeSensorDataRequest";
 	private final SensorManager sensorManager;
-	private JsonParser parser;
 	private Sensor sensor;
 	private Observer<DataReceiveEvent> sensorDataObserver;
 	
@@ -23,7 +21,6 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
-		this.parser = new JsonParser();
 		this.sensor = null;
 		this.sensorDataObserver = this::sensorDataObserver;
 	}
@@ -47,17 +44,20 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
+		JsonObject json = new JsonObject();
 		try
 		{
 			Integer.valueOf(data);
 		}
 		catch (NumberFormatException e)
 		{
+			json.addProperty("result", false);
+			this.channel.sendData(json.toString());
+			this.destroy();
 			return;
 		}
 		int id = Integer.parseInt(data);
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
-		JsonObject json = new JsonObject();
 		if(sensor != null)
 		{
 			if(this.sensor != null)
@@ -72,12 +72,14 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		else
 		{
 			json.addProperty("result", false);
+			this.destroy();
 		}
 	}
 
 	private void sensorDataObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent event)
 	{
 		JsonObject json = new JsonObject();
+		json.addProperty("time", DATE_FORMAT.format(event.data.time));
 		json.addProperty("xg", event.data.X_GRADIANT);
 		json.addProperty("yg", event.data.Y_GRADIANT);
 		json.addProperty("xa", event.data.X_ACCEL);
