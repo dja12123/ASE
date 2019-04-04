@@ -1,35 +1,6 @@
 //통신모듈
-import * as COMM from './CommModule.js';
+import * as COMM from '../CommModule.js';
 
-function addItem(key, on)   //table -> div 수정
-{ 
-    
-    var state = on? "checked": "";
-    var eItem = document.createElement("table");
-    eItem.id = key;
-    eItem.className = 'item';
-    eItem.innerHTML = [
-        '<tbody><tr><td class="title">',
-        key,
-        '</td>',
-        '<td></td>',
-        '<td>',
-        '<label class="switch">',
-        '<input id="',
-        key+"stat",
-        '" type="checkbox"',
-        state,
-        '>',
-        '<div class="slider round"></div>',
-        '</label>',
-        '</td>',
-        '<td>',
-        '<button class="item-btn" onclick="location.href=`manage_sensor_info.html`">VIEW</button>',
-        '</td>',
-        '</tr></tbody>',
-    ].join("");
-    document.getElementById('items').append(eItem);
-}
 
 
 var commModule = new COMM.CommModule(function()
@@ -52,6 +23,29 @@ var commModule = new COMM.CommModule(function()
         console.log(data.xa);
         console.log(data.za);
         console.log(data.al);
+    });
+
+    // 서버로부터 데이터를 받은 모듈
+var commModule = new COMM.CommModule(function()
+{
+    console.log("commModule load");
+    console.log(commModule.sessionUUID);
+
+    var sensorListCh = commModule.createChannel("SensorListRequest",null, (e)=>
+    {
+        console.log("data:"+e.data);
+        var data = JSON.parse(e.data);
+        console.log(data);
+        console.log("count:" + data.count)
+        console.log("id:" + data.data[0].id)
+       for(var i in data.data)// 센서 수 만큼 반복문
+        {
+            addItem(data.data[i].id, data.data[i].on);
+           
+        }
+        sensorListCh.close();
+
+        
     });
      
 
