@@ -1,8 +1,9 @@
+//key값이 int일 경우, 타입과 포멧 변경
 //key가 4자리 이하일때 앞에 0을 추가
-function keyForm(num) {
-    num = num + '';
-    return num.length >= 4 ? num : new Array(5 - num.length).join('0') + num;
-}
+// function keyForm(num) {
+//     num = num + '';
+//     return num.length >= 4 ? num : new Array(5 - num.length).join('0') + num;
+// }
 
 var total = 0;
 
@@ -14,8 +15,10 @@ function setTotal() {
     document.getElementById("total").innerHTML = msg;
 }
 
+//=============================================================
+
 // "센서" 추가
-// * addItem(int, boolean) 센서 키, 작동상태(on/off)
+// * addItem(string, boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) { //table -> div 수정
     total++;
     setTotal();
@@ -25,7 +28,7 @@ function addItem(key, on) { //table -> div 수정
     eItem.className = 'item';
     eItem.innerHTML = [
         '<tbody><tr><td class="title">',
-        keyForm(key),
+        key,
         '</td>',
         '<td></td>',
         '<td>',
@@ -47,7 +50,7 @@ function addItem(key, on) { //table -> div 수정
 }
 
 //  "센서" 지우기
-// ＊delItem(int) 센서 키
+// ＊delItem(string) 센서 키
 function delItem(key) {
     total--;
     setTotal();
@@ -55,7 +58,7 @@ function delItem(key) {
 }
 
 //  "작동상태" 변경(on/off)
-// ＊state(int, boolean) 센서 키, 작동상태(on/off)
+// ＊state(string, boolean) 센서 키, 작동상태(on/off)
 function state(key, on) {
     var sensor = document.getElementById(key+"stat");
     if(sensor.checked != on) sensor.checked = on;

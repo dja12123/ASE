@@ -6,19 +6,28 @@ function dateForm(date, text) {
 }
 
 // "로그" 삭제
-//로그가 있으면 삭제
+// 로그가 있으면 삭제
 function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
 }
 
-// 페이지 시작시 표시할 "센서 키", "작동상태"
-// ＊setState(int, boolean) 센서 키, 작동상태(on/off)
-function setState(key, on) {
-    if (typeof key == "undefined") { key = "####"; console.log("key: undefined"); }  //삭제
-    if (typeof on == "undefined") { on = false; console.log("on: undefined"); } //삭제
+//===============================================================
+
+// 페이지 시작시 표시할 "센서 키"
+// * dateSetKey(string) 센서 키
+function dateSetKey(key) {
+    //입력된 키  
+    //if (typeof key == "undefined") { key = "####"; console.log("key: undefined"); }
     document.title = "sensor " + key;
-    document.getElementById("state").innerHTML = keyForm(key) + " " + ((on) ? "작동중" : "중지");
+    document.getElementById("state_name").innerHTML = key;
+}
+
+// 페이지 시작시 표시할 "작동상태"
+// ＊setState(boolean) 작동상태(on/off)
+function setState(on) {
+    //if (typeof on == "undefined") { on = false; console.log("on: undefined"); }
+    document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
 }
 
 // "센서 데이터 값" 설정

@@ -39,6 +39,10 @@ header>div {
     color: rgba(70, 131, 180, 0.78);
 }
 
+.text2_name {
+    margin-right: 5px; 
+}
+
 @media (min-width: 501px) {
     header>div {
         margin: 0 auto;
