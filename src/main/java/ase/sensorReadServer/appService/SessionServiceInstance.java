@@ -10,6 +10,7 @@ import ase.clientSession.ChannelEvent;
 import ase.clientSession.IChannel;
 import ase.clientSession.ISession;
 import ase.console.LogWriter;
+import ase.sensorReadServer.appService.serviceInstance.RealtimeSensorDataSender;
 import ase.sensorReadServer.appService.serviceInstance.SensorListSender;
 import ase.sensorReadServer.appService.serviceInstance.ServiceInstance;
 import ase.sensorReadServer.sensorManager.SensorManager;
@@ -57,6 +58,9 @@ public class SessionServiceInstance
 			{
 			case SensorListSender.KEY:
 				serviceInst = new SensorListSender(event.channel, this.sensorManager);
+				break;
+			case RealtimeSensorDataSender.KEY:
+				serviceInst = new RealtimeSensorDataSender(event.channel, this.sensorManager);
 				break;
 			}
 			if(serviceInst != null)
