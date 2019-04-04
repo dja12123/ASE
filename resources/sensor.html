@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>sensor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="image/logo_telco.png">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="js/item.js"></script>
+    <script src="js/sensor.js"></script>
+    
+    <!-- 테스트 코드 -->
+    <script src="js/developer.js"></script>
+    <script src="js/developer_sensor.js"></script>
+</head>
+
+<body>
+    <section class="sensor">
+        <header>
+            <div>
+                <i class="fas fa-caret-square-left fa-2x back_btn" onclick="location.href='index.html'"></i>
+                <div class="right_empty"></div>
+                <span id="state" class="text2"></span>
+            </div>
+        </header>
+        <div></div>
+        <div class="state">
+            <div>
+                <div class="graph_item">기울기</div>
+                <label class="pos"> <span class="pos2">X</span> <span id="slopX"></span> <span class="unit">deg</span></label>
+                <label class="pos"> <span class="pos2">Y</span> <span id="slopY" ></span> <span class="unit">deg</span></label>
+            </div>
+            <div>
+                <div class="graph_item">가속도</div>
+                <label class="pos"> <span class="pos2">X</span> <span id="accX"></span> <span class="unit">deg</span></label>
+                <label class="pos"> <span class="pos2">Y</span> <span id="accY"></span> <span class="unit">mG</span></label>
+                <label class="pos"> <span class="pos2">Z</span> <span id="accZ"></span> <span class="unit">mG</span></label>
+            </div>
+            <div>
+                <div class="graph_item">고도</div>
+                <label class="pos"> <span class="pos2">A</span> <span id="alti"></span> <span class="unit">M</span></label>
+            
+                <div class="graph_item">온도</div>
+                <label class="pos"> <span class="pos2">T</span> <span id="temp"></span> <span class="unitT">˚</span></label>
+            </div>
+        </div>
+        <hr/>
+        <div>
+            <div>데이터 수집 시간</div>
+            <div id="uptime"></div>
+        </div>
+        <hr/>
+    </section>
+    <article>
+        <div>센서 로그</div>
+        <div id="log" class="logs"></div>
+    </article>
+</body>
+
+</html>

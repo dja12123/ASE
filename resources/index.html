@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MEERKEEP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="image/logo_telco.png">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <script src="js/item.js"></script>
+
+    <!-- 테스트 코드 -->
+    <script src="js/developer.js"></script>
+</head>
+<body>
+    <!-- 테스트 코드 -->
+    <developer> 
+        <div style="position: fixed; margin: 10px; padding: 10px; background: rgba(128, 128, 128, 0.5)">
+            <input id="state_check" type="checkbox" style="transform: scale(1.5);">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {clientLoad(this)}" maxlength="4" placeholder="Create(key)" style="width: 90px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {delData(this)}" maxlength="4" placeholder="Delete(key)" style="width: 90px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {onState(this)}" maxlength="4" placeholder="On(key)" style="width: 70px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {offState(this)}" maxlength="4" placeholder="Off(key)" style="width: 70px;">
+        </div>
+    </developer>
+    <header>
+        <div>
+            <img class="logo" src="image/logo_meerkeep.png" alt="">
+            <div id="total" class="text1"></div>
+        </div>
+    </header>
+    <section id="items" class="items">
+    </section>
+</body>
+</html>
