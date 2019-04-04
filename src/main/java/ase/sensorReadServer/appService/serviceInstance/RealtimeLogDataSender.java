@@ -73,6 +73,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 			json.addProperty("result", false);
 			this.destroy();
 		}
+		this.channel.sendData(json.toString());
 	}
 	
 	private void sensorDataObserver(Observable<SensorLog> provider, SensorLog event)

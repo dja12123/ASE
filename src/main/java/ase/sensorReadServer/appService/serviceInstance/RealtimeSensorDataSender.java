@@ -73,6 +73,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 			json.addProperty("result", false);
 			this.destroy();
 		}
+		this.channel.sendData(json.toString());
 	}
 
 	private void sensorDataObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent event)
