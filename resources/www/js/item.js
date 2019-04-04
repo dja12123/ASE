@@ -49,7 +49,7 @@ function addItem(key, on) { //table -> div 수정
     document.getElementById('items').append(eItem);
 }
 
-//  "센서" 지우기
+// "센서" 지우기
 // ＊delItem(string) 센서 키
 function delItem(key) {
     total--;

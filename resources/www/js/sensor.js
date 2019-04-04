@@ -5,8 +5,8 @@ function dateForm(date, text) {
     return text;
 }
 
-// "로그" 삭제
-// 로그가 있으면 삭제
+//"로그" 삭제
+//로그가 있으면 삭제
 function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
@@ -14,19 +14,18 @@ function delLog() {
 
 //===============================================================
 
-// 페이지 시작시 표시할 "센서 키"
-// * dateSetKey(string) 센서 키
-function dateSetKey(key) {
-    //입력된 키  
-    //if (typeof key == "undefined") { key = "####"; console.log("key: undefined"); }
+// 페이지 시작시 표시할 "센서 키", "작동상태"
+// * dateSetKey(string, boolean) 센서 키, 작동상태(on/off)
+function dateSetKey(key, on) {
+    //입력된 키 
     document.title = "sensor " + key;
     document.getElementById("state_name").innerHTML = key;
+    document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
 }
 
-// 페이지 시작시 표시할 "작동상태"
+// 센서의 상태 변경 "작동상태"
 // ＊setState(boolean) 작동상태(on/off)
 function setState(on) {
-    //if (typeof on == "undefined") { on = false; console.log("on: undefined"); }
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
 }
 
