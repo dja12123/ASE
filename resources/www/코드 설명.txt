@@ -1,0 +1,12 @@
+
+index - 목록
+ 센서 추가: item. addItem(key, on)
+ 센서 삭제: item. delItem(key)
+ 센서 상태 변경: item. state(key, on)
+
+sensor - 센서의 데이터
+ 센서 키 표시: sensor. dataSetKey(key)
+ 센서 상태 변경: sensor. setState(on)
+ 센서 테이터 표시 및 변경: sensor. setElem(pos)
+ 날짜 표시: sensor. setDate(date)
+ 로그 추가: sensor. addLog(date, msg)
