@@ -1,8 +1,5 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -36,11 +33,9 @@ public class SensorListSender extends ServiceInstance
 		JsonObject json = new JsonObject();
 		JsonArray dataSensorList = new JsonArray();
 
-		List<Sensor> sensorList = new ArrayList<>(this.sensorManager.sensorMap.size());
-		sensorList.addAll(this.sensorManager.sensorMap.values());
-		json.addProperty("count", sensorList.size());
+		json.addProperty("count", this.sensorManager.sensorMap.size());
 		json.add("data", dataSensorList);
-		for (Sensor sensor : sensorList)
+		for (Sensor sensor : this.sensorManager.sensorMap.values())
 		{
 			JsonObject data = new JsonObject();
 			data.addProperty("id", sensor.id);
