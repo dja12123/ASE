@@ -1,13 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>MEERKEEP</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="image/logo_telco.png">
-    <link type="text/css" rel="stylesheet" href="css/style.css">
-    <script src="js/item.js"></script>
+    <head>
+        
+        <script type="module">
+//통신모듈
+import * as COMM from './CommModule.mjs';
+var commModule = new COMM.CommModule(function()
+{
+    console.log("commModule load");
+    console.log(commModule.sessionUUID);
+
+    var sensorListCh = commModule.createChannel("SensorListRequest",null, (e)=>
+    {
+        console.log("data:"+e.data);
+        var data = JSON.parse(e.data);
+        console.log(data);
+        ch.close();
+    });
+
+    var sensorOnOffCh = commModule.createChannel("RealtimeAllSensorOnOffRequest",null, (e)=>
+    {
+        console.log(e.data);
+    });
+});
+window.onload = function()
+{
+    
+    
+}
+
+        </script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MEERKEEP</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="image/logo_telco.png">
+        <link type="text/css" rel="stylesheet" href="css/style.css">
+        <script>
+    
+
+function addItem(key, on)   //table -> div 수정
+{ 
+    total++;
+    setTotal();
+    var state = on? "checked": "";
+    var eItem = document.createElement("table");
+    eItem.id = key;
+    eItem.className = 'item';
+    eItem.innerHTML = [
+        '<tbody><tr><td class="title">',
+        keyForm(key),
+        '</td>',
+        '<td></td>',
+        '<td>',
+        '<label class="switch">',
+        '<input id="',
+        key+"stat",
+        '" type="checkbox"',
+        state,
+        '>',
+        '<div class="slider round"></div>',
+        '</label>',
+        '</td>',
+        '<td>',
+        '<button class="item-btn" onclick="location.href=`sensor.html`">VIEW</button>',
+        '</td>',
+        '</tr></tbody>',
+    ].join("");
+    document.getElementById('items').append(eItem);
+}
+
+    </script>
+
 </head>
 <body>
     <header>
