@@ -71,7 +71,6 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected synchronized void onMessage(WebSocketFrame frame) 
 	{
-		System.out.println("recv"+frame.getTextPayload() + " " + new String(frame.getBinaryPayload()));
 		if(this.key == null)
 		{
 			String key = frame.getTextPayload();
