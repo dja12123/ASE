@@ -1,23 +1,21 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
-import com.google.gson.JsonObject;
-
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorManager.sensor.Sensor;
-import ase.sensorReadServer.sensorManager.sensor.SensorLog;
+import ase.sensorReadServer.sensorManager.sensor.SensorOnlineEvent;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class RealtimeLogDataSender extends ServiceInstance
+public class RealtimeSensorOnOffSender extends ServiceInstance
 {
-	public static final String KEY = "RealtimeLogDataRequest";
+	public static final String KEY = "RealtimeSensorOnOffRequest";
 	private final SensorManager sensorManager;
 	private Sensor sensor;
-	private Observer<SensorLog> sensorDataObserver;
+	private Observer<SensorOnlineEvent> sensorDataObserver;
 	
-	public RealtimeLogDataSender(IChannel channel, SensorManager sensorManager)
+	public RealtimeSensorOnOffSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
@@ -36,7 +34,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 	{
 		if(this.sensor != null)
 		{
-			this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
+			this.sensor.sensorOnlineObservable.removeObserver(this.sensorDataObserver);
 		}
 	}
 
@@ -44,15 +42,13 @@ public class RealtimeLogDataSender extends ServiceInstance
 	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
-		JsonObject json = new JsonObject();
 		try
 		{
 			Integer.valueOf(data);
 		}
 		catch (NumberFormatException e)
 		{
-			json.addProperty("result", false);
-			this.channel.sendData(json.toString());
+			this.channel.sendData("result/"+false);
 			this.destroy();
 			return;
 		}
@@ -62,28 +58,22 @@ public class RealtimeLogDataSender extends ServiceInstance
 		{
 			if(this.sensor != null)
 			{
-				this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
+				this.sensor.sensorOnlineObservable.removeObserver(this.sensorDataObserver);
 			}
 			this.sensor = sensor;
-			this.sensor.sensorLogObservable.addObserver(this.sensorDataObserver);
-			json.addProperty("result", true);
+			this.sensor.sensorOnlineObservable.addObserver(this.sensorDataObserver);
+			this.channel.sendData("result/"+true);
 		}
 		else
 		{
-			json.addProperty("result", false);
+			this.channel.sendData("result/"+false);
 			this.destroy();
 		}
-		this.channel.sendData(json.toString());
 	}
 	
-	private void sensorDataObserver(Observable<SensorLog> provider, SensorLog event)
+	private void sensorDataObserver(Observable<SensorOnlineEvent> provider, SensorOnlineEvent event)
 	{
-		JsonObject json = new JsonObject();
-		json.addProperty("result", true);
-		json.addProperty("time", DATE_FORMAT.format(event.time));
-		json.addProperty("level", event.level.toString());
-		json.addProperty("message", event.message);
-		this.channel.sendData(json.toString());
+		this.channel.sendData("state/"+event.isOnline);
 	}
 
 }

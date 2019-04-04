@@ -67,18 +67,19 @@ public class RealtimeSensorDataSender extends ServiceInstance
 			this.sensor = sensor;
 			this.sensor.dataReceiveObservable.addObserver(this.sensorDataObserver);
 			json.addProperty("result", true);
-			json.addProperty("isOnline", this.sensor.isOnline());
 		}
 		else
 		{
 			json.addProperty("result", false);
 			this.destroy();
 		}
+		this.channel.sendData(json.toString());
 	}
 
 	private void sensorDataObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent event)
 	{
 		JsonObject json = new JsonObject();
+		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.data.time));
 		json.addProperty("xg", event.data.X_GRADIANT);
 		json.addProperty("yg", event.data.Y_GRADIANT);

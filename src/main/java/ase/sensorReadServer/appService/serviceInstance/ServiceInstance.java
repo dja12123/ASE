@@ -1,6 +1,7 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
 import java.text.SimpleDateFormat;
+import java.util.function.Consumer;
 
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
@@ -12,8 +13,9 @@ public abstract class ServiceInstance
 	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
 	
 	public final String key;
-	protected final IChannel channel;
+	public final IChannel channel;
 	private Observer<ChannelDataEvent> onDataRecieve;
+	private Consumer<ServiceInstance> destroyCallback;
 	
 	public ServiceInstance(String key, IChannel channel)
 	{
@@ -22,8 +24,9 @@ public abstract class ServiceInstance
 		this.onDataRecieve = this::onDataRecive;
 	}
 	
-	public final void startService()
+	public final void startService(Consumer<ServiceInstance> destroyCallback)
 	{
+		this.destroyCallback = destroyCallback;
 		this.channel.addDataReceiveObserver(this.onDataRecieve);
 		this.onStartService();
 	}
@@ -34,6 +37,7 @@ public abstract class ServiceInstance
 	{
 		this.channel.removeDataReceiveObserver(this.onDataRecieve);
 		this.onDestroy();
+		if(this.destroyCallback != null) this.destroyCallback.accept(this);
 	}
 	
 	protected abstract void onDestroy();
