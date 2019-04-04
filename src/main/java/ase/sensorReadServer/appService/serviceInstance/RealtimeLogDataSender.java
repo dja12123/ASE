@@ -1,16 +1,14 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
-import java.util.function.Consumer;
-
 import ase.clientSession.IChannel;
 
 public class RealtimeLogDataSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeLogDataRequest";
 	
-	public RealtimeLogDataSender(Consumer<ServiceInstance> destoryCallback, IChannel channel)
+	public RealtimeLogDataSender(IChannel channel)
 	{
-		super(KEY, destoryCallback, channel);
+		super(KEY, channel);
 		// TODO Auto-generated constructor stub
 	}
 

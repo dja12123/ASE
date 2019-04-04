@@ -1,7 +1,5 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
-import java.util.function.Consumer;
-
 import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
 
@@ -11,9 +9,9 @@ public class AllSensorDataSender extends ServiceInstance
 	
 	private final SensorManager sensorManager;
 	
-	public AllSensorDataSender(Consumer<ServiceInstance> destoryCallback, IChannel channel, SensorManager sensorManager)
+	public AllSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
-		super(KEY, destoryCallback, channel);
+		super(KEY, channel);
 		this.sensorManager = sensorManager;
 	}
 	

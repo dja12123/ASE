@@ -2,7 +2,6 @@ package ase.sensorReadServer.appService.serviceInstance;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,9 +16,9 @@ public class SensorListSender extends ServiceInstance
 
 	private final SensorManager sensorManager;
 
-	public SensorListSender(Consumer<ServiceInstance> destoryCallback, IChannel channel, SensorManager sensorManager)
+	public SensorListSender(IChannel channel, SensorManager sensorManager)
 	{
-		super(KEY, destoryCallback, channel);
+		super(KEY, channel);
 		this.sensorManager = sensorManager;
 	}
 

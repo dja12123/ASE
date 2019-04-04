@@ -1,12 +1,13 @@
 package ase.sensorReadServer.appService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ase.clientSession.ChannelEvent;
+import ase.clientSession.IChannel;
 import ase.clientSession.ISession;
 import ase.console.LogWriter;
 import ase.sensorReadServer.appService.serviceInstance.SensorListSender;
@@ -23,46 +24,57 @@ public class SessionServiceInstance
 	private SensorManager sensorManager;
 	
 	private Observer<ChannelEvent> channelObserver;
-	private Consumer<ServiceInstance> serviceInstCloseCallback;
 	
-	private List<ServiceInstance> serviceInstList;
+	private Map<IChannel, ServiceInstance> serviceInstMap;
 	
 	public SessionServiceInstance(ISession session, SensorManager sensorManager)
 	{
 		this.session = session;
 		this.sensorManager = sensorManager;
 		this.channelObserver = this::channelObserver;
-		this.serviceInstCloseCallback = this::closeServiceInstanceCallback;
-		this.serviceInstList = new ArrayList<>();
+		this.serviceInstMap = new HashMap<>();
 		this.session.addChannelObserver(this.channelObserver);
 	}
 	
 	public void destroy()
 	{
 		this.session.removeChannelObserver(this.channelObserver);
+		HashSet<ServiceInstance> set = new HashSet<>();
+		set.addAll(this.serviceInstMap.values());
+		for(ServiceInstance inst : this.serviceInstMap.values())
+		{
+			inst.destroy();
+		}
+		this.serviceInstMap.clear();
 	}
 
 	private void channelObserver(Observable<ChannelEvent> provider, ChannelEvent event)
 	{
-		if(!event.isOpen) return;
-		ServiceInstance serviceInst = null;
-		switch(event.channel.getKey())
+		if(event.isOpen)
 		{
-		case SensorListSender.KEY:
-			serviceInst = new SensorListSender(this.serviceInstCloseCallback, event.channel, this.sensorManager);
-			break;
+			ServiceInstance serviceInst = null;
+			switch(event.channel.getKey())
+			{
+			case SensorListSender.KEY:
+				serviceInst = new SensorListSender(event.channel, this.sensorManager);
+				break;
+			}
+			if(serviceInst != null)
+			{
+				logger.log(Level.INFO, "서비스 요청 key:"+serviceInst.key);
+				this.serviceInstMap.put(event.channel, serviceInst);
+				serviceInst.startService();
+			}
 		}
-		if(serviceInst != null)
+		else
 		{
-			logger.log(Level.INFO, "서비스 요청 key:"+serviceInst.key);
-			this.serviceInstList.add(serviceInst);
-			serviceInst.startService();
+			ServiceInstance serviceInst = this.serviceInstMap.getOrDefault(event.channel, null);
+			if(serviceInst != null)
+			{
+				serviceInst.destroy();
+				this.serviceInstMap.remove(event.channel);
+			}
 		}
-	}
-	
-	private void closeServiceInstanceCallback(ServiceInstance serviceInstance)
-	{
-		logger.log(Level.INFO, "서비스 중지 key:"+serviceInstance.key);
-		this.serviceInstList.remove(serviceInstance);
+
 	}
 }

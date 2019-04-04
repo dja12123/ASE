@@ -1,16 +1,14 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
-import java.util.function.Consumer;
-
 import ase.clientSession.IChannel;
 
 public class RealtimeSensorAddRemoveSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeSensorAddRemoveRequest";
 	
-	public RealtimeSensorAddRemoveSender(Consumer<ServiceInstance> destoryCallback, IChannel channel)
+	public RealtimeSensorAddRemoveSender(IChannel channel)
 	{
-		super(KEY, destoryCallback, channel);
+		super(KEY, channel);
 		// TODO Auto-generated constructor stub
 	}
 

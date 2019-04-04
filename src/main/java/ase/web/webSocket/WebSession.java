@@ -20,7 +20,6 @@ public class WebSession implements ISession
 	private final List<WebChannel> _channelList;
 	public final List<WebChannel> channelList;
 	private Observable<ChannelEvent> channelObservable;
-	private Observable<ISession> sessionCloseProvider;
 	private Consumer<WebSession> closeCallback;
 	
 	private Timer closeTimer;
@@ -33,7 +32,6 @@ public class WebSession implements ISession
 		this._channelList = new ArrayList<>();
 		this.channelList = Collections.unmodifiableList(this._channelList);
 		this.channelObservable = new Observable<>();
-		this.sessionCloseProvider = new Observable<>();
 		this.isActive = true;
 		this.closeCallback = closeCallback;
 	}
@@ -94,7 +92,6 @@ public class WebSession implements ISession
 			ch.close();
 		}
 		this.isActive = false;
-		this.sessionCloseProvider.notifyObservers(this);
 		this.closeCallback.accept(this);
 	}
 
@@ -117,17 +114,5 @@ public class WebSession implements ISession
 		buf.append("Session UID: ");
 		buf.append(this.sessionUID.toString());
 		return buf.toString();
-	}
-
-	@Override
-	public void addSessionCloseObserver(Observer<ISession> observer)
-	{
-		this.sessionCloseProvider.addObserver(observer);
-	}
-
-	@Override
-	public void removeSessionCloseObserver(Observer<ISession> observer)
-	{
-		this.sessionCloseProvider.removeObserver(observer);
 	}
 }
