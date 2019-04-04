@@ -29,13 +29,15 @@ function addItem(key, on)   //table -> div 수정
         '</label>',
         '</td>',
         '<td>',
-        '<button class="item-btn" onclick="location.href=`manage_sensor_info.html`">VIEW</button>',
+        // '<button class="item-btn" onclick="location.href=`sensor_info.html?`" action= "sensor_info.html" method = "get" id =',key, 'type="submit">VIEW</button>',
+        '<button class="item-btn" onclick="location.href=`sensor_info.html?key=`"' + key + '>VIEW</button>',
         '</td>',
         '</tr></tbody>',
     ].join("");
     document.getElementById('items').append(eItem);
 }
 
+// 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
 {
     console.log("commModule load");
