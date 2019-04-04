@@ -6,7 +6,7 @@ export class CommModule
 	constructor(startCallback)
 	{
 		console.log("loaded4");
-		this.ip = location.host;
+		this.ip = "172.16.1.4";
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
 		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback);
 	}
@@ -66,3 +66,5 @@ export class CommModule
 	}
 	
 }
+
+//gg
