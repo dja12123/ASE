@@ -29,6 +29,7 @@ window.WebSocketTest = function WebSocketTest()
 	var ch1 = commModule.createChannel("RealtimeSensorDataRequest",null, (e)=>
 	{
 		console.log("data:"+e.data);
+		ch1.send("1001");
 		var data = JSON.parse(e.data);
 		console.log(data);
 	});
