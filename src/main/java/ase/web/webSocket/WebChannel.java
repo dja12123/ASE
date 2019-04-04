@@ -79,7 +79,7 @@ public class WebChannel extends WebSocket implements IChannel
 			this.openCloseWSProvider.notifyObservers(channelEvent);
 			return;
 		}
-		
+		System.out.println(frame.toString());
 		ChannelDataEvent channelDataEvent = new ChannelDataEvent(this, frame.getBinaryPayload());
 		this.dataReceiveProvider.notifyObservers(channelDataEvent);
 	}
