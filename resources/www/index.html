@@ -7,90 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="image/logo_telco.png">
     <link type="text/css" rel="stylesheet" href="css/style.css">
-    <!-- <link type="text/css" rel="stylesheet" href="css/head.css">
-    <link type="text/css" rel="stylesheet" href="css/item.css">
-    <link type="text/css" rel="stylesheet" href="css/graph.css">
-    <link type="text/css" rel="stylesheet" href="css/toggle.css"> -->
-    <script type="text/javascript" src="js/test.js"></script>
+    <script src="js/item.js"></script>
+
+    <!-- 테스트 코드 -->
+    <script src="js/developer.js"></script>
 </head>
 <body>
-    <develope_test>
-        <button onclick="addItem()" style="margin: 10px; position: fixed">개발자버튼</button>
-    </develope_test>
-    <head>
-        <div class="head">
-            <img class="logo" src="image/logo_meerkeep.png">
-            <div class="text1">5개의 센서 확인</div>
+    <!-- 테스트 코드 -->
+    <developer> 
+        <div style="position: fixed; margin: 10px; padding: 10px; background: rgba(128, 128, 128, 0.5)">
+            <input id="state_check" type="checkbox" style="transform: scale(1.5);">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {clientLoad(this)}" maxlength="4" placeholder="Create(key)" style="width: 90px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {delData(this)}" maxlength="4" placeholder="Delete(key)" style="width: 90px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {onState(this)}" maxlength="4" placeholder="On(key)" style="width: 70px;">
+            <input type="number" oninput="maxLengthCheck(this)" onkeydown="if(event.keyCode==13) {offState(this)}" maxlength="4" placeholder="Off(key)" style="width: 70px;">
         </div>
-    </head>
-    <section id = "items">
-        <!-- 테스트 코드  -->
-        <table class="item">
-            <td class="title">9008</td>
-            <td></td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-            <td>
-                <button class="item-btn" onclick="location.href='sensor.html'">VIEW</button>
-            </td>
-        </table>
-        <table class="item">
-            <td class="title">9009</td>
-            <td></td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-            <td>
-                <button class="item-btn" onclick="location.href='sensor.html'">VIEW</button>
-            </td>
-        </table>
-        <table class="item">
-            <td class="title">9000</td>
-            <td></td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-            <td>
-                <button class="item-btn" onclick="location.href='sensor.html'">VIEW</button>
-            </td>
-        </table>
-        <table class="item">
-            <td class="title">1001</td>
-            <td></td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-            <td>
-                <button class="item-btn" onclick="location.href='sensor.html'">VIEW</button>
-            </td>
-        </table>
-        <table class="item">
-            <td class="title">9001</td>
-            <td></td>
-            <td>
-                <label class="switch">
-                    <input type="checkbox">
-                    <div class="slider round"></div>
-                </label>
-            </td>
-            <td>
-                <button class="item-btn" onclick="location.href='sensor.html'">VIEW</button>
-            </td>
-        </table>
-        <!-- \테스트 코드  -->
+    </developer>
+    <header>
+        <div>
+            <img class="logo" src="image/logo_meerkeep.png" alt="">
+            <div id="total" class="text1"></div>
+        </div>
+    </header>
+    <section id="items" class="items">
     </section>
 </body>
 </html>

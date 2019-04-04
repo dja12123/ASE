@@ -4,60 +4,60 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Senser 9009</title>
+    <title>sensor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="image/logo_telco.png">
     <link type="text/css" rel="stylesheet" href="css/style.css">
-    <!-- <link type="text/css" rel="stylesheet" href="css/head.css">
-    <link type="text/css" rel="stylesheet" href="css/item.css">
-    <link type="text/css" rel="stylesheet" href="css/graph.css">
-    <link type="text/css" rel="stylesheet" href="css/toggle.css"> -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="js/item.js"></script>
+    <script src="js/sensor.js"></script>
+    
+    <!-- 테스트 코드 -->
+    <script src="js/developer.js"></script>
+    <script src="js/developer_sensor.js"></script>
 </head>
 
 <body>
-
-    <head>
-        <div class="head">
-            <i class="fas fa-caret-square-left fa-2x back_btn" onclick="location.href='index.html'"></i>
-            <div class="right_empty"></div>
-            <span id="sender_stat" class="text2">센서9009: 작동중</span>
-        </div>
-    </head>
-    <section>
+    <section class="sensor">
+        <header>
+            <div>
+                <i class="fas fa-caret-square-left fa-2x back_btn" onclick="location.href='index.html'"></i>
+                <div class="right_empty"></div>
+                <span id="state" class="text2"></span>
+            </div>
+        </header>
         <div></div>
-        <div class="stat">
+        <div class="state">
             <div>
                 <div class="graph_item">기울기</div>
-                <!-- <input type="checkbox" id="c1" name="cc"> -->
-                <label class="pos" for="c1"> <span class="pos2">X</span> <span id="slopX">011.01</span></label>
-                <!-- <input type="checkbox" id="c2" name="cc"> -->
-                <label class="pos" for="c2"> <span class="pos2">Y</span> <span id="slopY" >011.20</span></label>
+                <label class="pos"> <span class="pos2">X</span> <span id="slopX"></span> <span class="unit">deg</span></label>
+                <label class="pos"> <span class="pos2">Y</span> <span id="slopY" ></span> <span class="unit">deg</span></label>
             </div>
             <div>
                 <div class="graph_item">가속도</div>
-                <!-- <input type="checkbox" id="c3" name="cc"> -->
-                <label class="pos" for="c3"> <span class="pos2">X</span> <span id="accX">008.12</span></label>
-                <!-- <input type="checkbox" id="c4" name="cc"> -->
-                <label class="pos" for="c4"> <span class="pos2">Y</span> <span id="accY">002.97</span></label>
-                <!-- <input type="checkbox" id="c5" name="cc"> -->
-                <label class="pos" for="c5"> <span class="pos2">Z</span> <span id="accZ">000.06</span></label>
+                <label class="pos"> <span class="pos2">X</span> <span id="accX"></span> <span class="unit">deg</span></label>
+                <label class="pos"> <span class="pos2">Y</span> <span id="accY"></span> <span class="unit">mG</span></label>
+                <label class="pos"> <span class="pos2">Z</span> <span id="accZ"></span> <span class="unit">mG</span></label>
             </div>
             <div>
                 <div class="graph_item">고도</div>
-                <!-- <input type="checkbox" id="c6" name="cc"> -->
-                <label class="pos" for="c6"> <span class="pos2">H</span> <span id="altiH">014.21</span></label>
+                <label class="pos"> <span class="pos2">A</span> <span id="alti"></span> <span class="unit">M</span></label>
+            
+                <div class="graph_item">온도</div>
+                <label class="pos"> <span class="pos2">T</span> <span id="temp"></span> <span class="unitT">˚</span></label>
             </div>
         </div>
         <hr/>
         <div>
-            데이터 수집 시간<div id="uptime">2019년 02월 22일 13시 32분 35초</div>
+            <div>데이터 수집 시간</div>
+            <div id="uptime"></div>
         </div>
         <hr/>
-        <div>
-            센서 로그<div id="log">[NFO][19/02/22 13:32:17]센서 온라인</div>
-        </div>
     </section>
+    <article>
+        <div>센서 로그</div>
+        <div id="log" class="logs"></div>
+    </article>
 </body>
 
 </html>
