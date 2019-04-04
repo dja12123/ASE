@@ -1,6 +1,8 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
+import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
+import ase.util.observer.Observable;
 
 public class RealtimeLogDataSender extends ServiceInstance
 {
@@ -21,6 +23,13 @@ public class RealtimeLogDataSender extends ServiceInstance
 
 	@Override
 	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		// TODO Auto-generated method stub
 		

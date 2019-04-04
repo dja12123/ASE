@@ -19,11 +19,12 @@ window.onload = function()
 
 window.WebSocketTest = function WebSocketTest()
 {
-	commModule.createChannel("SensorListRequest",null, (e)=>
+	var ch = commModule.createChannel("SensorListRequest",null, (e)=>
 	{
 		console.log("data:"+e.data);
 		var data = JSON.parse(e.data);
 		console.log(data);
+		ch.close();
 	});
 }
 		</script>

@@ -1,7 +1,9 @@
 package ase.sensorReadServer.appService.serviceInstance;
 
+import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
+import ase.util.observer.Observable;
 
 public class AllSensorDataSender extends ServiceInstance
 {
@@ -24,6 +26,13 @@ public class AllSensorDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
+		
+	}
+
+	@Override
+	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 }

@@ -6,9 +6,11 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorReadServer.sensorManager.SensorManager;
 import ase.sensorReadServer.sensorManager.sensor.Sensor;
+import ase.util.observer.Observable;
 
 public class SensorListSender extends ServiceInstance
 {
@@ -25,7 +27,7 @@ public class SensorListSender extends ServiceInstance
 	@Override
 	protected void onDestroy()
 	{
-
+		
 	}
 
 	@Override
@@ -47,5 +49,12 @@ public class SensorListSender extends ServiceInstance
 		}
 		this.channel.sendData(json.toString());
 		this.destroy();
+	}
+
+	@Override
+	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

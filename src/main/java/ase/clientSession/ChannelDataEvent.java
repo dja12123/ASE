@@ -14,6 +14,11 @@ public class ChannelDataEvent
 		this.data = data;
 	}
 	
+	public String getStringPayload()
+	{
+		return new String(this.data);
+	}
+	
 	@Override
 	public String toString()
 	{
