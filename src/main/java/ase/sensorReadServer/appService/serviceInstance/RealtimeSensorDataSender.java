@@ -46,6 +46,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	@Override
 	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
+		System.out.println("payload " + event.getStringPayload());
 		JsonObject e = (JsonObject) this.parser.parse(event.getStringPayload());
 		int id = e.getAsJsonPrimitive("sensorID").getAsInt();
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
