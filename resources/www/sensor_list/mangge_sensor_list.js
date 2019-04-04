@@ -42,7 +42,7 @@ function addItem(key, on) { //table -> div 수정
         '</label>',
         '</td>',
         '<td>',
-        '<button class="item-btn" onclick="location.href=`sensor.html`">VIEW</button>',
+        '<button class="item-btn" onclick="location.href=`sensor_list.html`">VIEW</button>',
         '</td>',
         '</tr></tbody>',
     ].join("");
