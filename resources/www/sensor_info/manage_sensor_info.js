@@ -14,16 +14,25 @@ function delLog() {
 
 //===============================================================
 
-// 페이지 시작시 표시할 "센서 키", "작동상태"
-// * dataSetKey(string, boolean) 센서 키, 작동상태(on/off)
-function dataSetKey(key, on) {
+// * 가져온 info페이지 "센서 키"
+var infoKey;
+
+// 페이지가 로드될 때 센서 키를 변수에 저장
+window.onload = function() {
+    tmp = location.href.split("?");
+    infoKey = tmp[1];
+    dataSetKey(infoKey);
+}
+
+// 페이지 시작시 표시할 "센서 키"
+// * dateSetKey(string) 센서 키
+function dataSetKey(key) {
     //입력된 키 
     document.title = "sensor " + key;
     document.getElementById("state_name").innerHTML = key;
-    document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
 }
 
-// 센서의 상태 변경 "작동상태"
+// 센서의 상태 표시 및 변경 "작동상태"
 // ＊setState(boolean) 작동상태(on/off)
 function setState(on) {
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
