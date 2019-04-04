@@ -11,25 +11,25 @@ public class RealtimeAllSensorOnOffSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeAllSensorOnOffRequest";
 	private SensorManager sensorManager;
-	private Observer<SensorOnlineEvent> sensorRegisterEventObserver;
+	private Observer<SensorOnlineEvent> sensorOnlineEventObserver;
 	
 	public RealtimeAllSensorOnOffSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
-		this.sensorRegisterEventObserver = this::sensorRegisterEventObserver;
+		this.sensorOnlineEventObserver = this::sensorOnlineEventObserver;
 	}
 
 	@Override
 	protected void onStartService()
 	{
-		this.sensorManager.publicSensorOnlineObservable.addObserver(this.sensorRegisterEventObserver);
+		this.sensorManager.publicSensorOnlineObservable.addObserver(this.sensorOnlineEventObserver);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		this.sensorManager.publicSensorOnlineObservable.removeObserver(this.sensorRegisterEventObserver);
+		this.sensorManager.publicSensorOnlineObservable.removeObserver(this.sensorOnlineEventObserver);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class RealtimeAllSensorOnOffSender extends ServiceInstance
 		
 	}
 	
-	private void sensorRegisterEventObserver(Observable<SensorOnlineEvent> provider, SensorOnlineEvent event)
+	private void sensorOnlineEventObserver(Observable<SensorOnlineEvent> provider, SensorOnlineEvent event)
 	{
 		this.channel.sendData(event.sensor.id+"/"+event.isOnline);
 	}
