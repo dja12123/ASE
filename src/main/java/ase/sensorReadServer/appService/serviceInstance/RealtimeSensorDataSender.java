@@ -60,13 +60,13 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		JsonObject json = new JsonObject();
 		if(sensor != null)
 		{
-			json.addProperty("result", true);
-			json.addProperty("isOnline", this.sensor.isOnline());
 			if(this.sensor != null)
 			{
 				this.sensor.dataReceiveObservable.removeObserver(this.sensorDataObserver);
 			}
 			this.sensor.dataReceiveObservable.addObserver(this.sensorDataObserver);
+			json.addProperty("result", true);
+			json.addProperty("isOnline", this.sensor.isOnline());
 		}
 		else
 		{
