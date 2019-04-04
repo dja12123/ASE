@@ -1,9 +1,3 @@
-//key값이 int일 경우, 타입과 포멧 변경
-//key가 4자리 이하일때 앞에 0을 추가
-// function keyForm(num) {
-//     num = num + '';
-//     return num.length >= 4 ? num : new Array(5 - num.length).join('0') + num;
-// }
 
 var total = 0;
 
