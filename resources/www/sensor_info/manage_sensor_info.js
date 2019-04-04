@@ -15,8 +15,8 @@ function delLog() {
 //===============================================================
 
 // 페이지 시작시 표시할 "센서 키", "작동상태"
-// * dateSetKey(string, boolean) 센서 키, 작동상태(on/off)
-function dateSetKey(key, on) {
+// * dataSetKey(string, boolean) 센서 키, 작동상태(on/off)
+function dataSetKey(key, on) {
     //입력된 키 
     document.title = "sensor " + key;
     document.getElementById("state_name").innerHTML = key;
