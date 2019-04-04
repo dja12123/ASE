@@ -71,6 +71,7 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected synchronized void onMessage(WebSocketFrame frame) 
 	{
+		System.out.println("recv"+frame.getTextPayload() + " " + new String(frame.getBinaryPayload()));
 		if(this.key == null)
 		{
 			String key = frame.getTextPayload();
@@ -79,7 +80,7 @@ public class WebChannel extends WebSocket implements IChannel
 			this.openCloseWSProvider.notifyObservers(channelEvent);
 			return;
 		}
-		System.out.println(frame.getTextPayload() + " " + new String(frame.getBinaryPayload()));
+		
 		ChannelDataEvent channelDataEvent = new ChannelDataEvent(this, frame.getBinaryPayload());
 		this.dataReceiveProvider.notifyObservers(channelDataEvent);
 	}
