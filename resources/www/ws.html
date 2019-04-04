@@ -26,10 +26,13 @@ window.WebSocketTest = function WebSocketTest()
 		console.log(data);
 		ch.close();
 	});
-	var ch1 = commModule.createChannel("RealtimeSensorDataRequest",null, (e)=>
+	var ch1 = commModule.createChannel("RealtimeSensorDataRequest",()=>
+	{
+		ch1.send("1001");
+	}, (e)=>
 	{
 		console.log("data:"+e.data);
-		ch1.send("1001");
+		
 		var data = JSON.parse(e.data);
 		console.log(data);
 	});
