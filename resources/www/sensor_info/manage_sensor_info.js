@@ -12,17 +12,17 @@ function delLog() {
     if (elem != null) elem.remove();
 }
 
-//===============================================================
-
-// * 가져온 info페이지 "센서 키"
-var infoKey;
-
 // 페이지가 로드될 때 센서 키를 변수에 저장
 window.onload = function() {
     tmp = location.href.split("?");
     infoKey = tmp[1];
     dataSetKey(infoKey);
 }
+
+//===============================================================
+
+// * 가져온 info페이지 "센서 키"
+var infoKey;
 
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(string) 센서 키
