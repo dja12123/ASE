@@ -63,7 +63,7 @@ window.onload = function()
 	{
 		console.log("data:" + e.data);
 		var data = e.data.split("/");
-		state(data[0], data[1]);
+		state(data[0], data[1] == "true");
 	});
 
 	var sensorAddRemove = commModule.createChannel("RealtimeSensorAddRemoveRequest", null, (e) =>
