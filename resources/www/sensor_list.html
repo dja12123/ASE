@@ -65,13 +65,6 @@ window.onload = function()
 		var data = e.data.split("/");
 		state(data[0], data[1]);
 	});
-	
-	var allSensorOnOff = commModule.createChannel("RealtimeAllSensorOnOffRequest", null, (e) =>
-	{
-		console.log("data:" + e.data);
-		var data = e.data.split("/");
-		state(data[0], data[1]);
-	});
 
 	var sensorAddRemove = commModule.createChannel("RealtimeSensorAddRemoveRequest", null, (e) =>
 	{
