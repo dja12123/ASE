@@ -17,6 +17,12 @@ section>div:nth-child(n + 2), article {
     margin-right: 20px;
 }
 
+/* 센서 상태 _ 아이콘 수정
+.info_on {
+    
+}
+*/
+
 .state {
     margin-top: 13px;
     margin-bottom: 20px;
