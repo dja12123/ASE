@@ -50,7 +50,7 @@ window.onload = function()
 		sensorOnOff.send(sensorID);
     }, (e)=>
     {
-        console.log(e.data);
+        console.log(data[0]);
 		if(data[0] == "result" && data[1] != "true")
 		{
 			sensorOnOff.close();
