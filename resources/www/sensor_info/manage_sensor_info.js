@@ -40,7 +40,6 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 // "데이터 수집 시간" 설정
 // * setDate(string[12]) string[12] = "YYMMDDHHMMSS"
 function setDate(date) {
-    var text = dateForm(date, ["년", "월", "일", "시", "분", "초"]);
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
 	date.getMonth()+"월 "+
