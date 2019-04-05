@@ -28,7 +28,7 @@ function setState(on) {
 }
 
 // "센서 데이터 값" 설정
-// ＊setElem(float(double)[7]) 기울기(2), 가속도(3), 고도(1), 온도(1) 7개 데이터
+// ＊setElem(float(double)[7]) 기울기(2), 가속도(3), 고도(1) 6개 데이터
 function setSensorData(time, xg, yg, xa, ya, za, al) {
 	setDate(time);
 	document.getElementById("slopX").innerHTML = xg.toFixed(2);
@@ -56,11 +56,17 @@ var logNum = 0;
 // * addLog(string[12], String) string[12] = "YYMMDDHHMMSS", 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
-    var text = dateForm(date, ["/", "/", " ", ":", ":", ""]);
+    var logDate =
+	date.getFullYear()+"/"+
+	date.getMonth()+"/"+
+	date.getDate()+"/ "+
+	date.getHours()+":"+
+	date.getMinutes()+":"+
+	date.getSeconds()+":";
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
-    eLog.innerHTML = ["[NFO][" + text.join('') + "] " + msg + "(" + logNum + ")"].join("");
+    eLog.innerHTML = ["[NFO][" + logDate + "] " + msg + "(" + logNum + ")"].join("");
     document.getElementById('log').append(eLog);
 
     logNum++;
