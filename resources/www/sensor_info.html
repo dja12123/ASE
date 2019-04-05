@@ -45,7 +45,7 @@ window.onload = function()
 
     var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",()=>
     {
-		sensorData.send(sensorID);
+		sensorOnOff.send(sensorID);
     }, (e)=>
     {
         console.log(e.data);
