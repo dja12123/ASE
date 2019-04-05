@@ -31,6 +31,7 @@ window.onload = function()
 	{
 		console.log("data:"+e.data);
 		var data = JSON.parse(e.data);
+		console.log(data.result);
 		if(data.result == "true")
 		{
 			var time = data.time.split("/");

@@ -78,7 +78,6 @@ public class RealtimeSensorDataSender extends ServiceInstance
 
 	private void sensorDataObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent event)
 	{
-		System.out.println("데이터전송");
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.data.time));
