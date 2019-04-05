@@ -63,6 +63,7 @@ public class RealtimeSensorOnOffSender extends ServiceInstance
 			this.sensor = sensor;
 			this.sensor.sensorOnlineObservable.addObserver(this.sensorDataObserver);
 			this.channel.sendData("result/"+true);
+			this.channel.sendData("state/"+this.sensor.isOnline());
 		}
 		else
 		{
