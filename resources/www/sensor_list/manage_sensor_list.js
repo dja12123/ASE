@@ -37,7 +37,7 @@ function addItem(key, on) //table -> div 수정
 		'</td>',
 		'<td>',
 		// '<button class="item-btn" onclick="location.href=`sensor_info.html?`" action= "sensor_info.html" method = "get" id =',key, 'type="submit">VIEW</button>',
-		'<button class="item-btn" onclick="location.href="sensor_info.html?key=' + key + '">VIEW</button>',
+		'<button class="item-btn" onclick="location.href=\'sensor_info.html?key=' + key + '\'>VIEW</button>',
 		'</td>',
 		'</tr></tbody>',
 	].join("");
