@@ -27,7 +27,7 @@ function addItem(key, on) //table -> div 수정
 		'<td></td>',
 		'<td>',
 		'<label class="switch">',
-		'<input id="',
+		'<input id="stat',
 		key,
 		'" type="checkbox"',
 		state,
@@ -59,6 +59,6 @@ function delItem(key)
 // ＊state(string, boolean) 센서 키, 작동상태(on/off)
 function state(key, on)
 {
-	var sensor = document.getElementById(key + "stat");
+	var sensor = document.getElementById("stat"+key);
 	if(sensor.checked != on) sensor.checked = on;
 }
