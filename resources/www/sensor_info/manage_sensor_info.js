@@ -28,7 +28,7 @@ function setState(on) {
 }
 
 // "센서 데이터 값" 설정
-// ＊setElem(float(double)[7]) 기울기(2), 가속도(3), 고도(1) 6개 데이터
+// ＊setElem(float(double)[6]) 기울기(2), 가속도(3), 고도(1) 6개 데이터
 function setSensorData(time, xg, yg, xa, ya, za, al) {
 	setDate(time);
 	document.getElementById("slopX").innerHTML = xg.toFixed(2);
@@ -40,7 +40,7 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 }
 
 // "데이터 수집 시간" 설정
-// * setDate(string[12]) string[12] = "YYMMDDHHMMSS"
+// * setDate(string) 날짜
 function setDate(date) {
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
@@ -53,7 +53,7 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(string[12], String) string[12] = "YYMMDDHHMMSS", 메세지
+// * addLog(string, String) 날짜, 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
     var logDate =
