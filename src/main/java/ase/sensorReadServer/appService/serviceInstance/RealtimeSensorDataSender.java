@@ -44,6 +44,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
+		System.out.println("데이타: " + data);
 		JsonObject json = new JsonObject();
 		try
 		{
