@@ -50,7 +50,7 @@ window.onload = function()
 		sensorOnOff.send(sensorID);
     }, (e)=>
     {
-		var data = e.data.parse("/");
+		var data = e.data.split("/");
 		if(data[0] == "result" && data[1] != "true")
 		{
 			sensorOnOff.close();
