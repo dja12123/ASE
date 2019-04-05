@@ -24,21 +24,6 @@ window.onload = function()
 {
 	var sensorID = getParameter("key");
 	dataSetKey(sensorID);
-	var sensorListCh = commModule.createChannel("SensorListRequest",null, (e)=>
-    {
-        console.log("data:"+e.data);
-        var data = JSON.parse(e.data);
-        console.log(data);
-        console.log(data.result);
-        console.log(data.time);
-        console.log(data.xg);
-        console.log(data.yg);
-        console.log(data.xa);
-        console.log(data.za);
-        console.log(data.al);
-        
-    });
-
     var sensorData = commModule.createChannel("RealtimeSensorDataRequest",()=>
 	{
 		sensorData.send(sensorID);
@@ -58,17 +43,17 @@ window.onload = function()
 		console.log(data);
 	});
 
-    var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",(e)=>
+    var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",()=>
     {
-		var data = e.data.split("/");
-        if(!(data[0] == "result" && data[1] == "true"))
-		{
-			sensorOnOff.close();
-		}
+		sensorData.send(sensorID);
     }, (e)=>
     {
         console.log(e.data);
-		if(data[0] == "state")
+		if(data[0] == "result" && data[1] != "true")
+		{
+			sensorOnOff.close();
+		}
+		else if(data[0] == "state")
 		{
 			setState(data[1] == "true");
 		}
