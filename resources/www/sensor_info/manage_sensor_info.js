@@ -56,17 +56,22 @@ var logNum = 0;
 // * addLog(string, String) 날짜, 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
-    var logDate =
-	date.getFullYear()+"/"+
-	date.getMonth()+"/"+
-	date.getDate()+"/ "+
-	date.getHours()+":"+
-	date.getMinutes()+":"+
-	date.getSeconds()+":";
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
-    eLog.innerHTML = ["[NFO][" + logDate + "] " + msg + "(" + logNum + ")"].join("");
+    eLog.innerHTML =
+    ["[NFO][" +
+    date.getFullYear() +"/"+
+	date.getMonth() +"/"+
+	date.getDate() +"/ "+
+	date.getHours() +":"+
+	date.getMinutes() +":"+
+	date.getSeconds() +
+    "] " +
+    msg +
+    "(" +
+    logNum +
+    ")"].join("");
     document.getElementById('log').append(eLog);
 
     logNum++;
