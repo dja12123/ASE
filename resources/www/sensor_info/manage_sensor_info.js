@@ -22,7 +22,9 @@ function dataSetKey(key) {
 // 센서의 상태 표시 및 변경 "작동상태"
 // ＊setState(boolean) 작동상태(on/off)
 function setState(on) {
+    console.log(typeof on);
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
+    //asdf
 }
 
 // "센서 데이터 값" 설정
