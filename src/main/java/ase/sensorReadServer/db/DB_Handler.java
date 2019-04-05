@@ -3,7 +3,6 @@ package ase.sensorReadServer.db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -41,7 +40,6 @@ public class DB_Handler
 	private Connection connection;
 	private SQLiteConfig config;
 	private boolean isOpened = false;
-
 	static
 	{// test22
 		try
@@ -54,6 +52,8 @@ public class DB_Handler
 			databaseLogger.log(Level.SEVERE, "JDBC 로드 실패", e);
 		}
 	}
+	
+	private Statement statement;
 
 	public DB_Handler()
 	{
@@ -65,11 +65,9 @@ public class DB_Handler
 	{
 		if (!this.isOpened)
 			return false;
-		Statement stmt = null;
 		try
 		{
-			stmt = this.connection.createStatement();
-			return stmt.execute(query);
+			return statement.execute(query);
 		}
 		catch (SQLException e)
 		{
@@ -77,26 +75,7 @@ public class DB_Handler
 			return false;
 		}
 	}
-
-	public boolean executeQuery(String query, ISQLcallback callback)
-	{
-		if (!this.isOpened)
-			return false;
-		PreparedStatement prep = null;
-		try
-		{
-			prep = this.connection.prepareStatement(query);
-			callback.callback(prep);
-			prep.close();
-		}
-		catch (SQLException e)
-		{
-			databaseLogger.log(Level.SEVERE, "질의 실패(" + query + ")", e);
-			return false;
-		}
-		return true;
-	}
-
+	
 	// 결과가 나오는 쿼리 (select문)
 	public CachedRowSet query(String query)
 	{
@@ -106,13 +85,11 @@ public class DB_Handler
 			return null;
 		}
 		CachedRowSet crs = null;
-		Statement stmt = null;
 		ResultSet rs = null;
 
 		try
 		{
-			stmt = this.connection.createStatement();
-			rs = stmt.executeQuery(query);
+			rs = this.statement.executeQuery(query);
 		}
 		catch (SQLException e)
 		{
@@ -164,7 +141,14 @@ public class DB_Handler
 			databaseLogger.log(Level.SEVERE, "데이터베이스 열기 실패", e);
 			return false;
 		}
-        
+        try
+		{
+			this.statement = this.connection.createStatement();
+		}
+		catch (SQLException e)
+		{
+			databaseLogger.log(Level.SEVERE, "데이터베이스 열기 실패", e);
+		}
 		this.isOpened = true;
         
 		return true;
@@ -174,10 +158,19 @@ public class DB_Handler
 	{
 		if (!this.isOpened)
 			return;
+		
+		try
+		{
+			if(this.statement != null) this.statement.close();
+		}
+		catch (SQLException e)
+		{
+			databaseLogger.log(Level.SEVERE, "데이터베이스 닫기 실패", e);
+		}
 
 		try
 		{
-			this.connection.close();
+			if(this.connection != null) this.connection.close();
 		}
 		catch (SQLException e)
 		{
