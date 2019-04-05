@@ -14,17 +14,17 @@
                     //통신모듈
 import * as COMM from './CommModule.js';
 
-
-
-
-
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
 {
     console.log("commModule load");
     console.log(commModule.sessionUUID);
-
-    var sensorListCh = commModule.createChannel("SensorListRequest",null, (e)=>
+});
+window.onload = function()
+{
+	var sensorID = getParameter("key");
+	dataSetKey(sensorID);
+	var sensorListCh = commModule.createChannel("SensorListRequest",null, (e)=>
     {
         console.log("data:"+e.data);
         var data = JSON.parse(e.data);
@@ -39,30 +39,41 @@ var commModule = new COMM.CommModule(function()
         
     });
 
-    var sendSensorID = commModule.createChannel("RealtimeSensorDataRequest",()=>
+    var sensorData = commModule.createChannel("RealtimeSensorDataRequest",()=>
 	{
-		sendSensorID.send("1001");
+		sensorData.send(sensorID);
 	}, (e)=>
 	{
 		console.log("data:"+e.data);
-		
 		var data = JSON.parse(e.data);
+		if(data.result == "true")
+		{
+			var time = data.time.split("/");
+			setElem(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
+		}
+		else
+		{
+			sensorData.close();
+		}
 		console.log(data);
 	});
 
-    
-
-    var sensorOnOffCh = commModule.createChannel("RealtimeAllSensorOnOffRequest",null, (e)=>
+    var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",(e)=>
+    {
+		var data = e.data.split("/");
+        if(!(data[0] == "result" && data[1] == "true"))
+		{
+			sensorOnOff.close();
+		}
+    }, (e)=>
     {
         console.log(e.data);
+		if(data[0] == "state")
+		{
+			setState(data[1] == "true");
+		}
     });
-});
-            window.onload = function()
-            {
-                
-                
-            }
-        
+}
     </script>
     
 </head>
