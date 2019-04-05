@@ -29,11 +29,10 @@ window.onload = function()
 		sensorData.send(sensorID);
 	}, (e)=>
 	{
-		console.log("data:"+e.data);
 		var data = JSON.parse(e.data);
-		console.log(data.result);
-		if(data.result == true)
+		if(data.result == true);
 		{
+			console.log(data.length)
 			if(data.length > 1)
 			{
 				var time = data.time.split("/");
@@ -44,7 +43,6 @@ window.onload = function()
 		{
 			sensorData.close();
 		}
-		console.log(data);
 	});
 
     var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",()=>
