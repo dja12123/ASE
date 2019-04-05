@@ -40,7 +40,16 @@ public class RealtimeSensorAddRemoveSender extends ServiceInstance
 	
 	private void sensorRegisterEventObserver(Observable<SensorRegisterEvent> provider, SensorRegisterEvent event)
 	{
-		this.channel.sendData(event.sensor.id+"/"+event.isActive);
+		StringBuffer buf = new StringBuffer();
+		buf.append(event.sensor.id);
+		buf.append("/");
+		buf.append(event.isActive);
+		if(event.isActive)
+		{
+			buf.append("/");
+			buf.append(event.sensor.isOnline());
+		}
+		this.channel.sendData(buf.toString());
 	}
 
 }
