@@ -10,8 +10,6 @@ function setTotal()
 		.innerHTML = msg;
 }
 
-//=============================================================
-
 // "센서" 추가
 // * addItem(string, boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) //table -> div 수정
