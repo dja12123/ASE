@@ -18,6 +18,7 @@ export class CommModule
 	
 	controlStart()
 	{
+		console.log("통신 연결 성공");
 		this.isConnect = true;
 		if(this.startCallback != null) this.startCallback();
 	}
