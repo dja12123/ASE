@@ -6,24 +6,38 @@ export class CommModule
 {
 	constructor(startCallback, disconnectCallback, reConnectCallback)
 	{
+		this.isConnect = false;
 		//this.ip = location.host;
 		this.ip = "172.16.1.4";
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
+		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback, null, this::controlDisconnect);
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, null, ()=>{this.controlDisconnect();});
+	}
+	
+	controlStart()
+	{
+		console.log("통신 연결 성공");
+		this.isConnect = true;
+		if(this.startCallback != null) this.startCallback();
 	}
 	
 	controlDisconnect()
 	{
 		console.log("연결 끊김 재접속 시도..");
-		if(this.disconnectCallback != null) this.disconnectCallback();
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, this::controlReconnect, null, this::controlDisconnect);
+		if(this.isConnect && this.disconnectCallback != null) this.disconnectCallback();
+		this.isConnect = false;
+		setTimeout(()=>
+		{
+			this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlReconnect();}, null, ()=>{this.controlDisconnect();});
+		}, 3000);
 	}
 	
 	controlReconnect()
 	{
 		console.log("재접속 완료");
+		this.isConnect = true;
 		if(this.reConnectCallback != null)this.reConnectCallback();
 	}
 
