@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.usb4java.Context;
 import org.usb4java.Device;
 import org.usb4java.DeviceDescriptor;
+import org.usb4java.DeviceHandle;
 import org.usb4java.DeviceList;
 import org.usb4java.LibUsb;
 import org.usb4java.LibUsbException;
@@ -34,77 +35,80 @@ public class SerialReadManager extends Observable<DevicePacket>
 	public static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 	public static final int FULL_PACKET_SIZE = 32;
 	public static final Logger logger = LogWriter.createLogger(SerialReadManager.class, "serialSensorReader");
-	private static final byte[] SERIAL_STX = new byte[] {0x55, 0x77};
-	
+	private static final byte[] SERIAL_STX = new byte[] { 0x55, 0x77 };
+
 	private Serial serial;
 	private SerialConfig config;
-	
+
 	public SerialReadManager()
 	{
 		this.serial = SerialFactory.createInstance();
-		
+
 		this.serial.addListener(this::dataReceived);
-	
+
 		this.config = new SerialConfig();
 
-		this.config
-		.baud(Baud._115200)
-		.dataBits(DataBits._8)
-		.parity(Parity.NONE)
-		.stopBits(StopBits._1)
-		.flowControl(FlowControl.NONE);
+		this.config.baud(Baud._115200).dataBits(DataBits._8).parity(Parity.NONE).stopBits(StopBits._1)
+				.flowControl(FlowControl.NONE);
 	}
-	
+
 	public boolean startModule()
 	{
 		logger.log(Level.INFO, "SerialReadManager 시작");
 		// Create the libusb context
-        Context context = new Context();
+		Context context = new Context();
 
-        // Initialize the libusb context
-        int result = LibUsb.init(context);
-        if (result < 0)
-        {
-            throw new LibUsbException("Unable to initialize libusb", result);
-        }
+		// Initialize the libusb context
+		int result = LibUsb.init(context);
+		if (result < 0)
+		{
+			throw new LibUsbException("Unable to initialize libusb", result);
+		}
 
-        // Read the USB device list
-        DeviceList list = new DeviceList();
-        result = LibUsb.getDeviceList(context, list);
-        if (result < 0)
-        {
-            throw new LibUsbException("Unable to get device list", result);
-        }
-
-        try
-        {
-            // Iterate over all devices and list them
-            for (Device device: list)
-            {
-                int address = LibUsb.getDeviceAddress(device);
-                int busNumber = LibUsb.getBusNumber(device);
-                DeviceDescriptor descriptor = new DeviceDescriptor();
-                result = LibUsb.getDeviceDescriptor(device, descriptor);
-                if (result < 0)
-                {
-                    throw new LibUsbException(
-                        "Unable to read device descriptor", result);
-                }
-                System.out.format(
-                    "Bus %03d, Device %03d: Vendor %04x, Product %04x%n",
-                    busNumber, address, descriptor.idVendor(),
-                    descriptor.idProduct());
-            }
-        }
-        finally
-        {
-            // Ensure the allocated device list is freed
-            LibUsb.freeDeviceList(list, true);
-        }
-
-        // Deinitialize the libusb context
-        LibUsb.exit(context);
+		// Read the USB device list
+		DeviceList list = new DeviceList();
 		
+		result = LibUsb.getDeviceList(context, list);
+		if (result < 0)
+		{
+			throw new LibUsbException("Unable to get device list", result);
+		}
+
+		try
+		{
+			// Iterate over all devices and list them
+			for (Device device : list)
+			{
+				
+				int address = LibUsb.getDeviceAddress(device);
+				int busNumber = LibUsb.getBusNumber(device);
+
+				DeviceDescriptor descriptor = new DeviceDescriptor();
+				DeviceHandle d = new DeviceHandle();
+				LibUsb.open(device, d);
+				
+				result = LibUsb.getDeviceDescriptor(device, descriptor);
+				
+				
+				if (result < 0)
+				{
+					throw new LibUsbException("Unable to read device descriptor", result);
+				}
+				
+				//LibUsb.releaseInterface(d, busNumber);
+				System.out.format("result: %d, Bus %03d, Device %03d: Vendor %04x, Product %04x%n", result, busNumber, address,
+						descriptor.idVendor(), descriptor.idProduct());
+			}
+		}
+		finally
+		{
+			// Ensure the allocated device list is freed
+			LibUsb.freeDeviceList(list, true);
+		}
+
+		// Deinitialize the libusb context
+		LibUsb.exit(context);
+
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
 		try
 		{
@@ -120,7 +124,9 @@ public class SerialReadManager extends Observable<DevicePacket>
 		{
 			Thread.sleep(500);
 		}
-		catch (InterruptedException e1){}
+		catch (InterruptedException e1)
+		{
+		}
 		try
 		{
 			this.serial.write(SERIAL_STX);
@@ -133,16 +139,16 @@ public class SerialReadManager extends Observable<DevicePacket>
 		logger.log(Level.INFO, "SerialReadManager 시작 완료");
 		return true;
 	}
-	
+
 	public void stopModule()
 	{
 		SerialFactory.shutdown();
 		logger.log(Level.INFO, "SerialReadManager 종료");
 	}
-	
+
 	private void dataReceived(SerialDataEvent event)
 	{
-		
+
 		byte[] receiveData;
 		try
 		{
@@ -153,33 +159,33 @@ public class SerialReadManager extends Observable<DevicePacket>
 			e.printStackTrace();
 			return;
 		}
-		
-		if(!this.isDevicePacket(receiveData))
+
+		if (!this.isDevicePacket(receiveData))
 		{
 			logger.log(Level.WARNING, "오류! 센서 패킷이 아님" + BinUtil.bytesToHex(receiveData));
 			return;
 		}
-		
+
 		ByteBuffer byteBuffer = ByteBuffer.wrap(receiveData);
 		byteBuffer.order(BYTE_ORDER);
-		
+
 		int id = byteBuffer.getInt();
 		int nsize = byteBuffer.getInt();
 		float xg = byteBuffer.getFloat();
 		float yg = byteBuffer.getFloat();
-		float xa= byteBuffer.getFloat();
+		float xa = byteBuffer.getFloat();
 		float ya = byteBuffer.getFloat();
 		float za = byteBuffer.getFloat();
 		float al = byteBuffer.getFloat();
-		
+
 		DevicePacket packet = new DevicePacket(id, xg, yg, xa, ya, za, al, -1);
-		
+
 		this.notifyObservers(ServerCore.mainThreadPool, packet);
 	}
-	
+
 	public boolean isDevicePacket(byte[] packet)
 	{
-		if(packet.length != FULL_PACKET_SIZE)
+		if (packet.length != FULL_PACKET_SIZE)
 		{
 			return false;
 		}
@@ -187,7 +193,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 		buffer.position(4);
 		buffer.order(BYTE_ORDER);
 		int packetSize = buffer.getInt();
-		if(packetSize != FULL_PACKET_SIZE)
+		if (packetSize != FULL_PACKET_SIZE)
 		{
 			return false;
 		}
