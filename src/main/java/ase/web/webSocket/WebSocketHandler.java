@@ -57,7 +57,6 @@ public class WebSocketHandler extends NanoWSD
 	@Override
 	protected synchronized WebSocket openWebSocket(IHTTPSession session) 
 	{
-		logger.log(Level.INFO, session.toString());
 		WebChannel channel = new WebChannel(session, this.channelObservable);
 		this.channelList.add(channel);
 		return channel;
