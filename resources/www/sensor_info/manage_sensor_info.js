@@ -35,7 +35,7 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 }
 
 // "데이터 수집 시간" 설정
-// * setDate(string) 날짜
+// * setDate(Date) 날짜
 function setDate(date) {
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
@@ -48,7 +48,7 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(string, String) 날짜, 메세지
+// * addLog(Date, String) 날짜, 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
     var eLog = document.createElement("div");
