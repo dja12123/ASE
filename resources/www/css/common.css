@@ -15,12 +15,11 @@ html, body {
 }
 
 .main {
-    position: absolute;
     opacity: 1;
 }
 
 .disconnected {
-    position: absolute;
+    position: fixed;
     opacity: 0;
 }
 
