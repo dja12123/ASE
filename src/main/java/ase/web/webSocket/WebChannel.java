@@ -93,7 +93,7 @@ public class WebChannel extends WebSocket implements IChannel
 	@Override
 	protected void onException(IOException exception)
 	{
-		logger.log(Level.SEVERE, "웹 소켓 예외가 발생함", exception);
+		
 	}
 	
 	@Override
