@@ -18,7 +18,7 @@ sensor_info - 센서의 데이터
 	setState(Boolean)
 	setState(센서 상태)
  센서 테이터 표시 및 변경: sensor_info. setElem(time, xg, yg, xa, ya, za, al)
-	setElem(Date, Number) //배열 size = 6;
+	setElem(Date, Number...) Number 6개
 	setElem(센서 데이터)
 	//기울기(2), 가속도(3), 고도(1), 온도(1)
  날짜 표시: sensor_info. setDate(date)
