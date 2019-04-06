@@ -70,14 +70,13 @@ public class WebSessionManager extends Observable<SessionEvent>
 		this._sessionMap.put(sessionUID, session);
 		this.notifyObservers(new SessionEvent(session, true));
 		session.onCreateChannel(ch);
-		logger.log(Level.INFO, "세션 수립:"+session.toString()+" 채널개수:"+session.channelList.size());
+		logger.log(Level.INFO, "세션 수립:"+session.toString());
 	}
 	
 	private void requestService(IHTTPSession request, WebSession session, WebChannel channel, boolean isOpen)
 	{
 		if(isOpen) session.onCreateChannel(channel);
 		else session.onCloseChannel(channel);
-		logger.log(Level.INFO, "웹소켓 "+isOpen+":"+session.toString()+" 채널개수:"+session.channelList.size());
 	}
 	
 	private synchronized void sessionCloseCallback(WebSession session)
