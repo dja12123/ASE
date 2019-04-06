@@ -54,8 +54,8 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
-    eLog.innerHTML =
-    ["[NFO][" +
+    eLog.innerHTML = [
+    "[NFO][" +
     date.getFullYear() +"/"+
 	date.getMonth() +"/"+
 	date.getDate() +"/ "+
@@ -63,10 +63,8 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
 	date.getMinutes() +":"+
 	date.getSeconds() +
     "] " +
-    msg +
-    "(" +
-    logNum +
-    ")"].join("");
+    msg
+    ].join("");
     if(document.body.scrollTop >= document.body.scrollHeight){
         document.getElementById('log').append(eLog);
         window.scrollTo(0,document.body.scrollHeight);
