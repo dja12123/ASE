@@ -145,6 +145,14 @@ export class Channel
 		
 	}
 	
+	send(msg)
+	{
+		if(this.isConnect)
+		{
+			this.ws.send(msg);
+		}
+	}
+	
 	close()
 	{
 		if(this.connecting) this.ws.close();
