@@ -135,7 +135,7 @@ public class HTTPServer extends NanoHTTPD
 	
 	public static Response setCookie(Response response, String key, String value, int timeSec)
 	{
-		response.addCookieHeader(String.format("%s=%s; max-age=%d", key, value, timeSec));
+		response.addCookieHeader(String.format("%s=%s; max-age=%d; path=/", key, value, timeSec));
 		return response;
 	}
 	
