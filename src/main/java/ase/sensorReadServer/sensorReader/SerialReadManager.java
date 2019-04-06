@@ -6,7 +6,12 @@ import java.nio.ByteOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.usb4java.Context;
+import org.usb4java.Device;
+import org.usb4java.DeviceDescriptor;
 import org.usb4java.DeviceList;
+import org.usb4java.LibUsb;
+import org.usb4java.LibUsbException;
 
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.DataBits;
@@ -53,10 +58,52 @@ public class SerialReadManager extends Observable<DevicePacket>
 	public boolean startModule()
 	{
 		logger.log(Level.INFO, "SerialReadManager 시작");
-		DeviceList list = new DeviceList();
-		list.forEach((device)->{
-			System.out.println("USB:"+ device);
-		});
+		// Create the libusb context
+        Context context = new Context();
+
+        // Initialize the libusb context
+        int result = LibUsb.init(context);
+        if (result < 0)
+        {
+            throw new LibUsbException("Unable to initialize libusb", result);
+        }
+
+        // Read the USB device list
+        DeviceList list = new DeviceList();
+        result = LibUsb.getDeviceList(context, list);
+        if (result < 0)
+        {
+            throw new LibUsbException("Unable to get device list", result);
+        }
+
+        try
+        {
+            // Iterate over all devices and list them
+            for (Device device: list)
+            {
+                int address = LibUsb.getDeviceAddress(device);
+                int busNumber = LibUsb.getBusNumber(device);
+                DeviceDescriptor descriptor = new DeviceDescriptor();
+                result = LibUsb.getDeviceDescriptor(device, descriptor);
+                if (result < 0)
+                {
+                    throw new LibUsbException(
+                        "Unable to read device descriptor", result);
+                }
+                System.out.format(
+                    "Bus %03d, Device %03d: Vendor %04x, Product %04x%n",
+                    busNumber, address, descriptor.idVendor(),
+                    descriptor.idProduct());
+            }
+        }
+        finally
+        {
+            // Ensure the allocated device list is freed
+            LibUsb.freeDeviceList(list, true);
+        }
+
+        // Deinitialize the libusb context
+        LibUsb.exit(context);
 		
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
 		try
