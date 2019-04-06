@@ -124,6 +124,7 @@ export class Channel
 		if(this.connecting || this.wsOpen) return;
 		this.connecting = true;
 		this.ws = new WebSocket("ws://"+this.ip+":"+WEB_SOCKET_PORT);
+		console.log("connect key:"+this.key+" ws://"+this.ip+":"+WEB_SOCKET_PORT);
 		this.ws.onopen = () =>
 		{
 			this.isConnect = true;
@@ -141,6 +142,7 @@ export class Channel
 			this.connecting = false;
 			if(this.wsClose != null) this.wsClose(this);
 		};
+		
 	}
 	
 	close()
