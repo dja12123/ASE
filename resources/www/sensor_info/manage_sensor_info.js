@@ -68,6 +68,7 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
     logNum +
     ")"].join("");
     document.getElementById('log').append(eLog);
+    window.scrollTo(0,document.body.scrollHeight);
 
     logNum++;
     if (logNum > 99) logNum = 0; //로그갯수 제한
