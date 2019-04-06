@@ -12,7 +12,7 @@
     <script src="sensor_info/manage_sensor_info.js"></script>
     <script type="module">
                     //통신모듈
-import * as COMM from './CommModule.js';
+import * as COMM from '../CommModule.js';
 
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
@@ -95,11 +95,11 @@ window.onload = function()
             </div>
         </div>
         <div>
-                <div>
-                    <span class="uptime_title">데이터 수집 시간</span>
-                </div>
-                <div id="uptime" class="uptime"></div>
+            <div>
+                <span class="uptime_title">데이터 수집 시간</span>
             </div>
+            <div id="uptime" class="uptime"></div>
+        </div>
             <div>
                 <div class="title_log">센서 로그</div>
             </div>
