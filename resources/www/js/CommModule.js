@@ -48,6 +48,7 @@ export class CommModule
 	{
 		console.log("Reconnection completed");
 		this.isConnect = true;
+		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
 		this.channelList.forEach((e)=>{
 			e.connect();
 		});
