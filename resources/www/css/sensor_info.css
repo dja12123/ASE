@@ -87,7 +87,7 @@ label>span:nth-child(1) {
 
 @media (min-width: 401px) {
     article {
-        padding-top: 430px;
+        padding-top: 365px;
         font-size: 16px;
     }
     .pos{
