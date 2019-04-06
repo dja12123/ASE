@@ -102,7 +102,7 @@ label>span:nth-child(1) {
     }
 }
 
-@media (min-width: 271px) and (max-width: 400px) {
+@media (min-width: 316px) and (max-width: 400px) {
     section>div:nth-child(n + 2) {
         font-size: 12px;
     }
@@ -122,7 +122,7 @@ label>span:nth-child(1) {
     }
 }
 
-@media (max-width: 270px) {
+@media (max-width: 315px) {
     section>div:nth-child(n + 2), article {
         margin: 0 7px;
         font-size: 11px;
