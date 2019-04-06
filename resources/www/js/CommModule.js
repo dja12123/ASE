@@ -1,4 +1,3 @@
-const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
 const WEB_SOCKET_PORT = "8080";
@@ -29,8 +28,15 @@ export class CommModule
 	
 	controlDisconnect()
 	{
-		console.log("Disconnect, try to reconnect");
-		if(this.isConnect && this.disconnectCallback != null) this.disconnectCallback();
+		if(this.isConnect && this.disconnectCallback != null)
+		{
+			console.log("Disconnect, try to reconnect");
+			this.disconnectCallback();
+		}
+		else
+		{
+			console.log("try to reconnect...");
+		}
 		this.isConnect = false;
 		setTimeout(()=>
 		{
