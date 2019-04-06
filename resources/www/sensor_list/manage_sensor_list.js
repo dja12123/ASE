@@ -11,7 +11,7 @@ function setTotal()
 }
 
 // "센서" 추가
-// * addItem(string, boolean) 센서 키, 작동상태(on/off)
+// * addItem(String, Boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) //table -> div 수정
 {
 	var state = on ? "checked" : "";
@@ -45,7 +45,7 @@ function addItem(key, on) //table -> div 수정
 }
 
 // "센서" 지우기
-// ＊delItem(string) 센서 키
+// ＊delItem(String) 센서 키
 function delItem(key)
 {
 	total--;
@@ -55,7 +55,7 @@ function delItem(key)
 }
 
 //  "작동상태" 변경(on/off)
-// ＊state(string, boolean) 센서 키, 작동상태(on/off)
+// ＊state(String, Boolean) 센서 키, 작동상태(on/off)
 function state(key, on)
 {
 	var sensor = document.getElementById("stat"+key);

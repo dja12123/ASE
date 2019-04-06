@@ -7,7 +7,7 @@ function delLog() {
 }
 
 // 페이지 시작시 표시할 "센서 키"
-// * dateSetKey(string) 센서 키
+// * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
     //입력된 키 
     document.title = "sensor " + key;
@@ -15,7 +15,7 @@ function dataSetKey(key) {
 }
 
 // 센서의 상태 표시 및 변경 "작동상태"
-// ＊setState(boolean) 작동상태(on/off)
+// ＊setState(Boolean) // 작동상태(on/off)
 function setState(on) {
     console.log(typeof on);
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
@@ -23,7 +23,7 @@ function setState(on) {
 }
 
 // "센서 데이터 값" 설정
-// ＊setElem(float(double)[6]) 기울기(2), 가속도(3), 고도(1) 6개 데이터
+// ＊setElem(Date, Number...) // 날짜, 데이터 6개
 function setSensorData(time, xg, yg, xa, ya, za, al) {
 	setDate(time);
 	document.getElementById("slopX").innerHTML = xg.toFixed(2);
@@ -35,7 +35,7 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 }
 
 // "데이터 수집 시간" 설정
-// * setDate(Date) 날짜
+// * setDate(Date) // 날짜
 function setDate(date) {
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
@@ -48,7 +48,7 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(Date, String) 날짜, 메세지
+// * addLog(Date, String) // 날짜, 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
     var eLog = document.createElement("div");
