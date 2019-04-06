@@ -21,7 +21,7 @@ export class CommModule
 	
 	controlStart()
 	{
-		console.log("통신 연결 성공");
+		console.log("Connection successful");
 		this.isConnect = true;
 		this.controlChannel.wsOpen = ()=>{this.controlReconnect();};
 		if(this.startCallback != null) this.startCallback();
@@ -29,7 +29,7 @@ export class CommModule
 	
 	controlDisconnect()
 	{
-		console.log("연결 끊김 재접속 시도..");
+		console.log("Disconnect, try to reconnect");
 		if(this.isConnect && this.disconnectCallback != null) this.disconnectCallback();
 		this.isConnect = false;
 		setTimeout(()=>
@@ -40,7 +40,7 @@ export class CommModule
 	
 	controlReconnect()
 	{
-		console.log("재접속 완료");
+		console.log("Reconnection completed");
 		this.isConnect = true;
 		this.channelList.forEach((e)=>{
 			e.connect();
@@ -93,14 +93,11 @@ export class CommModule
 	{
 		var channel = new Channel(this.ip, key, wsOpen, onMessage, wsClose, (ch)=>
 		{
-			console.log("size:"+this.channelList.length);
 			var idx = this.channelList.indexOf(ch);
 			this.channelList.splice(idx);
-			console.log("afterSize:"+this.channelList.length);
 		});
 		this.channelList.push(channel);
-		channel.connect();
-		console.log("insert:"+this.channelList.length);
+		if(this.isConnect) channel.connect();
 		return channel;
 	}	
 }
@@ -124,7 +121,6 @@ export class Channel
 		if(this.connecting || this.isConnect) return;
 		this.connecting = true;
 		this.ws = new WebSocket("ws://"+this.ip+":"+WEB_SOCKET_PORT);
-		console.log("connect key:"+this.key+" ws://"+this.ip+":"+WEB_SOCKET_PORT);
 		this.ws.onopen = () =>
 		{
 			this.isConnect = true;
@@ -142,7 +138,6 @@ export class Channel
 			this.connecting = false;
 			if(this.wsClose != null) this.wsClose(this);
 		};
-		
 	}
 	
 	send(msg)
