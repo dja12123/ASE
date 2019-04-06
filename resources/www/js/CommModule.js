@@ -20,7 +20,7 @@ export class CommModule
 	
 	controlStart()
 	{
-		console.log("Connection successful");
+		console.log("Connection successful, sessionID:"+this.sessionUUID);
 		this.isConnect = true;
 		this.controlChannel.wsOpen = ()=>{this.controlReconnect();};
 		if(this.startCallback != null) this.startCallback();
@@ -46,8 +46,9 @@ export class CommModule
 	
 	controlReconnect()
 	{
-		console.log("Reconnection completed");
+		console.log("Reconnection completed sessionID:"+this.sessionUUID);
 		this.isConnect = true;
+		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
 		this.channelList.forEach((e)=>{
 			e.connect();
 		});
