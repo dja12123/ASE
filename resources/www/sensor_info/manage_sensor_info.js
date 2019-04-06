@@ -1,9 +1,3 @@
-//날짜 출력형식
-function dateForm(date, text) {
-    for (let i = 0; i < 6; i++)
-        text[i] = date.substring(i * 2, (i + 1) * 2) + text[i];
-    return text;
-}
 
 //"로그" 삭제
 //로그가 있으면 삭제
@@ -11,6 +5,7 @@ function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
 }
+
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(string) 센서 키
 function dataSetKey(key) {
