@@ -64,16 +64,19 @@ public class WebManager
 			logger.log(Level.SEVERE, "웹 소켓 시작중 오류", e);
 			return false;
 		}
-		this.httpServer.start();
+		this.httpServer.startModule();
 		this.webSessionManager.start();
+		logger.log(Level.INFO, "웹 서비스 시작 완료");
 		return true;
 	}
 
 	public void stopModule()
 	{
+		logger.log(Level.INFO, "웹 서비스 종료");
 		this.webSessionManager.stop();
 		this.webSocketHandler.stop();
 		this.httpServer.stop();
+		logger.log(Level.INFO, "웹 서비스 종료 완료");
 	}
 
 }

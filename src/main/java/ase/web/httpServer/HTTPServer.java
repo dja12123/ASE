@@ -1,4 +1,5 @@
 package ase.web.httpServer;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,7 +9,6 @@ import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
-import org.nanohttpd.util.ServerRunner;
 
 import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
@@ -139,12 +139,18 @@ public class HTTPServer extends NanoHTTPD
 		return response;
 	}
 	
-	@Override
-	public void start()
+	public void startModule()
 	{
 		this.serviceThread = new Thread(()->
 		{
-			ServerRunner.executeInstance(this);
+			try
+			{
+				this.start(NanoHTTPD.SOCKET_READ_TIMEOUT, true);
+			}
+			catch (IOException e)
+			{
+				logger.log(Level.SEVERE,"http서버 시작중 오류", e);
+			}
 		});
 		this.serviceThread.setDaemon(true);
 		this.serviceThread.start();
