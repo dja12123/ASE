@@ -97,7 +97,8 @@ public class SerialReadManager extends Observable<DevicePacket>
 				
 				if(descriptor.idVendor() == 0x10c4)
 				{
-					LibUsb.releaseInterface(d, address);
+					int r = LibUsb.releaseInterface(d, address);
+					System.out.println(r);
 				}
 				
 				System.out.format("result: %d, Bus %03d, Device %03d: Vendor %04x, Product %04x%n", result, busNumber, address,
