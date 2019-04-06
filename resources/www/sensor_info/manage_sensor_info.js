@@ -64,7 +64,7 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
 	date.getSeconds() +
     "] " +
     msg
-    ].join("");
+    ];
     console.log(getCurrentScrollPercentage(), document.body.scrollHeight);
     if(getCurrentScrollPercentage() > 95){
         document.getElementById('log').append(eLog);
