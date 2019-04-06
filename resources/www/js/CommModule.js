@@ -13,7 +13,7 @@ export class CommModule
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlDisconnect();}, null, ()=>{this.controlDisconnect();});
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, null, ()=>{this.controlDisconnect();});
 	}
 	
 	controlStart()
