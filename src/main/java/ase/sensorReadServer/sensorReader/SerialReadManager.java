@@ -6,6 +6,8 @@ import java.nio.ByteOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.usb4java.DeviceList;
+
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.DataBits;
 import com.pi4j.io.serial.FlowControl;
@@ -51,6 +53,11 @@ public class SerialReadManager extends Observable<DevicePacket>
 	public boolean startModule()
 	{
 		logger.log(Level.INFO, "SerialReadManager 시작");
+		DeviceList list = new DeviceList();
+		list.forEach((device)->{
+			System.out.println("USB:"+ device);
+		});
+		
 		this.config.device(ServerCore.getProp(PROP_SerialDevice));
 		try
 		{
@@ -82,16 +89,8 @@ public class SerialReadManager extends Observable<DevicePacket>
 	
 	public void stopModule()
 	{
+		SerialFactory.shutdown();
 		logger.log(Level.INFO, "SerialReadManager 종료");
-		try
-		{
-			this.serial.close();
-		}
-		catch (IllegalStateException | IOException e)
-		{
-			logger.log(Level.SEVERE, "SerialReadManager 종료중 오류", e);
-		}
-		logger.log(Level.INFO, "SerialReadManager 종료 완료");
 	}
 	
 	private void dataReceived(SerialDataEvent event)
