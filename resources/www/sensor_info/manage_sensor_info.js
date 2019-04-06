@@ -65,13 +65,13 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
     "] " +
     msg
     ].join("");
-    if(document.body.scrollTop >= document.body.scrollHeight){
+    console.log(getCurrentScrollPercentage(), document.body.scrollHeight);
+    if(getCurrentScrollPercentage() > 95){
         document.getElementById('log').append(eLog);
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
     }
     else
         document.getElementById('log').append(eLog);
-
     logNum++;
     if (logNum > 99) logNum = 0; //로그갯수 제한
 }
