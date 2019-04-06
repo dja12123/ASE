@@ -10,7 +10,7 @@ export class CommModule
 		this.isConnect = false;
 		//this.ip = location.host;
 		this.ip = "172.16.1.4";
-		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
+		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
@@ -52,47 +52,6 @@ export class CommModule
 			e.connect();
 		});
 		if(this.reConnectCallback != null)this.reConnectCallback();
-	}
-
-	httpGet(theUrl, callback, params)
-	{
-		var xmlHttp = new XMLHttpRequest();
-		var paramStr="";
-		for(var key in params)
-		{
-			paramStr+=key+"="+params[key]+"&";
-		}
-		if(params)
-		{
-			paramStr = "?"+paramStr.slice(0, -1);
-		}
-		xmlHttp.onreadystatechange = function()
-		{
-			if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
-				callback(xmlHttp.responseText);
-		}
-		xmlHttp.open("GET", theUrl+paramStr);
-		xmlHttp.send(null);
-		return xmlHttp.responseText;
-	}
-
-	getCookie(cookieName)
-	{
-		var search = cookieName + "=";
-		var cookie = document.cookie;
-		if(cookie.length > 0)
-		{
-			var startIndex = cookie.indexOf(cookieName);
-
-			if(startIndex != -1)
-			{
-				startIndex += cookieName.length;
-				var endIndex = cookie.indexOf(";", startIndex);
-				if(endIndex == -1) endIndex = cookie.length;
-				return unescape(cookie.substring(startIndex + 1, endIndex));
-			}
-		}
-		return false;
 	}
 	
 	createChannel(key, wsOpen, onMessage, wsClose)
@@ -159,4 +118,45 @@ export class Channel
 		if(this.connecting) this.ws.close();
 		this.onClose(this);
 	}
+}
+
+function getCookie(cookieName)
+{
+	var search = cookieName + "=";
+	var cookie = document.cookie;
+	if(cookie.length > 0)
+	{
+		var startIndex = cookie.indexOf(cookieName);
+
+		if(startIndex != -1)
+		{
+			startIndex += cookieName.length;
+			var endIndex = cookie.indexOf(";", startIndex);
+			if(endIndex == -1) endIndex = cookie.length;
+			return unescape(cookie.substring(startIndex + 1, endIndex));
+		}
+	}
+	return false;
+}
+
+function httpGet(theUrl, callback, params)
+{
+	var xmlHttp = new XMLHttpRequest();
+	var paramStr="";
+	for(var key in params)
+	{
+		paramStr+=key+"="+params[key]+"&";
+	}
+	if(params)
+	{
+		paramStr = "?"+paramStr.slice(0, -1);
+	}
+	xmlHttp.onreadystatechange = function()
+	{
+		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+			callback(xmlHttp.responseText);
+	}
+	xmlHttp.open("GET", theUrl+paramStr);
+	xmlHttp.send(null);
+	return xmlHttp.responseText;
 }
