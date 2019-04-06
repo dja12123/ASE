@@ -94,7 +94,7 @@ export class CommModule
 		var channel = new Channel(this.ip, key, wsOpen, onMessage, wsClose, (ch)=>
 		{
 			console.log("size:"+this.channelList.length);
-			idx = this.channelList.indexOf(ch);
+			var idx = this.channelList.indexOf(ch);
 			this.channelList.splice(idx);
 			console.log("afterSize:"+this.channelList.length);
 		});
