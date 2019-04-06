@@ -1,4 +1,3 @@
-const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
 const WEB_SOCKET_PORT = "8080";
@@ -11,7 +10,7 @@ export class CommModule
 		this.isConnect = false;
 		//this.ip = location.host;
 		this.ip = "172.16.1.4";
-		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
+		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
@@ -21,7 +20,7 @@ export class CommModule
 	
 	controlStart()
 	{
-		console.log("통신 연결 성공");
+		console.log("Connection successful");
 		this.isConnect = true;
 		this.controlChannel.wsOpen = ()=>{this.controlReconnect();};
 		if(this.startCallback != null) this.startCallback();
@@ -29,8 +28,15 @@ export class CommModule
 	
 	controlDisconnect()
 	{
-		console.log("연결 끊김 재접속 시도..");
-		if(this.isConnect && this.disconnectCallback != null) this.disconnectCallback();
+		if(this.isConnect && this.disconnectCallback != null)
+		{
+			console.log("Disconnect, try to reconnect");
+			this.disconnectCallback();
+		}
+		else
+		{
+			console.log("try to reconnect...");
+		}
 		this.isConnect = false;
 		setTimeout(()=>
 		{
@@ -40,67 +46,23 @@ export class CommModule
 	
 	controlReconnect()
 	{
-		console.log("재접속 완료");
+		console.log("Reconnection completed");
 		this.isConnect = true;
 		this.channelList.forEach((e)=>{
 			e.connect();
 		});
 		if(this.reConnectCallback != null)this.reConnectCallback();
 	}
-
-	httpGet(theUrl, callback, params)
-	{
-		var xmlHttp = new XMLHttpRequest();
-		var paramStr="";
-		for(var key in params)
-		{
-			paramStr+=key+"="+params[key]+"&";
-		}
-		if(params)
-		{
-			paramStr = "?"+paramStr.slice(0, -1);
-		}
-		xmlHttp.onreadystatechange = function()
-		{
-			if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
-				callback(xmlHttp.responseText);
-		}
-		xmlHttp.open("GET", theUrl+paramStr);
-		xmlHttp.send(null);
-		return xmlHttp.responseText;
-	}
-
-	getCookie(cookieName)
-	{
-		var search = cookieName + "=";
-		var cookie = document.cookie;
-		if(cookie.length > 0)
-		{
-			var startIndex = cookie.indexOf(cookieName);
-
-			if(startIndex != -1)
-			{
-				startIndex += cookieName.length;
-				var endIndex = cookie.indexOf(";", startIndex);
-				if(endIndex == -1) endIndex = cookie.length;
-				return unescape(cookie.substring(startIndex + 1, endIndex));
-			}
-		}
-		return false;
-	}
 	
 	createChannel(key, wsOpen, onMessage, wsClose)
 	{
 		var channel = new Channel(this.ip, key, wsOpen, onMessage, wsClose, (ch)=>
 		{
-			console.log("size:"+this.channelList.length);
-			idx = this.channelList.indexOf(ch);
+			var idx = this.channelList.indexOf(ch);
 			this.channelList.splice(idx);
-			console.log("afterSize:"+this.channelList.length);
 		});
 		this.channelList.push(channel);
-		channel.connect();
-		console.log("insert:"+this.channelList.length);
+		if(this.isConnect) channel.connect();
 		return channel;
 	}	
 }
@@ -124,7 +86,6 @@ export class Channel
 		if(this.connecting || this.isConnect) return;
 		this.connecting = true;
 		this.ws = new WebSocket("ws://"+this.ip+":"+WEB_SOCKET_PORT);
-		console.log("connect key:"+this.key+" ws://"+this.ip+":"+WEB_SOCKET_PORT);
 		this.ws.onopen = () =>
 		{
 			this.isConnect = true;
@@ -142,7 +103,6 @@ export class Channel
 			this.connecting = false;
 			if(this.wsClose != null) this.wsClose(this);
 		};
-		
 	}
 	
 	send(msg)
@@ -158,4 +118,45 @@ export class Channel
 		if(this.connecting) this.ws.close();
 		this.onClose(this);
 	}
+}
+
+function getCookie(cookieName)
+{
+	var search = cookieName + "=";
+	var cookie = document.cookie;
+	if(cookie.length > 0)
+	{
+		var startIndex = cookie.indexOf(cookieName);
+
+		if(startIndex != -1)
+		{
+			startIndex += cookieName.length;
+			var endIndex = cookie.indexOf(";", startIndex);
+			if(endIndex == -1) endIndex = cookie.length;
+			return unescape(cookie.substring(startIndex + 1, endIndex));
+		}
+	}
+	return false;
+}
+
+function httpGet(theUrl, callback, params)
+{
+	var xmlHttp = new XMLHttpRequest();
+	var paramStr="";
+	for(var key in params)
+	{
+		paramStr+=key+"="+params[key]+"&";
+	}
+	if(params)
+	{
+		paramStr = "?"+paramStr.slice(0, -1);
+	}
+	xmlHttp.onreadystatechange = function()
+	{
+		if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+			callback(xmlHttp.responseText);
+	}
+	xmlHttp.open("GET", theUrl+paramStr);
+	xmlHttp.send(null);
+	return xmlHttp.responseText;
 }
