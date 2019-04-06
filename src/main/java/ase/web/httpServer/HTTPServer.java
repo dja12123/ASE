@@ -129,7 +129,7 @@ public class HTTPServer extends NanoHTTPD
 
 	public static Response setCookie(Response response, String key, String value)
 	{
-		response.addCookieHeader(String.format("%s=%s", key, value));
+		response.addCookieHeader(String.format("%s=%s; path=/", key, value));
 		return response;
 	}
 	
