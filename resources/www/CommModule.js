@@ -3,12 +3,27 @@ const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
 export class CommModule
 {
-	constructor(startCallback)
+	constructor(startCallback, disconnectCallback, reConnectCallback)
 	{
-		console.log("loaded4");
+		//this.ip = location.host;
 		this.ip = "172.16.1.4";
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback);
+		this.disconnectCallback = disconnectCallback;
+		this.reConnectCallback = reConnectCallback;
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback, null, this.controlDisconnect);
+	}
+	
+	controlDisconnect()
+	{
+		console.log("연결 끊김 재접속 시도..");
+		this.disconnectCallback();
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, this.controlReconnect, null, this.controlDisconnect);
+	}
+	
+	controlReconnect()
+	{
+		console.log("재접속 완료");
+		this.reConnectCallback();
 	}
 
 	httpGet(theUrl, callback, params)
