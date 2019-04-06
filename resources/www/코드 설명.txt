@@ -1,30 +1,30 @@
 
 sensor_list - 목록
  센서 추가: sensor_list. addItem(key, on)
-	addItem(string, boolean)
+	addItem(String, Boolean)
 	addItem(센서 키, 센서 상태)
  센서 삭제: sensor_list. delItem(key)
-	delItem(string)
+	delItem(String)
 	delItem(센서 키)
  센서 상태 변경: sensor_list. state(key, on)
-	state(string, boolean)
+	state(String, Boolean)
 	statet(센서 키, 센서 상태)
 
 sensor_info - 센서의 데이터
  센서 키 표시: sensor_info. dataSetKey(key)
-	dataSetKey(string)
+	dataSetKey(String)
 	dataSetKey(센서 키)
  센서 상태 표시 및 변경: sensor_info. setState(on)
-	setState(boolean)
+	setState(Boolean)
 	setState(센서 상태)
- 센서 테이터 표시 및 변경: sensor_info. setElem(pos)
-	setElem(float(double)[7]) //배열 size = 7;
+ 센서 테이터 표시 및 변경: sensor_info. setElem(time, xg, yg, xa, ya, za, al)
+	setElem(Date, Number) //배열 size = 6;
 	setElem(센서 데이터)
 	//기울기(2), 가속도(3), 고도(1), 온도(1)
  날짜 표시: sensor_info. setDate(date)
-	setDate(string[12]) //"YYMMDDHHMMSS"
+	setDate(Date) Date 객체
 	setDate(날짜)
  로그 추가: sensor_info. addLog(date, msg)
-	addLog(string[12], string) //"YYMMDDHHMMSS"
+	addLog(Date, String) Date 객체
 	addLog(날짜, 메세지)
 	

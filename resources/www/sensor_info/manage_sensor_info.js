@@ -1,9 +1,3 @@
-//날짜 출력형식
-function dateForm(date, text) {
-    for (let i = 0; i < 6; i++)
-        text[i] = date.substring(i * 2, (i + 1) * 2) + text[i];
-    return text;
-}
 
 //"로그" 삭제
 //로그가 있으면 삭제
@@ -11,8 +5,9 @@ function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
 }
+
 // 페이지 시작시 표시할 "센서 키"
-// * dateSetKey(string) 센서 키
+// * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
     //입력된 키 
     document.title = "sensor " + key;
@@ -20,7 +15,7 @@ function dataSetKey(key) {
 }
 
 // 센서의 상태 표시 및 변경 "작동상태"
-// ＊setState(boolean) 작동상태(on/off)
+// ＊setState(Boolean) // 작동상태(on/off)
 function setState(on) {
     console.log(typeof on);
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
@@ -28,7 +23,7 @@ function setState(on) {
 }
 
 // "센서 데이터 값" 설정
-// ＊setElem(float(double)[7]) 기울기(2), 가속도(3), 고도(1), 온도(1) 7개 데이터
+// ＊setElem(Date, Number...) // 날짜, 데이터 6개
 function setSensorData(time, xg, yg, xa, ya, za, al) {
 	setDate(time);
 	document.getElementById("slopX").innerHTML = xg.toFixed(2);
@@ -40,7 +35,7 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 }
 
 // "데이터 수집 시간" 설정
-// * setDate(string[12]) string[12] = "YYMMDDHHMMSS"
+// * setDate(Date) // 날짜
 function setDate(date) {
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
@@ -53,15 +48,27 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(string[12], String) string[12] = "YYMMDDHHMMSS", 메세지
+// * addLog(Date, String) // 날짜, 메세지
 function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
     delLog();
-    var text = dateForm(date, ["/", "/", " ", ":", ":", ""]);
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
-    eLog.innerHTML = ["[NFO][" + text.join('') + "] " + msg + "(" + logNum + ")"].join("");
+    eLog.innerHTML =
+    ["[NFO][" +
+    date.getFullYear() +"/"+
+	date.getMonth() +"/"+
+	date.getDate() +"/ "+
+	date.getHours() +":"+
+	date.getMinutes() +":"+
+	date.getSeconds() +
+    "] " +
+    msg +
+    "(" +
+    logNum +
+    ")"].join("");
     document.getElementById('log').append(eLog);
+    window.scrollTo(0,document.body.scrollHeight);
 
     logNum++;
     if (logNum > 99) logNum = 0; //로그갯수 제한

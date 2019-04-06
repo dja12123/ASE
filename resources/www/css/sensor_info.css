@@ -17,6 +17,12 @@ section>div:nth-child(n + 2), article {
     margin-right: 20px;
 }
 
+/* 센서 상태 _ 아이콘 수정
+.info_on {
+    
+}
+*/
+
 .state {
     margin-top: 13px;
     margin-bottom: 20px;
@@ -81,7 +87,7 @@ label>span:nth-child(1) {
 
 @media (min-width: 401px) {
     article {
-        padding-top: 430px;
+        padding-top: 365px;
         font-size: 16px;
     }
     .pos{
@@ -101,7 +107,7 @@ label>span:nth-child(1) {
         font-size: 12px;
     }
     article {
-        padding-top: 370px;
+        padding-top: 325px;
         font-size: 12px;
     }
     .pos{
@@ -122,7 +128,7 @@ label>span:nth-child(1) {
         font-size: 11px;
     }
     article {
-        padding-top: 340px;
+        padding-top: 300px;
     }
     .pos {
         padding: 1px 3px 1px 5px;
