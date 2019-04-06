@@ -1,11 +1,13 @@
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
+const WEB_SOCKET_PORT = "8080";
 
 export class CommModule
 {
 	constructor(startCallback, disconnectCallback, reConnectCallback)
 	{
+		this.channelList = new Array();
 		this.isConnect = false;
 		//this.ip = location.host;
 		this.ip = "172.16.1.4";
@@ -13,13 +15,15 @@ export class CommModule
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, null, ()=>{this.controlDisconnect();});
+		this.controlChannel = new Channel(this.ip, CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, null, ()=>{this.controlDisconnect();});
+		this.controlChannel.connect();
 	}
 	
 	controlStart()
 	{
 		console.log("통신 연결 성공");
 		this.isConnect = true;
+		this.controlChannel.wsOpen = ()=>{this.controlReconnect();};
 		if(this.startCallback != null) this.startCallback();
 	}
 	
@@ -30,7 +34,7 @@ export class CommModule
 		this.isConnect = false;
 		setTimeout(()=>
 		{
-			this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, ()=>{this.controlReconnect();}, null, ()=>{this.controlDisconnect();});
+			this.controlChannel.connect();
 		}, 3000);
 	}
 	
@@ -38,6 +42,9 @@ export class CommModule
 	{
 		console.log("재접속 완료");
 		this.isConnect = true;
+		this.channelList.forEach((e)=>{
+			e.connect();
+		});
 		if(this.reConnectCallback != null)this.reConnectCallback();
 	}
 
@@ -82,17 +89,63 @@ export class CommModule
 		return false;
 	}
 	
-	createChannel(key, onOpen, onMessage, onClose)
+	createChannel(key, wsOpen, onMessage, wsClose)
 	{
-		var ws = new WebSocket("ws://" + this.ip + ":8080");
-		ws.onopen = () =>
+		var channel = new Channel(this.ip, key, wsOpen, onMessage, wsClose, (ch)=>
 		{
-			ws.send(key);
-			if(onOpen != null) onOpen();
-		};
-		ws.onmessage = onMessage;
-		ws.onclose = onClose;
-		return ws;
+			console.log("size:"+this.channelList.length);
+			idx = this.channelList.indexOf(ch);
+			this.channelList.splice(idx);
+			console.log("afterSize:"+this.channelList.length);
+		});
+		this.channelList.push(channel);
+		channel.connect();
+		console.log("insert:"+this.channelList.length);
+		return channel;
+	}	
+}
+
+export class Channel
+{
+	constructor(ip, key, wsOpen, onMessage, wsClose, onClose)
+	{
+		this.ip = ip;
+		this.key = key;
+		this.wsOpen = wsOpen;
+		this.onMessage = onMessage;
+		this.wsClose = wsClose;
+		this.onClose = onClose;
+		this.isConnect = false;
+		this.connecting = false;
 	}
 	
+	connect()
+	{
+		if(this.connecting || this.wsOpen) return;
+		this.connecting = true;
+		this.ws = new WebSocket("ws://"+this.ip+":"+WEB_SOCKET_PORT);
+		this.ws.onopen = () =>
+		{
+			this.isConnect = true;
+			this.connecting = false;
+			this.ws.send(this.key);
+			if(this.wsOpen != null) this.wsOpen(this);
+		};
+		this.ws.onmessage = (e) =>
+		{
+			if(this.onMessage != null) this.onMessage(e, this);
+		};
+		this.ws.onclose = () =>
+		{
+			this.isConnect = false;
+			this.connecting = false;
+			if(this.wsClose != null) this.wsClose(this);
+		};
+	}
+	
+	close()
+	{
+		if(this.connecting) this.ws.close();
+		this.onClose(this);
+	}
 }
