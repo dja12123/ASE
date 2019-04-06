@@ -95,7 +95,11 @@ public class SerialReadManager extends Observable<DevicePacket>
 					throw new LibUsbException("Unable to read device descriptor", result);
 				}
 				
-				//LibUsb.releaseInterface(d, busNumber);
+				if(descriptor.idVendor() == 0x10c4)
+				{
+					LibUsb.releaseInterface(d, address);
+				}
+				
 				System.out.format("result: %d, Bus %03d, Device %03d: Vendor %04x, Product %04x%n", result, busNumber, address,
 						descriptor.idVendor(), descriptor.idProduct());
 				LibUsb.close(d);
