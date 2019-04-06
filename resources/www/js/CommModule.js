@@ -121,7 +121,7 @@ export class Channel
 	
 	connect()
 	{
-		if(this.connecting || this.wsOpen) return;
+		if(this.connecting || this.isConnect) return;
 		this.connecting = true;
 		this.ws = new WebSocket("ws://"+this.ip+":"+WEB_SOCKET_PORT);
 		console.log("connect key:"+this.key+" ws://"+this.ip+":"+WEB_SOCKET_PORT);
