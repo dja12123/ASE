@@ -16,9 +16,18 @@ import * as COMM from '/js/CommModule.js';
 
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
-{
+{//최초연결
     console.log("commModule load");
     console.log(commModule.sessionUUID);
+},
+function()
+{//연결끊김
+    document.getElementById("main").style.opacity = 0;
+    document.getElementById("")
+},
+function()
+{//재연결
+    document.getElementById("main").style.opacity = 1;
 });
 window.onload = function()
 {
@@ -68,38 +77,39 @@ window.onload = function()
 </head>
 
 <body>
-    <section class="sensor">
-        <header>
-            <div>
-                <i class="fas fa-caret-square-left fa-2x back_btn" onclick="history.back(-1);"></i>
-                <div class="right_empty"></div>
-                <span class="text2"><span id="state_name" class="text2_name"></span><span id="state" class="info_on"></span></span>
+    <div id="main">
+        <section class="sensor">
+            <header>
+                <div>
+                    <i class="fas fa-caret-square-left fa-2x back_btn" onclick="history.back(-1);"></i>
+                    <div class="right_empty"></div>
+                    <span class="text2"><span id="state_name" class="text2_name"></span><span id="state" class="info_on"></span></span>
+                </div>
+            </header>
+            <div></div>
+            <div class="state">
+                <div>
+                    <div class="graph_item">기울기</div>
+                    <label class="pos"> <span class="pos2">X</span> <span id="slopX"></span> <span class="unit">deg</span></label>
+                    <label class="pos"> <span class="pos2">Y</span> <span id="slopY" ></span> <span class="unit">deg</span></label>
+                </div>
+                <div>
+                    <div class="graph_item">가속도</div>
+                    <label class="pos"> <span class="pos2">X</span> <span id="accX"></span> <span class="unit">deg</span></label>
+                    <label class="pos"> <span class="pos2">Y</span> <span id="accY"></span> <span class="unit">mG</span></label>
+                    <label class="pos"> <span class="pos2">Z</span> <span id="accZ"></span> <span class="unit">mG</span></label>
+                </div>
+                <div>
+                    <div class="graph_item">고도</div>
+                    <label class="pos"> <span class="pos2">A</span> <span id="alti"></span> <span class="unit">M</span></label>
+                </div>
             </div>
-        </header>
-        <div></div>
-        <div class="state">
             <div>
-                <div class="graph_item">기울기</div>
-                <label class="pos"> <span class="pos2">X</span> <span id="slopX"></span> <span class="unit">deg</span></label>
-                <label class="pos"> <span class="pos2">Y</span> <span id="slopY" ></span> <span class="unit">deg</span></label>
+                <div>
+                    <span class="uptime_title">데이터 수집 시간</span>
+                </div>
+                <div id="uptime" class="uptime"></div>
             </div>
-            <div>
-                <div class="graph_item">가속도</div>
-                <label class="pos"> <span class="pos2">X</span> <span id="accX"></span> <span class="unit">deg</span></label>
-                <label class="pos"> <span class="pos2">Y</span> <span id="accY"></span> <span class="unit">mG</span></label>
-                <label class="pos"> <span class="pos2">Z</span> <span id="accZ"></span> <span class="unit">mG</span></label>
-            </div>
-            <div>
-                <div class="graph_item">고도</div>
-                <label class="pos"> <span class="pos2">A</span> <span id="alti"></span> <span class="unit">M</span></label>
-            </div>
-        </div>
-        <div>
-            <div>
-                <span class="uptime_title">데이터 수집 시간</span>
-            </div>
-            <div id="uptime" class="uptime"></div>
-        </div>
             <div>
                 <div class="title_log">센서 로그</div>
             </div>
@@ -107,6 +117,11 @@ window.onload = function()
         <article>
             <div id="log" class="logs"></div>
         </article>
-    </body>
+    </div>
+    <div id="disconnected">
+    </div>
+    <div id="reconnect">
+    </div>
+</body>
 
 </html>
