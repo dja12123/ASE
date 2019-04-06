@@ -98,6 +98,7 @@ public class SerialReadManager extends Observable<DevicePacket>
 				//LibUsb.releaseInterface(d, busNumber);
 				System.out.format("result: %d, Bus %03d, Device %03d: Vendor %04x, Product %04x%n", result, busNumber, address,
 						descriptor.idVendor(), descriptor.idProduct());
+				LibUsb.close(d);
 			}
 		}
 		finally
