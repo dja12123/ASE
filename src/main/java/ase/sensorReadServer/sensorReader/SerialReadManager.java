@@ -83,6 +83,15 @@ public class SerialReadManager extends Observable<DevicePacket>
 	public void stopModule()
 	{
 		logger.log(Level.INFO, "SerialReadManager 종료");
+		try
+		{
+			this.serial.close();
+		}
+		catch (IllegalStateException | IOException e)
+		{
+			logger.log(Level.SEVERE, "SerialReadManager 종료중 오류", e);
+		}
+		logger.log(Level.INFO, "SerialReadManager 종료 완료");
 	}
 	
 	private void dataReceived(SerialDataEvent event)
