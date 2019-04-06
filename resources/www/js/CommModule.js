@@ -1,6 +1,7 @@
 const CONTROL_GET_UUID_REQUEST = "control_get_uuid";
 const COOKIE_KEY_SESSION = "sessionUID";
 const CONTROL_CHANNEL_KEY = "control";
+
 export class CommModule
 {
 	constructor(startCallback, disconnectCallback, reConnectCallback)
@@ -10,14 +11,14 @@ export class CommModule
 		this.sessionUUID = this.getCookie(COOKIE_KEY_SESSION);
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback, null, this.controlDisconnect);
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, startCallback, null, this::controlDisconnect);
 	}
 	
 	controlDisconnect()
 	{
 		console.log("연결 끊김 재접속 시도..");
 		if(this.disconnectCallback != null) this.disconnectCallback();
-		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, this.controlReconnect, null, this.controlDisconnect);
+		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, this::controlReconnect, null, this::controlDisconnect);
 	}
 	
 	controlReconnect()
@@ -81,5 +82,3 @@ export class CommModule
 	}
 	
 }
-
-//gg
