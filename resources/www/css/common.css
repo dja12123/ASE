@@ -14,15 +14,13 @@ html, body {
     display:none;
 }
 
-body>div:nth-child(1){
+.main {
+    position: absolute;
     opacity: 1;
 }
 
-body>div:nth-child(2) {
-    opacity: 0;
-}
-
-body>div:nth-child(3) {
+.disconnected {
+    position: absolute;
     opacity: 0;
 }
 

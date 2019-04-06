@@ -23,11 +23,12 @@ var commModule = new COMM.CommModule(function()
 function()
 {//연결끊김
     document.getElementById("main").style.opacity = 0;
-    document.getElementById("")
+    document.getElementById("disconnected").style.opacity = 1;
 },
 function()
 {//재연결
     document.getElementById("main").style.opacity = 1;
+    document.getElementById("disconnected").style.opacity = 0;
 });
 window.onload = function()
 {
