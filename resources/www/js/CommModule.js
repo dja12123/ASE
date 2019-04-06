@@ -16,14 +16,14 @@ export class CommModule
 	controlDisconnect()
 	{
 		console.log("연결 끊김 재접속 시도..");
-		this.disconnectCallback();
+		if(this.disconnectCallback != null) this.disconnectCallback();
 		this.controlChannel = this.createChannel(CONTROL_CHANNEL_KEY, this.controlReconnect, null, this.controlDisconnect);
 	}
 	
 	controlReconnect()
 	{
 		console.log("재접속 완료");
-		this.reConnectCallback();
+		if(this.reConnectCallback != null)this.reConnectCallback();
 	}
 
 	httpGet(theUrl, callback, params)
