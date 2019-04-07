@@ -22,7 +22,6 @@ public class HTTPServer extends NanoHTTPD
 	public static final String WEB_RES_DIR = "/www";
 	
 	private final WebSessionManager webSessionManager;
-	private Thread serviceThread;
 	
 	public HTTPServer(int port, WebSessionManager webSessionManager)
 	{
@@ -144,7 +143,5 @@ public class HTTPServer extends NanoHTTPD
 		{
 			logger.log(Level.SEVERE,"http서버 시작중 오류", e);
 		}
-		this.serviceThread.setDaemon(true);
-		this.serviceThread.start();
 	}
 }
