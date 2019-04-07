@@ -88,6 +88,19 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     if (logNum > 99) logNum = 0; //로그갯수 제한
 }
 
+function infoDisconnect() {
+    document.getElementById("main").style.opacity = 0.4;
+    document.body.innerHTML += 
+    '<div id="disconnected" class="disconnected">' +
+    '<span>연결 끊김<br/>재접속 시도중</span>' +
+    '</div>';
+}
+
+function infoReconnect() {
+    document.getElementById("main").style.opacity = 1;
+    document.body.removeChild(document.getElementById("disconnected"));
+}
+
 function getParameter(name){
     search=location.search;
     if(!search){

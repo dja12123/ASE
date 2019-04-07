@@ -61,3 +61,16 @@ function state(key, on)
 	var sensor = document.getElementById("stat"+key);
 	if(sensor.checked != on) sensor.checked = on;
 }
+
+function listDisconnect() {
+    document.getElementById("main").style.opacity = 0.4;
+    document.body.innerHTML += 
+    '<div id="disconnected" class="disconnected">' +
+    '<span>연결 끊김<br/>재접속 시도중</span>' +
+    '</div>';
+}
+
+function listReconnect() {
+    document.getElementById("main").style.opacity = 1;
+    document.body.removeChild(document.getElementById("disconnected"));
+}
