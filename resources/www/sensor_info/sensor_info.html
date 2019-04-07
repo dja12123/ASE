@@ -19,6 +19,21 @@ var commModule = new COMM.CommModule(function()
 {//최초연결
     console.log("commModule load");
     console.log(commModule.sessionUUID);
+
+	
+},
+function()
+{//연결끊김
+    document.getElementById("main").style.opacity = 0;
+    document.getElementById("disconnected").style.opacity = 1;
+},
+function()
+{//재연결
+    document.getElementById("main").style.opacity = 1;
+    document.getElementById("disconnected").style.opacity = 0;
+});
+window.onload = function()
+{
 	var sensorID = getParameter("key");
 	dataSetKey(sensorID);
     var sensorData = commModule.createChannel("RealtimeSensorDataRequest",()=>
@@ -57,21 +72,6 @@ var commModule = new COMM.CommModule(function()
 			setState(data[1] == "true");
 		}
     });
-	
-},
-function()
-{//연결끊김
-    document.getElementById("main").style.opacity = 0;
-    document.getElementById("disconnected").style.opacity = 1;
-},
-function()
-{//재연결
-    document.getElementById("main").style.opacity = 1;
-    document.getElementById("disconnected").style.opacity = 0;
-});
-window.onload = function()
-{
-
     // log Bottom
     window.scrollTo(0,document.body.scrollHeight);
 }
