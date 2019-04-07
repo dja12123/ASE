@@ -51,6 +51,7 @@ public class GPIOControl
 	
 	private void gpioListener(GpioPinDigitalStateChangeEvent event)
 	{
+		System.out.println(event.getSource());
 		if(event.getSource() == this.btn1)
 		{
 			this.gpioEventProvider.notifyObservers(new GPIOEvent(this.btn1, event.getState().isHigh()));
