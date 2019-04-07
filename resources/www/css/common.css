@@ -21,7 +21,7 @@ html, body {
 .disconnected {
     top: 0;
     position: fixed;
-    opacity: 0;
+    opacity: 1;
 }
 
 header {
