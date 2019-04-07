@@ -19,9 +19,22 @@ html, body {
 }
 
 .disconnected {
-    top: 0;
     position: fixed;
-    opacity: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+}
+
+.disconnected>span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    margin: auto;
+    text-align: center;
 }
 
 header {
@@ -69,9 +82,13 @@ header>div {
 
         font-size: 16px;
     }
-    .back_btn{
+    .back_btn {
         margin: 15px 0 0 30px;
         width: 30px;
+    }
+    .disconnected>span {
+        width: 300px;
+        font-size: 32px;
     }
 }
 
@@ -106,5 +123,9 @@ header>div {
         margin: 15px 10px 0 3px;
         height: 30px;
         width: 30px;
+    }
+    .disconnected>span {
+        width: 200px;
+        font-size: 18px;
     }
 }
