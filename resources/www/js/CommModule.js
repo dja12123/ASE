@@ -63,6 +63,10 @@ export class CommModule
 			{
 				this.isReconnect = true;
 				if(this.startCallback != null) this.startCallback();
+				this.channelList.forEach((e)=>
+				{
+					e.connect();
+				});
 				console.log("connection successful, sessionID:"+this.sessionUUID);
 			}
 		}

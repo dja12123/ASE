@@ -69,8 +69,8 @@ public class WebSession implements ISession
 		}
 		else
 		{
-			this._channelList.remove(ch);
 			this.channelObservable.notifyObservers(new ChannelEvent(ch, false));
+			this._channelList.remove(ch);
 		}
 	}
 	
