@@ -24,6 +24,7 @@ public class WebChannel extends WebSocket implements IChannel
 	private Observable<WebChannelEvent> openCloseWSProvider;
 	private Observable<ChannelDataEvent> dataReceiveProvider;
 	private String key;
+	private WebSession assignSession;
 	
 	public WebChannel(IHTTPSession session, Observable<WebChannelEvent> channelObservable)
 	{
@@ -31,6 +32,16 @@ public class WebChannel extends WebSocket implements IChannel
 		this.dataReceiveProvider = new Observable<>();
 		this.openCloseWSProvider = channelObservable;
 		this.key = null;
+	}
+	
+	public void assignSession(WebSession session)
+	{
+		this.assignSession = session;
+	}
+	
+	public WebSession getAssignSession()
+	{
+		return this.assignSession;
 	}
 	
 	@Override
