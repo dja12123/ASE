@@ -6,6 +6,16 @@ function delLog() {
     if (elem != null) elem.remove();
 }
 
+// 자동 스크롤: 현재 스크롤 위치
+function getCurrentScrollPercentage() {
+    return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100;
+}
+
+// 날짜 포멧: 두자리
+function getFormatDate(date) {
+    return (date < 10) ? '0' + date : date;
+}
+
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
@@ -59,11 +69,11 @@ function addLog(info, date, msg) { //100개 제한, 원형큐
     info +
     "][" +
     date.getFullYear() +"/"+
-	date.getMonth() +"/"+
-	date.getDate() +" "+
-	date.getHours() +":"+
-	date.getMinutes() +":"+
-	date.getSeconds() +
+	getFormatDate((date.getMonth()+1)) +"/"+
+	getFormatDate(date.getDate()) +" "+
+	getFormatDate(date.getHours()) +":"+
+	getFormatDate(date.getMinutes()) +":"+
+	getFormatDate(date.getSeconds()) +
     "] " +
     msg
     ];
