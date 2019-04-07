@@ -102,9 +102,9 @@ public class WebChannel extends WebSocket implements IChannel
 	}
 	
 	@Override
-	protected void onException(IOException exception)
+	protected void onException(IOException e)
 	{
-		
+		e.printStackTrace();
 	}
 	
 	@Override

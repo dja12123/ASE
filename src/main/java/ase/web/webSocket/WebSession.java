@@ -43,7 +43,6 @@ public class WebSession implements ISession
 		if(!this.isActive) return;
 		if(ch.getKey().equals(WebSessionManager.CHKEY_CONTROLCH))
 		{
-			System.out.println("제어 채널 추가");
 			ch.assignSession(this);
 			if(this.controlChList.size() == 0)
 			{
@@ -63,7 +62,6 @@ public class WebSession implements ISession
 		if(!this.isActive) return;
 		if(ch.getKey().equals(WebSessionManager.CHKEY_CONTROLCH))
 		{
-			System.out.println("제어 채널 삭제");
 			this.controlChList.remove(ch);
 			if(this.controlChList.size() == 0)
 			{
