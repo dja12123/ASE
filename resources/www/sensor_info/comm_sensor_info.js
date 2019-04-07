@@ -21,7 +21,7 @@ window.onload = function()
     var sensorID = getParameter("key");
     dataSetKey(sensorID);
 
-    // 이전데이터 띄우기
+    // 이전 센서 데이터 요청
     var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
     {
         var numbers = String(1);
@@ -53,7 +53,7 @@ window.onload = function()
     }
     );
 
-
+    // 이전 데이터 로그 요청
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
         var numbers = String(1);
@@ -66,14 +66,14 @@ window.onload = function()
             console.log(Object.keys(data).length);
 			if(Object.keys(data).length > 1)
 			{
-                for(var i in data.sensorData)   // 센서 수 만큼 반복문
+                for(var i in data.sensorData)
                 {
                     var sensorData = data.sensorData[i];
                     console.log(sensorData);
-                    var time = sensorData.time.split("/");
-                    console.log(data.xg);
-				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
+                    addLog(sensorData.level, new Date(sensorData.time), sensorData.message)
                 }
+
+                addLog()
 				
 			}
 
@@ -96,8 +96,13 @@ window.onload = function()
 		var data = JSON.parse(e.data);
 		if(data.result == true)
 		{
-            console.log(data);
-        }
+			console.log(Object.keys(data).length);
+			if(Object.keys(data).length > 1)
+			{
+				var time = data.time.split("/");
+				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
+			}
+		}
 		else
 		{
 			sensorData.close();
@@ -122,6 +127,7 @@ window.onload = function()
     });
 
     // log Bottom
+    // 실시간 센서 로그 요청
     var sensorLog = commModule.createChannel("RealtimeLogDataRequest",()=>
     {
         sensorLog.send(sensorID);
@@ -134,7 +140,7 @@ window.onload = function()
             console.log(object.key(data).length);
             if(object.key(data).length>1) 
             {
-                addLog(data.level, data.time, data.message);
+                addLog(data.level, new Date(data.time), data.message);
             }
         }
         else
