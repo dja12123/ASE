@@ -1,6 +1,6 @@
 
-//"로그" 삭제
-//로그가 있으면 삭제
+// "로그" 삭제
+// 로그가 있으면 삭제
 function delLog() {
     elem = document.getElementById("log" + logNum);
     if (elem != null) elem.remove();
@@ -15,6 +15,7 @@ function getCurrentScrollPercentage() {
 function getFormatDate(date) {
     return (date < 10) ? '0' + date : date;
 }
+
 
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
