@@ -36,9 +36,10 @@ public class GPIOControl
 		logger.log(Level.INFO, "gpio 제어기 활성화");
 		this.gpio = GpioFactory.getInstance();
 		this.gpioListener = this::gpioListener;
-		GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_18, // PIN NUMBER
+		GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, // PIN NUMBER
 				"MyButton", // PIN FRIENDLY NAME (optional)
 				PinPullResistance.PULL_UP);
+		
 		myButton.addListener(this.gpioListener);
 	}
 	
