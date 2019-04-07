@@ -8,8 +8,8 @@ export class CommModule
 	{
 		this.channelList = new Array();
 		this.isConnect = false;
-		//this.ip = location.host;
-		this.ip = "172.16.1.4";
+		this.ip = location.host;
+		//this.ip = "172.16.1.4";
 		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
