@@ -65,15 +65,11 @@ window.onload = function()
         {
 			console.log(data);
             console.log(Object.keys(data).length);
-			if(Object.keys(data).length > 1)
+			for(var i in data.sensorData)
 			{
-                for(var i in data.sensorData)
-                {
-                    var sensorData = data.sensorData[i];
-                    console.log(sensorData);
-                    addLog(sensorData.level, new Date(sensorData.time), sensorData.message)
-                }
-
+				var sensorData = data.sensorData[i];
+				console.log(sensorData);
+				addLog(sensorData.level, new Date(sensorData.time), sensorData.message)
 			}
 
         }
@@ -137,8 +133,8 @@ window.onload = function()
         if(data.result == true)
         {
             console.log("logData:" + data);
-            console.log(object.key(data).length);
-            if(object.key(data).length>1) 
+            console.log(Object.key(data).length);
+            if(Object.key(data).length>1) 
             {
                 addLog(data.level, new Date(data.time), data.message);
             }
