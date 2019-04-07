@@ -52,7 +52,17 @@ header>div {
 
 .back_btn{
     float: left;
-
+    height: 30px;
+    width: 28px;
+    margin-top: 15px;
+    margin-left: 15px;
+    border: 2px solid rgb(68, 150, 218);
+    border-radius: 10px;
+    text-align: center;
+    line-height: 23px;
+    padding-right: 2px;
+    font-size: 30px;
+    font-weight: 700;
     color: rgb(68, 150, 218);
 }
 
@@ -82,10 +92,6 @@ header>div {
 
         font-size: 16px;
     }
-    .back_btn {
-        margin: 15px 0 0 30px;
-        width: 30px;
-    }
     .disconnected>span {
         width: 300px;
         font-size: 32px;
@@ -114,10 +120,7 @@ header>div {
         margin: 22px auto;
 
         font-size: 12px;
-    }
-    .back_btn{
-        margin: 15px 3px 0 10px;
-    }    
+    }   
     .right_empty {
         float: right;
         margin: 15px 10px 0 3px;
