@@ -58,15 +58,15 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(string, Date, String) // NFO, 날짜, 메세지
-function addLog(info, date, msg) { //100개 제한, 원형큐
+// * addLog(string, Date, String) // level, 날짜, 메세지
+function addLog(level, date, msg) { //100개 제한, 원형큐
     delLog();
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
     eLog.innerHTML = [
     "[" +
-    info +
+    level +
     "][" +
     date.getFullYear() +"/"+
 	getFormatDate((date.getMonth()+1)) +"/"+
