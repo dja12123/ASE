@@ -63,6 +63,7 @@ window.onload = function()
         var data = JSON.parse(e.data);
         if(data.result = true)
         {
+			console.log(data);
             console.log(Object.keys(data).length);
 			if(Object.keys(data).length > 1)
 			{
