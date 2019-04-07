@@ -34,17 +34,21 @@ function reconnect(){
 });
 window.onload = function()
 {
+    var sensorID = getParameter("key");
+    dataSetKey(sensorID);
+
     // 이전데이터 띄우기
     var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
     {
-        beforeSensorData.send(sensorID);
+        var numbers = String(1);
+        beforeSensorData.send(sensorID + "/" + numbers);
     }, (e) =>
     {
         var data = JSON.parse(e.data);
         if(data.result = true)
         {
             console.log(data);
-            
+
         }
         else
         {
@@ -53,8 +57,7 @@ window.onload = function()
     }
     );
     
-	var sensorID = getParameter("key");
-    dataSetKey(sensorID);
+	
     
     // 실시간 센서 데이터 요청
     var sensorData = commModule.createChannel("RealtimeSensorDataRequest",()=>
