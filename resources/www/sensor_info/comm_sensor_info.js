@@ -60,7 +60,7 @@ window.onload = function()
     }, (e) =>
     {
         var data = JSON.parse(e.data);
-        if(data.result = true)
+        if(data.result == true)
         {
 			console.log(data);
             console.log(Object.keys(data).length);
@@ -68,16 +68,15 @@ window.onload = function()
 			{
 				var sensorLog = data.sensorLog[i];
 				console.log(sensorLog);
-				addLog(sensorLog.level, new Date(sensorLog.time), sensorLog.message)
+				var time = sensorLog.time.split("/");
+				addLog(sensorLog.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorLog.message)
 			}
-
         }
         else
         {
             beforeSensorLog.close();
         }
-    }
-    );
+    });
     
 	
     
@@ -132,11 +131,8 @@ window.onload = function()
         if(data.result == true)
         {
             console.log("logData:" + data);
-            console.log(Object.key(data).length);
-            if(Object.key(data).length>1) 
-            {
-                addLog(data.level, new Date(data.time), data.message);
-            }
+			var time = data.time.split("/");
+            addLog(data.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.message);
         }
         else
         {
