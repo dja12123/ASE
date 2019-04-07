@@ -47,16 +47,14 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{
 		IHTTPSession request = e.channel.getHandshakeRequest();
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
-		if(sessionUIDStr == null || this.sessionMap.containsKey(UUID.fromString(sessionUIDStr)))
+		if(sessionUIDStr == null || !this.sessionMap.containsKey(UUID.fromString(sessionUIDStr)))
 		{
 			if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
 			{
 				this.newRequest(e.channel);
+				return;
 			}
-			else
-			{
-				logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
-			}
+			logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
 			return;
 		}
 		else
