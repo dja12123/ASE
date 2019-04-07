@@ -40,7 +40,16 @@ window.onload = function()
         beforeSensorData.send(sensorID);
     }, (e) =>
     {
-
+        var data = JSON.parse(e.data);
+        if(data.result = true)
+        {
+            console.log(data);
+            
+        }
+        else
+        {
+            beforeSensorData.close();
+        }
     }
     );
     
