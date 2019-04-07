@@ -23,7 +23,7 @@ import ase.web.httpServer.HTTPServer;
 public class WebSessionManager extends Observable<SessionEvent>
 {
 	private static final Logger logger = LogWriter.createLogger(WebSessionManager.class, "SessionManager");
-	public static final String COOKIE_KEY_SESSION = "sessionUID";
+	public static final String COOKIE_KEY_SESSION = "sessionUUID";
 	public static final String CHKEY_CONTROLCH = "control";
 	
 	private final Observable<WebChannelEvent> channelProvider;
