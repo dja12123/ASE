@@ -95,7 +95,7 @@ window.onload = function()
     });
 
     // log Bottom
-    var sensorLog = commModule.createChannel("RealtimeSensorLog",()=>
+    var sensorLog = commModule.createChannel("AllSensorLogRequest",()=>
     {
         sensorLog.send(sensorID);
     },(e) =>
@@ -105,7 +105,7 @@ window.onload = function()
         {
             console.log("logData:" + data);
             console.log(object.key(data).length);
-            if(object.key(data).length>1)
+            if(object.key(data).length>1) 
             {
                 addLog(data.level, data.time, data.message);
             }
