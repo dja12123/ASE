@@ -89,7 +89,7 @@ window.onload = function()
             console.log(object.key(data).length);
             if(object.key(data).length>1)
             {
-                addLog();
+                addLog(data.level, data.time, data.message);
             }
         }
         else
