@@ -59,8 +59,14 @@ public class WebSessionManager extends Observable<SessionEvent>
 		}
 		else
 		{
+			if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
+			{
+				logger.log(Level.WARNING, "확인된 채널:"+e.channel.toString());
+				
+			}
 			UUID sessionUID = UUID.fromString(sessionUIDStr);
 			WebSession session = this._sessionMap.get(sessionUID);
+			this.sendControlMessage(e.channel, session);
 			this.requestService(request, session, e.channel, e.isOpen);
 		}
 	}
@@ -68,15 +74,20 @@ public class WebSessionManager extends Observable<SessionEvent>
 	private void newRequest(WebChannel ch)
 	{
 		UUID newUUID = UUID.randomUUID();
-		JsonObject json = new JsonObject();
-		json.addProperty("cmdType", "setUUID");
-		json.addProperty("sessionUUID", newUUID.toString());
-		ch.sendData(json.toString());
 		WebSession session = new WebSession(newUUID, this.sessionConfigAccess, this.sessionCloseCallback);
 		this._sessionMap.put(newUUID, session);
+		this.sendControlMessage(ch, session);
 		this.notifyObservers(new SessionEvent(session, true));
 		session.onCreateChannel(ch);
 		logger.log(Level.INFO, "세션 수립:"+session.toString());
+	}
+	
+	private void sendControlMessage(WebChannel ch, WebSession session)
+	{
+		JsonObject json = new JsonObject();
+		json.addProperty("cmdType", "setUUID");
+		json.addProperty("sessionUUID", session.sessionUID.toString());
+		ch.sendData(json.toString());
 	}
 	
 	private void requestService(IHTTPSession request, WebSession session, WebChannel channel, boolean isOpen)
