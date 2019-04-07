@@ -108,11 +108,11 @@ public class HTTPServer extends NanoHTTPD
 			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
 			if(s != null)
 			{
-				logger.log(Level.INFO, s.toString() + ": " +request.getMethod() + " '" + request.getUri() + "' ");
+
 				return;
 			}
 		}
-		logger.log(Level.INFO, "nosession: " +request.getMethod() + " '" + request.getUri() + "' ");
+
 	}
 	
 	public static String getCookie(IHTTPSession request, String key)
