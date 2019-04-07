@@ -24,8 +24,7 @@ window.onload = function()
     // 이전 센서 데이터 요청
     var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
     {
-        var numbers = String(1);
-        beforeSensorData.send(sensorID + "/" + numbers);
+        beforeSensorData.send(sensorID + "/" + String(1));
     }, (e) =>
     {
         var data = JSON.parse(e.data);
@@ -55,8 +54,7 @@ window.onload = function()
     // 이전 데이터 로그 요청
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
-        var numbers = String(1);
-        beforeSensorLog.send(sensorID + "/" + numbers);
+        beforeSensorLog.send(sensorID + "/" + String(100));
     }, (e) =>
     {
         var data = JSON.parse(e.data);
