@@ -25,6 +25,7 @@ window.onload = function()
 		var data = JSON.parse(e.data);
 		console.log(data);
 		console.log("count:" + data.count)
+		setTotal(data.count);
 		for(var i in data.data) // 센서 수 만큼 반복문
 		{
 			addItem(data.data[i].id, data.data[i].on);
