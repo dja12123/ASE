@@ -128,15 +128,15 @@ window.onload = function()
     {
         console.log(e.data);
         var data = JSON.parse(e.data);
-        if(data.result == true)
+		if(data.result != true)
+		{
+			sensorLog.close();
+		}
+        if(data.result == true && data.message)
         {
             console.log("logData:" + data);
 			var time = data.time.split("/");
             addLog(data.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.message);
-        }
-        else
-        {
-            sensorLog.close();
         }
 
     });
