@@ -66,7 +66,7 @@
     }
 }
 
-@media (min-width: 316px) and (max-width: 400px) {
+@media (min-width: 296px) and (max-width: 400px) {
     .item {
         padding: 0 15px 0 15px;
         margin: 18px 26px 18px 26px;
@@ -78,7 +78,7 @@
     }
 }
 
-@media (max-width: 315px) {
+@media (max-width: 295px) {
     .item {
         padding: 0 6px 0 6px;
         margin: 18px 5px 0 5px;
