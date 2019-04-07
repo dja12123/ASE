@@ -21,7 +21,7 @@ public abstract class ServiceInstance
 	{
 		this.key = key;
 		this.channel = channel;
-		this.onDataRecieve = this::onDataRecive;
+		this.onDataRecieve = this::onDataReceive;
 	}
 	
 	public final void startService(Consumer<ServiceInstance> destroyCallback)
@@ -42,5 +42,5 @@ public abstract class ServiceInstance
 	
 	protected abstract void onDestroy();
 	
-	protected abstract void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event);
+	protected abstract void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event);
 }

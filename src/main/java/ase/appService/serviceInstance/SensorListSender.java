@@ -47,7 +47,7 @@ public class SensorListSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		// TODO Auto-generated method stub
 		
