@@ -1,5 +1,4 @@
 
-
 // add, del함수 실행시 total체크
 // * setTotal(Number) 센서 개수
 function setTotal(total) {
