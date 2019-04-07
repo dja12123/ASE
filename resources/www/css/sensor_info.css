@@ -39,6 +39,8 @@ section>div:nth-child(5) {
 }
 
 .pos {
+    display: inline-block;
+    width: 120px;
     margin-right: 2px;
     border-radius: 9px;
     border-right: 1px solid gray;
