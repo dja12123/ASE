@@ -34,7 +34,7 @@ section>div:nth-child(5) {
     background: white;
 }
 
-.graph_item {
+.state_item {
     margin: 3px 0 3px 5px;
 }
 
@@ -50,7 +50,7 @@ section>div:nth-child(5) {
     margin: 10px 0 10px 0;
 }
 
-label>span:nth-child(1) {
+.pos>span:nth-child(1) {
     color: steelblue;
 }
 
