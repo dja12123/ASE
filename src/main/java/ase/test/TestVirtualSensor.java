@@ -2,7 +2,7 @@ package ase.test;
 
 import java.util.Random;
 
-import ase.sensorReadServer.sensorManager.SensorManager;
+import ase.sensorManager.SensorManager;
 
 public class TestVirtualSensor
 {
