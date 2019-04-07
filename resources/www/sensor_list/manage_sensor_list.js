@@ -1,12 +1,11 @@
 
-
-//add, del함수 실행시 total체크
+// add, del함수 실행시 total체크
+// * setTotal(Number) 센서 개수
 function setTotal(total) {
 	var msg;
 	if(total > 0) msg = total + "개의 센서 확인";
 	else msg = "확인된 센서가 없습니다"
-	document.getElementById("total")
-		.innerHTML = msg;
+	document.getElementById("total").innerHTML = msg;
 }
 
 // "센서" 추가
