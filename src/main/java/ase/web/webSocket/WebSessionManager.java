@@ -51,10 +51,9 @@ public class WebSessionManager extends Observable<SessionEvent>
 		{
 			if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
 			{
-				this.newRequest(e.channel);
+				this.createSessionTask(e.channel);
 				return;
 			}
-			logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
 			return;
 		}
 
@@ -62,14 +61,13 @@ public class WebSessionManager extends Observable<SessionEvent>
 		WebSession session = this._sessionMap.get(sessionUID);
 		if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
 		{
-			logger.log(Level.WARNING, "확인된 채널:"+e.channel.toString());
 			this.sendControlMessage(e.channel, session);
 		}
 		this.requestService(request, session, e.channel, e.isOpen);
 	
 	}
 	
-	private void newRequest(WebChannel ch)
+	private void createSessionTask(WebChannel ch)
 	{
 		UUID newUUID = UUID.randomUUID();
 		WebSession session = new WebSession(newUUID, this.sessionConfigAccess, this.sessionCloseCallback);
