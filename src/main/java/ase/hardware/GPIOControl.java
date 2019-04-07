@@ -17,10 +17,20 @@ public class GPIOControl
 {
 	public static final Logger logger = LogWriter.createLogger(GPIOControl.class, "gpio");
 	
-	public static final GPIOControl inst = new GPIOControl();
+	private static GPIOControl inst;
 	private final GpioController gpio;
 	private GpioPinListenerDigital gpioListener;
 
+	public static void init()
+	{
+		inst = new GPIOControl();
+	}
+	
+	public static GPIOControl inst()
+	{
+		return inst;
+	}
+	
 	private GPIOControl()
 	{
 		logger.log(Level.INFO, "gpio 제어기 활성화");

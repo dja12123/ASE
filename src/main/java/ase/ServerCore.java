@@ -22,6 +22,7 @@ import ase.console.LogWriter;
 import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
+import ase.hardware.GPIOControl;
 import ase.sensorManager.SensorManager;
 import ase.sensorReader.SerialReadManager;
 import ase.sensorReader.TcpSensorReadManager;
@@ -53,6 +54,8 @@ public class ServerCore
 		{
 			return;
 		}
+		
+		GPIOControl.init();
 		
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
