@@ -65,8 +65,10 @@ public class WebSessionManager extends Observable<SessionEvent>
 			logger.log(Level.WARNING, "확인된 채널:"+e.channel.toString());
 			this.sendControlMessage(e.channel, session);
 		}
-		this.requestService(request, session, e.channel, e.isOpen);
-	
+		else
+		{
+			this.requestService(request, session, e.channel, e.isOpen);
+		}
 	}
 	
 	private void newRequest(WebChannel ch)
