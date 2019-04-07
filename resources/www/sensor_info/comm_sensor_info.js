@@ -52,6 +52,38 @@ window.onload = function()
         }
     }
     );
+
+
+    var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
+    {
+        var numbers = String(1);
+        beforeSensorData.send(sensorID + "/" + numbers);
+    }, (e) =>
+    {
+        var data = JSON.parse(e.data);
+        if(data.result = true)
+        {
+            console.log(Object.keys(data).length);
+			if(Object.keys(data).length > 1)
+			{
+                for(var i in data.sensorData)   // 센서 수 만큼 반복문
+                {
+                    var sensorData = data.sensorData[i];
+                    console.log(sensorData);
+                    var time = sensorData.time.split("/");
+                    console.log(data.xg);
+				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
+                }
+				
+			}
+
+        }
+        else
+        {
+            beforeSensorData.close();
+        }
+    }
+    );
     
 	
     
@@ -64,13 +96,8 @@ window.onload = function()
 		var data = JSON.parse(e.data);
 		if(data.result == true)
 		{
-			console.log(Object.keys(data).length);
-			if(Object.keys(data).length > 1)
-			{
-				var time = data.time.split("/");
-				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
-			}
-		}
+            console.log(data);
+        }
 		else
 		{
 			sensorData.close();
@@ -95,7 +122,7 @@ window.onload = function()
     });
 
     // log Bottom
-    var sensorLog = commModule.createChannel("AllSensorLogRequest",()=>
+    var sensorLog = commModule.createChannel("RealtimeLogDataRequest",()=>
     {
         sensorLog.send(sensorID);
     },(e) =>
