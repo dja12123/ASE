@@ -28,9 +28,7 @@ function dataSetKey(key) {
 // 센서의 상태 표시 및 변경 "작동상태"
 // ＊setState(Boolean) // 작동상태(on/off)
 function setState(on) {
-    console.log(typeof on);
     document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
-    //asdf
 }
 
 // "센서 데이터 값" 설정
@@ -46,7 +44,7 @@ function setSensorData(time, xg, yg, xa, ya, za, al) {
 }
 
 // "데이터 수집 시간" 설정
-// * setDate(Date) // 날짜
+// * setDate(Date) // Date 객체
 function setDate(date) {
     document.getElementById('uptime').innerHTML =
 	(date.getFullYear()+"년 "+
@@ -59,7 +57,7 @@ function setDate(date) {
 
 var logNum = 0;
 // "로그" 추가
-// * addLog(string, Date, String) // NFO, 날짜, 메세지
+// * addLog(string, Date, String) // NFO, Date 객체, 메세지
 function addLog(level, date, msg) { //100개 제한, 원형큐
     delLog();
     var eLog = document.createElement("div");
@@ -70,7 +68,7 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     level +
     "][" +
     date.getFullYear() +"/"+
-	getFormatDate((date.getMonth()+1)) +"/"+
+	getFormatDate(date.getMonth()) +"/"+
 	getFormatDate(date.getDate()) +" "+
 	getFormatDate(date.getHours()) +":"+
 	getFormatDate(date.getMinutes()) +":"+
@@ -78,7 +76,7 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     "] " +
     msg
     ];
-    // 자동스크롤
+    // 자동 스크롤
     if(getCurrentScrollPercentage() > 95){
         document.getElementById('log').append(eLog);
         window.scrollTo(0, document.body.scrollHeight);
@@ -89,6 +87,7 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     if (logNum > 99) logNum = 0; //로그갯수 제한
 }
 
+// 연결 끊김
 function infoDisconnect() {
     document.getElementById("main").style.opacity = 0.4;
     document.body.innerHTML += 
@@ -97,10 +96,12 @@ function infoDisconnect() {
     '</div>';
 }
 
+// 재접속
 function infoReconnect() {
     document.getElementById("main").style.opacity = 1;
     document.body.removeChild(document.getElementById("disconnected"));
 }
+
 
 function getParameter(name){
     search=location.search;
