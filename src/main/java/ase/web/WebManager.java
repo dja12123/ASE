@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ase.clientSession.ChannelDataEvent;
 import ase.console.LogWriter;
 import ase.sensorReadServer.ServerCore;
-import ase.util.observer.Observable;
 import ase.web.httpServer.HTTPServer;
-import ase.web.webSocket.WebChannelEvent;
 import ase.web.webSocket.WebSessionManager;
 import ase.web.webSocket.WebSocketHandler;
 
@@ -38,18 +35,6 @@ public class WebManager
 		this.httpServer = new HTTPServer(this.webServerPort, this.webSessionManager);
 		
 		
-	}
-
-	public static void main(String[] args)
-	{
-		WebManager webServer = new WebManager();
-		webServer.webSocketHandler.addChannelObserver((Observable<WebChannelEvent> o1, WebChannelEvent e1)->{
-			System.out.println("채널오픈" + e1.channel.toString());
-			e1.channel.addDataReceiveObserver((Observable<ChannelDataEvent> o, ChannelDataEvent e)->{
-				System.out.println("채널 데이타 수신" + e1.channel.toString() + " " + e.toString());
-			});
-		});
-		webServer.startModule();
 	}
 
 	public boolean startModule()
