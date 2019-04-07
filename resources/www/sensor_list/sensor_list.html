@@ -44,16 +44,18 @@ var commModule = new COMM.CommModule(function()
 	console.log(commModule.sessionUUID);
 
 },
-function()
-{//연결끊김
-    document.getElementById("main").style.opacity = 0;
+// 연결 끊김
+function disconnect(){
+    document.getElementById("main").style.opacity = 0.5;
     document.getElementById("disconnected").style.opacity = 1;
 },
-function()
-{//재연결
+// 재접속
+function reconnect(){
     document.getElementById("main").style.opacity = 1;
     document.getElementById("disconnected").style.opacity = 0;
 });
+
+
 window.onload = function()
 {
 	var sensorListCh = commModule.createChannel("SensorListRequest", null, (e) =>
