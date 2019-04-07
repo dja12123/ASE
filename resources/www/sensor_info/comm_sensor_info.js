@@ -133,6 +133,7 @@ window.onload = function()
         sensorLog.send(sensorID);
     },(e) =>
     {
+        console.log(e.data);
         var data = JSON.parse(e.data);
         if(data.result == true)
         {
