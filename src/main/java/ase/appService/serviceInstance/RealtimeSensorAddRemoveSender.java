@@ -33,7 +33,7 @@ public class RealtimeSensorAddRemoveSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		
 	}

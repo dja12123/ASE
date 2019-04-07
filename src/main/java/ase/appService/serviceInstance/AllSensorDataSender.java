@@ -34,7 +34,7 @@ public class AllSensorDataSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		JsonObject json = new JsonObject();
 		String[] input;

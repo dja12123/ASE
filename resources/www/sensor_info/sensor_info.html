@@ -34,6 +34,16 @@ function reconnect(){
 });
 window.onload = function()
 {
+    // 이전데이터 띄우기
+    var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
+    {
+        beforeSensorData.send(sensorID);
+    }, (e) =>
+    {
+
+    }
+    );
+    
 	var sensorID = getParameter("key");
     dataSetKey(sensorID);
     
@@ -41,7 +51,7 @@ window.onload = function()
     var sensorData = commModule.createChannel("RealtimeSensorDataRequest",()=>
 	{
 		sensorData.send(sensorID);
-	}, (e)=>
+	}, (e) =>
 	{
 		var data = JSON.parse(e.data);
 		if(data.result == true)
@@ -97,9 +107,7 @@ window.onload = function()
             sensorLog.close();
         }
 
-    }
-    
-    )
+    });
 
     window.scrollTo(0,document.body.scrollHeight);
 }

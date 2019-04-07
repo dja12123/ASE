@@ -39,7 +39,7 @@ public class RealtimeSensorOnOffSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataRecive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
 		try
