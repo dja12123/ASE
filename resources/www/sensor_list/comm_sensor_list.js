@@ -10,16 +10,11 @@ var commModule = new COMM.CommModule(function()
 },
 // 연결 끊김
 function disconnect(){
-    document.getElementById("main").style.opacity = 0.5;
-    document.body.innerHTML += 
-    '<div id="disconnected" class="disconnected">' +
-    '<span>연결 끊김<br/>재접속 시도중</span>' +
-    '</div>';
+    listDisconnect();
 },
 // 재접속
 function reconnect(){
-    document.getElementById("main").style.opacity = 1;
-    document.body.removeChild(document.getElementById("disconnected"));
+    listReconnect();
 });
 
 window.onload = function()
