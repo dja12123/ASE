@@ -28,13 +28,13 @@ function dataSetKey(key) {
 // 센서의 상태 표시 및 변경 "작동상태"
 // ＊setState(Boolean) // 작동상태(on/off)
 function setState(on) {
-    document.getElementById("state").innerHTML = ((on) ? "작동중" : "중지");
+    document.getElementById("state").innerHTML = (on ? "작동중" : "중지");
 }
 
 // "센서 데이터 값" 설정
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
-function setSensorData(time, xg, yg, xa, ya, za, al) {
-	setDate(time);
+function setSensorData(date, xg, yg, xa, ya, za, al) {
+	setDate(date);
 	document.getElementById("slopX").innerHTML = xg.toFixed(4);
 	document.getElementById("slopY").innerHTML = yg.toFixed(4);
 	document.getElementById("accX").innerHTML = xa.toFixed(4);
