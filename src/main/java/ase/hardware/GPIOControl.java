@@ -39,7 +39,7 @@ public class GPIOControl
 		GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, // PIN NUMBER
 				"MyButton", // PIN FRIENDLY NAME (optional)
 				PinPullResistance.PULL_DOWN);
-		
+		myButton.setDebounce(1000);
 		myButton.addListener(this.gpioListener);
 	}
 	
