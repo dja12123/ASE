@@ -78,7 +78,6 @@ public class WebSessionManager extends Observable<SessionEvent>
 		this._sessionMap.put(newUUID, session);
 		this.sendControlMessage(ch, session);
 		this.notifyObservers(new SessionEvent(session, true));
-		session.onCreateChannel(ch);
 		logger.log(Level.INFO, "세션 수립:"+session.toString());
 	}
 	
