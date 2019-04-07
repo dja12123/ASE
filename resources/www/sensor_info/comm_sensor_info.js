@@ -10,11 +10,11 @@ var commModule = new COMM.CommModule(function()
 },
 // 연결 끊김
 function disconnect(){
-    listDisconnect();
+    infoDisconnect();
 },
 // 재접속
 function reconnect(){
-    listReconnect();
+    infoReconnect();
 });
 window.onload = function()
 {
