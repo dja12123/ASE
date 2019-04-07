@@ -1,6 +1,6 @@
 package ase.web.webSocket;
 
-import ase.sensorReadServer.ServerCore;
+import ase.ServerCore;
 
 public class SessionConfigAccess
 {

@@ -163,6 +163,5 @@ public class WebChannel extends WebSocket implements IChannel
 		{
 			logger.log(Level.SEVERE, "웹 소켓 기록중 오류", e);
 		}
-		
 	}
 }
