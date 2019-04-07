@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 
+import com.google.gson.JsonObject;
+
 import ase.clientSession.SessionEvent;
 import ase.console.LogWriter;
 import ase.util.observer.Observable;
@@ -22,6 +24,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 {
 	private static final Logger logger = LogWriter.createLogger(WebSessionManager.class, "SessionManager");
 	public static final String COOKIE_KEY_SESSION = "sessionUID";
+	public static final String CHKEY_CONTROLCH = "control";
 	
 	private final Observable<WebChannelEvent> channelProvider;
 	private final SessionConfigAccess sessionConfigAccess;
@@ -44,30 +47,35 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{
 		IHTTPSession request = e.channel.getHandshakeRequest();
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
-		if(sessionUIDStr == null)
+		if(sessionUIDStr == null || this.sessionMap.containsKey(UUID.fromString(sessionUIDStr)))
 		{
-			logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
+			if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
+			{
+				this.newRequest(e.channel);
+			}
+			else
+			{
+				logger.log(Level.WARNING, "확인되지 않은 채널:"+e.channel.toString());
+			}
 			return;
 		}
 		else
 		{
 			UUID sessionUID = UUID.fromString(sessionUIDStr);
-			WebSession session = this._sessionMap.getOrDefault(sessionUID, null);
-			if(session != null)
-			{
-				this.requestService(request, session, e.channel, e.isOpen);
-			}
-			else
-			{
-				if(e.isOpen) this.newRequest(sessionUID, request, e.channel);
-			}
+			WebSession session = this._sessionMap.get(sessionUID);
+			this.requestService(request, session, e.channel, e.isOpen);
 		}
 	}
 	
-	private void newRequest(UUID sessionUID, IHTTPSession request, WebChannel ch)
+	private void newRequest(WebChannel ch)
 	{
-		WebSession session = new WebSession(sessionUID, this.sessionConfigAccess, this.sessionCloseCallback);
-		this._sessionMap.put(sessionUID, session);
+		UUID newUUID = UUID.randomUUID();
+		JsonObject json = new JsonObject();
+		json.addProperty("cmdType", "setUUID");
+		json.addProperty("sessionUUID", newUUID.toString());
+		ch.sendData(json.toString());
+		WebSession session = new WebSession(newUUID, this.sessionConfigAccess, this.sessionCloseCallback);
+		this._sessionMap.put(newUUID, session);
 		this.notifyObservers(new SessionEvent(session, true));
 		session.onCreateChannel(ch);
 		logger.log(Level.INFO, "세션 수립:"+session.toString());

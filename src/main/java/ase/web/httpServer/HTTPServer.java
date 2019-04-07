@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
-import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 
@@ -51,10 +50,7 @@ public class HTTPServer extends NanoHTTPD
 	@Override
 	public Response serve(IHTTPSession request)
 	{
-		Method method = request.getMethod();
 		String uri = request.getUri();
-
-		logger.log(Level.INFO, method + " '" + uri + "' ");
 
 		String msg = "";
 		Response response;
@@ -113,12 +109,11 @@ public class HTTPServer extends NanoHTTPD
 			WebSession s = this.webSessionManager.sessionMap.getOrDefault(sessionUID, null);
 			if(s != null)
 			{
+				logger.log(Level.INFO, s.toString() + ": " +request.getMethod() + " '" + request.getUri() + "' ");
 				return;
 			}
 		}
-		sessionUID = UUID.randomUUID();
-		sessionUIDStr = sessionUID.toString();
-		setCookie(response, WebSessionManager.COOKIE_KEY_SESSION, sessionUIDStr);
+		logger.log(Level.INFO, "nosession: " +request.getMethod() + " '" + request.getUri() + "' ");
 	}
 	
 	public static String getCookie(IHTTPSession request, String key)
@@ -129,7 +124,7 @@ public class HTTPServer extends NanoHTTPD
 
 	public static Response setCookie(Response response, String key, String value)
 	{
-		response.addCookieHeader(String.format("%s=%s; path=/", key, value));
+		response.addCookieHeader(String.format("%s=%s; Path=/", key, value));
 		return response;
 	}
 	
@@ -151,6 +146,7 @@ public class HTTPServer extends NanoHTTPD
 			{
 				logger.log(Level.SEVERE,"http서버 시작중 오류", e);
 			}
+			System.out.println("웹서버시작쓰레드종료");
 		});
 		this.serviceThread.setDaemon(true);
 		this.serviceThread.start();

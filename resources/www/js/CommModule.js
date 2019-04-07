@@ -14,23 +14,21 @@ export class CommModule
 		this.startCallback = startCallback;
 		this.disconnectCallback = disconnectCallback;
 		this.reConnectCallback = reConnectCallback;
-		this.controlChannel = new Channel(this.ip, CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, null, ()=>{this.controlDisconnect();});
+		this.isReconnect = false;
+		this.controlChannel = new Channel(this.ip, CONTROL_CHANNEL_KEY, ()=>{this.controlStart();}, (e)=>{this.controlReceive(e);}, ()=>{this.controlDisconnect();});
 		this.controlChannel.connect();
 	}
 	
 	controlStart()
 	{
-		console.log("Connection successful, sessionID:"+this.sessionUUID);
-		this.isConnect = true;
-		this.controlChannel.wsOpen = ()=>{this.controlReconnect();};
-		if(this.startCallback != null) this.startCallback();
+		console.log("control channel open");
 	}
 	
 	controlDisconnect()
 	{
 		if(this.isConnect && this.disconnectCallback != null)
 		{
-			console.log("Disconnect, try to reconnect");
+			console.log("disconnect, try to reconnect");
 			this.disconnectCallback();
 		}
 		else
@@ -44,15 +42,30 @@ export class CommModule
 		}, 3000);
 	}
 	
-	controlReconnect()
+	controlReceive(e)
 	{
-		this.isConnect = true;
-		this.sessionUUID = getCookie(COOKIE_KEY_SESSION);
-		console.log("Reconnection completed sessionID:"+this.sessionUUID);
-		this.channelList.forEach((e)=>{
-			e.connect();
-		});
-		if(this.reConnectCallback != null)this.reConnectCallback();
+		var data = JSON.parse(e.data);
+		if(data.cmdType == "setUUID")
+		{
+			this.sessionUUID = data.sessionUUID;
+			setCookie("sessionUUID", this.sessionUUID);
+			this.isConnect = true;
+			if(this.isReconnect)
+			{
+				this.channelList.forEach((e)=>
+				{
+					e.connect();
+				});
+				console.log("reconnection successful, sessionID:"+this.sessionUUID);
+				if(this.reConnectCallback != null) this.reConnectCallback();
+			}
+			else
+			{
+				this.isReconnect = true;
+				if(this.startCallback != null) this.startCallback();
+				console.log("connection successful, sessionID:"+this.sessionUUID);
+			}
+		}
 	}
 	
 	createChannel(key, wsOpen, onMessage, wsClose)
@@ -138,6 +151,11 @@ function getCookie(cookieName)
 		}
 	}
 	return false;
+}
+
+function setCookie(cookieName, cookieValue)
+{
+	document.cookie = cookieName+"="+cookieValue+"; Path=/";
 }
 
 function httpGet(theUrl, callback, params)
