@@ -49,7 +49,7 @@ function setDate(date) {
 var logNum = 0;
 // "로그" 추가
 // * addLog(Date, String) // 날짜, 메세지
-function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 변경
+function addLog(date, msg) { //100개 제한, 원형큐
     delLog();
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
@@ -65,7 +65,7 @@ function addLog(date, msg) { //100개 제한, 원형큐 / 위부터 쌓이게 �
     "] " +
     msg
     ];
-    console.log(getCurrentScrollPercentage(), document.body.scrollHeight);
+    // 자동스크롤
     if(getCurrentScrollPercentage() > 95){
         document.getElementById('log').append(eLog);
         window.scrollTo(0, document.body.scrollHeight);
