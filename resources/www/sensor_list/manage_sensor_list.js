@@ -34,7 +34,7 @@ function addItem(key, on) //table -> div 수정
 		'</label>',
 		'</td>',
 		'<td>',
-		'<button class="item-btn" onclick="location.href=\'sensor_info.html?key=',
+		'<button class="item-btn" onclick="location.href=\'../sensor_info/sensor_info.html?key=',
 		key,
 		'\'">VIEW</button>',
 		'</td>',
@@ -60,4 +60,17 @@ function state(key, on)
 {
 	var sensor = document.getElementById("stat"+key);
 	if(sensor.checked != on) sensor.checked = on;
+}
+
+function listDisconnect() {
+    document.getElementById("main").style.opacity = 0.4;
+    document.body.innerHTML += 
+    '<div id="disconnected" class="disconnected">' +
+    '<span>연결 끊김<br/>재접속 시도중</span>' +
+    '</div>';
+}
+
+function listReconnect() {
+    document.getElementById("main").style.opacity = 1;
+    document.body.removeChild(document.getElementById("disconnected"));
 }
