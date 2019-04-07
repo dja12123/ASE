@@ -19,6 +19,7 @@ public class WebSession implements ISession
 	private final SessionConfigAccess sessionConfigAccess;
 	private final List<WebChannel> _channelList;
 	public final List<WebChannel> channelList;
+	private ArrayList<WebChannel> controlChList;
 	private Observable<ChannelEvent> channelObservable;
 	private Consumer<WebSession> closeCallback;
 	
@@ -30,6 +31,7 @@ public class WebSession implements ISession
 		this.sessionUID = sessionUID;
 		this.sessionConfigAccess = config;
 		this._channelList = new ArrayList<>();
+		this.controlChList = new ArrayList<>();
 		this.channelList = Collections.unmodifiableList(this._channelList);
 		this.channelObservable = new Observable<>();
 		this.isActive = true;
@@ -39,22 +41,36 @@ public class WebSession implements ISession
 	public synchronized void onCreateChannel(WebChannel ch)
 	{
 		if(!this.isActive) return;
-		if(this._channelList.size() == 0)
+		if(ch.getKey().equals(WebSessionManager.CHKEY_CONTROLCH))
 		{
-			this.killCloseTimer();
+			if(this.controlChList.size() == 0)
+			{
+				this.killCloseTimer();
+			}
+			this.controlChList.add(ch);
 		}
-		this._channelList.add(ch);
-		this.channelObservable.notifyObservers(new ChannelEvent(ch, true));
+		else
+		{
+			this._channelList.add(ch);
+			this.channelObservable.notifyObservers(new ChannelEvent(ch, true));
+		}
 	}
 	
 	public synchronized void onCloseChannel(WebChannel ch)
 	{
 		if(!this.isActive) return;
-		this._channelList.remove(ch);
-		this.channelObservable.notifyObservers(new ChannelEvent(ch, false));
-		if(this._channelList.size() == 0)
+		if(ch.getKey().equals(WebSessionManager.CHKEY_CONTROLCH))
 		{
-			this.startCloseTimer();
+			this.controlChList.remove(ch);
+			if(this.controlChList.size() == 0)
+			{
+				this.startCloseTimer();
+			}
+		}
+		else
+		{
+			this._channelList.remove(ch);
+			this.channelObservable.notifyObservers(new ChannelEvent(ch, false));
 		}
 	}
 	
