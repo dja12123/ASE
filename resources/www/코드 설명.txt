@@ -24,7 +24,7 @@ sensor_info - 센서의 데이터
  날짜 표시: sensor_info. setDate(date)
 	setDate(Date) Date 객체
 	setDate(날짜)
- 로그 추가: sensor_info. addLog(info, date, msg)
-	addLog(info, Date, String) Date 객체
+ 로그 추가: sensor_info. addLog(level, date, msg)
+	addLog(level, Date, String) Date 객체
 	addLog(NFO, 날짜, 메세지)
 	
