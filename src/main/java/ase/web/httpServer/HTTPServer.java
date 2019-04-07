@@ -136,18 +136,14 @@ public class HTTPServer extends NanoHTTPD
 	
 	public void startModule()
 	{
-		this.serviceThread = new Thread(()->
+		try
 		{
-			try
-			{
-				this.start(NanoHTTPD.SOCKET_READ_TIMEOUT, true);
-			}
-			catch (IOException e)
-			{
-				logger.log(Level.SEVERE,"http서버 시작중 오류", e);
-			}
-			System.out.println("웹서버시작쓰레드종료");
-		});
+			this.start(NanoHTTPD.SOCKET_READ_TIMEOUT, true);
+		}
+		catch (IOException e)
+		{
+			logger.log(Level.SEVERE,"http서버 시작중 오류", e);
+		}
 		this.serviceThread.setDaemon(true);
 		this.serviceThread.start();
 	}
