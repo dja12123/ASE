@@ -37,9 +37,10 @@ window.onload = function()
                 for(var i in data.sensorData)   // 센서 수 만큼 반복문
                 {
                     var sensorData = data.sensorData[i];
+                    console.log(sensorData);
                     var time = sensorData.time.split("/");
                     console.log(data.xg);
-				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
+				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
                 }
 				
 			}
