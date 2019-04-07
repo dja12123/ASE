@@ -31,7 +31,16 @@ window.onload = function()
         var data = JSON.parse(e.data);
         if(data.result = true)
         {
-            console.log(data);
+            console.log(Object.keys(data).length);
+			if(Object.keys(data).length > 1)
+			{
+                for(var i in data.sensorData)   // 센서 수 만큼 반복문
+                {
+                    var time = data.time.split("/");
+				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
+                }
+				
+			}
 
         }
         else
