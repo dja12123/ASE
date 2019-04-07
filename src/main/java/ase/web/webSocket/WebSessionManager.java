@@ -54,6 +54,10 @@ public class WebSessionManager extends Observable<SessionEvent>
 				this.createSessionTask(e.channel);
 				return;
 			}
+			else if(!e.isOpen && e.channel.getAssignSession() != null && this.sessionMap.containsValue(e.channel.getAssignSession()))
+			{
+				e.channel.getAssignSession().onCloseChannel(e.channel);
+			}
 			return;
 		}
 
