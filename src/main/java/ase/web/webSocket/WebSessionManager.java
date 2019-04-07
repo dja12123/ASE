@@ -63,7 +63,8 @@ public class WebSessionManager extends Observable<SessionEvent>
 		{
 			this.sendControlMessage(e.channel, session);
 		}
-		this.requestService(request, session, e.channel, e.isOpen);
+		if(e.isOpen) session.onCreateChannel(e.channel);
+		else session.onCloseChannel(e.channel);
 	
 	}
 	
@@ -85,12 +86,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 		json.addProperty("sessionUUID", session.sessionUID.toString());
 		ch.sendData(json.toString());
 	}
-	
-	private void requestService(IHTTPSession request, WebSession session, WebChannel channel, boolean isOpen)
-	{
-		if(isOpen) session.onCreateChannel(channel);
-		else session.onCloseChannel(channel);
-	}
+
 	
 	private synchronized void sessionCloseCallback(WebSession session)
 	{
