@@ -36,12 +36,12 @@ function setState(on) {
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
 function setSensorData(time, xg, yg, xa, ya, za, al) {
 	setDate(time);
-	document.getElementById("slopX").innerHTML = xg.toFixed(2);
-	document.getElementById("slopY").innerHTML = yg.toFixed(2);
-	document.getElementById("accX").innerHTML = xa.toFixed(2);
-	document.getElementById("accY").innerHTML = ya.toFixed(2);
-	document.getElementById("accZ").innerHTML = za.toFixed(2);
-	document.getElementById("alti").innerHTML = al.toFixed(2);
+	document.getElementById("slopX").innerHTML = xg.toFixed(4);
+	document.getElementById("slopY").innerHTML = yg.toFixed(4);
+	document.getElementById("accX").innerHTML = xa.toFixed(4);
+	document.getElementById("accY").innerHTML = ya.toFixed(4);
+	document.getElementById("accZ").innerHTML = za.toFixed(4);
+	document.getElementById("alti").innerHTML = al.toFixed(4);
 }
 
 // "데이터 수집 시간" 설정
