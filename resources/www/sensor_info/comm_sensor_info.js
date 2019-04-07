@@ -57,7 +57,7 @@ window.onload = function()
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
         var numbers = String(1);
-        beforeSensorData.send(sensorID + "/" + numbers);
+        beforeSensorLog.send(sensorID + "/" + numbers);
     }, (e) =>
     {
         var data = JSON.parse(e.data);
@@ -73,14 +73,12 @@ window.onload = function()
                     addLog(sensorData.level, new Date(sensorData.time), sensorData.message)
                 }
 
-                addLog()
-				
 			}
 
         }
         else
         {
-            beforeSensorData.close();
+            beforeSensorLog.close();
         }
     }
     );
