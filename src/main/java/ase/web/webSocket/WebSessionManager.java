@@ -47,16 +47,16 @@ public class WebSessionManager extends Observable<SessionEvent>
 	{//TODO 로직 개판이므로 수정필요
 		IHTTPSession request = e.channel.getHandshakeRequest();
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
+		if(!e.isOpen && e.channel.getAssignSession() != null && this.sessionMap.containsValue(e.channel.getAssignSession()))
+		{
+			e.channel.getAssignSession().onCloseChannel(e.channel);
+		}
 		if(sessionUIDStr == null || !this.sessionMap.containsKey(UUID.fromString(sessionUIDStr)))
 		{
 			if(e.isOpen && e.channel.getKey().equals(CHKEY_CONTROLCH))
 			{
 				this.createSessionTask(e.channel);
 				return;
-			}
-			else if(!e.isOpen && e.channel.getAssignSession() != null && this.sessionMap.containsValue(e.channel.getAssignSession()))
-			{
-				e.channel.getAssignSession().onCloseChannel(e.channel);
 			}
 			return;
 		}
