@@ -61,7 +61,7 @@ dependencies
 ext 
 {
     _javaVersion = '1.8'
-    _mainClassName = 'ase.sensorReadServer.ServerCore'
+    _mainClassName = 'ase.ServerCore'
 }
 
 jar
