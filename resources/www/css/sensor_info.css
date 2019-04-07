@@ -85,7 +85,9 @@ section>div:nth-child(4)>div:nth-child(2) {
     margin-left: 18px;
 }
 
-.unit, .unitT{
+.unit {
+    float: right;
+    margin-top: 7px;
     color: rgb(40, 40, 40);
 }
 
@@ -113,9 +115,6 @@ section>div:nth-child(4)>div:nth-child(2) {
     .unit{
         font-size:10px;
     }
-    .unitT{
-        font-size:18px;
-    }
     section>div:nth-child(4)>div:nth-child(1) {
         height: 25px;
     }
@@ -136,9 +135,6 @@ section>div:nth-child(4)>div:nth-child(2) {
     .unit{
         font-size:9px;
     }
-    .unitT{
-        font-size:13px;
-    }
     section>div:nth-child(4)>div:nth-child(1) {
         height: 22px;
     }
@@ -157,9 +153,6 @@ section>div:nth-child(4)>div:nth-child(2) {
 
     .unit{
         font-size:7px;
-    }
-    .unitT{
-        font-size:11px;
     }
     section>div:nth-child(4)>div:nth-child(1) {
         height: 20px;
