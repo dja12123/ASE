@@ -103,13 +103,14 @@ function infoDisconnect() {
     '<div id="disconnected" class="disconnected">' +
     '<span>연결 끊김<br/>재접속 시도중</span>' +
     '</div>';
-    removeAllLogs();
+    
 }
 
 // 재접속
 function infoReconnect() {
     document.getElementById("main").style.opacity = 1;
     document.body.removeChild(document.getElementById("disconnected"));
+    removeAllLogs();
 }
 
 
