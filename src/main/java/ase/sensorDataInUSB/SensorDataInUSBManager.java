@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -122,7 +123,14 @@ public class SensorDataInUSBManager
 		JsonElement element = parser.parse(result);
 		if(!(element instanceof JsonObject)) return false;
 		JsonObject jsonObj = (JsonObject) element;
-		System.out.println(jsonObj);
+		JsonArray arr = jsonObj.getAsJsonArray("filesystems");
+		for(int i = 0; i < arr.size(); ++i)
+		{
+			JsonObject obj = (JsonObject) arr.get(i);
+			obj.get("target").getAsString();
+			System.out.println(obj.get("target").getAsString());
+		}
+		
 		return true;
 	}
 }
