@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -118,9 +119,10 @@ public class SensorDataInUSBManager
 			return false;
 		}
 		JsonParser parser = new JsonParser();
-		if(result == null) return false;
-		JsonObject element = (JsonObject)parser.parse(result);
-		System.out.println(element);
+		JsonElement element = parser.parse(result);
+		if(!(element instanceof JsonObject)) return false;
+		JsonObject jsonObj = (JsonObject) element;
+		System.out.println(jsonObj);
 		return true;
 	}
 }
