@@ -96,19 +96,15 @@ public class DisplayControl
 
 				boolean[][] dataArr = new boolean[data_height + yoffset][data_width + xoffset];
 
-				int i = 0;
-				for (int y = data_y; y < data_y + data_height; ++y)
+				for (int y = 0; y < data_y; ++y)
 				{
-					int j = 0;
-					for (int x = data_x; x < data_x + data_width; ++x)
+					for (int x = 0; x < data_x; ++x)
 					{
-						if (fontBitmap.getRGB(x, y) >= -10000000)
+						if (fontBitmap.getRGB(x + data_x, y + data_y) >= -10000000)
 						{
-							dataArr[i][j] = true;
+							dataArr[x][y] = true;
 						}
-						++j;
 					}
-					++i;
 				}
 
 				this.fontData.put((char) data_charid, dataArr);
@@ -425,7 +421,6 @@ public class DisplayControl
 			//System.out.println("align " + s.charAt(i) + " " + align);
 			for (int h = 0; list[i].length > h; ++h)
 			{
-				
 				for(int w = 0; w < list[i][h].length; ++w)
 				{
 					result[w + position][h] = list[i][h][w];
