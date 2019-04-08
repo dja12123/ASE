@@ -1,9 +1,10 @@
 
 // "로그" 삭제
 // 로그가 있으면 삭제
-function delLog() {
-    elem = document.getElementById("log" + logNum);
+function removeLog(num) {
+    elem = document.getElementById("log" + num);
     if (elem != null) elem.remove();
+    else return 1;
 }
 
 // 자동 스크롤: 현재 스크롤 위치
@@ -54,11 +55,12 @@ function setDate(date) {
 	date.getSeconds()+"초");
 }
 
+const logMax = 99;
 var logNum = 0;
 // "로그" 추가
 // * addLog(string, Date, String) // NFO, Date 객체, 메세지
 function addLog(level, date, msg) { //100개 제한, 원형큐
-    delLog();
+    removeLog(logNum);
     var eLog = document.createElement("div");
     eLog.id = "log" + logNum;
     eLog.className = "log";
@@ -83,7 +85,15 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     else
         document.getElementById('log').append(eLog);
     logNum++;
-    if (logNum > 99) logNum = 0; //로그갯수 제한
+    if (logNum > logMax) logNum = 0; //로그갯수 제한
+}
+
+function removeAllLogs() {
+    for (let i = 0; i <= logMax; i++) {
+        if(removeLog(i))
+            break;
+    }
+    logNum = 0;
 }
 
 // 연결 끊김
@@ -93,6 +103,7 @@ function infoDisconnect() {
     '<div id="disconnected" class="disconnected">' +
     '<span>연결 끊김<br/>재접속 시도중</span>' +
     '</div>';
+    removeAllLogs();
 }
 
 // 재접속
