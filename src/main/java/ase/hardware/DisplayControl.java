@@ -30,7 +30,7 @@ public class DisplayControl
 	public static final int FONT_SIZE = 12;
 	public static final int FONT_MARGIN = 1;
 
-	private static final boolean[][] NULLCHAR = new boolean[][] {
+	private static final FontChar NULLCHAR = new FontChar(' ', new boolean[][] {
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
 			{ true, true, false, false, false, false, false, false, false, false, true, true },
 			{ true, false, true, false, false, false, false, false, false, true, false, true },
@@ -44,7 +44,7 @@ public class DisplayControl
 			{ true, true, false, false, false, false, false, false, false, false, true, true },
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
 
-	};
+	}, (byte)0, (byte)0);
 
 	private static DisplayControl inst;
 
@@ -58,7 +58,7 @@ public class DisplayControl
 		return inst;
 	}
 
-	private HashMap<Character, boolean[][]> fontData;
+	private HashMap<Character, FontChar> fontData;
 
 	private OLEDDisplay display;
 	private ArrayList<DisplayObject> lcdObjList;
@@ -68,7 +68,7 @@ public class DisplayControl
 	{
 		this.lcdObjList = new ArrayList<>();
 		this.timer = new Timer(true);
-		this.fontData = new HashMap<Character, boolean[][]>();
+		this.fontData = new HashMap<Character, FontChar>();
 
 		try
 		{
@@ -87,6 +87,10 @@ public class DisplayControl
 						.parseInt(line.substring(line.indexOf("width=") + 6, line.indexOf("height=")).trim());
 				int data_height = Integer
 						.parseInt(line.substring(line.indexOf("height=") + 7, line.indexOf("xoffset=")).trim());
+				byte xoffset = Byte
+						.parseByte(line.substring(line.indexOf("xoffset=") + 8, line.indexOf("yoffset=")).trim());
+				byte yoffset = Byte
+						.parseByte(line.substring(line.indexOf("yoffset=") + 8, line.indexOf("xadvance=")).trim());
 				int xadvance = Integer
 						.parseInt(line.substring(line.indexOf("xadvance=") + 9, line.indexOf("page=")).trim());
 
@@ -107,7 +111,7 @@ public class DisplayControl
 					++i;
 				}
 
-				this.fontData.put((char) data_charid, dataArr);
+				this.fontData.put((char) data_charid, new FontChar((char) data_charid, dataArr, xoffset, yoffset));
 				line = fontMetadata.readLine();
 			}
 
@@ -402,15 +406,15 @@ public class DisplayControl
 
 	private boolean[][] stringToBitMap(String s)
 	{
-		boolean[][][] list = new boolean[s.length()][][];
+		FontChar[] list = new FontChar[s.length()];
 		int width = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			boolean[][] bitmap = this.fontData.get(s.charAt(i));
-			if (bitmap == null)
-				bitmap = NULLCHAR;
-			width += bitmap[0].length + FONT_MARGIN;
-			list[i] = bitmap;
+			FontChar font = this.fontData.get(s.charAt(i));
+			if (font == null)
+				font = NULLCHAR;
+			width += font.data[0].length + FONT_MARGIN;
+			list[i] = font;
 		}
 
 		boolean[][] result = new boolean[width][FONT_SIZE];
@@ -418,19 +422,34 @@ public class DisplayControl
 		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			int align = FONT_SIZE - list[i].length;
 			//System.out.println("align " + s.charAt(i) + " " + align);
-			for (int h = 0; list[i].length > h; ++h)
+			for (int h = 0; list[i].data.length > h; ++h)
 			{
 				
-				for(int w = 0; w < list[i][h].length; ++w)
+				for(int w = 0; w < list[i].data[h].length; ++w)
 				{
-					result[w + position][h + align] = list[i][h][w];
+					result[w + position + list[i].xoffset][h + list[i].yoffset] = list[i].data[h][w];
 				}
 			}
-			position += list[i][0].length + FONT_MARGIN;
+			position += list[i].data[0].length + FONT_MARGIN;
 		}
 		
 		return result;
+	}
+}
+
+class FontChar
+{
+	public final char c;
+	public final boolean[][] data;
+	public final byte xoffset;
+	public final byte yoffset;
+	
+	public FontChar(char c, boolean[][] data, byte xoffset, byte yoffset)
+	{
+		this.c = c;
+		this.data = data;
+		this.xoffset = xoffset;
+		this.yoffset = yoffset;
 	}
 }
