@@ -52,12 +52,13 @@ export class CommModule
 			this.isConnect = true;
 			if(this.isReconnect)
 			{
+				if(this.reConnectCallback != null) this.reConnectCallback();
 				this.channelList.forEach((e)=>
 				{
 					e.connect();
 				});
 				console.log("reconnection successful, sessionID:"+this.sessionUUID);
-				if(this.reConnectCallback != null) this.reConnectCallback();
+				
 			}
 			else
 			{
