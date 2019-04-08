@@ -59,12 +59,10 @@ public class HTTPServer extends NanoHTTPD
 		
 		if (uri.startsWith("/"))
 		{
-			System.out.println(uri);
 			String dir;
 			if(uri.equals("/"))
 			{
 				dir = WEB_RES_DIR+this.httpDefaultPage;
-				System.out.println(dir);
 			}
 			else
 			{
@@ -78,7 +76,7 @@ public class HTTPServer extends NanoHTTPD
 				return response;
 			}
 			
-			int pos = uri.lastIndexOf( "." );
+			int pos = dir.lastIndexOf( "." );
 			
 			if(pos == -1)
 			{
@@ -87,7 +85,7 @@ public class HTTPServer extends NanoHTTPD
 				return response;
 			}
 			
-			String ext = uri.substring( pos + 1 );
+			String ext = dir.substring( pos + 1 );
 			switch(ext)
 			{
 			case "html":
