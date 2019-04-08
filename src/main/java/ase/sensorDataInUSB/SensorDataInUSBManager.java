@@ -193,6 +193,6 @@ public class SensorDataInUSBManager
 		{
 		}
 
-		return totalSize - useSize / Math.pow(1024, 2);
+		return (totalSize - useSize) / (1024 * 1024);
 	}
 }
