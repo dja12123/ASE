@@ -368,7 +368,7 @@ public class DisplayControl
 					 * if(nextObj.bitmap[cx + x - nextObj.x][cy + y - nextObj.y] != true) {
 					 * continue; }
 					 */
-					this.display.setPixel(cx + x, cy + y, true);
+					this.display.setPixel(cx + x, cy + y, nextObj.bitmap[cx + x - nextObj.x][cy + y - nextObj.y]);
 					// 이전 픽셀 보이게
 				}
 			}
