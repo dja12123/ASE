@@ -179,10 +179,9 @@ public class SensorDataInUSBManager
 		String result;
 		try
 		{
-			result = CommandExecutor.executeCommand(String.format("df %s", this.usbDevice));
+			result = CommandExecutor.executeCommand(String.format("df %s --output=used,avail", this.usbDevice));
 			result = result.split("\n")[1];
-			result = result.trim();
-			for(String s : result.split(" "))
+			for(String s : result.split("\\s+"))
 			{
 				System.out.println(s);
 			}
