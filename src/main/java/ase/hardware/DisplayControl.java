@@ -96,15 +96,19 @@ public class DisplayControl
 
 				boolean[][] dataArr = new boolean[data_height + yoffset][data_width + xoffset];
 
+				int i = 0;
 				for (int y = data_y; y < data_y + data_height; ++y)
 				{
+					int j = 0;
 					for (int x = data_x; x < data_x + data_width; ++x)
 					{
 						if (fontBitmap.getRGB(x, y) >= -10000000)
 						{
-							dataArr[y + yoffset][x + xoffset] = true;
+							dataArr[i][j] = true;
 						}
+						++j;
 					}
+					++i;
 				}
 
 				this.fontData.put((char) data_charid, dataArr);
