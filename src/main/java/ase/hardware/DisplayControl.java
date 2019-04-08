@@ -419,7 +419,7 @@ public class DisplayControl
 			{
 				for(int w = 0; w < result1[h].length; ++w)
 				{
-					System.out.print(result1[h][w] ? " ": "ㅁ");
+					System.out.print(result1[h][w] ? "ㅁ": "  ");
 				}
 				System.out.println();
 			}
