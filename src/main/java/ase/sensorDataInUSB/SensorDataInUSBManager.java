@@ -127,8 +127,11 @@ public class SensorDataInUSBManager
 		for(int i = 0; i < arr.size(); ++i)
 		{
 			JsonObject obj = (JsonObject) arr.get(i);
-			obj.get("target").getAsString();
-			System.out.println(obj.get("target").getAsString());
+			String target = obj.get("target").getAsString();
+			if(target.equals(this.mountDir.toString()))
+			{
+				System.out.println("찾았다!!!");
+			}
 		}
 		
 		return true;
