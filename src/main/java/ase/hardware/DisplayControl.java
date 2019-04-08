@@ -418,12 +418,14 @@ public class DisplayControl
 		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
+			int align = FONT_SIZE - list[i][0].length;
+			System.out.println("align " + s.charAt(i) + " " + align);
 			for (int h = 0; list[i].length > h; ++h)
 			{
-				int align = FONT_SIZE - list[i][h].length;
+				
 				for(int w = 0; w < list[i][h].length; ++w)
 				{
-					result[w + position][h + align] = list[i][h][w];
+					result[w + position][h] = list[i][h][w];
 				}
 			}
 			position += list[i][0].length + FONT_MARGIN;
