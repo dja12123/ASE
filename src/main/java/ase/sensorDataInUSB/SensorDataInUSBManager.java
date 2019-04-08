@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
@@ -78,6 +80,7 @@ public class SensorDataInUSBManager
 			this.mountingTask = false;
 			return;
 		}
+		this.checkMount();
 		this.ismount = true;
 		this.mountingTask = false;
 	}
@@ -98,7 +101,25 @@ public class SensorDataInUSBManager
 		{
 			logger.log(Level.WARNING, "마운트 실패", e);
 		}
+		this.checkMount();
 		this.ismount = false;
 		this.mountingTask = false;
+	}
+	
+	public boolean checkMount()
+	{
+		String result;
+		try
+		{
+			result = CommandExecutor.executeCommand(String.format("findmnt -J -S %s", this.usbDevice));
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+		JsonParser parser = new JsonParser();
+		JsonObject element = (JsonObject)parser.parse(result);
+		System.out.println(element);
+		return true;
 	}
 }
