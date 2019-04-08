@@ -121,6 +121,8 @@ public class DisplayControl
 			logger.log(Level.SEVERE, "디스플레이 로드 불가", e);
 			return;
 		}
+		
+		logger.log(Level.INFO, "디스플레이 제어모듈 초기화 완료");
 	}
 
 	
