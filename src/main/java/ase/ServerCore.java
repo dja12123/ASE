@@ -262,7 +262,7 @@ public class ServerCore
 		//if(!this.tcpSensorReadManager.startModule()) return false;
 		DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드");
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
-		DisplayControl.inst().replaceString(loadingText, "USB 저장모듈 로드");
+		DisplayControl.inst().replaceString(loadingText, "USB저장기 로드");
 		if(!this.sensorDataInUSBManager.startModule()) return false;
 		DisplayControl.inst().replaceString(loadingText, "웹 서비스 로드");
 		if(!this.webManager.startModule()) return false;
