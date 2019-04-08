@@ -428,7 +428,7 @@ public class DisplayControl
 				
 				for(int w = 0; w < list[i].data[h].length; ++w)
 				{
-					result[w + position + list[i].xoffset][h + list[i].yoffset] = list[i].data[h][w];
+					result[w + position + list[i].yoffset][h + list[i].xoffset] = list[i].data[h][w];
 				}
 			}
 			position += list[i].data[0].length + FONT_MARGIN;
