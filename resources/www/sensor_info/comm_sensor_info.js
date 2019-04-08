@@ -3,10 +3,6 @@ import * as COMM from '/js/CommModule.js';
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
 {//최초연결
-    console.log("commModule load");
-    console.log(commModule.sessionUUID);
-
-	
 },
 // 연결 끊김
 function disconnect(){
@@ -29,20 +25,13 @@ window.onload = function()
     {
         var data = JSON.parse(e.data);
         if(data.result = true)
-        {
-            console.log(Object.keys(data).length);
-		
-			for(var i in data.sensorData)   // 센서 수 만큼 반복문
+        {		
+			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
-				console.log(sensorData);
 				var time = sensorData.time.split("/");
-				console.log(data.xg);
 				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
 			}
-			
-		
-
         }
         else
         {
@@ -60,12 +49,9 @@ window.onload = function()
         var data = JSON.parse(e.data);
         if(data.result == true)
         {
-			console.log(data);
-            console.log(Object.keys(data).length);
 			for(var i in data.sensorLog)
 			{
 				var sensorLog = data.sensorLog[i];
-				console.log(sensorLog);
 				var time = sensorLog.time.split("/");
 				addLog(sensorLog.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorLog.message)
 			}
@@ -87,7 +73,6 @@ window.onload = function()
 		var data = JSON.parse(e.data);
 		if(data.result == true)
 		{
-			console.log(Object.keys(data).length);
 			if(Object.keys(data).length > 1)
 			{
 				var time = data.time.split("/");
@@ -124,7 +109,6 @@ window.onload = function()
         sensorLog.send(sensorID);
     },(e) =>
     {
-        console.log(e.data);
         var data = JSON.parse(e.data);
 		if(data.result != true)
 		{
@@ -132,11 +116,9 @@ window.onload = function()
 		}
         if(data.result == true && data.message)
         {
-            console.log("logData:" + data);
 			var time = data.time.split("/");
             addLog(data.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.message);
         }
-
     });
 
     window.scrollTo(0,document.body.scrollHeight);
