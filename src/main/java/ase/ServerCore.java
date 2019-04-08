@@ -255,6 +255,16 @@ public class ServerCore
 	private boolean start()
 	{
 		DisplayObject loadingText = DisplayControl.inst().showString(-1, -1, "DB모듈 로드중");
+		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
+		try
+		{
+			Thread.sleep(10000);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
