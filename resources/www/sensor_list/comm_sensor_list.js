@@ -19,13 +19,14 @@ function reconnect(){
 
 window.onload = function()
 {
+	var tatal=0;
 	var sensorListCh = commModule.createChannel("SensorListRequest", null, (e) =>
 	{
 		console.log("data:" + e.data);
 		var data = JSON.parse(e.data);
 		console.log(data);
 		console.log("count:" + data.count)
-		setTotal(data.count);
+		total= total+data.count;
 		for(var i in data.data) // 센서 수 만큼 반복문
 		{
 			addItem(data.data[i].id, data.data[i].on);
@@ -48,6 +49,7 @@ window.onload = function()
 		//console.log("sensor status: "+data[1]);
 		if(data[1] == "true")
 		{
+			total = total+1;
 			addItem(data[0], false);
 		}
 		else
@@ -55,4 +57,6 @@ window.onload = function()
 			delItem(key[0]);
 		}
 	});
+
+	setTotal(total);
 }
