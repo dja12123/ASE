@@ -94,7 +94,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.publicDataReceiveObservable.clearObservers();
 		this.publicSensorOnlineObservable.clearObservers();
 		
-		this.timeoutCheckThread.interrupt();
+		if(this.timeoutCheckThread != null) this.timeoutCheckThread.interrupt();
 		
 		this.sensorReader.removeObserver(this);
 		
