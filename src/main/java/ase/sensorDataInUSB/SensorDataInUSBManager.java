@@ -118,6 +118,7 @@ public class SensorDataInUSBManager
 			return false;
 		}
 		JsonParser parser = new JsonParser();
+		if(result == null) return false;
 		JsonObject element = (JsonObject)parser.parse(result);
 		System.out.println(element);
 		return true;
