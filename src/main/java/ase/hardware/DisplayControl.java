@@ -331,10 +331,10 @@ public class DisplayControl
 		{
 			for (int y = 0; y < obj.height; ++y)
 			{
-				if (obj.bitmap[x][y] != true)
+				/*if (obj.bitmap[x][y] != true)
 				{
 					continue;
-				}
+				}*/
 				this.display.setPixel(x + obj.x, y + obj.y, false);
 				// 켜진 픽셀 끄기
 			}
