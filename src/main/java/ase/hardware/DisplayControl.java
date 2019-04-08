@@ -27,6 +27,7 @@ public class DisplayControl
 	public static final Logger logger = LogWriter.createLogger(DisplayControl.class, "DisplayControl");
 	public static final int DISPLAY_WIDTH = 128;
 	public static final int DISPLAY_HEIGHT = 64;
+	public static final int FONT_SIZE = 12;
 
 	private static final boolean[][] NULLCHAR = new boolean[][] {
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
@@ -399,20 +400,15 @@ public class DisplayControl
 	private boolean[][] stringToBitMap(String s)
 	{
 		boolean[][][] list = new boolean[s.length()][][];
-		int width = 0;
-		int height = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
 			boolean[][] bitmap = this.fontData.get(s.charAt(i));
 			if (bitmap == null)
 				bitmap = NULLCHAR;
-			width += bitmap[0].length;
-			if (bitmap.length > height)
-				height = bitmap.length;
 			list[i] = bitmap;
 		}
 
-		boolean[][] result = new boolean[height][width];
+		boolean[][] result = new boolean[FONT_SIZE][s.length() * FONT_SIZE];
 		for(boolean[][] result1 : list)
 		{
 			for(int h = 0; h < result1.length; ++h)
@@ -425,14 +421,12 @@ public class DisplayControl
 			}
 		}
 
-		int putPosition = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			for (int h = 0; list[i].length > h && h < height; ++h)
+			for (int h = 0; list[i].length > h; ++h)
 			{
-				System.arraycopy(list[i][h], 0, result[h], putPosition, list[i][h].length);
+				System.arraycopy(list[i][h], 0, result[h], i * FONT_SIZE, list[i][h].length);
 			}
-			putPosition += list[i][0].length;
 		}
 		return result;
 	}
