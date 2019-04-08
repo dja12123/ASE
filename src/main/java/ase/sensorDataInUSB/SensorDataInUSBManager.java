@@ -61,16 +61,18 @@ public class SensorDataInUSBManager
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
-		this.dispUsbState = DisplayControl.inst().showString(60, 0, "usb:" + (this.ismount ? "run" : "off"));
+		this.dispUsbState = DisplayControl.inst().showString(60, 0, "usb:");
 		this.dispCapacity = DisplayControl.inst().showString(60, 15, "cap:");
 		if(this.ismount)
 		{
 			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
+			
 		}
 		else
 		{
 			this.mount();
 		}
+		this.displayMount();
 		
 		return true;
 	}
@@ -176,22 +178,21 @@ public class SensorDataInUSBManager
 	
 	public double getFreeSpaceGB()
 	{
+		double totalSize = 0;
+		double useSize = 0;
 		String result;
 		try
 		{
-			result = CommandExecutor.executeCommand(String.format("df %s --output=used,avail", this.usbDevice));
+			result = CommandExecutor.executeCommand(String.format("df %s --output=size,used", this.usbDevice));
 			result = result.split("\n")[1];
-			for(String s : result.split("\\s+"))
-			{
-				System.out.println(s);
-			}
+			String[] arr = result.split("\\s+");
+			totalSize = Integer.parseInt(arr[0]);
+			useSize = Integer.parseInt(arr[1]);
 		}
 		catch (Exception e)
 		{
-			return 0;
 		}
-		double totalSize = this.mountDir.getTotalSpace() / Math.pow(1024, 3);
-		double useSize = this.mountDir.getUsableSpace() / Math.pow(1024, 3);
-		return totalSize - useSize;
+
+		return Math.pow(totalSize - useSize, 2);
 	}
 }
