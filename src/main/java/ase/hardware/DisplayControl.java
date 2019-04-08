@@ -413,7 +413,7 @@ public class DisplayControl
 			list[i] = bitmap;
 		}
 
-		boolean[][] result = new boolean[FONT_SIZE][width];
+		boolean[][] result = new boolean[width][FONT_SIZE];
 		for(boolean[][] result1 : list)
 		{
 			for(int h = 0; h < result1.length; ++h)
@@ -431,10 +431,16 @@ public class DisplayControl
 		{
 			for (int h = 0; list[i].length > h; ++h)
 			{
-				System.arraycopy(list[i][h], 0, result[h], position, list[i][h].length);
+				for(int w = 0; w < list[i][h].length; ++w)
+				{
+					result[w + position][h] = list[i][h][w];
+				}
+				//System.arraycopy(list[i][h], 0, result[h], position, list[i][h].length);
 			}
 			position += list[i][0].length + FONT_MARGIN;
 		}
+		
+		
 		return result;
 	}
 }
