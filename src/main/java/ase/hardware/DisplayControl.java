@@ -104,13 +104,16 @@ public class DisplayControl
 						{
 							try
 							{
-								dataArr[x][y] = true;
+								dataArr[y][x] = true;
+								
 							}
 							catch(Exception e)
 							{
 								e.printStackTrace();
+								System.out.println(x +" " +y);
+								//System.out.println(dataArr.length + " " dataArr);
 							}
-							System.out.println(x +" " +y);
+							
 						}
 					}
 				}
