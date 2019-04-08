@@ -61,8 +61,8 @@ public class SensorDataInUSBManager
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
-		this.dispUsbState = DisplayControl.inst().showString(60, 0, "usb:");
-		this.dispCapacity = DisplayControl.inst().showString(60, 15, "cap:");
+		this.dispUsbState = DisplayControl.inst().showString(50, 0, "usb:");
+		this.dispCapacity = DisplayControl.inst().showString(50, 15, "cap:");
 		if(this.ismount)
 		{
 			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
