@@ -2,8 +2,8 @@ package ase.hardware;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -22,8 +22,8 @@ import de.pi3g.pi.oled.OLEDDisplay;
 
 public class DisplayControl
 {
-	public static final String FONT_METADATA = "displayFont/rawfont.fnt";
-	public static final String FONT_BITMAP = "displayFont/rawfont.png";
+	public static final String FONT_METADATA = "/displayFont/rawfont.fnt";
+	public static final String FONT_BITMAP = "/displayFont/rawfont.png";
 	public static final Logger logger = LogWriter.createLogger(DisplayControl.class, "LCDControl");
 	public static final int DISPLAY_WIDTH = 128;
 	public static final int DISPLAY_HEIGHT = 64;
@@ -72,7 +72,7 @@ public class DisplayControl
         try
         {
         	BufferedImage fontBitmap = ImageIO.read(FileHandler.getResInputStream(FONT_BITMAP));
-        	BufferedReader fontMetadata = new BufferedReader(new FileReader(FONT_METADATA));
+        	BufferedReader fontMetadata = new BufferedReader(new InputStreamReader(FileHandler.getResInputStream(FONT_METADATA)));
         	
         	String line = fontMetadata.readLine();
         	while(line != null)
