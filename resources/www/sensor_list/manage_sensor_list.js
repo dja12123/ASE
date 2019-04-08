@@ -1,5 +1,5 @@
 
-// 모든 센서 제거
+// 모든 센서 삭제
 function removeAllItem() {
 	var items = document.getElementById("items");
 	while (items.hasChildNodes())
