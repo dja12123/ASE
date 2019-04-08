@@ -86,8 +86,10 @@ public class DisplayControl
 						.parseInt(line.substring(line.indexOf("width=") + 6, line.indexOf("height=")).trim());
 				int data_height = Integer
 						.parseInt(line.substring(line.indexOf("height=") + 7, line.indexOf("xoffset=")).trim());
+				int xadvance = Integer
+						.parseInt(line.substring(line.indexOf("xadvance=") + 6, line.indexOf("page=")).trim());
 
-				boolean[][] dataArr = new boolean[data_height][data_width];
+				boolean[][] dataArr = new boolean[data_height][xadvance];
 
 				int i = 0;
 				for (int y = data_y; y < data_y + data_height; ++y)
@@ -400,15 +402,17 @@ public class DisplayControl
 	private boolean[][] stringToBitMap(String s)
 	{
 		boolean[][][] list = new boolean[s.length()][][];
+		int width = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
 			boolean[][] bitmap = this.fontData.get(s.charAt(i));
 			if (bitmap == null)
 				bitmap = NULLCHAR;
+			width += bitmap[0].length;
 			list[i] = bitmap;
 		}
 
-		boolean[][] result = new boolean[FONT_SIZE][s.length() * FONT_SIZE];
+		boolean[][] result = new boolean[FONT_SIZE][width];
 		for(boolean[][] result1 : list)
 		{
 			for(int h = 0; h < result1.length; ++h)
@@ -420,13 +424,15 @@ public class DisplayControl
 				System.out.println();
 			}
 		}
-
+		
+		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
 			for (int h = 0; list[i].length > h; ++h)
 			{
-				System.arraycopy(list[i][h], 0, result[h], i * FONT_SIZE, list[i][h].length);
+				System.arraycopy(list[i][h], 0, result[h], position, list[i][h].length);
 			}
+			position += list[i][0].length;
 		}
 		return result;
 	}
