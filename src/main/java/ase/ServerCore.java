@@ -23,6 +23,7 @@ import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
 import ase.hardware.GPIOControl;
+import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorReader.SerialReadManager;
 import ase.sensorReader.TcpSensorReadManager;
@@ -226,6 +227,7 @@ public class ServerCore
 	private SerialReadManager serialSensorReadManager;
 	private TcpSensorReadManager tcpSensorReadManager;
 	private SensorManager sensorManager;
+	private SensorDataInUSBManager sensorDataInUSBManager;
 	private WebManager webManager;
 	private ClientSessionManager clientSessionManager;
 	
@@ -239,6 +241,7 @@ public class ServerCore
 		this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
 		this.sensorManager = new SensorManager(this.dbHandler, this.serialSensorReadManager);
+		this.sensorDataInUSBManager = new SensorDataInUSBManager();
 		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
@@ -255,6 +258,7 @@ public class ServerCore
 		if(!this.serialSensorReadManager.startModule()) return false;
 		//if(!this.tcpSensorReadManager.startModule()) return false;
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		if(!this.sensorDataInUSBManager.startModule()) return false;
 		if(!this.webManager.startModule()) return false;
 		if(!this.clientSessionManager.startModule()) return false;
 		if(!this.appServiceManager.startModule()) return false;
@@ -275,6 +279,7 @@ public class ServerCore
 		this.appServiceManager.stopModule();
 		this.clientSessionManager.stopModule();
 		this.webManager.stopModule();
+		this.sensorDataInUSBManager.stopModule();
 		this.sensorManager.stopModule();
 		//this.tcpSensorReadManager.stopModule();
 		this.serialSensorReadManager.stopModule();
