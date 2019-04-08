@@ -428,7 +428,7 @@ public class DisplayControl
 		int putPosition = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			for (int h = 0; h < height; ++h)
+			for (int h = 0; list[i].length > h && h < height; ++h)
 			{
 				System.arraycopy(list[i][h], 0, result[h], putPosition, list[i][h].length);
 			}
