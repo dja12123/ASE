@@ -257,7 +257,7 @@ public class ServerCore
 		DisplayObject loadingText = DisplayControl.inst().showString(-1, -1, "DB모듈 로드중");
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
-		DisplayControl.inst().replaceString(loadingText, "센서 serial 로드");
+		DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
 		if(!this.serialSensorReadManager.startModule()) return false;
 		//if(!this.tcpSensorReadManager.startModule()) return false;
 		DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드");
