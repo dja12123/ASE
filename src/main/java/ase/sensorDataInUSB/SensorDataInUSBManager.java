@@ -37,8 +37,10 @@ public class SensorDataInUSBManager
 	{
 		if(event.getState().isHigh())
 		{
-			if(this.ismount) this.unMount();
-			else this.mount();
+			ServerCore.mainThreadPool.execute(()->{
+				if(this.ismount) this.unMount();
+				else this.mount();
+			});
 		}
 		
 	}
@@ -58,7 +60,7 @@ public class SensorDataInUSBManager
 	
 	public synchronized void mount()
 	{
-		if(this.mountingTask) return;
+		if(this.mountingTask || this.ismount) return;
 		this.mountingTask = true;
 		logger.log(Level.INFO, "USB마운트 " + this.usbDevice + " " + this.mountDir.toString());
 		try
@@ -80,7 +82,7 @@ public class SensorDataInUSBManager
 	
 	public synchronized void unMount()
 	{
-		if(this.mountingTask) return;
+		if(this.mountingTask || !this.ismount) return;
 		this.mountingTask = true;
 		logger.log(Level.INFO, "USB언마운트 " + this.usbDevice + " " + this.mountDir.toString());
 		try
