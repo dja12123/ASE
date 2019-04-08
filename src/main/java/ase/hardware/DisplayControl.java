@@ -131,21 +131,21 @@ public class DisplayControl
 		logger.log(Level.INFO, "디스플레이 제어모듈 초기화 완료");
 	}
 
-	public DisplayObject showString(int x, int y, String str)
+	public synchronized DisplayObject showString(int x, int y, String str)
 	{// 해당 좌표에 문자열 출력(한글지원)
 		// x나 y에 -1을 입력할 경우 해당 좌표가 중앙으로 정렬됨
 		boolean[][] bitmap = this.stringToBitMap(str);
 		return showShape(x, y, bitmap);
 	}
 
-	public DisplayObject replaceString(DisplayObject before, String str)
+	public synchronized DisplayObject replaceString(DisplayObject before, String str)
 	{// 문자열 교체
 		// 주의사항!! 새 오브젝트가 반환되므로 다음에 변환할때는 반환된 오브젝트를 사용해야 함
 		boolean[][] bitmap = this.stringToBitMap(str);
 		return replaceShape(before, bitmap);
 	}
 
-	public DisplayObject showRect(int x, int y, int width, int height)
+	public synchronized DisplayObject showRect(int x, int y, int width, int height)
 	{// 사각형 출력(기준좌표, 사각형크기)
 		boolean[][] bitmap = new boolean[width][height];
 		for (int i = 0; i < height; ++i)
@@ -161,7 +161,7 @@ public class DisplayControl
 		return showShape(x, y, bitmap);
 	}
 
-	public DisplayObject showFillRect(int x, int y, int width, int height)
+	public synchronized DisplayObject showFillRect(int x, int y, int width, int height)
 	{// 꽉찬 사각형 출력(기준좌표, 사각형크기)
 		boolean[][] bitmap = new boolean[width][height];
 		for (int i = 0; i < height; ++i)
@@ -174,7 +174,7 @@ public class DisplayControl
 		return showShape(x, y, bitmap);
 	}
 
-	public DisplayObject showLine(int x0, int y0, int x1, int y1)
+	public synchronized DisplayObject showLine(int x0, int y0, int x1, int y1)
 	{// 선 출력(시작좌표, 끝좌표)
 		int temp;
 		if (x0 > x1)
@@ -222,7 +222,7 @@ public class DisplayControl
 		return showShape(basex, basey, bitmap);
 	}
 
-	public DisplayObject showShape(int x, int y, boolean[][] shape)
+	public synchronized DisplayObject showShape(int x, int y, boolean[][] shape)
 	{// 비트맵 도형 출력
 		if (shape.length <= 0)
 		{
@@ -234,7 +234,7 @@ public class DisplayControl
 		return obj;
 	}
 
-	public DisplayObject replaceShape(DisplayObject before, boolean[][] shape)
+	public synchronized DisplayObject replaceShape(DisplayObject before, boolean[][] shape)
 	{// 주의사항!! 새 오브젝트가 반환되므로 다음에 변환할때는 반환된 오브젝트를 사용해야 함
 		DisplayObject obj = new DisplayObject(before.xcenter ? -1 : before.x, before.ycenter ? -1 : before.y,
 				shape.length, shape[0].length, shape);
@@ -244,13 +244,13 @@ public class DisplayControl
 		return obj;
 	}
 
-	public void removeShape(DisplayObject obj)
+	public synchronized void removeShape(DisplayObject obj)
 	{
 		this.removeLCDObj(obj);
 		this.updateDisplay();
 	}
 
-	public DisplayObject removeShapeTimer(DisplayObject obj, int time)
+	public synchronized DisplayObject removeShapeTimer(DisplayObject obj, int time)
 	{// 지정한 시간 뒤에 도형 삭제
 		TimerTask task = new TimerTask()
 		{
@@ -331,10 +331,10 @@ public class DisplayControl
 		{
 			for (int y = 0; y < obj.height; ++y)
 			{
-				/*if (obj.bitmap[x][y] != true)
+				if (!obj.bitmap[x][y])
 				{
 					continue;
-				}*/
+				}
 				this.display.setPixel(x + obj.x, y + obj.y, false);
 				// 켜진 픽셀 끄기
 			}
