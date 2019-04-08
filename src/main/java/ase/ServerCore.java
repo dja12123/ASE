@@ -23,6 +23,7 @@ import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
 import ase.hardware.DisplayControl;
+import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
@@ -63,6 +64,8 @@ public class ServerCore
 		DisplayControl.inst().showString(0, 15, "잘 나오냐??");
 		DisplayControl.inst().showString(0, 30, "abc ABC 다람쥐 헌 ");
 		DisplayControl.inst().showString(0, 45, "쳇바퀴에 타고파");
+		DisplayObject o = DisplayControl.inst().showRect(0, 0, 30, 30);
+		DisplayControl.inst().blinkShape(o, 1000, 3);
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		
