@@ -44,8 +44,6 @@ function addItem(key, on) {
 // "센서" 지우기
 // ＊delItem(String) 센서 키
 function delItem(key) {
-	total--;
-	setTotal();
 	document.getElementById(key).remove();
 }
 

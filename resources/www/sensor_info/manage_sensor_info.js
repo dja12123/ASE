@@ -20,7 +20,6 @@ function getFormatDate(date) {
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
-    //입력된 키 
     document.title = "sensor " + key;
     document.getElementById("state_name").innerHTML = key;
 }

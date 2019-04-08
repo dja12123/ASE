@@ -10,10 +10,6 @@ html, body {
     user-select: none;
 }
 
-::-webkit-scrollbar {
-    display:none;
-}
-
 .main {
     opacity: 1;
 }
@@ -68,7 +64,7 @@ header>div {
 
 .back_btn:hover {
     cursor: pointer;
-    
+    border: 2px solid rgba(70, 131, 180, 0.78);
     color: rgba(70, 131, 180, 0.78);
 }
 
