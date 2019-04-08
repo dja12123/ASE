@@ -22,6 +22,7 @@ import ase.console.LogWriter;
 import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
+import ase.hardware.DisplayControl;
 import ase.hardware.GPIOControl;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
@@ -56,7 +57,9 @@ public class ServerCore
 			return;
 		}
 		
+		DisplayControl.init();
 		GPIOControl.init();
+		DisplayControl.inst().showString(0, 0, "안녕!!");
 		
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
