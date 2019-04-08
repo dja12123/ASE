@@ -60,12 +60,6 @@ public class ServerCore
 		
 		DisplayControl.init();
 		GPIOControl.init();
-		DisplayControl.inst().showString(0, 0, "안녕!!");
-		DisplayControl.inst().showString(0, 15, "잘 나오냐??");
-		DisplayControl.inst().showString(0, 30, "abc ABC 다람쥐 헌 ");
-		DisplayControl.inst().showString(0, 45, "쳇바퀴에 타고파");
-		DisplayObject o = DisplayControl.inst().showRect(0, 0, 30, 30);
-		DisplayControl.inst().blinkShape(o, 1000, 3);
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		
@@ -260,20 +254,27 @@ public class ServerCore
 
 	private boolean start()
 	{
-		
+		DisplayObject loadingText = DisplayControl.inst().showString(-1, -1, "DB모듈 로드중");
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
+		DisplayControl.inst().replaceString(loadingText, "센서 serial 준비중");
 		if(!this.serialSensorReadManager.startModule()) return false;
 		//if(!this.tcpSensorReadManager.startModule()) return false;
+		DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드중");
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		DisplayControl.inst().replaceString(loadingText, "USB 저장모듈 로드중");
 		if(!this.sensorDataInUSBManager.startModule()) return false;
+		DisplayControl.inst().replaceString(loadingText, "웹 서비스 로드중");
 		if(!this.webManager.startModule()) return false;
+		DisplayControl.inst().replaceString(loadingText, "세션 관리자 로드중");
 		if(!this.clientSessionManager.startModule()) return false;
+		DisplayControl.inst().replaceString(loadingText, "사용자 서비스 로드중");
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
 		
 		//this.testSensor.start();
-		
+		DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
+		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
 	}
