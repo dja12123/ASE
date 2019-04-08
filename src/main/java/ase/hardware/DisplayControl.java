@@ -102,7 +102,15 @@ public class DisplayControl
 					{
 						if (fontBitmap.getRGB(x + data_x, y + data_y) >= -10000000)
 						{
-							dataArr[x][y] = true;
+							try
+							{
+								dataArr[x][y] = true;
+							}
+							catch(Exception e)
+							{
+								e.printStackTrace();
+							}
+							System.out.println(x +" " +y);
 						}
 					}
 				}
