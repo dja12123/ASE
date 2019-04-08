@@ -28,6 +28,7 @@ public class DisplayControl
 	public static final int DISPLAY_WIDTH = 128;
 	public static final int DISPLAY_HEIGHT = 64;
 	public static final int FONT_SIZE = 12;
+	public static final int FONT_MARGIN = 1;
 
 	private static final boolean[][] NULLCHAR = new boolean[][] {
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
@@ -408,7 +409,7 @@ public class DisplayControl
 			boolean[][] bitmap = this.fontData.get(s.charAt(i));
 			if (bitmap == null)
 				bitmap = NULLCHAR;
-			width += bitmap[0].length;
+			width += bitmap[0].length + FONT_MARGIN;
 			list[i] = bitmap;
 		}
 
@@ -432,7 +433,7 @@ public class DisplayControl
 			{
 				System.arraycopy(list[i][h], 0, result[h], position, list[i][h].length);
 			}
-			position += list[i][0].length;
+			position += list[i][0].length + FONT_MARGIN;
 		}
 		return result;
 	}
