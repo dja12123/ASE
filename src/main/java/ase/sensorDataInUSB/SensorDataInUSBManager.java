@@ -37,7 +37,8 @@ public class SensorDataInUSBManager
 	{
 		if(event.getState().isHigh())
 		{
-			ServerCore.mainThreadPool.execute(()->{
+			ServerCore.mainThreadPool.execute(()->
+			{
 				if(this.ismount) this.unMount();
 				else this.mount();
 			});
@@ -65,8 +66,9 @@ public class SensorDataInUSBManager
 		logger.log(Level.INFO, "USB마운트 " + this.usbDevice + " " + this.mountDir.toString());
 		try
 		{
-			CommandExecutor.executeCommand(String.format("mount %s %s", 
+			String result = CommandExecutor.executeCommand(String.format("mount %s %s", 
 					this.usbDevice, this.mountDir.toString()));
+			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(1000);
 		}
 		catch (Exception e)
@@ -87,8 +89,9 @@ public class SensorDataInUSBManager
 		logger.log(Level.INFO, "USB언마운트 " + this.usbDevice + " " + this.mountDir.toString());
 		try
 		{
-			CommandExecutor.executeCommand(String.format("umount %s", 
+			String result = CommandExecutor.executeCommand(String.format("umount %s", 
 					this.usbDevice));
+			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(1000);
 		}
 		catch (Exception e)
