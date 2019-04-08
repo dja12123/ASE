@@ -24,7 +24,7 @@ public class DisplayControl
 {
 	public static final String FONT_METADATA = "/displayFont/rawfont.fnt";
 	public static final String FONT_BITMAP = "/displayFont/rawfont.png";
-	public static final Logger logger = LogWriter.createLogger(DisplayControl.class, "LCDControl");
+	public static final Logger logger = LogWriter.createLogger(DisplayControl.class, "DisplayControl");
 	public static final int DISPLAY_WIDTH = 128;
 	public static final int DISPLAY_HEIGHT = 64;
 	
@@ -57,7 +57,7 @@ public class DisplayControl
 		return inst;
 	}
 	
-	private HashMap<String, boolean[][]> fontData;
+	private HashMap<Character, boolean[][]> fontData;
 
 	private OLEDDisplay display;
 	private ArrayList<DisplayObject> lcdObjList;
@@ -67,7 +67,7 @@ public class DisplayControl
 	{
 		this.lcdObjList = new ArrayList<>();
 		this.timer = new Timer(true);
-		this.fontData = new HashMap<String, boolean[][]>();
+		this.fontData = new HashMap<Character, boolean[][]>();
 
         try
         {
@@ -101,7 +101,7 @@ public class DisplayControl
         			++i;
         		}
         		
-        		this.fontData.put(String.valueOf((char)data_charid), dataArr);
+        		this.fontData.put((char)data_charid, dataArr);
         		line = fontMetadata.readLine();
         	}
         	
@@ -395,8 +395,7 @@ public class DisplayControl
 		int height = 0;
 		for(int i = 0; i < s.length(); ++i)
 		{
-			char c = s.charAt(i);
-			boolean[][] bitmap = this.fontData.get(i);
+			boolean[][] bitmap = this.fontData.get(s.charAt(i));
 			if(bitmap == null) bitmap = NULLCHAR;
 			width += bitmap[0].length;
 			if(bitmap.length > height) height = bitmap.length;
