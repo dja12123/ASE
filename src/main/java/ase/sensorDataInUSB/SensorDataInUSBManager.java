@@ -55,6 +55,8 @@ public class SensorDataInUSBManager
 		GPIOControl.inst().btn1.addListener(this.btnListener);
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
+		this.ismount = this.checkMount();
+		if(this.ismount) logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
 		return true;
 	}
 	
@@ -78,12 +80,8 @@ public class SensorDataInUSBManager
 		catch (Exception e)
 		{
 			logger.log(Level.WARNING, "마운트 실패", e);
-			this.ismount = false;
-			this.mountingTask = false;
-			return;
 		}
-		this.checkMount();
-		this.ismount = true;
+		this.ismount = this.checkMount();
 		this.mountingTask = false;
 	}
 	
@@ -103,8 +101,7 @@ public class SensorDataInUSBManager
 		{
 			logger.log(Level.WARNING, "마운트 실패", e);
 		}
-		this.checkMount();
-		this.ismount = false;
+		this.ismount = this.checkMount();
 		this.mountingTask = false;
 	}
 	
@@ -130,10 +127,10 @@ public class SensorDataInUSBManager
 			String target = obj.get("target").getAsString();
 			if(target.equals(this.mountDir.toString()))
 			{
-				System.out.println("찾았다!!!");
+				return true;
 			}
 		}
 		
-		return true;
+		return false;
 	}
 }
