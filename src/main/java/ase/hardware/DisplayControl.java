@@ -87,7 +87,7 @@ public class DisplayControl
 				int data_height = Integer
 						.parseInt(line.substring(line.indexOf("height=") + 7, line.indexOf("xoffset=")).trim());
 				int xadvance = Integer
-						.parseInt(line.substring(line.indexOf("xadvance=") + 6, line.indexOf("page=")).trim());
+						.parseInt(line.substring(line.indexOf("xadvance=") + 9, line.indexOf("page=")).trim());
 
 				boolean[][] dataArr = new boolean[data_height][xadvance];
 
