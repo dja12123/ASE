@@ -32,6 +32,7 @@ public class SensorDataInUSBManager
 	private boolean mountingTask;
 	private boolean ismount;
 	private DisplayObject dispUsbState;
+	private DisplayObject dispCapacity;
 	
 	public SensorDataInUSBManager()
 	{
@@ -60,8 +61,16 @@ public class SensorDataInUSBManager
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
-		this.dispUsbState = DisplayControl.inst().showString(75, 0, "usb:" + (this.ismount ? "run" : "off"));
-		if(this.ismount) logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
+		this.dispUsbState = DisplayControl.inst().showString(60, 0, "usb:" + (this.ismount ? "run" : "off"));
+		this.dispCapacity = DisplayControl.inst().showString(60, 15, "cap:");
+		if(this.ismount)
+		{
+			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
+		}
+		else
+		{
+			this.mount();
+		}
 		
 		return true;
 	}
@@ -153,6 +162,22 @@ public class SensorDataInUSBManager
 	
 	public void displayMount()
 	{
-		this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:" + (this.ismount ? "run" : "off"));
+		if(this.ismount)
+		{
+			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:run");
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("cap:%.1fGB", this.getFreeSpaceGB()));
+		}
+		else
+		{
+			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:off");
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, "cap:");
+		}
+	}
+	
+	public double getFreeSpaceGB()
+	{
+		double totalSize = this.mountDir.getTotalSpace() / Math.pow(1024, 3);
+		double useSize = this.mountDir.getUsableSpace() / Math.pow(1024, 3);
+		return totalSize - useSize;
 	}
 }
