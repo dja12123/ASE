@@ -415,11 +415,11 @@ public class DisplayControl
 		boolean[][] result = new boolean[height][width];
 		for(boolean[][] result1 : list)
 		{
-			for(int i = 0; i < result.length; ++i)
+			for(int h = 0; h < result.length; ++h)
 			{
-				for(int j = 0; j < result[i].length; ++j)
+				for(int w = 0; w < result[h].length; ++w)
 				{
-					System.out.print(result1[j][i] ? " ": "ㅁ");
+					System.out.print(result1[h][w] ? " ": "ㅁ");
 				}
 				System.out.println();
 			}
@@ -428,9 +428,9 @@ public class DisplayControl
 		int putPosition = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			for (int j = 0; j < height; ++j)
+			for (int h = 0; h < height; ++h)
 			{
-				System.arraycopy(list[i][j], 0, result[j], putPosition, list[i][j].length);
+				System.arraycopy(list[i][h], 0, result[h], putPosition, list[i][h].length);
 			}
 			putPosition += list[i][0].length;
 		}
