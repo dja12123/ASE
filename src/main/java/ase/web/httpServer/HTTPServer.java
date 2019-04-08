@@ -9,6 +9,7 @@ import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 
+import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
 import ase.web.webSocket.WebSession;
@@ -20,9 +21,11 @@ public class HTTPServer extends NanoHTTPD
 	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
 	public static final String WEB_RES_DIR = "/www";
+	public static final String PROP_HTTP_DEFAULT_PAGE = "HttpDefaultPage";
+	private String httpDefaultPage;
 	
 	private final WebSessionManager webSessionManager;
-	
+
 	public HTTPServer(int port, WebSessionManager webSessionManager)
 	{
 		super(port);
@@ -56,7 +59,16 @@ public class HTTPServer extends NanoHTTPD
 
 		if (uri.startsWith("/"))
 		{
-			String dir = WEB_RES_DIR+uri;
+			String dir;
+			if(uri.equals("/"))
+			{
+				dir = WEB_RES_DIR+this.httpDefaultPage;
+			}
+			else
+			{
+				dir = WEB_RES_DIR+uri;
+			}
+			
 			if(!FileHandler.isExistResFile(dir))
 			{
 				response = HTTPServer.serveError(Status.NOT_FOUND, "Error 404: File not found");
@@ -135,6 +147,7 @@ public class HTTPServer extends NanoHTTPD
 	
 	public void startModule()
 	{
+		this.httpDefaultPage = ServerCore.getProp(PROP_HTTP_DEFAULT_PAGE);
 		try
 		{
 			this.start(NanoHTTPD.SOCKET_READ_TIMEOUT, true);
