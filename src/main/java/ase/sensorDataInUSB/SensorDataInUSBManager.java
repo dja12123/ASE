@@ -65,6 +65,7 @@ public class SensorDataInUSBManager
 		{
 			CommandExecutor.executeCommand(String.format("mount %s %s", 
 					this.usbDevice, this.mountDir.toString()));
+			Thread.sleep(1000);
 		}
 		catch (Exception e)
 		{
@@ -86,6 +87,7 @@ public class SensorDataInUSBManager
 		{
 			CommandExecutor.executeCommand(String.format("umount %s", 
 					this.usbDevice));
+			Thread.sleep(1000);
 		}
 		catch (Exception e)
 		{
