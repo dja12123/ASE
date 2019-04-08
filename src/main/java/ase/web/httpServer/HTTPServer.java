@@ -69,9 +69,7 @@ public class HTTPServer extends NanoHTTPD
 			String dir;
 			if(uri.equals("/"))
 			{
-				
-				dir = WEB_RES_DIR+this.httpDefaultPage;
-				response = HTTPServer.serveRedirect(dir);
+				response = HTTPServer.serveRedirect(this.httpDefaultPage);
 				this.sessionService(request, response);
 				return response;
 			}
