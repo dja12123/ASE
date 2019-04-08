@@ -70,7 +70,7 @@ public class CommandExecutor {
 	//명령을 mv -r /df /fd 하고 싶으면 매개변수로 ("mv -r /df /fd") 이런식으로 넘기면 명령줄 실행
 	public static String executeCommand(String cmd) throws Exception {
 
-        return executeCommand(cmd, true);
+        return executeCommand(cmd, false);
 	}
 	
 	//명령을 mv -r /df /fd 하고 싶으면 매개변수로 ("mv -r /df /fd") 이런식으로 넘기면 명령줄 실행

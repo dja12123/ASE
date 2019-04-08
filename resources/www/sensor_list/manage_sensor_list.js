@@ -4,17 +4,18 @@ function removeAllItem() {
 	var items = document.getElementById("items");
 	while (items.hasChildNodes())
 		items.removeChild(items.firstChild);
+	setTotal();
 }
 
-
-// add, del함수 실행시 total체크
-// * setTotal(Number) 센서 개수
-function setTotal(total) {
+// 센서 개수 체크
+function setTotal() {
+	var total = document.getElementById("items").childElementCount;
 	var msg;
 	if(total > 0) msg = total + "개의 센서 확인";
 	else msg = "확인된 센서가 없습니다"
 	document.getElementById("total").innerHTML = msg;
 }
+
 
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
@@ -47,12 +48,14 @@ function addItem(key, on) {
 		'</tr></tbody>',
 	].join("");
 	document.getElementById('items').append(eItem);
+	setTotal();
 }
 
 // "센서" 지우기
 // ＊delItem(String) 센서 키
 function delItem(key) {
 	document.getElementById(key).remove();
+	setTotal();
 }
 
 //  "작동상태" 변경(on/off)
