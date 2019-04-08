@@ -62,7 +62,7 @@ public class SensorDataInUSBManager
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
 		this.dispUsbState = DisplayControl.inst().showString(60, 0, "usb:");
-		this.dispCapacity = DisplayControl.inst().showString(60, 15, "");
+		this.dispCapacity = DisplayControl.inst().showString(60, 15, " ");
 		if(this.ismount)
 		{
 			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
@@ -167,12 +167,12 @@ public class SensorDataInUSBManager
 		if(this.ismount)
 		{
 			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:run");
-			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("cap:%.1fGB", this.getFreeSpaceGB()));
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("%.1fGB", this.getFreeSpaceGB()));
 		}
 		else
 		{
 			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:off");
-			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, "cap:");
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, " ");
 		}
 	}
 	
