@@ -31,6 +31,7 @@ public class SensorDataInUSBManager
 	private File mountDir;
 	private boolean mountingTask;
 	private boolean ismount;
+	private DisplayObject dispUsbState;
 	
 	public SensorDataInUSBManager()
 	{
@@ -59,7 +60,7 @@ public class SensorDataInUSBManager
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
-		this.dispUsbState = DisplayControl.inst().showString(70, 0, "usb:" + (this.ismount ? "run" : "off"));
+		this.dispUsbState = DisplayControl.inst().showString(75, 0, "usb:" + (this.ismount ? "run" : "off"));
 		if(this.ismount) logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
 		
 		return true;
@@ -91,8 +92,8 @@ public class SensorDataInUSBManager
 		boolean result = this.checkMount();
 		if(result != this.ismount)
 		{
-			this.displayMount();
 			this.ismount = result;
+			this.displayMount();
 		}
 		this.mountingTask = false;
 	}
@@ -116,8 +117,8 @@ public class SensorDataInUSBManager
 		boolean result = this.checkMount();
 		if(result != this.ismount)
 		{
-			this.displayMount();
 			this.ismount = result;
+			this.displayMount();
 		}
 		this.mountingTask = false;
 	}
@@ -149,8 +150,6 @@ public class SensorDataInUSBManager
 		}
 		return false;
 	}
-	
-	private DisplayObject dispUsbState;
 	
 	public void displayMount()
 	{
