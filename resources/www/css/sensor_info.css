@@ -1,4 +1,7 @@
 
+body {
+    overflow-y:hidden;    
+}
 .sensor {
     position: fixed;
     width: 100%;
@@ -78,6 +81,44 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     margin: 3px 0;
 }
 
+.logs {
+    border: 2px solid #8f8f8f;
+    padding: 5px;
+    margin-right: 17px;
+    background-color: white;
+    overflow-y: scroll;
+}
+
+@media (min-height: 1101px) {
+    .logs {
+        height: 690px;
+    }
+}
+
+@media (min-height: 901px) and (max-height: 1100px) {
+    .logs {
+        height: 490px;
+    }
+}
+
+@media (min-height: 751px) and (max-height: 900px) {
+    .logs {
+        height: 340px;
+    }
+}
+
+@media (min-height: 601px) and (max-height: 750px) {
+    .logs {
+        height: 190px;
+    }
+}
+
+@media (max-height: 600px){
+    .logs {
+        height: 140px;
+    }
+}
+
 @media (min-width: 601px) {
     section>div:nth-child(n + 2), article {
         max-width: 550px;
@@ -89,7 +130,7 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
 @media (min-width: 476px) {
     article {
         /* log */
-        padding-top: 380px;
+        margin-top: 40px;
         font-size: 16px;
     }
     .pos{
@@ -112,7 +153,7 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     }
     article {
         /* log */
-        padding-top: 329px;
+        margin-top: 35px;
         font-size: 12px;
     }
     .pos{
@@ -134,7 +175,7 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     }
     article {
         /* log */
-        padding-top: 313px;
+        margin-top: 35px;
     }
     .pos {
         width: 83px;
@@ -156,7 +197,7 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     }
     article {
         /* log */
-        padding-top: 385px;
+        margin-top: 35px;
     }
     .pos {
         border-radius: 7px;
