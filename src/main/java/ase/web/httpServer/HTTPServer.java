@@ -56,7 +56,7 @@ public class HTTPServer extends NanoHTTPD
 
 		String msg = "";
 		Response response;
-
+		System.out.println(uri);
 		if (uri.startsWith("/"))
 		{
 			String dir;
