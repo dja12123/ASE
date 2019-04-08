@@ -415,9 +415,9 @@ public class DisplayControl
 		boolean[][] result = new boolean[height][width];
 		for(boolean[][] result1 : list)
 		{
-			for(int h = 0; h < result.length; ++h)
+			for(int h = 0; h < result1.length; ++h)
 			{
-				for(int w = 0; w < result[h].length; ++w)
+				for(int w = 0; w < result1[h].length; ++w)
 				{
 					System.out.print(result1[h][w] ? " ": "ㅁ");
 				}
