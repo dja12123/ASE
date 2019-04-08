@@ -48,6 +48,13 @@ public class HTTPServer extends NanoHTTPD
 	{
 		return Response.newFixedLengthResponse(status, errorStr, "");
 	}
+	
+	private static Response serveRedirect(String dir)
+	{
+		Response r = Response.newFixedLengthResponse(Status.REDIRECT, MIME_HTML, "");
+		r.addHeader("Location", dir);
+		return r;
+	}
 
 	@Override
 	public Response serve(IHTTPSession request)
@@ -62,7 +69,11 @@ public class HTTPServer extends NanoHTTPD
 			String dir;
 			if(uri.equals("/"))
 			{
+				
 				dir = WEB_RES_DIR+this.httpDefaultPage;
+				response = HTTPServer.serveRedirect(dir);
+				this.sessionService(request, response);
+				return response;
 			}
 			else
 			{
@@ -84,7 +95,6 @@ public class HTTPServer extends NanoHTTPD
 				this.sessionService(request, response);
 				return response;
 			}
-			
 			String ext = dir.substring( pos + 1 );
 			switch(ext)
 			{
