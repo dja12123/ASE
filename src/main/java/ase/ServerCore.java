@@ -255,6 +255,7 @@ public class ServerCore
 	private boolean start()
 	{
 		DisplayObject loadingText = DisplayControl.inst().showString(-1, -1, "DB모듈 로드중");
+		DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
 		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
 		try
 		{
