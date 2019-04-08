@@ -30,7 +30,7 @@ public class DisplayControl
 	public static final int FONT_SIZE = 12;
 	public static final int FONT_MARGIN = 1;
 
-	private static final FontChar NULLCHAR = new FontChar(' ', new boolean[][] {
+	private static final boolean[][] NULLCHAR = new boolean[][] {
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
 			{ true, true, false, false, false, false, false, false, false, false, true, true },
 			{ true, false, true, false, false, false, false, false, false, true, false, true },
@@ -44,7 +44,7 @@ public class DisplayControl
 			{ true, true, false, false, false, false, false, false, false, false, true, true },
 			{ true, true, true, true, true, true, true, true, true, true, true, true },
 
-	}, (byte)0, (byte)0);
+	};
 
 	private static DisplayControl inst;
 
@@ -58,7 +58,7 @@ public class DisplayControl
 		return inst;
 	}
 
-	private HashMap<Character, FontChar> fontData;
+	private HashMap<Character, boolean[][]> fontData;
 
 	private OLEDDisplay display;
 	private ArrayList<DisplayObject> lcdObjList;
@@ -68,7 +68,7 @@ public class DisplayControl
 	{
 		this.lcdObjList = new ArrayList<>();
 		this.timer = new Timer(true);
-		this.fontData = new HashMap<Character, FontChar>();
+		this.fontData = new HashMap<Character, boolean[][]>();
 
 		try
 		{
@@ -87,14 +87,14 @@ public class DisplayControl
 						.parseInt(line.substring(line.indexOf("width=") + 6, line.indexOf("height=")).trim());
 				int data_height = Integer
 						.parseInt(line.substring(line.indexOf("height=") + 7, line.indexOf("xoffset=")).trim());
-				byte xoffset = Byte
-						.parseByte(line.substring(line.indexOf("xoffset=") + 8, line.indexOf("yoffset=")).trim());
-				byte yoffset = Byte
-						.parseByte(line.substring(line.indexOf("yoffset=") + 8, line.indexOf("xadvance=")).trim());
+				int xoffset = Integer
+						.parseInt(line.substring(line.indexOf("xoffset=") + 8, line.indexOf("yoffset=")).trim());
+				int yoffset = Integer
+						.parseInt(line.substring(line.indexOf("yoffset=") + 8, line.indexOf("xadvance=")).trim());
 				int xadvance = Integer
 						.parseInt(line.substring(line.indexOf("xadvance=") + 9, line.indexOf("page=")).trim());
 
-				boolean[][] dataArr = new boolean[data_height][xadvance];
+				boolean[][] dataArr = new boolean[data_height + yoffset][data_width + xoffset];
 
 				int i = 0;
 				for (int y = data_y; y < data_y + data_height; ++y)
@@ -104,14 +104,14 @@ public class DisplayControl
 					{
 						if (fontBitmap.getRGB(x, y) >= -10000000)
 						{
-							dataArr[i][j] = true;
+							dataArr[i + yoffset][j + xoffset] = true;
 						}
 						++j;
 					}
 					++i;
 				}
 
-				this.fontData.put((char) data_charid, new FontChar((char) data_charid, dataArr, xoffset, yoffset));
+				this.fontData.put((char) data_charid, dataArr);
 				line = fontMetadata.readLine();
 			}
 
@@ -406,15 +406,15 @@ public class DisplayControl
 
 	private boolean[][] stringToBitMap(String s)
 	{
-		FontChar[] list = new FontChar[s.length()];
+		boolean[][][] list = new boolean[s.length()][][];
 		int width = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			FontChar font = this.fontData.get(s.charAt(i));
-			if (font == null)
-				font = NULLCHAR;
-			width += font.data[0].length + FONT_MARGIN;
-			list[i] = font;
+			boolean[][] bitmap = this.fontData.get(s.charAt(i));
+			if (bitmap == null)
+				bitmap = NULLCHAR;
+			width += bitmap[0].length + FONT_MARGIN;
+			list[i] = bitmap;
 		}
 
 		boolean[][] result = new boolean[width][FONT_SIZE];
@@ -422,16 +422,17 @@ public class DisplayControl
 		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
+			int align = FONT_SIZE - list[i].length;
 			//System.out.println("align " + s.charAt(i) + " " + align);
-			for (int h = 0; list[i].data.length > h; ++h)
+			for (int h = 0; list[i].length > h; ++h)
 			{
 				
-				for(int w = 0; w < list[i].data[h].length; ++w)
+				for(int w = 0; w < list[i][h].length; ++w)
 				{
-					result[w + position + list[i].yoffset][h + list[i].xoffset] = list[i].data[h][w];
+					result[w + position][h + align] = list[i][h][w];
 				}
 			}
-			position += list[i].data[0].length + FONT_MARGIN;
+			position += list[i][0].length + FONT_MARGIN;
 		}
 		
 		return result;
