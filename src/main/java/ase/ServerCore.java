@@ -255,36 +255,25 @@ public class ServerCore
 	private boolean start()
 	{
 		DisplayObject loadingText = DisplayControl.inst().showString(-1, -1, "DB모듈 로드중");
-		DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
-		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
-		try
-		{
-			Thread.sleep(10000);
-		}
-		catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
-		DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "센서 읽기 로드");
 		if(!this.serialSensorReadManager.startModule()) return false;
 		//if(!this.tcpSensorReadManager.startModule()) return false;
-		DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드");
 		if(!this.sensorManager.startModule(dbInstaller)) return false;
-		DisplayControl.inst().replaceString(loadingText, "USB저장기 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "USB저장기 로드");
 		if(!this.sensorDataInUSBManager.startModule()) return false;
-		DisplayControl.inst().replaceString(loadingText, "웹 서비스 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "웹 서비스 로드");
 		if(!this.webManager.startModule()) return false;
-		DisplayControl.inst().replaceString(loadingText, "세션 관리자 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "세션 관리자 로드");
 		if(!this.clientSessionManager.startModule()) return false;
-		DisplayControl.inst().replaceString(loadingText, "사용자 서비스 로드");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "사용자 서비스 로드");
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
 		
 		//this.testSensor.start();
-		DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
+		loadingText = DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
 		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
 		logger.log(Level.INFO, "시스템 시작 완료");
 		return true;
