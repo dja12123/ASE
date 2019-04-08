@@ -1,4 +1,12 @@
 
+// 모든 센서 제거
+function removeAllItem() {
+	var items = document.getElementById("items");
+	while (items.hasChildNodes())
+		items.removeChild(items.firstChild);
+}
+
+
 // add, del함수 실행시 total체크
 // * setTotal(Number) 센서 개수
 function setTotal(total) {
@@ -65,5 +73,6 @@ function listDisconnect() {
 // 재접속
 function listReconnect() {
     document.getElementById("main").style.opacity = 1;
-    document.body.removeChild(document.getElementById("disconnected"));
+	document.body.removeChild(document.getElementById("disconnected"));
+	removeAllItem();
 }
