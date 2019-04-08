@@ -45,7 +45,7 @@ window.onload = function()
 		console.log(e.data);
 		console.log("data:" + e.data);
 		var data = e.data.split("/");
-		console.log("sensor status: "+data[1]);
+		//console.log("sensor status: "+data[1]);
 		if(data[1] == "true")
 		{
 			addItem(data[0], false);
