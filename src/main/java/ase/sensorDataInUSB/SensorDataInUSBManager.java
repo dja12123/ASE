@@ -83,7 +83,7 @@ public class SensorDataInUSBManager
 			String result = CommandExecutor.executeCommand(String.format("mount %s %s", 
 					this.usbDevice, this.mountDir.toString()));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
-			Thread.sleep(1000);
+			Thread.sleep(200);
 		}
 		catch (Exception e)
 		{
@@ -108,7 +108,7 @@ public class SensorDataInUSBManager
 			String result = CommandExecutor.executeCommand(String.format("umount %s", 
 					this.usbDevice));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
-			Thread.sleep(1000);
+			Thread.sleep(200);
 		}
 		catch (Exception e)
 		{
