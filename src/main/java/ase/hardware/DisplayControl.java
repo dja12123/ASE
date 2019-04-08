@@ -418,7 +418,7 @@ public class DisplayControl
 		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
 		{
-			int align = FONT_SIZE - list[i][0].length;
+			int align = FONT_SIZE - list[i].length;
 			System.out.println("align " + s.charAt(i) + " " + align);
 			for (int h = 0; list[i].length > h; ++h)
 			{
