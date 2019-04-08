@@ -10,10 +10,6 @@ html, body {
     user-select: none;
 }
 
-::-webkit-scrollbar {
-    display:none;
-}
-
 .main {
     opacity: 1;
 }
