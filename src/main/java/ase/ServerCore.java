@@ -60,7 +60,9 @@ public class ServerCore
 		DisplayControl.init();
 		GPIOControl.init();
 		DisplayControl.inst().showString(0, 0, "안녕!!");
-		
+		DisplayControl.inst().showString(0, 12, "잘 나오냐??");
+		DisplayControl.inst().showString(0, 24, "abc ABC");
+		DisplayControl.inst().showString(0, 32, "다람쥐 헌 쳇바퀴에 타고파");
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		

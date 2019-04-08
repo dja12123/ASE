@@ -414,17 +414,6 @@ public class DisplayControl
 		}
 
 		boolean[][] result = new boolean[width][FONT_SIZE];
-		for(boolean[][] result1 : list)
-		{
-			for(int h = 0; h < result1.length; ++h)
-			{
-				for(int w = 0; w < result1[h].length; ++w)
-				{
-					System.out.print(result1[h][w] ? "ㅁ": "  ");
-				}
-				System.out.println();
-			}
-		}
 		
 		int position = 0;
 		for (int i = 0; i < s.length(); ++i)
@@ -435,11 +424,9 @@ public class DisplayControl
 				{
 					result[w + position][h] = list[i][h][w];
 				}
-				//System.arraycopy(list[i][h], 0, result[h], position, list[i][h].length);
 			}
 			position += list[i][0].length + FONT_MARGIN;
 		}
-		
 		
 		return result;
 	}
