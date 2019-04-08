@@ -15,6 +15,8 @@ import ase.ServerCore;
 import ase.bash.CommandExecutor;
 import ase.console.LogWriter;
 import ase.fileIO.FileHandler;
+import ase.hardware.DisplayControl;
+import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 
 public class SensorDataInUSBManager
@@ -52,16 +54,21 @@ public class SensorDataInUSBManager
 	
 	public boolean startModule()
 	{
+		logger.log(Level.INFO, "USB 센서 정보 저장기 시작");
 		GPIOControl.inst().btn1.addListener(this.btnListener);
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
 		this.ismount = this.checkMount();
+		this.dispUsbState = DisplayControl.inst().showString(70, 0, "usb:" + (this.ismount ? "run" : "off"));
 		if(this.ismount) logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
+		
 		return true;
 	}
 	
 	public void stopModule()
 	{
+		logger.log(Level.INFO, "USB 센서 정보 저장기 종료");
+		DisplayControl.inst().removeShape(this.dispUsbState);
 		GPIOControl.inst().btn1.removeListener(this.btnListener);
 	}
 	
@@ -81,7 +88,12 @@ public class SensorDataInUSBManager
 		{
 			logger.log(Level.WARNING, "마운트 실패", e);
 		}
-		this.ismount = this.checkMount();
+		boolean result = this.checkMount();
+		if(result != this.ismount)
+		{
+			this.displayMount();
+			this.ismount = result;
+		}
 		this.mountingTask = false;
 	}
 	
@@ -101,7 +113,12 @@ public class SensorDataInUSBManager
 		{
 			logger.log(Level.WARNING, "마운트 실패", e);
 		}
-		this.ismount = this.checkMount();
+		boolean result = this.checkMount();
+		if(result != this.ismount)
+		{
+			this.displayMount();
+			this.ismount = result;
+		}
 		this.mountingTask = false;
 	}
 	
@@ -130,7 +147,13 @@ public class SensorDataInUSBManager
 				return true;
 			}
 		}
-		
 		return false;
+	}
+	
+	private DisplayObject dispUsbState;
+	
+	public void displayMount()
+	{
+		this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:" + (this.ismount ? "run" : "off"));
 	}
 }
