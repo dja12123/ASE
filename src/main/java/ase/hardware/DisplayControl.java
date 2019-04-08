@@ -96,9 +96,9 @@ public class DisplayControl
 
 				boolean[][] dataArr = new boolean[data_height + yoffset][data_width + xoffset];
 
-				for (int y = 0; y < data_y; ++y)
+				for (int y = 0; y < data_height; ++y)
 				{
-					for (int x = 0; x < data_x; ++x)
+					for (int x = 0; x < data_width; ++x)
 					{
 						if (fontBitmap.getRGB(x + data_x, y + data_y) >= -10000000)
 						{
