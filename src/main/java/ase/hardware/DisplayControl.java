@@ -422,7 +422,7 @@ public class DisplayControl
 			{
 				for(int w = 0; w < list[i][h].length; ++w)
 				{
-					result[w + position][h] = list[i][h][w];
+					result[w + position][h] = list[i][(FONT_SIZE - list[i][h].length) + h][w];
 				}
 			}
 			position += list[i][0].length + FONT_MARGIN;
