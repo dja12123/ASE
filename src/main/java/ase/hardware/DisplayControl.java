@@ -94,7 +94,7 @@ public class DisplayControl
 				int xadvance = Integer
 						.parseInt(line.substring(line.indexOf("xadvance=") + 9, line.indexOf("page=")).trim());
 
-				boolean[][] dataArr = new boolean[data_height + yoffset][data_width + xoffset];
+				boolean[][] dataArr = new boolean[data_height + yoffset][xadvance];
 
 				for (int y = 0; y < data_height; ++y)
 				{
