@@ -72,7 +72,7 @@ public class AllSensorLogSender extends ServiceInstance
 				data.addProperty("message", sensorLog.message);
 				dataArray.add(data);
 			}
-			json.add("sensorData", dataArray);
+			json.add("sensorLog", dataArray);
 		}
 		else
 		{

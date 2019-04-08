@@ -24,26 +24,24 @@ window.onload = function()
     // 이전 센서 데이터 요청
     var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
     {
-        var numbers = String(1);
-        beforeSensorData.send(sensorID + "/" + numbers);
+        beforeSensorData.send(sensorID + "/" + String(1));
     }, (e) =>
     {
         var data = JSON.parse(e.data);
         if(data.result = true)
         {
             console.log(Object.keys(data).length);
-			if(Object.keys(data).length > 1)
+		
+			for(var i in data.sensorData)   // 센서 수 만큼 반복문
 			{
-                for(var i in data.sensorData)   // 센서 수 만큼 반복문
-                {
-                    var sensorData = data.sensorData[i];
-                    console.log(sensorData);
-                    var time = sensorData.time.split("/");
-                    console.log(data.xg);
-				    setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
-                }
-				
+				var sensorData = data.sensorData[i];
+				console.log(sensorData);
+				var time = sensorData.time.split("/");
+				console.log(data.xg);
+				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
 			}
+			
+		
 
         }
         else
@@ -56,34 +54,27 @@ window.onload = function()
     // 이전 데이터 로그 요청
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
-        var numbers = String(1);
-        beforeSensorData.send(sensorID + "/" + numbers);
+        beforeSensorLog.send(sensorID + "/" + String(100));
     }, (e) =>
     {
         var data = JSON.parse(e.data);
-        if(data.result = true)
+        if(data.result == true)
         {
+			console.log(data);
             console.log(Object.keys(data).length);
-			if(Object.keys(data).length > 1)
+			for(var i in data.sensorLog)
 			{
-                for(var i in data.sensorData)
-                {
-                    var sensorData = data.sensorData[i];
-                    console.log(sensorData);
-                    addLog(sensorData.level, new Date(sensorData.time), sensorData.message)
-                }
-
-                addLog()
-				
+				var sensorLog = data.sensorLog[i];
+				console.log(sensorLog);
+				var time = sensorLog.time.split("/");
+				addLog(sensorLog.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorLog.message)
 			}
-
         }
         else
         {
-            beforeSensorData.close();
+            beforeSensorLog.close();
         }
-    }
-    );
+    });
     
 	
     
@@ -135,18 +126,15 @@ window.onload = function()
     {
         console.log(e.data);
         var data = JSON.parse(e.data);
-        if(data.result == true)
+		if(data.result != true)
+		{
+			sensorLog.close();
+		}
+        if(data.result == true && data.message)
         {
             console.log("logData:" + data);
-            console.log(object.key(data).length);
-            if(object.key(data).length>1) 
-            {
-                addLog(data.level, new Date(data.time), data.message);
-            }
-        }
-        else
-        {
-            sensorLog.close();
+			var time = data.time.split("/");
+            addLog(data.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.message);
         }
 
     });
