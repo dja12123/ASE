@@ -17,6 +17,16 @@ function getFormatDate(date) {
     return (date < 10) ? '0' + date : date;
 }
 
+// 모든 로그 삭제
+// 재접속 시도: infoReconnect()
+function removeAllLogs() {
+    for (let i = 0; i <= logMax; i++) {
+        if(removeLog(i))
+            break;
+    }
+    logNum = 0;
+}
+
 
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
@@ -86,14 +96,6 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
         document.getElementById('log').append(eLog);
     logNum++;
     if (logNum > logMax) logNum = 0; //로그갯수 제한
-}
-
-function removeAllLogs() {
-    for (let i = 0; i <= logMax; i++) {
-        if(removeLog(i))
-            break;
-    }
-    logNum = 0;
 }
 
 // 연결 끊김
