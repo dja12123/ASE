@@ -22,8 +22,8 @@ import de.pi3g.pi.oled.OLEDDisplay;
 
 public class DisplayControl
 {
-	public static final String FONT_METADATA = "/displayFont/rawfont.fnt";
-	public static final String FONT_BITMAP = "/displayFont/rawfont.png";
+	public static final String FONT_METADATA = "displayFont/rawfont.fnt";
+	public static final String FONT_BITMAP = "displayFont/rawfont.png";
 	public static final Logger logger = LogWriter.createLogger(DisplayControl.class, "LCDControl");
 	public static final int DISPLAY_WIDTH = 128;
 	public static final int DISPLAY_HEIGHT = 64;
