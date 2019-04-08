@@ -176,11 +176,19 @@ public class SensorDataInUSBManager
 	
 	public double getFreeSpaceGB()
 	{
-		for(File f : File.listRoots())
+		String result;
+		try
 		{
-			double totalSize = f.getTotalSpace() / Math.pow(1024, 3);
-			double useSize = f.getUsableSpace() / Math.pow(1024, 3);
-			System.out.println(totalSize - useSize);
+			result = CommandExecutor.executeCommand(String.format("df %s", this.usbDevice));
+			result = result.split("\n")[1];
+			for(String s : result.split(" "))
+			{
+				System.out.println(s);
+			}
+		}
+		catch (Exception e)
+		{
+			return 0;
 		}
 		double totalSize = this.mountDir.getTotalSpace() / Math.pow(1024, 3);
 		double useSize = this.mountDir.getUsableSpace() / Math.pow(1024, 3);
