@@ -181,6 +181,7 @@ public class SensorDataInUSBManager
 		{
 			result = CommandExecutor.executeCommand(String.format("df %s", this.usbDevice));
 			result = result.split("\n")[1];
+			result = result.trim();
 			for(String s : result.split(" "))
 			{
 				System.out.println(s);
