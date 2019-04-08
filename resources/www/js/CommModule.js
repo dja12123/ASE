@@ -133,9 +133,15 @@ export class Channel
 	}
 	
 	close()
+	{// 웹소켓 닫기
+		if(this.connecting) this.ws.close();
+		if(this.wsClose) this.wsClose(this);
+	}
+	
+	closeCh()
 	{
 		if(this.connecting) this.ws.close();
-		this.onClose(this);
+		if(this.onClose) this.onClose(this);
 	}
 }
 
