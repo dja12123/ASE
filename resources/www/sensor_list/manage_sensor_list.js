@@ -19,7 +19,6 @@ function setTotal() {
 
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
-// table -> div 수정
 function addItem(key, on) {
 	var state = on ? "checked" : "";
 	var eItem = document.createElement("table");
