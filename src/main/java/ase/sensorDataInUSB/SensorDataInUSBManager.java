@@ -312,6 +312,10 @@ public class SensorDataInUSBManager
 			}
 		}
 		this.taskFile = new File(this.mountFile, FilePrefix+"_"+FileDateFormat.format(new Date())+"_"+FilePostfix);
+		if(this.taskFile == null)
+		{
+			logger.log(Level.WARNING, "작업 파일 가져오는중 오류");
+		}
 		return this.taskFile;
 	}
 	
