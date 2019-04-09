@@ -86,6 +86,7 @@ public class SensorDataInUSBManager
 	private File mountFile;
 	private int freeCapKB;
 	private String mountDir;
+	private String fullMountDir;
 	private boolean mountingTask;
 	private boolean ismount;
 	private Queue<DataReceiveEvent> sensorDataQueue;
@@ -136,6 +137,7 @@ public class SensorDataInUSBManager
 		GPIOControl.inst().btn1.addListener(this.btnListener);
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
 		this.mountDir = ServerCore.getProp(PROP_USB_MOUNT_DIR);
+		this.fullMountDir = FileHandler.getExtResourceFile(this.mountDir).toString();
 		this.saveTaskInterval = Integer.parseInt(ServerCore.getProp(PROP_SAVE_TASK_INTERVAL));
 		this.freeCapKB = Integer.parseInt(ServerCore.getProp(PROP_FREE_CAP_KB));
 		this.ismount = this.checkMount();
@@ -143,7 +145,7 @@ public class SensorDataInUSBManager
 		this.dispCapacity = DisplayControl.inst().showString(70, 15, " ");
 		if(this.ismount)
 		{
-			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountFile.toString());
+			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice);
 		}
 		else
 		{
@@ -369,11 +371,11 @@ public class SensorDataInUSBManager
 	{
 		if(this.mountingTask || this.ismount) return;
 		this.mountingTask = true;
-		logger.log(Level.INFO, "USB마운트 " + this.usbDevice + " " + this.mountFile.toString());
+		logger.log(Level.INFO, "USB마운트 " + this.usbDevice);
 		try
 		{
 			String result = CommandExecutor.executeCommand(String.format("mount %s %s", 
-					this.usbDevice, this.mountFile.toString()));
+					this.usbDevice, this.fullMountDir));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(200);
 		}
@@ -445,7 +447,7 @@ public class SensorDataInUSBManager
 		{
 			JsonObject obj = (JsonObject) arr.get(i);
 			String target = obj.get("target").getAsString();
-			if(target.equals(FileHandler.getExtResourceFile(this.mountDir).toString()))
+			if(target.equals(this.fullMountDir))
 			{
 				return true;
 			}
