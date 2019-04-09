@@ -445,7 +445,7 @@ public class SensorDataInUSBManager
 		{
 			JsonObject obj = (JsonObject) arr.get(i);
 			String target = obj.get("target").getAsString();
-			if(target.equals(this.mountFile.toString()))
+			if(target.equals(FileHandler.getExtResourceFile(this.mountDir).toString()))
 			{
 				return true;
 			}
