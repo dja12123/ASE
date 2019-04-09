@@ -243,7 +243,7 @@ public class ServerCore
 		this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
 		this.sensorManager = new SensorManager(this.dbHandler, this.serialSensorReadManager);
-		this.sensorDataInUSBManager = new SensorDataInUSBManager();
+		this.sensorDataInUSBManager = new SensorDataInUSBManager(this.sensorManager);
 		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);

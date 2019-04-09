@@ -395,7 +395,7 @@ public class DisplayControl
 			}
 			catch (IOException e)
 			{
-				logger.log(Level.SEVERE, "LCD컨트롤 오류", e);
+				//logger.log(Level.SEVERE, "LCD컨트롤 오류", e);
 			}
 		});
 	}
