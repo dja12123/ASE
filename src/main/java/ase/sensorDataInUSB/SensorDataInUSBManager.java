@@ -326,6 +326,7 @@ public class SensorDataInUSBManager
 		{
 			return false;
 		}
+		if(this.mountFile == null) return false;
 		File[] files = this.mountFile.listFiles();
 		class TempClass implements Comparable<TempClass>
 		{
