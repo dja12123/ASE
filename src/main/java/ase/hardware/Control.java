@@ -49,11 +49,13 @@ public class Control
 		else
 		{
 			long nowTime = System.currentTimeMillis();
-			if(nowTime - this.pushTime >= 2000 && nowTime - this.pushTime <= 6000)
+			int btnTime = (int) (nowTime - this.pushTime);
+			if(btnTime >= 2000 && btnTime <= 6000)
 			{
+				logger.log(Level.INFO, "종료버튼 누름1");
 				if(!this.shutdownCommand && this.isPush)
 				{
-					logger.log(Level.INFO, "종료버튼 누름");
+					logger.log(Level.INFO, "종료버튼 누름2");
 					this.shutdownCommand = true;
 					ServerCore.endProgram();
 				}
