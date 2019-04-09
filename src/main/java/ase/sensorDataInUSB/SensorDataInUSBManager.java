@@ -221,6 +221,7 @@ public class SensorDataInUSBManager
 			}
 			catch (IOException e)
 			{
+				logger.log(Level.WARNING, taskFile.getParent());
 				logger.log(Level.WARNING, "기록 파일 생성 실패"+taskFile.toString(), e);
 				return false;
 			}
