@@ -100,7 +100,7 @@ public class ServerCore
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			
 		}
 		mainThread.interrupt();
 		RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
