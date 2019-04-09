@@ -189,8 +189,7 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
         height: 16px;
     }
 }
-
-/* min-width: 270px */
+/* min-width: 295px */
 @media (max-width: 350px) {
     section>div:nth-child(n + 2), article {
         font-size: 11px;

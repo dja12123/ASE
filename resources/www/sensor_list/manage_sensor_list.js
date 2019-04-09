@@ -19,7 +19,6 @@ function setTotal() {
 
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
-// table -> div 수정
 function addItem(key, on) {
 	var state = on ? "checked" : "";
 	var eItem = document.createElement("table");
@@ -65,6 +64,7 @@ function state(key, on) {
 	if(sensor.checked != on) sensor.checked = on;
 }
 
+// 연결 끊김
 function listDisconnect() {
     document.getElementById("main").style.opacity = 0.4;
     document.body.innerHTML += 

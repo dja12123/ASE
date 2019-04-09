@@ -95,7 +95,7 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     else
         document.getElementById('log').append(eLog);
     logNum++;
-    if (logNum > logMax) logNum = 0; //로그갯수 제한
+    if (logNum > logMax) logNum = 0; // 로그 100개 제한: logMax
 }
 
 // 연결 끊김
