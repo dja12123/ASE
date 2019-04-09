@@ -49,9 +49,10 @@ public class Control
 		}
 		else
 		{
-			logger.log(Level.INFO, "종료버튼 누름2");
+			
 			long nowTime = System.currentTimeMillis();
 			int btnTime = (int) (nowTime - this.pushTime);
+			logger.log(Level.INFO, "종료버튼 누름2"+btnTime);
 			if(btnTime >= 2000 && btnTime <= 6000)
 			{
 				logger.log(Level.INFO, "종료버튼 누름3");
