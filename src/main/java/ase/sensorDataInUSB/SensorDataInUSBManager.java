@@ -125,7 +125,7 @@ public class SensorDataInUSBManager
 		}
 		
 		this.displayMount();
-		this.sensorManager.publicDataReceiveObservable.addObserver(this.sensorDataReceiveObserver);
+		
 
 		return true;
 	}
@@ -133,7 +133,6 @@ public class SensorDataInUSBManager
 	public void stopModule()
 	{
 		logger.log(Level.INFO, "USB 센서 정보 저장기 종료");
-		this.sensorManager.publicDataReceiveObservable.removeObserver(this.sensorDataReceiveObserver);
 		DisplayControl.inst().removeShape(this.dispUsbState);
 		this.recordData();
 		this.stopTask();
@@ -146,6 +145,7 @@ public class SensorDataInUSBManager
 	private void startTask()
 	{
 		if(this.isRun) return;
+		this.sensorManager.publicDataReceiveObservable.addObserver(this.sensorDataReceiveObserver);
 		this.taskThread = new Thread(this.task);
 		this.taskThread.setDaemon(true);
 		this.isRun = true;
@@ -155,6 +155,7 @@ public class SensorDataInUSBManager
 	private void stopTask()
 	{
 		if(!this.isRun) return;
+		this.sensorManager.publicDataReceiveObservable.removeObserver(this.sensorDataReceiveObserver);
 		this.isRun = false;
 		if(this.taskThread != null) this.taskThread.interrupt();
 		this.usbCapKB = 0;
