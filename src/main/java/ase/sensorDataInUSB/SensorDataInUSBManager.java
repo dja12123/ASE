@@ -205,7 +205,10 @@ public class SensorDataInUSBManager
 		BufferedWriter bufferedWriter;
 		try
 		{
-			bufferedWriter = new BufferedWriter(new FileWriter(taskFile, true));
+			if(taskFile.exists() && taskFile.isFile())
+				bufferedWriter = new BufferedWriter(new FileWriter(taskFile, true));
+			else
+				bufferedWriter = new BufferedWriter(new FileWriter(taskFile));
 		}
 		catch (IOException e)
 		{
