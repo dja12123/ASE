@@ -64,6 +64,7 @@ function state(key, on) {
 	if(sensor.checked != on) sensor.checked = on;
 }
 
+// 연결 끊김
 function listDisconnect() {
     document.getElementById("main").style.opacity = 0.4;
     document.body.innerHTML += 
