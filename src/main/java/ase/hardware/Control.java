@@ -43,19 +43,21 @@ public class Control
 	{
 		if(event.getState().isHigh())
 		{
+			logger.log(Level.INFO, "종료버튼 누름1");
 			this.pushTime = System.currentTimeMillis();
 			this.isPush = true;
 		}
 		else
 		{
+			logger.log(Level.INFO, "종료버튼 누름2");
 			long nowTime = System.currentTimeMillis();
 			int btnTime = (int) (nowTime - this.pushTime);
 			if(btnTime >= 2000 && btnTime <= 6000)
 			{
-				logger.log(Level.INFO, "종료버튼 누름1");
+				logger.log(Level.INFO, "종료버튼 누름3");
 				if(!this.shutdownCommand && this.isPush)
 				{
-					logger.log(Level.INFO, "종료버튼 누름2");
+					logger.log(Level.INFO, "종료버튼 누름4");
 					this.shutdownCommand = true;
 					ServerCore.endProgram();
 				}
