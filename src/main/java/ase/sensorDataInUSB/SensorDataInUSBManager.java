@@ -71,7 +71,7 @@ public class SensorDataInUSBManager
 	public static final String PROP_USB_MOUNT_DIR = "MountDir";
 	private static final String PROP_SAVE_TASK_INTERVAL = "SaveTaskInterval";
 	private static final String PROP_FREE_CAP_KB = "FreeCapKB";
-	private static final SimpleDateFormat FileDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+	private static final SimpleDateFormat FileDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String FilePrefix = "SensorData";
 	private static final String FilePostfix = ".csv";
 	
@@ -205,7 +205,7 @@ public class SensorDataInUSBManager
 			int freeSpace = this.usbCapKB - this.getUseSpaceKB();
 			if(freeSpace <= this.freeCapKB)
 			{
-				logger.log(Level.WARNING, "기록 실패: USB가 가득 참");
+				logger.log(Level.WARNING, "기록 실패: USB가 가득 참 free: "+freeSpace+"KB");
 				return false;
 			}
 		}
