@@ -503,6 +503,7 @@ public class SensorDataInUSBManager
 		}
 		catch (Exception e)
 		{
+			logger.log(Level.WARNING, "용량정보 오류", e);
 		}
 
 		return useSize;
