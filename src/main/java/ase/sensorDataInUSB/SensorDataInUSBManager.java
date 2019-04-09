@@ -207,11 +207,11 @@ public class SensorDataInUSBManager
 			try
 			{
 				if(!taskFile.createNewFile())
-					logger.log(Level.WARNING, "기록 파일 생성 실패");
+					logger.log(Level.WARNING, "기록 파일 생성 실패"+taskFile.toString());
 			}
 			catch (IOException e)
 			{
-				logger.log(Level.WARNING, "기록 파일 생성 실패", e);
+				logger.log(Level.WARNING, "기록 파일 생성 실패"+taskFile.toString(), e);
 			}
 		}
 		BufferedWriter bufferedWriter;
