@@ -118,8 +118,8 @@ public class SensorDataInUSBManager
 			{
 				if(this.ismount)
 				{
-					this.stopTask();
 					this.recordData();
+					this.stopTask();
 					this.unMount();
 				}
 				else
