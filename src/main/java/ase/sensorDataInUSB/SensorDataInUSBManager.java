@@ -86,14 +86,14 @@ public class SensorDataInUSBManager
 			{
 				if(this.ismount)
 				{
-					this.recordData();
+					if(this.ismount) this.recordData();
 					this.stopTask();
 					this.unMount();
 				}
 				else
 				{
 					this.mount();
-					this.startTask();
+					if(this.ismount) this.startTask();
 				}
 			});
 		}
