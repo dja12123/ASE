@@ -4,8 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -37,36 +35,6 @@ import ase.util.observer.Observer;
 
 public class SensorDataInUSBManager
 {
-	
-	public static void main(String[] args) throws Exception
-	{
-		class TempClass implements Comparable<TempClass>
-		{
-			File file;
-			Date date;
-			@Override
-			public int compareTo(TempClass o)
-			{
-				return date.compareTo(o.date);
-			}
-		}
-		File[] files = new File("D:\\Users\\dja12123\\Documents\\반디카메라").listFiles();
-		List<TempClass> fileSortList = new LinkedList<>();
-		for(File f : files)
-		{
-
-			TempClass t = new TempClass();
-			BasicFileAttributes attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-			t.date = new Date(attr.creationTime().toMillis());
-			t.file = f;
-			fileSortList.add(t);
-		}
-		Collections.sort(fileSortList);
-		for(TempClass t : fileSortList)
-		{
-			System.out.println(FileDateFormat.format(t.date));
-		}
-	}
 	public static final String PROP_USB_DEVICE = "UsbDevice";
 	public static final String PROP_USB_MOUNT_DIR = "MountDir";
 	private static final String PROP_SAVE_TASK_INTERVAL = "SaveTaskInterval";

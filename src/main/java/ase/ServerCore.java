@@ -22,6 +22,7 @@ import ase.console.LogWriter;
 import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
+import ase.hardware.Control;
 import ase.hardware.DisplayControl;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
@@ -45,14 +46,6 @@ public class ServerCore
 	
 	public static void main(String[] args)
 	{
-		shutdownThreads = getShutdownHookList();
-		
-		for(Thread beforeShutdownThread : getShutdownHookList())
-		{
-			Runtime.getRuntime().removeShutdownHook(beforeShutdownThread);
-		}
-		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
-		
 		if(!initProp())
 		{
 			return;
@@ -60,8 +53,17 @@ public class ServerCore
 		
 		DisplayControl.init();
 		GPIOControl.init();
+		Control.init();
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
+		
+		shutdownThreads = getShutdownHookList();
+		
+		for(Thread beforeShutdownThread : getShutdownHookList())
+		{
+			Runtime.getRuntime().removeShutdownHook(beforeShutdownThread);
+		}
+		Runtime.getRuntime().addShutdownHook(new Thread(ServerCore::endProgram, "shutdownThread"));
 		
 		Thread shutdownThread = new Thread(ServerCore::endProgram, "shutdownThread");
 		shutdownThread.setPriority(Thread.MAX_PRIORITY);
