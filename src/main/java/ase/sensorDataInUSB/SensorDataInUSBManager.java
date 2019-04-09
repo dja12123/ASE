@@ -299,6 +299,7 @@ public class SensorDataInUSBManager
 			}
 			catch (ParseException e)
 			{
+				logger.log(Level.WARNING, "작업 파일 가져오는중 오류", e);
 				return null;
 			}
 			if(nowDate.compareTo(fileDate) == 0)
@@ -483,6 +484,7 @@ public class SensorDataInUSBManager
 		}
 		catch (Exception e)
 		{
+			logger.log(Level.WARNING, "용량정보 오류", e);
 		}
 
 		return totalSize;
