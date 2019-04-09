@@ -167,8 +167,8 @@ public class SensorDataInUSBManager
 		logger.log(Level.INFO, "USB 센서 정보 저장기 종료");
 		this.sensorManager.publicDataReceiveObservable.removeObserver(this.sensorDataReceiveObserver);
 		DisplayControl.inst().removeShape(this.dispUsbState);
-		this.stopTask();
 		this.recordData();
+		this.stopTask();
 		this.unMount();
 		this.sensorDataQueue.clear();
 		GPIOControl.inst().btn1.removeListener(this.btnListener);
