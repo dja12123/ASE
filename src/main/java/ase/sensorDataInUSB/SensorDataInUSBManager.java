@@ -202,13 +202,22 @@ public class SensorDataInUSBManager
 				return false;
 			}
 		}
+		if(!(taskFile.exists() && taskFile.isFile()))
+		{
+			try
+			{
+				if(!taskFile.createNewFile())
+					logger.log(Level.WARNING, "기록 파일 생성 실패");
+			}
+			catch (IOException e)
+			{
+				logger.log(Level.WARNING, "기록 파일 생성 실패", e);
+			}
+		}
 		BufferedWriter bufferedWriter;
 		try
 		{
-			if(taskFile.exists() && taskFile.isFile())
-				bufferedWriter = new BufferedWriter(new FileWriter(taskFile, true));
-			else
-				bufferedWriter = new BufferedWriter(new FileWriter(taskFile));
+			bufferedWriter = new BufferedWriter(new FileWriter(taskFile, true));
 		}
 		catch (IOException e)
 		{
