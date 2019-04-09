@@ -100,7 +100,7 @@ public class ServerCore
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			
 		}
 		mainThread.interrupt();
 		RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
@@ -283,7 +283,7 @@ public class ServerCore
 
 	private void shutdown()
 	{
-	
+		DisplayObject endText = DisplayControl.inst().showString(-1, -1, "시스템 종료중");
 		logger.log(Level.INFO, "시스템 종료 시작");
 		
 		//this.testSensor.stop();
@@ -296,6 +296,14 @@ public class ServerCore
 		this.serialSensorReadManager.stopModule();
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
+		DisplayControl.inst().removeShape(endText);
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e)
+		{
+		}
 	}
 	
 	public static String getProp(String key)
