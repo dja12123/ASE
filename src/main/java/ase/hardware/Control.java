@@ -34,6 +34,7 @@ public class Control
 	{
 		this.shutdownCommand = false;
 		this.btnListener = this::btnListener;
+		GPIOControl.inst().btn1.addListener(this.btnListener);
 		logger.log(Level.INFO, "제어 활성화");
 		
 	}
