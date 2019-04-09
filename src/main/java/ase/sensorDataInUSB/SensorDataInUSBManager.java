@@ -244,7 +244,6 @@ public class SensorDataInUSBManager
 	{
 		while(this.isRun)
 		{
-			logger.log(Level.INFO, "센서 정보 저장");
 			if(!this.recordData()) this.stopTask();
 			try
 			{
