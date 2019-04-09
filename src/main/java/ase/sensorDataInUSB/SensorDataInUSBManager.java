@@ -437,7 +437,7 @@ public class SensorDataInUSBManager
 		if(this.ismount)
 		{
 			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:run");
-			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("%.1fGB", (this.usbCapKB - this.getUseSpaceKB()) / (1024*1024)));
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("%.1fGB", (double)(this.usbCapKB - this.getUseSpaceKB()) / (1024*1024)));
 		}
 		else
 		{
