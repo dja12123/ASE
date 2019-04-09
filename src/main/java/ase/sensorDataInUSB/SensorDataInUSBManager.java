@@ -148,12 +148,12 @@ public class SensorDataInUSBManager
 			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice);
 			this.mountFile = FileHandler.getExtResourceFile(this.mountDir);
 			this.usbCapKB = this.getTotalSpaceKB();
-			this.startTask();
 		}
 		else
 		{
 			this.mount();
 		}
+		if(this.ismount) this.startTask();
 		this.displayMount();
 		this.sensorManager.publicDataReceiveObservable.addObserver(this.sensorDataReceiveObserver);
 
