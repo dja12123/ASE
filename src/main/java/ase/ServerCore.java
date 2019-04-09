@@ -297,6 +297,13 @@ public class ServerCore
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 		DisplayControl.inst().removeShape(endText);
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e)
+		{
+		}
 	}
 	
 	public static String getProp(String key)
