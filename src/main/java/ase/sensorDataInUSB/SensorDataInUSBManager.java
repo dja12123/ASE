@@ -286,7 +286,6 @@ public class SensorDataInUSBManager
 				break;
 			}
 		}
-		this.taskFile = null;
 	}
 	
 	private File getTaskFile()
