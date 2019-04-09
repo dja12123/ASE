@@ -283,7 +283,7 @@ public class ServerCore
 
 	private void shutdown()
 	{
-	
+		DisplayObject endText = DisplayControl.inst().showString(-1, -1, "시스템 종료중");
 		logger.log(Level.INFO, "시스템 종료 시작");
 		
 		//this.testSensor.stop();
