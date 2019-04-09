@@ -9,7 +9,9 @@ function removeLog(num) {
 
 // 자동 스크롤: 현재 스크롤 위치
 function getCurrentScrollPercentage() {
-    return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100;
+    var log = document.getElementById('log');
+    // console.log(log.clientHeight);
+    return (log.scrollTop + log.clientHeight) / log.clientHeight * 100;
 }
 
 // 날짜 포멧: 두자리
@@ -88,12 +90,13 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     msg
     ];
     // 자동 스크롤
-    if(getCurrentScrollPercentage() > 95){
-        document.getElementById('log').append(eLog);
-        window.scrollTo(0, document.body.scrollHeight);
+    var log = document.getElementById('log');
+    if(getCurrentScrollPercentage() > 90){
+        log.append(eLog);
+        log.scrollTop = log.scrollHeight;
     }
     else
-        document.getElementById('log').append(eLog);
+        log.append(eLog);
     logNum++;
     if (logNum > logMax) logNum = 0; // 로그 100개 제한: logMax
 }
