@@ -296,6 +296,7 @@ public class ServerCore
 		this.serialSensorReadManager.stopModule();
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
+		DisplayControl.inst().removeShape(endText);
 	}
 	
 	public static String getProp(String key)
