@@ -83,8 +83,9 @@ public class SensorDataInUSBManager
 	
 	private GpioPinListenerDigital btnListener;
 	private String usbDevice;
-	private File mountDir;
+	private File mountFile;
 	private int freeCapKB;
+	private String mountDir;
 	private boolean mountingTask;
 	private boolean ismount;
 	private Queue<DataReceiveEvent> sensorDataQueue;
@@ -96,7 +97,7 @@ public class SensorDataInUSBManager
 	
 	private DisplayObject dispUsbState;
 	private DisplayObject dispCapacity;
-	
+
 	public SensorDataInUSBManager(SensorManager sensorManager)
 	{
 		this.sensorManager = sensorManager;
@@ -134,7 +135,7 @@ public class SensorDataInUSBManager
 		logger.log(Level.INFO, "USB 센서 정보 저장기 시작");
 		GPIOControl.inst().btn1.addListener(this.btnListener);
 		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
-		this.mountDir = FileHandler.getExtResourceFile(ServerCore.getProp(PROP_USB_MOUNT_DIR));
+		this.mountDir = ServerCore.getProp(PROP_USB_MOUNT_DIR);
 		this.saveTaskInterval = Integer.parseInt(ServerCore.getProp(PROP_SAVE_TASK_INTERVAL));
 		this.freeCapKB = Integer.parseInt(ServerCore.getProp(PROP_FREE_CAP_KB));
 		this.ismount = this.checkMount();
@@ -142,7 +143,7 @@ public class SensorDataInUSBManager
 		this.dispCapacity = DisplayControl.inst().showString(70, 15, " ");
 		if(this.ismount)
 		{
-			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountDir.toString());
+			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice + " " + this.mountFile.toString());
 		}
 		else
 		{
@@ -207,11 +208,15 @@ public class SensorDataInUSBManager
 			try
 			{
 				if(!taskFile.createNewFile())
+				{
 					logger.log(Level.WARNING, "기록 파일 생성 실패"+taskFile.toString());
+					return false;
+				}		
 			}
 			catch (IOException e)
 			{
 				logger.log(Level.WARNING, "기록 파일 생성 실패"+taskFile.toString(), e);
+				return false;
 			}
 		}
 		BufferedWriter bufferedWriter;
@@ -298,7 +303,7 @@ public class SensorDataInUSBManager
 				return this.taskFile;
 			}
 		}
-		this.taskFile = new File(this.mountDir, FilePrefix+"_"+FileDateFormat.format(new Date())+"_"+FilePostfix);
+		this.taskFile = new File(this.mountFile, FilePrefix+"_"+FileDateFormat.format(new Date())+"_"+FilePostfix);
 		return this.taskFile;
 	}
 	
@@ -309,7 +314,7 @@ public class SensorDataInUSBManager
 		{
 			return false;
 		}
-		File[] files = this.mountDir.listFiles();
+		File[] files = this.mountFile.listFiles();
 		class TempClass implements Comparable<TempClass>
 		{
 			File file;
@@ -364,11 +369,11 @@ public class SensorDataInUSBManager
 	{
 		if(this.mountingTask || this.ismount) return;
 		this.mountingTask = true;
-		logger.log(Level.INFO, "USB마운트 " + this.usbDevice + " " + this.mountDir.toString());
+		logger.log(Level.INFO, "USB마운트 " + this.usbDevice + " " + this.mountFile.toString());
 		try
 		{
 			String result = CommandExecutor.executeCommand(String.format("mount %s %s", 
-					this.usbDevice, this.mountDir.toString()));
+					this.usbDevice, this.mountFile.toString()));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(200);
 		}
@@ -377,7 +382,11 @@ public class SensorDataInUSBManager
 			logger.log(Level.WARNING, "마운트 실패", e);
 		}
 		boolean result = this.checkMount();
-		if(result) this.usbCapKB = this.getTotalSpaceKB();
+		if(result)
+		{
+			this.usbCapKB = this.getTotalSpaceKB();
+			this.mountFile = FileHandler.getExtResourceFile(this.mountDir);
+		}
 		if(result != this.ismount)
 		{
 			this.ismount = result;
@@ -390,7 +399,7 @@ public class SensorDataInUSBManager
 	{
 		if(this.mountingTask || !this.ismount) return;
 		this.mountingTask = true;
-		logger.log(Level.INFO, "USB언마운트 " + this.usbDevice + " " + this.mountDir.toString());
+		logger.log(Level.INFO, "USB언마운트 " + this.usbDevice + " " + this.mountFile.toString());
 		try
 		{
 			String result = CommandExecutor.executeCommand(String.format("umount %s", 
@@ -405,7 +414,7 @@ public class SensorDataInUSBManager
 		boolean result = this.checkMount();
 		if(!result)
 		{
-			this.mountDir = null;
+			this.mountFile = null;
 		}
 		if(result != this.ismount)
 		{
@@ -436,7 +445,7 @@ public class SensorDataInUSBManager
 		{
 			JsonObject obj = (JsonObject) arr.get(i);
 			String target = obj.get("target").getAsString();
-			if(target.equals(this.mountDir.toString()))
+			if(target.equals(this.mountFile.toString()))
 			{
 				return true;
 			}
