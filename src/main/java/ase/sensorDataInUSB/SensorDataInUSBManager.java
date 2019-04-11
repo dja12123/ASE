@@ -40,6 +40,7 @@ public class SensorDataInUSBManager
 	private static final String PROP_SAVE_TASK_INTERVAL = "SaveTaskInterval";
 	private static final String PROP_FREE_CAP_KB = "FreeCapKB";
 	private static final SimpleDateFormat FileDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DataDateFormat = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss");
 	private static final String FilePrefix = "SensorData";
 	private static final String FilePostfix = ".csv";
 	
@@ -49,20 +50,20 @@ public class SensorDataInUSBManager
 	private final Observer<DataReceiveEvent> sensorDataReceiveObserver;
 	private final Runnable task;
 	
+	private String propUsbDevice;
+	private int propFreeCapKB;
+	private String propMountDir;
 	private GpioPinListenerDigital btnListener;
-	private String usbDevice;
-	private File mountFile;
-	private int freeCapKB;
-	private String mountDir;
-	private String fullMountDir;
-	private boolean mountingTask;
-	private boolean ismount;
+	private File mountDir;
+	private String mountDirStr;
+	private boolean isMountingTask;
+	private boolean ismounted;
 	private Queue<DataReceiveEvent> sensorDataQueue;
 	private Thread taskThread;
-	private boolean isRun;
+	private boolean isRunSaveTask;
 	private int saveTaskInterval;
-	private int usbCapKB;
-	private File taskFile;
+	private int usbFullCapKB;
+	private File nowTaskFile;
 	
 	private DisplayObject dispUsbState;
 	private DisplayObject dispCapacity;
@@ -73,8 +74,8 @@ public class SensorDataInUSBManager
 		this.btnListener = this::btnListener;
 		this.sensorDataReceiveObserver = this::sensorDataReceiveObserver;
 		this.task = this::task;
-		this.mountingTask = false;
-		this.ismount = false;
+		this.isMountingTask = false;
+		this.ismounted = false;
 		this.sensorDataQueue = new LinkedList<>();
 	}
 	
@@ -84,16 +85,16 @@ public class SensorDataInUSBManager
 		{
 			ServerCore.mainThreadPool.execute(()->
 			{
-				if(this.ismount)
+				if(this.ismounted)
 				{
-					if(this.ismount) this.recordData();
+					if(this.ismounted) this.recordData();
 					this.stopTask();
 					this.unMount();
 				}
 				else
 				{
 					this.mount();
-					if(this.ismount) this.startTask();
+					if(this.ismounted) this.startTask();
 				}
 			});
 		}
@@ -103,25 +104,25 @@ public class SensorDataInUSBManager
 	{
 		logger.log(Level.INFO, "USB 센서 정보 저장기 시작");
 		GPIOControl.inst().btn1.addListener(this.btnListener);
-		this.usbDevice = ServerCore.getProp(PROP_USB_DEVICE);
-		this.mountDir = ServerCore.getProp(PROP_USB_MOUNT_DIR);
-		this.fullMountDir = FileHandler.getExtResourceFile(this.mountDir).toString();
+		this.propUsbDevice = ServerCore.getProp(PROP_USB_DEVICE);
+		this.propMountDir = ServerCore.getProp(PROP_USB_MOUNT_DIR);
+		this.mountDirStr = FileHandler.getExtResourceFile(this.propMountDir).toString();
 		this.saveTaskInterval = Integer.parseInt(ServerCore.getProp(PROP_SAVE_TASK_INTERVAL));
-		this.freeCapKB = Integer.parseInt(ServerCore.getProp(PROP_FREE_CAP_KB));
-		this.ismount = this.checkMount();
+		this.propFreeCapKB = Integer.parseInt(ServerCore.getProp(PROP_FREE_CAP_KB));
+		this.ismounted = this.checkMount();
 		this.dispUsbState = DisplayControl.inst().showString(70, 0, "usb:");
 		this.dispCapacity = DisplayControl.inst().showString(70, 15, " ");
-		if(this.ismount)
+		if(this.ismounted)
 		{
-			logger.log(Level.INFO, "USB마운트 확인 " + this.usbDevice);
-			this.mountFile = FileHandler.getExtResourceFile(this.mountDir);
-			this.usbCapKB = this.getTotalSpaceKB();
+			logger.log(Level.INFO, "USB마운트 확인 " + this.propUsbDevice);
+			this.mountDir = FileHandler.getExtResourceFile(this.propMountDir);
+			this.usbFullCapKB = this.getTotalSpaceKB();
 			this.startTask();
 		}
 		else
 		{
 			this.mount();
-			if(this.ismount) this.startTask();
+			if(this.ismounted) this.startTask();
 		}
 		
 		this.displayMount();
@@ -144,21 +145,21 @@ public class SensorDataInUSBManager
 	
 	private void startTask()
 	{
-		if(this.isRun) return;
+		if(this.isRunSaveTask) return;
 		this.sensorManager.publicDataReceiveObservable.addObserver(this.sensorDataReceiveObserver);
 		this.taskThread = new Thread(this.task);
 		this.taskThread.setDaemon(true);
-		this.isRun = true;
+		this.isRunSaveTask = true;
 		this.taskThread.start();
 	}
 	
 	private void stopTask()
 	{
-		if(!this.isRun) return;
+		if(!this.isRunSaveTask) return;
 		this.sensorManager.publicDataReceiveObservable.removeObserver(this.sensorDataReceiveObserver);
-		this.isRun = false;
+		this.isRunSaveTask = false;
 		if(this.taskThread != null) this.taskThread.interrupt();
-		this.usbCapKB = 0;
+		this.usbFullCapKB = 0;
 	}
 	
 	private boolean recordData()
@@ -171,8 +172,8 @@ public class SensorDataInUSBManager
 		}
 		if(this.checkAndRemoveFile())
 		{
-			int freeSpace = this.usbCapKB - this.getUseSpaceKB();
-			if(freeSpace <= this.freeCapKB)
+			int freeSpace = this.usbFullCapKB - this.getUseSpaceKB();
+			if(freeSpace <= this.propFreeCapKB)
 			{
 				logger.log(Level.WARNING, "기록 실패: USB가 가득 참 free: "+freeSpace+"KB");
 				return false;
@@ -212,7 +213,8 @@ public class SensorDataInUSBManager
 			DataReceiveEvent data = this.sensorDataQueue.poll();
 			try
 			{
-				bufferedWriter.write(String.format("%d,%f,%f,%f,%f,%f,%f"
+				bufferedWriter.write(String.format("%s,%d,%f,%f,%f,%f,%f,%f"
+						, DataDateFormat.format(data.data.time)
 						, data.sensorInst.id
 						, data.data.X_GRADIANT
 						, data.data.Y_GRADIANT
@@ -242,7 +244,7 @@ public class SensorDataInUSBManager
 	
 	private void task()
 	{
-		while(this.isRun)
+		while(this.isRunSaveTask)
 		{
 			if(!this.recordData()) this.stopTask();
 			try
@@ -258,9 +260,9 @@ public class SensorDataInUSBManager
 	
 	private File getTaskFile()
 	{
-		if(this.taskFile != null)
+		if(this.nowTaskFile != null)
 		{
-			String fileName = this.taskFile.getName();
+			String fileName = this.nowTaskFile.getName();
 			Date fileDate;
 			Date nowDate;
 			try
@@ -275,26 +277,26 @@ public class SensorDataInUSBManager
 			}
 			if(nowDate.compareTo(fileDate) == 0)
 			{
-				return this.taskFile;
+				return this.nowTaskFile;
 			}
 		}
-		this.taskFile = new File(this.mountFile, FilePrefix+"_"+FileDateFormat.format(new Date())+"_"+FilePostfix);
-		if(this.taskFile == null)
+		this.nowTaskFile = new File(this.mountDir, FilePrefix+"_"+FileDateFormat.format(new Date())+"_"+FilePostfix);
+		if(this.nowTaskFile == null)
 		{
 			logger.log(Level.WARNING, "작업 파일 가져오는중 오류");
 		}
-		return this.taskFile;
+		return this.nowTaskFile;
 	}
 	
 	private boolean checkAndRemoveFile()
 	{
-		int freeSpace = this.usbCapKB - this.getUseSpaceKB();
-		if(freeSpace > this.freeCapKB)
+		int freeSpace = this.usbFullCapKB - this.getUseSpaceKB();
+		if(freeSpace > this.propFreeCapKB)
 		{
 			return false;
 		}
-		if(this.mountFile == null) return false;
-		File[] files = this.mountFile.listFiles();
+		if(this.mountDir == null) return false;
+		File[] files = this.mountDir.listFiles();
 		class TempClass implements Comparable<TempClass>
 		{
 			File file;
@@ -336,7 +338,7 @@ public class SensorDataInUSBManager
 			if(c.file.exists() && c.file.delete())
 			{
 				freeSpaceByte += fileLength;
-				if(freeSpaceByte > this.freeCapKB * 1024)
+				if(freeSpaceByte > this.propFreeCapKB * 1024)
 				{
 					return true;
 				}
@@ -347,13 +349,13 @@ public class SensorDataInUSBManager
 	
 	public synchronized void mount()
 	{
-		if(this.mountingTask || this.ismount) return;
-		this.mountingTask = true;
-		logger.log(Level.INFO, "USB마운트 " + this.usbDevice);
+		if(this.isMountingTask || this.ismounted) return;
+		this.isMountingTask = true;
+		logger.log(Level.INFO, "USB마운트 " + this.propUsbDevice);
 		try
 		{
 			String result = CommandExecutor.executeCommand(String.format("mount %s %s", 
-					this.usbDevice, this.fullMountDir));
+					this.propUsbDevice, this.mountDirStr));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(200);
 		}
@@ -364,26 +366,26 @@ public class SensorDataInUSBManager
 		boolean result = this.checkMount();
 		if(result)
 		{
-			this.usbCapKB = this.getTotalSpaceKB();
-			this.mountFile = FileHandler.getExtResourceFile(this.mountDir);
+			this.usbFullCapKB = this.getTotalSpaceKB();
+			this.mountDir = FileHandler.getExtResourceFile(this.propMountDir);
 		}
-		if(result != this.ismount)
+		if(result != this.ismounted)
 		{
-			this.ismount = result;
+			this.ismounted = result;
 			this.displayMount();
 		}
-		this.mountingTask = false;
+		this.isMountingTask = false;
 	}
 	
 	public synchronized void unMount()
 	{
-		if(this.mountingTask || !this.ismount) return;
-		this.mountingTask = true;
-		logger.log(Level.INFO, "USB언마운트 " + this.usbDevice + " " + this.mountFile.toString());
+		if(this.isMountingTask || !this.ismounted) return;
+		this.isMountingTask = true;
+		logger.log(Level.INFO, "USB언마운트 " + this.propUsbDevice + " " + this.mountDir.toString());
 		try
 		{
 			String result = CommandExecutor.executeCommand(String.format("umount %s", 
-					this.usbDevice));
+					this.propUsbDevice));
 			if(!result.isEmpty()) logger.log(Level.WARNING, result);
 			Thread.sleep(200);
 		}
@@ -394,14 +396,14 @@ public class SensorDataInUSBManager
 		boolean result = this.checkMount();
 		if(!result)
 		{
-			this.mountFile = null;
+			this.mountDir = null;
 		}
-		if(result != this.ismount)
+		if(result != this.ismounted)
 		{
-			this.ismount = result;
+			this.ismounted = result;
 			this.displayMount();
 		}
-		this.mountingTask = false;
+		this.isMountingTask = false;
 	}
 	
 	public boolean checkMount()
@@ -409,7 +411,7 @@ public class SensorDataInUSBManager
 		String result;
 		try
 		{
-			result = CommandExecutor.executeCommand(String.format("findmnt -J -S %s", this.usbDevice));
+			result = CommandExecutor.executeCommand(String.format("findmnt -J -S %s", this.propUsbDevice));
 			
 		}
 		catch (Exception e)
@@ -425,7 +427,7 @@ public class SensorDataInUSBManager
 		{
 			JsonObject obj = (JsonObject) arr.get(i);
 			String target = obj.get("target").getAsString();
-			if(target.equals(this.fullMountDir))
+			if(target.equals(this.mountDirStr))
 			{
 				return true;
 			}
@@ -435,10 +437,10 @@ public class SensorDataInUSBManager
 	
 	public void displayMount()
 	{
-		if(this.ismount)
+		if(this.ismounted)
 		{
 			this.dispUsbState = DisplayControl.inst().replaceString(this.dispUsbState, "usb:run");
-			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("%.1fGB", (double)(this.usbCapKB - this.getUseSpaceKB()) / (1024*1024)));
+			this.dispCapacity = DisplayControl.inst().replaceString(this.dispCapacity, String.format("%.1fGB", (double)(this.usbFullCapKB - this.getUseSpaceKB()) / (1024*1024)));
 		}
 		else
 		{
@@ -453,7 +455,7 @@ public class SensorDataInUSBManager
 		String result;
 		try
 		{
-			result = CommandExecutor.executeCommand(String.format("df %s --output=size", this.usbDevice));
+			result = CommandExecutor.executeCommand(String.format("df %s --output=size", this.propUsbDevice));
 			result = result.split("\n")[1];
 			result = result.trim();
 			totalSize = Integer.parseInt(result);
@@ -472,7 +474,7 @@ public class SensorDataInUSBManager
 		String result;
 		try
 		{
-			result = CommandExecutor.executeCommand(String.format("df %s --output=used", this.usbDevice));
+			result = CommandExecutor.executeCommand(String.format("df %s --output=used", this.propUsbDevice));
 			result = result.split("\n")[1];
 			result = result.trim();
 			useSize = Integer.parseInt(result);
