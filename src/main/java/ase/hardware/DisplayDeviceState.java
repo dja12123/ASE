@@ -45,11 +45,11 @@ public class DisplayDeviceState
 		this.barCpu = DisplayControl.inst().showRect(23, 0, GRAPH_WIDTH, 12);
 		this.dispMem = DisplayControl.inst().showString(0, 13, "MEM");
 		this.barMem = DisplayControl.inst().showRect(23, 13, GRAPH_WIDTH, 12);
-		this.strSensorInfo = DisplayControl.inst().showString(26, 0, 
+		this.strSensorInfo = DisplayControl.inst().showString(0, 26, 
 				String.format("sensor:%d on:%d"
 						, this.sensorManager.sensorMap.size()
 						, this.sensorManager.getOnlineSensorCount()));
-		this.strAppInfo = DisplayControl.inst().showString(39, 0, String.format("user:%d"
+		this.strAppInfo = DisplayControl.inst().showString(0, 39, String.format("user:%d"
 				, this.appManager.sessionEventProviders.size()));
 		
 		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
