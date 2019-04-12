@@ -121,7 +121,7 @@ public class DisplayDeviceState
 			result[0][i] = true;
 			result[width - 1][i] = true;
 		}
-		for(int i = 1; i < fill && i < height; ++i)
+		for(int i = 1; i < fill && i < width; ++i)
 		{
 			for(int j = 1; j < height; ++j)
 			{
