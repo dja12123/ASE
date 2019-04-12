@@ -265,7 +265,7 @@ public class DisplayControl
 		return obj;
 	}
 
-	public DisplayObject blinkShape(DisplayObject obj, int time, int count)
+	public synchronized DisplayObject blinkShape(DisplayObject obj, int time, int count)
 	{// 깜빡임간격, 깜빡임횟수 입력(-1이면 무한 깜빡임)
 		TimerTask task = new TimerTask()
 		{
@@ -305,13 +305,13 @@ public class DisplayControl
 		return obj;
 	}
 
-	private synchronized void addLCDObj(DisplayObject obj)
+	private void addLCDObj(DisplayObject obj)
 	{
 		this.lcdObjList.add(obj);
 		this.draw(obj);
 	}
 
-	private synchronized void draw(DisplayObject obj)
+	private void draw(DisplayObject obj)
 	{// 실제 LCD에 그림
 		for (int x = 0; x < obj.bitmap.length; ++x)
 		{
@@ -325,7 +325,7 @@ public class DisplayControl
 		}
 	}
 
-	private synchronized void undraw(DisplayObject obj)
+	private void undraw(DisplayObject obj)
 	{// 실제 LCD에 지움
 		for (int x = 0; x < obj.width; ++x)
 		{
@@ -375,7 +375,7 @@ public class DisplayControl
 		}
 	}
 
-	private synchronized void removeLCDObj(DisplayObject obj)
+	private void removeLCDObj(DisplayObject obj)
 	{
 		if (obj == null)
 			return;
@@ -433,18 +433,3 @@ public class DisplayControl
 	}
 }
 
-class FontChar
-{
-	public final char c;
-	public final boolean[][] data;
-	public final byte xoffset;
-	public final byte yoffset;
-	
-	public FontChar(char c, boolean[][] data, byte xoffset, byte yoffset)
-	{
-		this.c = c;
-		this.data = data;
-		this.xoffset = xoffset;
-		this.yoffset = yoffset;
-	}
-}
