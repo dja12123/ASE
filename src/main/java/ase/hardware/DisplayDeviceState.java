@@ -76,7 +76,6 @@ public class DisplayDeviceState
 	
 	private void deviceStateObserver(DeviceStateEvent event)
 	{
-		System.out.println(event.cpuLoad);
 		int cpuPixel = (int) (event.cpuLoad * GRAPH_WIDTH);
 		int memPixel = (int) (((double)event.useMemByte / (double)event.totalMemByte) * GRAPH_WIDTH);
 		if(cpuPixel != this.cpuPixel)
