@@ -254,7 +254,7 @@ public class ServerCore
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
 		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
-		this.displayDeviceState = new DisplayDeviceState();
+		this.displayDeviceState = new DisplayDeviceState(this.sensorManager, this.clientSessionManager);
 		//this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
 
