@@ -51,24 +51,21 @@ public class DisplayDeviceState
 	private boolean[][] getBar(int width, int height, int fill)
 	{
 		boolean[][] result = new boolean[width][height];
-		for(int j = 0; j < width; ++j)
+		for(int i = 0; i < width; ++i)
 		{
-			result[j][0] = true;
-		}
-		for(int j = 0; j < width; ++j)
-		{
-			result[j][height - 1] = true;
+			result[i][0] = true;
+			result[i][height - 1] = true;
 		}
 		for(int i = 0; i < height; ++i)
 		{
 			result[0][i] = true;
 			result[width - 1][i] = true;
-			if(i <= fill)
+		}
+		for(int i = 1; i < width - 1; ++i)
+		{
+			for(int j = 1; j < fill; ++j)
 			{
-				for(int j = 1; j < width - 1; ++j)
-				{
-					result[j][i] = true;
-				}
+				result[i][j] = true;
 			}
 		}
 		
