@@ -106,9 +106,19 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");
 		this._sensorMap.clear();
 	}
+	
+	public synchronized int getOnlineSensorCount()
+	{
+		int count = 0;
+		for(Sensor s : this.sensorMap.values())
+		{
+			if(s.isOnline()) ++count;
+		}
+		return count;
+	}
 
 	@Override
-	public void update(DevicePacket data)
+	public synchronized void update(DevicePacket data)
 	{
 		Sensor s = this._sensorMap.getOrDefault(data.ID, null);
 		if(s == null)
@@ -128,7 +138,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		}
 	}
 	
-	public Sensor registerSensor(int id)
+	public synchronized Sensor registerSensor(int id)
 	{
 		if(this._sensorMap.containsKey(id))
 		{
@@ -144,7 +154,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		return s;
 	}
 	
-	public void removeSensor(int id)
+	public synchronized void removeSensor(int id)
 	{
 		Sensor s = this._sensorMap.getOrDefault(id, null);
 		if(s == null)

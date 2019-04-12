@@ -1,5 +1,10 @@
 package ase.hardware;
 
+import ase.clientSession.ClientSessionManager;
+import ase.clientSession.SessionEvent;
+import ase.sensorManager.SensorManager;
+import ase.sensorManager.SensorRegisterEvent;
+import ase.sensorManager.sensor.SensorOnlineEvent;
 import ase.util.observer.Observer;
 
 public class DisplayDeviceState
@@ -7,44 +12,100 @@ public class DisplayDeviceState
 	private static final int GRAPH_WIDTH = 40;
 	
 	private final Observer<DeviceStateEvent> deviceStateObserver;
-	private DisplayObject dispCpu;
+	private final Observer<SensorRegisterEvent> sensorObserver;
+	private final Observer<SensorOnlineEvent> sensorOnlineObserver;
+	private final Observer<SessionEvent> sessionObserver;
+	private final SensorManager sensorManager;
+	private final ClientSessionManager appManager;
+	
+	private DisplayObject strCpu;
 	private DisplayObject barCpu;
+	private int cpuPixel;
+	
 	private DisplayObject dispMem;
 	private DisplayObject barMem;
+	private int memPixel;
 	
+	private DisplayObject strSensorInfo;
+	private DisplayObject strAppInfo;
 	
-	public DisplayDeviceState()
+	public DisplayDeviceState(SensorManager sensorManager, ClientSessionManager appManager)
 	{
 		this.deviceStateObserver = this::deviceStateObserver;
+		this.sensorObserver = this::sensorObserver;
+		this.sensorOnlineObserver = this::sensorOnlineObserver;
+		this.sessionObserver = this::sessionObserver;
+		this.sensorManager = sensorManager;
+		this.appManager = appManager;
 	}
 	
 	public boolean startModule()
 	{
-		this.dispCpu = DisplayControl.inst().showString(0, 0, "CPU");
+		this.strCpu = DisplayControl.inst().showString(0, 0, "CPU");
 		this.barCpu = DisplayControl.inst().showRect(23, 0, GRAPH_WIDTH, 12);
 		this.dispMem = DisplayControl.inst().showString(0, 13, "MEM");
 		this.barMem = DisplayControl.inst().showRect(23, 13, GRAPH_WIDTH, 12);
+		this.strSensorInfo = DisplayControl.inst().showString(26, 0, 
+				String.format("sensor:%d on:%d"
+						, this.sensorManager.sensorMap.size()
+						, this.sensorManager.getOnlineSensorCount()));
+		this.strAppInfo = DisplayControl.inst().showString(39, 0, String.format("user:%d"
+				, this.appManager.sessionEventProviders.size()));
 		
 		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
+		this.sensorManager.addObserver(this.sensorObserver);
+		this.sensorManager.publicSensorOnlineObservable.addObserver(this.sensorOnlineObserver);
+		this.appManager.addObserver(this.sessionObserver);
 		return true;
 	}
 	
 	public void stopModule()
 	{
-		DisplayControl.inst().removeShape(this.dispCpu);
+		DeviceStateMonitor.inst().removeObserver(this.deviceStateObserver);
+		this.sensorManager.removeObserver(this.sensorObserver);
+		this.sensorManager.publicSensorOnlineObservable.removeObserver(this.sensorOnlineObserver);
+		this.appManager.removeObserver(this.sessionObserver);
+		
+		DisplayControl.inst().removeShape(this.strCpu);
 		DisplayControl.inst().removeShape(this.barCpu);
 		DisplayControl.inst().removeShape(this.dispMem);
 		DisplayControl.inst().removeShape(this.barMem);
-		DeviceStateMonitor.inst().removeObserver(this.deviceStateObserver);
+		DisplayControl.inst().removeShape(this.strSensorInfo);
+		DisplayControl.inst().removeShape(this.strAppInfo);
 	}
 	
-	public void deviceStateObserver(DeviceStateEvent event)
+	private void deviceStateObserver(DeviceStateEvent event)
 	{
-		
 		int cpuPixel = (int) (event.cpuLoad * GRAPH_WIDTH);
 		int memPixel = (int) (((double)event.useMemByte / (double)event.totalMemByte) * GRAPH_WIDTH);
-		this.barCpu = DisplayControl.inst().replaceShape(this.barCpu, this.getBar(GRAPH_WIDTH, 12, cpuPixel));
-		this.barMem = DisplayControl.inst().replaceShape(this.barMem, this.getBar(GRAPH_WIDTH, 12, memPixel));
+		if(cpuPixel != this.cpuPixel)
+		{
+			this.barCpu = DisplayControl.inst().replaceShape(this.barCpu, this.getBar(GRAPH_WIDTH, 12, cpuPixel));
+			this.cpuPixel = cpuPixel;
+		}
+		if(memPixel != this.memPixel)
+		{
+			this.barMem = DisplayControl.inst().replaceShape(this.barMem, this.getBar(GRAPH_WIDTH, 12, memPixel));
+			this.memPixel = memPixel;
+		}
+	}
+	
+	private void sensorObserver(SensorRegisterEvent event)
+	{
+		this.strSensorInfo = DisplayControl.inst().replaceString(this.strSensorInfo, 
+				String.format("sensor:%d on:%d", this.sensorManager.sensorMap.size(), this.sensorManager.getOnlineSensorCount()));
+	}
+	
+	private void sensorOnlineObserver(SensorOnlineEvent event)
+	{
+		this.strSensorInfo = DisplayControl.inst().replaceString(this.strSensorInfo, 
+				String.format("sensor:%d on:%d", this.sensorManager.sensorMap.size(), this.sensorManager.getOnlineSensorCount()));
+	}
+	
+	private void sessionObserver(SessionEvent event)
+	{
+		this.strAppInfo = DisplayControl.inst().replaceString(this.strAppInfo, 
+				String.format("user:%d", this.appManager.sessionEventProviders.size()));
 	}
 	
 	private boolean[][] getBar(int width, int height, int fill)
