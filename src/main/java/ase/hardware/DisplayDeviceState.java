@@ -22,8 +22,8 @@ public class DisplayDeviceState
 	{
 		this.dispCpu = DisplayControl.inst().showString(0, 0, "CPU");
 		this.barCpu = DisplayControl.inst().showRect(19, 0, GRAPH_WIDTH, 12);
-		this.dispMem = DisplayControl.inst().showString(0, 17, "MEM");
-		this.barMem = DisplayControl.inst().showRect(19, 17, GRAPH_WIDTH, 12);
+		this.dispMem = DisplayControl.inst().showString(0, 20, "MEM");
+		this.barMem = DisplayControl.inst().showRect(19, 20, GRAPH_WIDTH, 12);
 		
 		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
 		return true;
@@ -40,9 +40,9 @@ public class DisplayDeviceState
 	
 	public void deviceStateObserver(DeviceStateEvent event)
 	{
-		System.out.println(String.format("%f, %d", event.cpuLoad, (event.totalMemByte / event.useMemByte) * 100));
+		System.out.println(String.format("%f, %f", event.cpuLoad, (((double)event.totalMemByte / (double)event.useMemByte)) * 100));
 		int cpuPixel = (int) ((event.cpuLoad / 100) * GRAPH_WIDTH);
-		int memPixel = (int) ((event.totalMemByte / event.useMemByte) * GRAPH_WIDTH);
+		int memPixel = (int) (((double)event.totalMemByte / (double)event.useMemByte) * GRAPH_WIDTH);
 		this.barCpu = DisplayControl.inst().replaceShape(this.barCpu, this.getBar(GRAPH_WIDTH, 12, cpuPixel));
 		this.barMem = DisplayControl.inst().replaceShape(this.barMem, this.getBar(GRAPH_WIDTH, 12, memPixel));
 	}
