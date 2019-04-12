@@ -1,7 +1,6 @@
 package ase.clientSession;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ase.util.observer.Observable;
@@ -9,35 +8,42 @@ import ase.util.observer.Observer;
 
 public class ClientSessionManager extends Observable<SessionEvent>
 {
-	private List<Observable<SessionEvent>> _sessionEventProviders;
-	public List<Observable<SessionEvent>> sessionEventProviders;
+	private List<Observable<SessionEvent>> sessionEventProviders;
 	private Observer<SessionEvent> sessionEventObserver;
+	private int sessionCount;
 	
 	public ClientSessionManager()
 	{
-		this._sessionEventProviders = new ArrayList<>();
-		this.sessionEventProviders = Collections.unmodifiableList(this._sessionEventProviders);
+		this.sessionEventProviders = new ArrayList<>();
 		this.sessionEventObserver = this::sessionEventObserver;
 	}
 	
-	public void addSessionProvider(Observable<SessionEvent> provider)
+	public synchronized void addSessionProvider(Observable<SessionEvent> provider)
 	{
-		this._sessionEventProviders.add(provider);
+		this.sessionEventProviders.add(provider);
 	}
 	
-	public void removeSessionProvider(Observable<SessionEvent> provider)
+	public synchronized void removeSessionProvider(Observable<SessionEvent> provider)
 	{
-		this._sessionEventProviders.remove(provider);
+		this.sessionEventProviders.remove(provider);
 	}
 	
-	private void sessionEventObserver(SessionEvent event)
+	private synchronized void sessionEventObserver(SessionEvent event)
 	{
+		if(event.isActive) ++this.sessionCount;
+		else --this.sessionCount;
 		this.notifyObservers(event);
+	}
+	
+	public int getSessionCount()
+	{
+		return this.sessionCount;
 	}
 	
 	public boolean startModule()
 	{
-		for(Observable<SessionEvent> provider : this._sessionEventProviders)
+		this.sessionCount = 0;
+		for(Observable<SessionEvent> provider : this.sessionEventProviders)
 		{
 			provider.addObserver(this.sessionEventObserver);
 		}
@@ -46,7 +52,7 @@ public class ClientSessionManager extends Observable<SessionEvent>
 	
 	public void stopModule()
 	{
-		for(Observable<SessionEvent> provider : this._sessionEventProviders)
+		for(Observable<SessionEvent> provider : this.sessionEventProviders)
 		{
 			provider.removeObserver(this.sessionEventObserver);
 		}

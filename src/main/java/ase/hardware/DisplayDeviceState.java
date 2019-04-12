@@ -50,7 +50,7 @@ public class DisplayDeviceState
 						, this.sensorManager.sensorMap.size()
 						, this.sensorManager.getOnlineSensorCount()));
 		this.strAppInfo = DisplayControl.inst().showString(0, 39, String.format("user:%d"
-				, this.appManager.sessionEventProviders.size()));
+				, this.appManager.getSessionCount()));
 		
 		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
 		this.sensorManager.addObserver(this.sensorObserver);
@@ -105,7 +105,7 @@ public class DisplayDeviceState
 	private void sessionObserver(SessionEvent event)
 	{
 		this.strAppInfo = DisplayControl.inst().replaceString(this.strAppInfo, 
-				String.format("user:%d", this.appManager.sessionEventProviders.size()));
+				String.format("user:%d", this.appManager.getSessionCount()));
 	}
 	
 	private boolean[][] getBar(int width, int height, int fill)
