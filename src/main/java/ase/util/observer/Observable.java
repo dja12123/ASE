@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 public class Observable<Event>
 {
 
-	private List<Observer<Event>> _observers = new LinkedList<Observer<Event>>();
+	protected List<Observer<Event>> _observers = new LinkedList<Observer<Event>>();
 
 	public void addObserver(Observer<Event> observer)
 	{
@@ -41,7 +41,7 @@ public class Observable<Event>
 	{
 		for (Observer<Event> obs : this._observers)
 		{
-			obs.update(this, event);
+			obs.update(event);
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class Observable<Event>
 	{
 		for (Observer<Event> obs : this._observers)
 		{
-			pool.submit(()->{obs.update(this, event);});
+			pool.submit(()->{obs.update(event);});
 		}
 	}
 	

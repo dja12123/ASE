@@ -7,7 +7,6 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.DataReceiveEvent;
 import ase.sensorManager.sensor.Sensor;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorDataSender extends ServiceInstance
@@ -41,7 +40,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
 		JsonObject json = new JsonObject();
@@ -76,7 +75,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		this.channel.sendData(json.toString());
 	}
 
-	private void sensorDataObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent event)
+	private void sensorDataObserver(DataReceiveEvent event)
 	{
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);

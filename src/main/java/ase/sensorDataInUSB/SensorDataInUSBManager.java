@@ -30,7 +30,6 @@ import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.DataReceiveEvent;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class SensorDataInUSBManager
@@ -487,7 +486,7 @@ public class SensorDataInUSBManager
 		return useSize;
 	}
 	
-	private void sensorDataReceiveObserver(Observable<DataReceiveEvent> provider, DataReceiveEvent e)
+	private void sensorDataReceiveObserver(DataReceiveEvent e)
 	{
 		this.sensorDataQueue.add(e);
 	}

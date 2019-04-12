@@ -7,7 +7,6 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.util.observer.Observable;
 
 public class SensorListSender extends ServiceInstance
 {
@@ -47,7 +46,7 @@ public class SensorListSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(ChannelDataEvent event)
 	{
 		// TODO Auto-generated method stub
 		

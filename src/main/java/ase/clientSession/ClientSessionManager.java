@@ -27,7 +27,7 @@ public class ClientSessionManager extends Observable<SessionEvent>
 		this.sessionEventProviders.remove(provider);
 	}
 	
-	private void sessionEventObserver(Observable<SessionEvent> provider, SessionEvent event)
+	private void sessionEventObserver(SessionEvent event)
 	{
 		this.notifyObservers(event);
 	}

@@ -21,7 +21,6 @@ import ase.clientSession.IChannel;
 import ase.clientSession.ISession;
 import ase.console.LogWriter;
 import ase.sensorManager.SensorManager;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class SessionServiceInstance
@@ -56,7 +55,7 @@ public class SessionServiceInstance
 		this.serviceInstMap.clear();
 	}
 
-	private synchronized void channelObserver(Observable<ChannelEvent> provider, ChannelEvent event)
+	private synchronized void channelObserver(ChannelEvent event)
 	{
 		if(event.isOpen)
 		{

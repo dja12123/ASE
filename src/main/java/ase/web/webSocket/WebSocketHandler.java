@@ -36,7 +36,7 @@ public class WebSocketHandler extends NanoWSD
 		this.addChannelObserver(this.channelEventCallback);
 	}
 	
-	private void channelEventObserver(Observable<WebChannelEvent> provider, WebChannelEvent event)
+	private void channelEventObserver(WebChannelEvent event)
 	{
 		if(!event.isOpen)
 		{

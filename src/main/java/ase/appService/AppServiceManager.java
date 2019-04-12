@@ -9,7 +9,6 @@ import ase.clientSession.ISession;
 import ase.clientSession.SessionEvent;
 import ase.console.LogWriter;
 import ase.sensorManager.SensorManager;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class AppServiceManager
@@ -29,7 +28,7 @@ public class AppServiceManager
 		this.sessionObserver = this::sessionObserver;
 	}
 	
-	private void sessionObserver(Observable<SessionEvent> provider, SessionEvent event)
+	private void sessionObserver(SessionEvent event)
 	{
 		if(event.isActive)
 		{

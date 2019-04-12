@@ -4,7 +4,6 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorAddRemoveSender extends ServiceInstance
@@ -33,12 +32,12 @@ public class RealtimeSensorAddRemoveSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(ChannelDataEvent event)
 	{
 		
 	}
 	
-	private void sensorRegisterEventObserver(Observable<SensorRegisterEvent> provider, SensorRegisterEvent event)
+	private void sensorRegisterEventObserver(SensorRegisterEvent event)
 	{
 		this.channel.sendData(event.sensor.id+"/"+event.isActive);
 	}

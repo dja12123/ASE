@@ -5,7 +5,6 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensor.SensorOnlineEvent;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorOnOffSender extends ServiceInstance
@@ -39,7 +38,7 @@ public class RealtimeSensorOnOffSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(ChannelDataEvent event)
 	{
 		String data = event.getStringPayload();
 		try
@@ -72,7 +71,7 @@ public class RealtimeSensorOnOffSender extends ServiceInstance
 		}
 	}
 	
-	private void sensorDataObserver(Observable<SensorOnlineEvent> provider, SensorOnlineEvent event)
+	private void sensorDataObserver(SensorOnlineEvent event)
 	{
 		this.channel.sendData("state/"+event.isOnline);
 	}

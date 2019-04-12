@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
-import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
 public abstract class ServiceInstance
@@ -42,5 +41,5 @@ public abstract class ServiceInstance
 	
 	protected abstract void onDestroy();
 	
-	protected abstract void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event);
+	protected abstract void onDataReceive(ChannelDataEvent event);
 }

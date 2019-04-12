@@ -23,7 +23,9 @@ import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.fileIO.FileHandler;
 import ase.hardware.Control;
+import ase.hardware.DeviceStateMonitor;
 import ase.hardware.DisplayControl;
+import ase.hardware.DisplayDeviceState;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
@@ -54,6 +56,7 @@ public class ServerCore
 		DisplayControl.init();
 		GPIOControl.init();
 		Control.init();
+		DeviceStateMonitor.init();
 		mainThread = Thread.currentThread();
 		mainInst = new ServerCore();
 		
@@ -234,6 +237,7 @@ public class ServerCore
 	private SensorDataInUSBManager sensorDataInUSBManager;
 	private WebManager webManager;
 	private ClientSessionManager clientSessionManager;
+	private DisplayDeviceState displayDeviceState;
 	
 	private AppServiceManager appServiceManager;
 	
@@ -250,7 +254,7 @@ public class ServerCore
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
 		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
-		
+		this.displayDeviceState = new DisplayDeviceState();
 		//this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
 
@@ -273,7 +277,7 @@ public class ServerCore
 		loadingText = DisplayControl.inst().replaceString(loadingText, "사용자 서비스 로드");
 		if(!this.appServiceManager.startModule()) return false;
 		dbInstaller.complete();
-		
+		if(!this.displayDeviceState.startModule()) return false;
 		//this.testSensor.start();
 		loadingText = DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
 		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
@@ -285,7 +289,7 @@ public class ServerCore
 	{
 		DisplayObject endText = DisplayControl.inst().showString(-1, -1, "시스템 종료중");
 		logger.log(Level.INFO, "시스템 종료 시작");
-		
+		this.displayDeviceState.stopModule();
 		//this.testSensor.stop();
 		this.appServiceManager.stopModule();
 		this.clientSessionManager.stopModule();

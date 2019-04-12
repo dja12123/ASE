@@ -8,7 +8,6 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensor.SensorLog;
-import ase.util.observer.Observable;
 
 public class AllSensorLogSender extends ServiceInstance
 {
@@ -36,7 +35,7 @@ public class AllSensorLogSender extends ServiceInstance
 	}
 
 	@Override
-	protected void onDataReceive(Observable<ChannelDataEvent> provider, ChannelDataEvent event)
+	protected void onDataReceive(ChannelDataEvent event)
 	{
 		JsonObject json = new JsonObject();
 		String[] input;

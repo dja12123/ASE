@@ -108,7 +108,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	}
 
 	@Override
-	public void update(Observable<DevicePacket> object, DevicePacket data)
+	public void update(DevicePacket data)
 	{
 		Sensor s = this._sensorMap.getOrDefault(data.ID, null);
 		if(s == null)

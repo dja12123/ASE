@@ -43,7 +43,7 @@ public class WebSessionManager extends Observable<SessionEvent>
 		this.sessionMap = Collections.unmodifiableMap(this._sessionMap);
 	}
 	
-	private synchronized void channelObserver(Observable<WebChannelEvent> provider, WebChannelEvent e)
+	private synchronized void channelObserver(WebChannelEvent e)
 	{//TODO 로직 개판이므로 수정필요
 		IHTTPSession request = e.channel.getHandshakeRequest();
 		String sessionUIDStr = HTTPServer.getCookie(request, COOKIE_KEY_SESSION);
