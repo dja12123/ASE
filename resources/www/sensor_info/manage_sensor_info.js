@@ -90,6 +90,27 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     if (logNum > logMax) logNum = 0; // 로그 100개 제한: logMax
 }
 
+// 로그인
+var inputId, inputPw;
+function login() {
+    inputId = document.getElementById('id').value;
+    inputPw = document.getElementById('pw').value;
+    console.log("아이디: " + inputId);
+    console.log("비밀번호: " + inputPw);
+}
+
+// 로그인 요청
+function loginRequest() {
+    document.getElementById("main").style.opacity = 0.4;
+    document.body.innerHTML += 
+    '<div id="loginSess" class="loginSess"> <div class="login"> ' +
+    '<div class="input_form"> <span class="error"></span> </div>' +
+    '<div class="input_form"> <input id="id" class="id" type="text" onkeydown="if(event.keyCode==13) {login()}" maxlength="36" placeholder="아이디"> </div>' +
+    '<div class="input_form"> <input id="pw" class="pw" type="password" onkeydown="if(event.keyCode==13) {login()}" maxlength="16" placeholder="비밀번호"> </div>' +
+    '<div class="input_form"> <input class="login_btn" type="button" onclick="login()" value="로그인"> </div>' +
+    '</div> </div>';
+}
+
 // 연결 끊김
 function infoDisconnect() {
     document.getElementById("main").style.opacity = 0.4;

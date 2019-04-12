@@ -1,11 +1,8 @@
 
-body {
-    overflow-y:hidden;    
-}
 .sensor {
+    z-index: 2;
     position: fixed;
     width: 100%;
-    background-color: lightgray;
 }
 
 section>div:nth-child(n + 2), article {
