@@ -21,9 +21,9 @@ public class DisplayDeviceState
 	public boolean startModule()
 	{
 		this.dispCpu = DisplayControl.inst().showString(0, 0, "CPU");
-		this.barCpu = DisplayControl.inst().showRect(19, 0, GRAPH_WIDTH, 12);
-		this.dispMem = DisplayControl.inst().showString(0, 20, "MEM");
-		this.barMem = DisplayControl.inst().showRect(19, 20, GRAPH_WIDTH, 12);
+		this.barCpu = DisplayControl.inst().showRect(23, 0, GRAPH_WIDTH, 12);
+		this.dispMem = DisplayControl.inst().showString(0, 13, "MEM");
+		this.barMem = DisplayControl.inst().showRect(23, 13, GRAPH_WIDTH, 12);
 		
 		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
 		return true;
