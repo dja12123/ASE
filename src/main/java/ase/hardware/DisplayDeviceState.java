@@ -4,7 +4,7 @@ import ase.util.observer.Observer;
 
 public class DisplayDeviceState
 {
-	private static final int GRAPH_WIDTH = 30;
+	private static final int GRAPH_WIDTH = 45;
 	
 	private final Observer<DeviceStateEvent> deviceStateObserver;
 	private DisplayObject dispCpu;
@@ -40,9 +40,9 @@ public class DisplayDeviceState
 	
 	public void deviceStateObserver(DeviceStateEvent event)
 	{
-		System.out.println(String.format("%f, %f", event.cpuLoad, (((double)event.totalMemByte / (double)event.useMemByte)) * 100));
+		System.out.println(String.format("%f, %f", event.cpuLoad, (((double)event.useMemByte / (double)event.totalMemByte)) * 100));
 		int cpuPixel = (int) ((event.cpuLoad / 100) * GRAPH_WIDTH);
-		int memPixel = (int) (((double)event.totalMemByte / (double)event.useMemByte) * GRAPH_WIDTH);
+		int memPixel = (int) (((double)event.useMemByte / (double)event.totalMemByte) * GRAPH_WIDTH);
 		this.barCpu = DisplayControl.inst().replaceShape(this.barCpu, this.getBar(GRAPH_WIDTH, 12, cpuPixel));
 		this.barMem = DisplayControl.inst().replaceShape(this.barMem, this.getBar(GRAPH_WIDTH, 12, memPixel));
 	}
