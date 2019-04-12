@@ -35,6 +35,7 @@ public class DeviceStateMonitor extends Observable<DeviceStateEvent>
 	{
 		this.task = this::task;
 		this.osbean =  ManagementFactory.getOperatingSystemMXBean();
+		this.isRun = true;
 		this.taskThread = new Thread(this.task);
 		this.taskThread.start();
 	}
