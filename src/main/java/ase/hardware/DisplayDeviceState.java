@@ -41,7 +41,7 @@ public class DisplayDeviceState
 	public void deviceStateObserver(DeviceStateEvent event)
 	{
 		
-		int cpuPixel = (int) ((event.cpuLoad / 100) * GRAPH_WIDTH);
+		int cpuPixel = (int) (event.cpuLoad * GRAPH_WIDTH);
 		int memPixel = (int) (((double)event.useMemByte / (double)event.totalMemByte) * GRAPH_WIDTH);
 		System.out.println(String.format("%f, %f, %d, %d", event.cpuLoad, (((double)event.useMemByte / (double)event.totalMemByte)) * 100,cpuPixel,memPixel));
 		this.barCpu = DisplayControl.inst().replaceShape(this.barCpu, this.getBar(GRAPH_WIDTH, 12, cpuPixel));
