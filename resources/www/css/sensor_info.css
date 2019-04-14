@@ -74,10 +74,6 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     color: rgb(40, 40, 40);
 }
 
-.log {
-    margin: 3px 0;
-}
-
 .logs {
     border: 2px solid #8f8f8f;
     padding: 5px;
@@ -212,5 +208,11 @@ section>div:nth-child(4)>div:nth-child(2), .logs {
     }
     section>div:nth-child(4)>div:nth-child(2), .logs {
         margin-left: 4px;
+    }
+    .log_info {
+        display: block;
+    }
+    .log {
+        margin-bottom: 4px;
     }
 }

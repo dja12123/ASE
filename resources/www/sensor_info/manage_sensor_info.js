@@ -26,7 +26,7 @@ function removeAllLogs() {
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
-    document.title = "sensor " + key;
+    document.title = "SENSER " + key;
     document.getElementById("state_name").innerHTML = key;
 }
 
@@ -70,7 +70,7 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
     eLog.id = "log" + logNum;
     eLog.className = "log";
     eLog.innerHTML = [
-    "[" +
+    '<span class="log_info">[' +
     level +
     "][" +
     date.getFullYear() +"/"+
@@ -79,8 +79,9 @@ function addLog(level, date, msg) { //100개 제한, 원형큐
 	getFormatDate(date.getHours()) +":"+
 	getFormatDate(date.getMinutes()) +":"+
 	getFormatDate(date.getSeconds()) +
-    "] " +
-    msg
+    '] </span> <span class="log_msg">' +
+    msg +
+    '</span>'
     ];
     // 자동 스크롤
     var log = document.getElementById('log');
