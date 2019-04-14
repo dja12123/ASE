@@ -64,6 +64,22 @@ function state(key, on) {
 	if(sensor.checked != on) sensor.checked = on;
 }
 
+// *연결 끊김
+function listDisconnect() {
+    document.getElementById("main").style.opacity = 0.4;
+    document.body.innerHTML += 
+    '<div id="disconnected" class="disconnected">' +
+    '<span>연결 끊김<br/>재접속 시도중</span>' +
+    '</div>';
+}
+
+// *재접속
+function listReconnect() {
+    document.getElementById("main").style.opacity = 1;
+    document.body.removeChild(document.getElementById("disconnected"));
+    removeAllItem();
+}
+
 // *로그인 세션
 // id: 36글자, string
 // pw: 16글자, string 
@@ -71,17 +87,25 @@ function loginRequest() {
     document.getElementById("main").style.opacity = 0.4;
     document.body.innerHTML += 
     '<div id="loginSess" class="loginSess"> <div class="login">' +
-    //form action 서버 작성
+    // *form action 서버 작성
     '<form action="" id="loginForm">' +
     '<div class="input_form"> <span id="error" class="error"></span> </div>' +
-    '<div class="input_form"> <input id="id" class="id" type="text" onkeydown="if(event.keyCode==13) {login()}" maxlength="36" placeholder="아이디"> </div>' +
+    '<div class="input_form"> <input id="id" class="id" type="text" autocomplete="off" onkeydown="if(event.keyCode==13) {login()}" maxlength="36" placeholder="아이디"> </div>' +
     '<div class="input_form"> <input id="pw" class="pw" type="password" onkeydown="if(event.keyCode==13) {login()}" maxlength="16" placeholder="비밀번호"> </div>' +
     '<div class="input_form"> <input class="login_btn" type="button" onclick="login()" value="로그인"> </div>' +
     '</form> </div> </div>';
 }
 
+// *로그인 id, pw 전송
 function login() {
-    document.getElementById("loginForm").submit();
+    if(inputId == '') {
+        document.getElementById('id').focus();
+		document.getElementById("error").innerHTML = "아이디를 입력해주세요.";
+    } else if(inputPw == '') {
+        document.getElementById('pw').focus();
+		document.getElementById("error").innerHTML = "비밀번호를 입력해주세요.";
+    } else
+		document.getElementById("loginForm").submit();
 }
 
 // *로그인 성공
