@@ -116,5 +116,6 @@ function loginSucceed() {
 
 // *로그인 실패
 function loginFailed() {
+	document.getElementById('pw').value = "";
     document.getElementById("error").innerHTML = "아이디, 비밀번호를 다시 확인해주세요.";
 }
