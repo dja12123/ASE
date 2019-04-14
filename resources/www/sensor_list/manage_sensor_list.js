@@ -64,39 +64,33 @@ function state(key, on) {
 	if(sensor.checked != on) sensor.checked = on;
 }
 
-// 로그인
-var inputId, inputPw;
-function login() {
-    inputId = document.getElementById('id').value;
-    inputPw = document.getElementById('pw').value;
-    console.log("아이디: " + inputId);
-    console.log("비밀번호: " + inputPw);
-}
-
-// 로그인 요청
+// *로그인 세션
+// id: 36글자, string
+// pw: 16글자, string 
 function loginRequest() {
     document.getElementById("main").style.opacity = 0.4;
     document.body.innerHTML += 
-    '<div id="loginSess" class="loginSess"> <div class="login"> ' +
-    '<div class="input_form"> <span class="error"></span> </div>' +
+    '<div id="loginSess" class="loginSess"> <div class="login">' +
+    //form action 서버 작성
+    '<form action="" id="loginForm">' +
+    '<div class="input_form"> <span id="error" class="error"></span> </div>' +
     '<div class="input_form"> <input id="id" class="id" type="text" onkeydown="if(event.keyCode==13) {login()}" maxlength="36" placeholder="아이디"> </div>' +
     '<div class="input_form"> <input id="pw" class="pw" type="password" onkeydown="if(event.keyCode==13) {login()}" maxlength="16" placeholder="비밀번호"> </div>' +
     '<div class="input_form"> <input class="login_btn" type="button" onclick="login()" value="로그인"> </div>' +
-    '</div> </div>';
+    '</form> </div> </div>';
 }
 
-// 연결 끊김
-function listDisconnect() {
-    document.getElementById("main").style.opacity = 0.4;
-    document.body.innerHTML += 
-    '<div id="disconnected" class="disconnected">' +
-    '<span>연결 끊김<br/>재접속 시도중</span>' +
-    '</div>';
+function login() {
+    document.getElementById("loginForm").submit();
 }
 
-// 재접속
-function listReconnect() {
+// *로그인 성공
+function loginSucceed() {
     document.getElementById("main").style.opacity = 1;
-	document.body.removeChild(document.getElementById("disconnected"));
-	removeAllItem();
+    document.body.removeChild(document.getElementById("loginSess"));
+}
+
+// *로그인 실패
+function loginFailed() {
+    document.getElementById("error").innerHTML = "아이디, 비밀번호를 다시 확인해주세요.";
 }
