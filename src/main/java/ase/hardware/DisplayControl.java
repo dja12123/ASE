@@ -75,39 +75,60 @@ public class DisplayControl
 			BufferedImage fontBitmap = ImageIO.read(FileHandler.getResInputStream(FONT_BITMAP));
 			BufferedReader fontMetadata = new BufferedReader(
 					new InputStreamReader(FileHandler.getResInputStream(FONT_METADATA)));
-
+			
+			HashMap<String, Integer> dataMap = new HashMap<>();
 			String line = fontMetadata.readLine();
 			while (line != null)
 			{
-				int data_charid = Integer.parseInt(line.substring("char id=".length(), line.indexOf("x=")).trim());
-
-				int data_x = Integer.parseInt(line.substring(line.indexOf("x=") + 2, line.indexOf("y=")).trim());
-				int data_y = Integer.parseInt(line.substring(line.indexOf("y=") + 2, line.indexOf("width=")).trim());
-				int data_width = Integer
-						.parseInt(line.substring(line.indexOf("width=") + 6, line.indexOf("height=")).trim());
-				int data_height = Integer
-						.parseInt(line.substring(line.indexOf("height=") + 7, line.indexOf("xoffset=")).trim());
-				int xoffset = Integer
-						.parseInt(line.substring(line.indexOf("xoffset=") + 8, line.indexOf("yoffset=")).trim());
-				int yoffset = Integer
-						.parseInt(line.substring(line.indexOf("yoffset=") + 8, line.indexOf("xadvance=")).trim());
-				int xadvance = Integer
-						.parseInt(line.substring(line.indexOf("xadvance=") + 9, line.indexOf("page=")).trim());
-
-				boolean[][] dataArr = new boolean[data_height + yoffset][xadvance];
-
-				for (int y = 0; y < data_height; ++y)
+				line = line.replaceAll("\\s+", " ");
+				
+				int lastIndex = 0;
+				String key = "";
+				int value = 0;
+				
+				for(int index = line.indexOf('='); index < line.length(); ++index)
 				{
-					for (int x = 0; x < data_width; ++x)
+					char ch = line.charAt(index);
+					
+					if (ch == '=')
 					{
-						if (fontBitmap.getRGB(x + data_x, y + data_y) >= -10000000)
+						key = line.substring(lastIndex, index);
+						lastIndex = index + 1;
+					}
+					else if(ch == ' ')
+					{
+						value = Integer.parseInt(line.substring(lastIndex, index));
+						dataMap.put(key, value);
+						lastIndex = index + 1;
+					}
+				}
+				
+				int char_id = dataMap.get("char id");
+				int x = dataMap.get("x");
+				int y = dataMap.get("y");
+				int width = dataMap.get("width");
+				int height = dataMap.get("height");
+				int xoffset = dataMap.get("xoffset");
+				int yoffset = dataMap.get("yoffset");
+				int xadvance = dataMap.get("xadvance");
+				
+				value = Integer.parseInt(line.substring(lastIndex, line.length()));
+				dataMap.put(key, value);
+
+				boolean[][] dataArr = new boolean[height + yoffset][xadvance];
+
+				for (int index_y = 0; index_y < height; ++index_y)
+				{
+					for (int index_x = 0; index_x < width; ++index_x)
+					{
+						if (fontBitmap.getRGB(index_x + x, index_y + y) >= -10000000)
 						{
-							dataArr[y + yoffset][x + xoffset] = true;
+							dataArr[index_y + yoffset][index_x + xoffset] = true;
 						}
 					}
 				}
 
-				this.fontData.put((char) data_charid, dataArr);
+				this.fontData.put((char) char_id, dataArr);
 				line = fontMetadata.readLine();
 			}
 
