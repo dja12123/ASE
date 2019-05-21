@@ -1,4 +1,4 @@
-package ase.sensorManager.sensor;
+package ase.sensorManager.sensorData;
 
 import java.util.Date;
 

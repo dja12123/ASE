@@ -20,7 +20,7 @@ import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class SensorManager extends Observable<SensorRegisterEvent> implements Observer<DevicePacket> 
+public class SensorManager
 {
 	public static final String PROP_SENSOR_CHECK_INTERVAL = "SensorCheckInterval";
 	
@@ -29,7 +29,6 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	private Observable<DevicePacket> sensorReader;
 	private DB_Handler dbHandler;
 	
-	private SensorDBAccess dbAccess;
 	private SensorConfigAccess configAccess;
 	
 	private int checkInterval;
@@ -39,8 +38,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 	private HashMap<Integer, Sensor> _sensorMap;
 	public Map<Integer, Sensor> sensorMap;
 	
-	public final Observable<DataReceiveEvent> publicDataReceiveObservable;
-	public final Observable<SensorOnlineEvent> publicSensorOnlineObservable;
+	public final Observable<SensorRegisterEvent> registerObservable;
 	
 	public SensorManager(DB_Handler dbHandler, Observable<DevicePacket> sensorReader)
 	{
@@ -48,9 +46,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		this.dbHandler = dbHandler;
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
-		
-		this.publicDataReceiveObservable = new Observable<DataReceiveEvent>();
-		this.publicSensorOnlineObservable = new Observable<SensorOnlineEvent>();
+		this.registerObservable = new Observable<>();
 	}
 	
 	public boolean startModule(DB_Installer dbinit)
@@ -60,13 +56,7 @@ public class SensorManager extends Observable<SensorRegisterEvent> implements Ob
 		
 		logger.log(Level.INFO, "SensorManager 시작");
 
-		this.dbAccess = new SensorDBAccess(dbHandler, dbinit);
 		this.configAccess = new SensorConfigAccess();
-		
-		for(Sensor s : this.dbAccess.getSensorFromDB(this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable))
-		{
-			this._sensorMap.put(s.id, s);
-		}
 		
 		this.checkTimeoutTask();
 		

@@ -1,4 +1,6 @@
-package ase.sensorManager.sensor;
+package ase.sensorManager.sensorData;
+
+import ase.sensorManager.sensor.Sensor;
 
 public class DataReceiveEvent
 {
@@ -14,6 +16,6 @@ public class DataReceiveEvent
 	@Override
 	public String toString()
 	{
-		return "dataReceive("+this.sensorInst.id+ ")\n" + this.data.toString();
+		return "dataReceive("+this.sensorInst.ID+ ")\n" + this.data.toString();
 	}
 }

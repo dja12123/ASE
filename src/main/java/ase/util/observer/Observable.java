@@ -26,7 +26,7 @@ public class Observable<Event>
 	{
 		if (observer == null)
 		{
-			throw new IllegalArgumentException("Tried to add a null observer");
+			throw new IllegalArgumentException("Tried to remove a null observer");
 		}
 		
 		this._observers.remove(observer);

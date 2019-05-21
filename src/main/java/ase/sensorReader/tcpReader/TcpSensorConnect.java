@@ -1,4 +1,4 @@
-package ase.sensorReader;
+package ase.sensorReader.tcpReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
+import ase.sensorReader.DevicePacket;
 
 public class TcpSensorConnect
 {	

@@ -1,4 +1,4 @@
-package ase.sensorReader;
+package ase.sensorReader.tcpReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
+import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 
 public class TcpSensorReadManager extends Observable<DevicePacket>

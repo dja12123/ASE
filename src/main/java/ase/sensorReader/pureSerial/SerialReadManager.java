@@ -1,4 +1,4 @@
-package ase.sensorReader;
+package ase.sensorReader.pureSerial;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,6 +18,7 @@ import com.pi4j.io.serial.StopBits;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
+import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 
 public class SerialReadManager extends Observable<DevicePacket>

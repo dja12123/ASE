@@ -30,8 +30,8 @@ import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
-import ase.sensorReader.SerialReadManager;
-import ase.sensorReader.TcpSensorReadManager;
+import ase.sensorReader.pureSerial.SerialReadManager;
+import ase.sensorReader.tcpReader.TcpSensorReadManager;
 import ase.test.TestVirtualSensorManager;
 import ase.web.WebManager;
 
