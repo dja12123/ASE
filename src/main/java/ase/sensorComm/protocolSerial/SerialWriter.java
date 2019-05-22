@@ -45,7 +45,7 @@ public class SerialWriter
 	public synchronized void write(byte[] data)
 	{
 		this.writeQueue.add(data);
-		this.writeQueue.notify();
+		this.notify();
 	}
 	
 	private void serialWriteTask()
@@ -77,7 +77,7 @@ public class SerialWriter
 			{
 				synchronized (this)
 				{
-					this.writeQueue.wait();
+					this.wait();
 				}
 			}
 			catch (InterruptedException e){ }
