@@ -223,7 +223,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			return;
 		}
 
-		if(receiveData.length > SerialProtoDef.SERIAL_PACKET_MAXSIZE)
+		if(receiveData.length > SerialProtoDef.SERIAL_PACKET_MAXSIZE && receiveData.length < 1 + 1)
 		{
 			logger.log(Level.WARNING, "수신 크기 오류 " + receiveData.length);
 		}
