@@ -61,7 +61,11 @@ public class SerialWriter
 				}
 				try
 				{
-					this.serial.write(packet);
+					synchronized (this.serial)
+					{
+						this.serial.write(packet);
+					}
+					
 				}
 				catch (IllegalStateException | IOException e)
 				{
