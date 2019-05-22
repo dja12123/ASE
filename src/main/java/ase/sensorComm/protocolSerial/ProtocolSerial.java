@@ -30,6 +30,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 {
 	public static final Logger logger = LogWriter.createLogger(ProtocolSerial.class, "protoSerialReader");
 	public static final String PROP_SerialDevice = "SerialDevice";
+	public static final String PROP_SerialRate = "SerialRate";
 	
 	private final Serial serial;
 	private final SerialConfig config;

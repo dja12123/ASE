@@ -40,7 +40,7 @@ public class DisplayDeviceState
 		this.dispMem = DisplayControl.inst().showString(0, 13, "MEM");
 		this.barMem = DisplayControl.inst().showRect(23, 13, GRAPH_WIDTH, 12);
 		this.strSensorInfo = DisplayControl.inst().showString(0, 26, 
-				String.format("sensor:%d on:%d"
+				String.format("sensor:%d"
 						, this.sensorManager.sensorMap.size()));
 		this.strAppInfo = DisplayControl.inst().showString(0, 39, String.format("user:%d"
 				, this.appManager.getSessionCount()));
