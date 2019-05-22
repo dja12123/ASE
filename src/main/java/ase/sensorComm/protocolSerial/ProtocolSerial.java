@@ -223,15 +223,22 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			return;
 		}
 
-		if(receiveData.length > SerialProtoDef.SERIAL_PACKET_MAXSIZE || receiveData.length < 1 + 1)
+		if(receiveData.length > SerialProtoDef.SERIAL_PACKET_MAXSIZE || receiveData.length < 1 + 1 + 1)
 		{
 			logger.log(Level.WARNING, "수신 크기 오류 " + receiveData.length);
+			return;
 		}
-		logger.log(Level.WARNING, "수신 크기:" + receiveData.length);
 		ByteBuffer buffer = ByteBuffer.wrap(receiveData);
 
 		byte command = buffer.get();
 		byte id = buffer.get();
+		byte totalSize = buffer.get();
+		
+		if(receiveData.length != totalSize)
+		{
+			logger.log(Level.WARNING, "잘못된 데이터 입력");
+			return;
+		}
 		
 		if(this.nowTransaction == null || this.nowTransaction.user.ID != id)
 		{
