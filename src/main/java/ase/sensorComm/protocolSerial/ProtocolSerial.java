@@ -2,8 +2,7 @@ package ase.sensorComm.protocolSerial;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +22,7 @@ import com.pi4j.io.serial.StopBits;
 import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.ReceiveEvent;
-import ase.sensorReader.DevicePacket;
-import ase.sensorReader.pureSerial.SerialReadManager;
 import ase.util.observer.KeyObservable;
-import ase.util.observer.Observable;
 
 public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 {
@@ -43,6 +39,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 	private Runnable commManageTask;
 	
 	private final Map<Byte, CommUser> _users;
+	public final Map<Byte, CommUser> users;
 	
 	private TransactionUnit nowTransaction;
 	private byte nowUserIndex;
@@ -56,6 +53,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 				.flowControl(FlowControl.NONE);
 		this.commManageTask = this::commManageTask;
 		this._users = new HashMap<>();
+		this.users = Collections.unmodifiableMap(this._users);
 	}
 	
 	public synchronized boolean startModule()
@@ -102,10 +100,12 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 		logger.log(Level.INFO, "SerialReadManager 종료");
 	}
 	
-	public synchronized void addUser(byte id)
+	public synchronized boolean addUser(byte id)
 	{
+		if(this._users.containsKey(id)) return false;
 		CommUser user = new CommUser(id);
 		this._users.put(id, user);
+		return true;
 	}
 	
 	public synchronized void removeUser(byte id)
@@ -135,7 +135,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 				{
 					if(this.nowTransaction == null)
 					{
-						this.transaction();
+						this.startTransaction();
 					}
 					continue;
 				}
@@ -144,15 +144,15 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 			{
 				if(this.nowTransaction != null)
 				{
-					this._users.remove(this.nowTransaction.user.ID);
-					logger.log(Level.WARNING, "트랜잭션 타임아웃으로 제거됨 " + this.nowTransaction.user.ID);
+					logger.log(Level.WARNING, "트랜잭션 타임아웃 " + this.nowTransaction.user.ID);
+					this.nowTransaction = null;
 				}
-				this.transaction();
+				this.startTransaction();
 			}
 		}
 	}
 	
-	private void transaction()
+	private void startTransaction()
 	{
 		if(!this._users.isEmpty())
 		{
@@ -229,19 +229,23 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent>
 		
 		byte[] payload = new byte[receiveData.length - 1 - 1];
 		buffer.get(payload, 1 + 1, payload.length);
-		if(!this.nowTransaction.putReceiveData(command, payload))
+		if(command == ProtoDef.SERIAL_PACKET_SEG_NODATACLIENT)
 		{
-			return;
+			this.nowTransaction = null;
 		}
-		
-		if(this.nowTransaction.isReceiveFinish())
+		else
 		{
-			if(this.nowTransaction.getDataLen() > 0)
+			if(!this.nowTransaction.putReceiveData(command, payload))
+			{
+				return;
+			}
+			
+			if(this.nowTransaction.isReceiveFinish())
 			{
 				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, this.nowTransaction.getkey(), this.nowTransaction.getPayload());
 				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
+				this.nowTransaction = null;
 			}
-			this.nowTransaction = null;
 		}
 		this.commManageThread.interrupt();
 	}

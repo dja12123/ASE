@@ -26,12 +26,7 @@ public class TransactionUnit
 	
 	public boolean putReceiveData(byte command, byte[] payload)
 	{
-		if(this.receiveData.size() == 0 && command == ProtoDef.SERIAL_PACKET_SEG_NODATACLIENT)
-		{
-			this.len = 0;
-			return true;
-		}
-		else if(this.receiveData.size() == 0 && command == ProtoDef.SERIAL_PACKET_SEG_STARTFROMCLIENT)
+		if(this.receiveData.size() == 0 && command == ProtoDef.SERIAL_PACKET_SEG_STARTFROMCLIENT)
 		{
 			ByteBuffer buffer = ByteBuffer.wrap(payload);
 			this.key = buffer.getShort();
