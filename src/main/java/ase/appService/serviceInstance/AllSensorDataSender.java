@@ -7,7 +7,7 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensor.SensorData;
+import ase.sensorManager.sensorData.SensorData;
 
 public class AllSensorDataSender extends ServiceInstance
 {
@@ -53,6 +53,7 @@ public class AllSensorDataSender extends ServiceInstance
 		int id = Integer.parseInt(input[0]);
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 
+		/*
 		if(sensor != null)
 		{
 			json.addProperty("result", true);
@@ -78,7 +79,7 @@ public class AllSensorDataSender extends ServiceInstance
 		else
 		{
 			json.addProperty("result", false);
-		}
+		}*/
 		this.channel.sendData(json.toString());
 		this.destroy();
 	}

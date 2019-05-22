@@ -28,6 +28,7 @@ import ase.hardware.DisplayControl;
 import ase.hardware.DisplayDeviceState;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
+import ase.sensorComm.protocolSerial.ProtocolSerial;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorReader.pureSerial.SerialReadManager;
@@ -231,7 +232,8 @@ public class ServerCore
 	}
 
 	private DB_Handler dbHandler;
-	private SerialReadManager serialSensorReadManager;
+	private ProtocolSerial protocolSerial;
+	//private SerialReadManager serialSensorReadManager;
 	private TcpSensorReadManager tcpSensorReadManager;
 	private SensorManager sensorManager;
 	private SensorDataInUSBManager sensorDataInUSBManager;
@@ -246,9 +248,10 @@ public class ServerCore
 	private ServerCore()
 	{
 		this.dbHandler = new DB_Handler();
-		this.serialSensorReadManager = new SerialReadManager();
+		this.protocolSerial = new ProtocolSerial();
+		//this.serialSensorReadManager = new SerialReadManager();
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
-		this.sensorManager = new SensorManager(this.dbHandler, this.serialSensorReadManager);
+		this.sensorManager = new SensorManager(this.protocolSerial);
 		this.sensorDataInUSBManager = new SensorDataInUSBManager(this.sensorManager);
 		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
@@ -264,10 +267,11 @@ public class ServerCore
 		if(!this.dbHandler.startModule()) return false;
 		DB_Installer dbInstaller = new DB_Installer(this.dbHandler);
 		loadingText = DisplayControl.inst().replaceString(loadingText, "시리얼 로드");
-		if(!this.serialSensorReadManager.startModule()) return false;
+		if(!this.protocolSerial.startModule()) return false;
+		//if(!this.serialSensorReadManager.startModule()) return false;
 		//if(!this.tcpSensorReadManager.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "센서 매니저 로드");
-		if(!this.sensorManager.startModule(dbInstaller)) return false;
+		if(!this.sensorManager.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "USB저장기 로드");
 		if(!this.sensorDataInUSBManager.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "웹 서비스 로드");
@@ -297,7 +301,8 @@ public class ServerCore
 		this.sensorDataInUSBManager.stopModule();
 		this.sensorManager.stopModule();
 		//this.tcpSensorReadManager.stopModule();
-		this.serialSensorReadManager.stopModule();
+		//this.serialSensorReadManager.stopModule();
+		this.protocolSerial.stopModule();
 		this.dbHandler.stopModule();
 		logger.log(Level.INFO, "시스템 종료 완료");
 		DisplayControl.inst().removeShape(endText);

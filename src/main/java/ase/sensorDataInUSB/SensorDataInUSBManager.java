@@ -29,7 +29,7 @@ import ase.hardware.DisplayControl;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.sensor.DataReceiveEvent;
+import ase.sensorManager.sensorData.DataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class SensorDataInUSBManager
@@ -145,7 +145,7 @@ public class SensorDataInUSBManager
 	private void startTask()
 	{
 		if(this.isRunSaveTask) return;
-		this.sensorManager.publicDataReceiveObservable.addObserver(this.sensorDataReceiveObserver);
+		this.sensorManager.dataManager.addObserver(this.sensorDataReceiveObserver);
 		this.taskThread = new Thread(this.task);
 		this.taskThread.setDaemon(true);
 		this.isRunSaveTask = true;
@@ -155,7 +155,7 @@ public class SensorDataInUSBManager
 	private void stopTask()
 	{
 		if(!this.isRunSaveTask) return;
-		this.sensorManager.publicDataReceiveObservable.removeObserver(this.sensorDataReceiveObserver);
+		this.sensorManager.dataManager.removeObserver(this.sensorDataReceiveObserver);
 		this.isRunSaveTask = false;
 		if(this.taskThread != null) this.taskThread.interrupt();
 		this.usbFullCapKB = 0;
@@ -214,7 +214,7 @@ public class SensorDataInUSBManager
 			{
 				bufferedWriter.write(String.format("%s,%d,%f,%f,%f,%f,%f,%f"
 						, DataDateFormat.format(data.data.time)
-						, data.sensorInst.id
+						, data.sensorInst.ID
 						, data.data.X_GRADIANT
 						, data.data.Y_GRADIANT
 						, data.data.X_ACCEL

@@ -1,7 +1,9 @@
 package ase.sensorComm.protocolSerial;
 
-public class ProtoDef
+public class SerialProtoDef
 {
+	public static final int SERIAL_DELAY = 70;
+	public static final int SERIAL_TRANSACTION_TIMEOUT = 500;
 	public static final int MAX_BUFFER_SIZE = 400;
 	public static final int SERIAL_PACKET_MAXSIZE = 59;
 	public static final int SERIAL_PACKET_HEADERSIZE = 3;

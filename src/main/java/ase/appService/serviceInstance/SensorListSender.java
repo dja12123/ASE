@@ -37,8 +37,7 @@ public class SensorListSender extends ServiceInstance
 		for (Sensor sensor : this.sensorManager.sensorMap.values())
 		{
 			JsonObject data = new JsonObject();
-			data.addProperty("id", sensor.id);
-			data.addProperty("on", sensor.isOnline());
+			data.addProperty("id", sensor.ID);
 			dataSensorList.add(data);
 		}
 		this.channel.sendData(json.toString());

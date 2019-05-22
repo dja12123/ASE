@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.sensor.DataReceiveEvent;
 import ase.sensorManager.sensor.Sensor;
+import ase.sensorManager.sensorData.DataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorDataSender extends ServiceInstance
@@ -27,16 +27,13 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
-		
+		this.sensorManager.dataManager.addObserver(this.sensorDataObserver);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		if(this.sensor != null)
-		{
-			this.sensor.dataReceiveObservable.removeObserver(this.sensorDataObserver);
-		}
+		this.sensorManager.dataManager.removeObserver(this.sensorDataObserver);
 	}
 
 	@Override
@@ -59,12 +56,8 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 		if(sensor != null)
 		{
-			if(this.sensor != null)
-			{
-				this.sensor.dataReceiveObservable.removeObserver(this.sensorDataObserver);
-			}
 			this.sensor = sensor;
-			this.sensor.dataReceiveObservable.addObserver(this.sensorDataObserver);
+		
 			json.addProperty("result", true);
 		}
 		else
@@ -77,6 +70,8 @@ public class RealtimeSensorDataSender extends ServiceInstance
 
 	private void sensorDataObserver(DataReceiveEvent event)
 	{
+		if(this.sensor == null) return;
+		if(event.sensorInst.ID != this.sensor.ID) return;
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.data.time));

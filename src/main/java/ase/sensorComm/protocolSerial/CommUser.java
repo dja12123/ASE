@@ -3,7 +3,10 @@ package ase.sensorComm.protocolSerial;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommUser
+import ase.sensorComm.ISensorCommUser;
+import ase.sensorComm.SegmentBuilder;
+
+public class CommUser implements ISensorCommUser
 {
 	public final byte ID;
 
@@ -17,37 +20,38 @@ public class CommUser
 		this.totalPacketSize = 0;
 	}
 	
+	@Override
 	public synchronized boolean putSegment(SegmentBuilder builder)
 	{
 		byte[] payload = builder.getPayload();
 		int size = 0;
 		List<byte[]> tempPacketList = new ArrayList<>();
 		
-		for(int i = 0; i < payload.length / ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE; ++i)
+		for(int i = 0; i < payload.length / SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE; ++i)
 		{
-			byte[] packet = new byte[ProtoDef.SERIAL_PACKET_MAXSIZE];
+			byte[] packet = new byte[SerialProtoDef.SERIAL_PACKET_MAXSIZE];
 
 			packet[0] = this.ID;
-			if(i == 0) packet[1] = ProtoDef.SERIAL_PACKET_SEG_STARTFROMSERVER;
-			else packet[1] = ProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER;
-			packet[2] = ProtoDef.SERIAL_PACKET_MAXSIZE;
-			System.arraycopy(payload, i * ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE, packet, ProtoDef.SERIAL_PACKET_HEADERSIZE, ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE);
+			if(i == 0) packet[1] = SerialProtoDef.SERIAL_PACKET_SEG_STARTFROMSERVER;
+			else packet[1] = SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER;
+			packet[2] = SerialProtoDef.SERIAL_PACKET_MAXSIZE;
+			System.arraycopy(payload, i * SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE, packet, SerialProtoDef.SERIAL_PACKET_HEADERSIZE, SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE);
 			tempPacketList.add(packet);
-			size += ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE;
+			size += SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE;
 		}
 		
-		if(payload.length % ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE > 0)
+		if(payload.length % SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE > 0)
 		{
-			byte[] packet = new byte[payload.length % ProtoDef.SERIAL_PACKET_MAXSIZE + ProtoDef.SERIAL_PACKET_HEADERSIZE];
+			byte[] packet = new byte[payload.length % SerialProtoDef.SERIAL_PACKET_MAXSIZE + SerialProtoDef.SERIAL_PACKET_HEADERSIZE];
 			packet[0] = this.ID;
-			packet[1] = ProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER;
+			packet[1] = SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER;
 			packet[2] = (byte)packet.length;
-			System.arraycopy(payload, payload.length / ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE * ProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE, packet, ProtoDef.SERIAL_PACKET_HEADERSIZE, payload.length % ProtoDef.SERIAL_PACKET_MAXSIZE);
+			System.arraycopy(payload, payload.length / SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE * SerialProtoDef.SERIAL_PACKET_MAXPAYLOADSIZE, packet, SerialProtoDef.SERIAL_PACKET_HEADERSIZE, payload.length % SerialProtoDef.SERIAL_PACKET_MAXSIZE);
 			tempPacketList.add(packet);
-			size += payload.length % ProtoDef.SERIAL_PACKET_MAXSIZE;
+			size += payload.length % SerialProtoDef.SERIAL_PACKET_MAXSIZE;
 		}
 		
-		if(this.totalPacketSize + size >= ProtoDef.MAX_BUFFER_SIZE)
+		if(this.totalPacketSize + size >= SerialProtoDef.MAX_BUFFER_SIZE)
 		{
 			return false;
 		}

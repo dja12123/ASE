@@ -4,16 +4,12 @@ import ase.clientSession.ClientSessionManager;
 import ase.clientSession.SessionEvent;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;
-import ase.sensorManager.sensor.SensorOnlineEvent;
 import ase.util.observer.Observer;
 
 public class DisplayDeviceState
 {
 	private static final int GRAPH_WIDTH = 40;
 	
-	private final Observer<DeviceStateEvent> deviceStateObserver;
-	private final Observer<SensorRegisterEvent> sensorObserver;
-	private final Observer<SensorOnlineEvent> sensorOnlineObserver;
 	private final Observer<SessionEvent> sessionObserver;
 	private final SensorManager sensorManager;
 	private final ClientSessionManager appManager;
@@ -31,9 +27,7 @@ public class DisplayDeviceState
 	
 	public DisplayDeviceState(SensorManager sensorManager, ClientSessionManager appManager)
 	{
-		this.deviceStateObserver = this::deviceStateObserver;
-		this.sensorObserver = this::sensorObserver;
-		this.sensorOnlineObserver = this::sensorOnlineObserver;
+
 		this.sessionObserver = this::sessionObserver;
 		this.sensorManager = sensorManager;
 		this.appManager = appManager;
@@ -47,23 +41,16 @@ public class DisplayDeviceState
 		this.barMem = DisplayControl.inst().showRect(23, 13, GRAPH_WIDTH, 12);
 		this.strSensorInfo = DisplayControl.inst().showString(0, 26, 
 				String.format("sensor:%d on:%d"
-						, this.sensorManager.sensorMap.size()
-						, this.sensorManager.getOnlineSensorCount()));
+						, this.sensorManager.sensorMap.size()));
 		this.strAppInfo = DisplayControl.inst().showString(0, 39, String.format("user:%d"
 				, this.appManager.getSessionCount()));
 		
-		DeviceStateMonitor.inst().addObserver(this.deviceStateObserver);
-		this.sensorManager.addObserver(this.sensorObserver);
-		this.sensorManager.publicSensorOnlineObservable.addObserver(this.sensorOnlineObserver);
 		this.appManager.addObserver(this.sessionObserver);
 		return true;
 	}
 	
 	public void stopModule()
 	{
-		DeviceStateMonitor.inst().removeObserver(this.deviceStateObserver);
-		this.sensorManager.removeObserver(this.sensorObserver);
-		this.sensorManager.publicSensorOnlineObservable.removeObserver(this.sensorOnlineObserver);
 		this.appManager.removeObserver(this.sessionObserver);
 		
 		DisplayControl.inst().removeShape(this.strCpu);
@@ -88,18 +75,6 @@ public class DisplayDeviceState
 			this.barMem = DisplayControl.inst().replaceShape(this.barMem, this.getBar(GRAPH_WIDTH, 12, memPixel));
 			this.memPixel = memPixel;
 		}
-	}
-	
-	private void sensorObserver(SensorRegisterEvent event)
-	{
-		this.strSensorInfo = DisplayControl.inst().replaceString(this.strSensorInfo, 
-				String.format("sensor:%d on:%d", this.sensorManager.sensorMap.size(), this.sensorManager.getOnlineSensorCount()));
-	}
-	
-	private void sensorOnlineObserver(SensorOnlineEvent event)
-	{
-		this.strSensorInfo = DisplayControl.inst().replaceString(this.strSensorInfo, 
-				String.format("sensor:%d on:%d", this.sensorManager.sensorMap.size(), this.sensorManager.getOnlineSensorCount()));
 	}
 	
 	private void sessionObserver(SessionEvent event)

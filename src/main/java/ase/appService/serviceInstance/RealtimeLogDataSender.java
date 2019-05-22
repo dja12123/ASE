@@ -6,7 +6,7 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensor.SensorLog;
+import ase.sensorManager.sensorLog.SensorLog;
 import ase.util.observer.Observer;
 
 public class RealtimeLogDataSender extends ServiceInstance
@@ -35,7 +35,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 	{
 		if(this.sensor != null)
 		{
-			this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
+			//this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
 		}
 	}
 
@@ -61,10 +61,10 @@ public class RealtimeLogDataSender extends ServiceInstance
 		{
 			if(this.sensor != null)
 			{
-				this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
+				//this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
 			}
 			this.sensor = sensor;
-			this.sensor.sensorLogObservable.addObserver(this.sensorDataObserver);
+			//this.sensor.sensorLogObservable.addObserver(this.sensorDataObserver);
 			json.addProperty("result", true);
 		}
 		else

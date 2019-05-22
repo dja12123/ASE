@@ -9,11 +9,8 @@ import java.util.logging.Logger;
 
 import ase.appService.serviceInstance.AllSensorDataSender;
 import ase.appService.serviceInstance.AllSensorLogSender;
-import ase.appService.serviceInstance.RealtimeAllSensorOnOffSender;
 import ase.appService.serviceInstance.RealtimeLogDataSender;
-import ase.appService.serviceInstance.RealtimeSensorAddRemoveSender;
 import ase.appService.serviceInstance.RealtimeSensorDataSender;
-import ase.appService.serviceInstance.RealtimeSensorOnOffSender;
 import ase.appService.serviceInstance.SensorListSender;
 import ase.appService.serviceInstance.ServiceInstance;
 import ase.clientSession.ChannelEvent;
@@ -68,20 +65,11 @@ public class SessionServiceInstance
 			case AllSensorLogSender.KEY:
 				serviceInst = new AllSensorLogSender(event.channel, this.sensorManager);
 				break;
-			case RealtimeAllSensorOnOffSender.KEY:
-				serviceInst = new RealtimeAllSensorOnOffSender(event.channel, this.sensorManager);
-				break;
 			case RealtimeLogDataSender.KEY:
 				serviceInst = new RealtimeLogDataSender(event.channel, this.sensorManager);
 				break;
-			case RealtimeSensorAddRemoveSender.KEY:
-				serviceInst = new RealtimeSensorAddRemoveSender(event.channel, this.sensorManager);
-				break;
 			case RealtimeSensorDataSender.KEY:
 				serviceInst = new RealtimeSensorDataSender(event.channel, this.sensorManager);
-				break;
-			case RealtimeSensorOnOffSender.KEY:
-				serviceInst = new RealtimeSensorOnOffSender(event.channel, this.sensorManager);
 				break;
 			case SensorListSender.KEY:
 				serviceInst = new SensorListSender(event.channel, this.sensorManager);

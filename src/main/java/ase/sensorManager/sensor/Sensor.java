@@ -2,9 +2,9 @@ package ase.sensorManager.sensor;
 
 public class Sensor
 {	
-	public final byte ID;
+	public final int ID;
 	
-	public Sensor(byte id)
+	public Sensor(int id)
 	{
 		this.ID = id;
 	}

@@ -7,7 +7,7 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensor.SensorLog;
+import ase.sensorManager.sensorLog.SensorLog;
 
 public class AllSensorLogSender extends ServiceInstance
 {
@@ -37,6 +37,7 @@ public class AllSensorLogSender extends ServiceInstance
 	@Override
 	protected void onDataReceive(ChannelDataEvent event)
 	{
+		/*
 		JsonObject json = new JsonObject();
 		String[] input;
 		try
@@ -78,7 +79,9 @@ public class AllSensorLogSender extends ServiceInstance
 			json.addProperty("result", false);
 		}
 		this.channel.sendData(json.toString());
+		*/
 		this.destroy();
+		
 	}
 
 

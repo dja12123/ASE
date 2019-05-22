@@ -11,11 +11,9 @@ import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.db.DB_Handler;
 import ase.db.DB_Installer;
-import ase.sensorManager.sensor.DataReceiveEvent;
+import ase.sensorComm.ISensorCommManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensor.SensorConfigAccess;
-import ase.sensorManager.sensor.SensorDBAccess;
-import ase.sensorManager.sensor.SensorOnlineEvent;
+import ase.sensorManager.sensorData.SensorDataManager;
 import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
@@ -23,33 +21,30 @@ import ase.util.observer.Observer;
 public class SensorManager
 {
 	public static final String PROP_SENSOR_CHECK_INTERVAL = "SensorCheckInterval";
+	public static final String PROP_SENSOR_ID_LIST = "SensorIDList";
 	
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
-	private Observable<DevicePacket> sensorReader;
-	private DB_Handler dbHandler;
-	
+	private final ISensorCommManager sensorComm;
+	public final SensorDataManager dataManager;
 	private SensorConfigAccess configAccess;
 	
-	private int checkInterval;
-	
 	private boolean isRun;
-	private Thread timeoutCheckThread;
 	private HashMap<Integer, Sensor> _sensorMap;
 	public Map<Integer, Sensor> sensorMap;
 	
 	public final Observable<SensorRegisterEvent> registerObservable;
 	
-	public SensorManager(DB_Handler dbHandler, Observable<DevicePacket> sensorReader)
+	public SensorManager(ISensorCommManager sensorReader)
 	{
-		this.sensorReader = sensorReader;
-		this.dbHandler = dbHandler;
+		this.sensorComm = sensorReader;
+		this.dataManager = new SensorDataManager(this, sensorReader);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		this.registerObservable = new Observable<>();
 	}
 	
-	public boolean startModule(DB_Installer dbinit)
+	public boolean startModule()
 	{
 		if(this.isRun) return true;
 		this.isRun = true;
@@ -58,16 +53,15 @@ public class SensorManager
 
 		this.configAccess = new SensorConfigAccess();
 		
-		this.checkTimeoutTask();
+		this.dataManager.startModule();
 		
-		this.checkInterval = Integer.parseInt(ServerCore.getProp(PROP_SENSOR_CHECK_INTERVAL));
+		String sensorID = ServerCore.getProp(PROP_SENSOR_ID_LIST);
 		
-		this.sensorReader.addObserver(this);
-		
-		
-		this.timeoutCheckThread = new Thread(this::timeoutCheck);
-		this.timeoutCheckThread.setDaemon(true);
-		this.timeoutCheckThread.start();
+		for(String idstr : sensorID.split(","))
+		{
+			int id = Integer.parseInt(idstr.trim());
+			this.registerSensor(id);
+		}
 		
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
@@ -78,99 +72,30 @@ public class SensorManager
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
-		
-		logger.log(Level.INFO, "SensorManager관리자 종료");
-		
-		this.publicDataReceiveObservable.clearObservers();
-		this.publicSensorOnlineObservable.clearObservers();
-		
-		if(this.timeoutCheckThread != null) this.timeoutCheckThread.interrupt();
-		
-		this.sensorReader.removeObserver(this);
-		
-		for(Sensor s : this._sensorMap.values())
-		{
-			logger.log(Level.INFO, s.id+"센서 정보 저장중...");
-			s.save();
-		}
-		logger.log(Level.INFO, "SensorManager 관리자 종료 완료");
+		this.dataManager.stopModule();
 		this._sensorMap.clear();
 	}
-	
-	public synchronized int getOnlineSensorCount()
-	{
-		int count = 0;
-		for(Sensor s : this.sensorMap.values())
-		{
-			if(s.isOnline()) ++count;
-		}
-		return count;
-	}
 
-	@Override
-	public synchronized void update(DevicePacket data)
+
+	public synchronized boolean registerSensor(int id)
 	{
-		Sensor s = this._sensorMap.getOrDefault(data.ID, null);
-		if(s == null)
-		{// 새 장치 접근
-			s = this.registerSensor(data.ID);
+		if(this._sensorMap.containsKey(id)) return false;
+		Sensor sensor = new Sensor(id);
+		this._sensorMap.put(id, sensor);
+		if(!this.sensorComm.getUserMap().containsKey(id))
+		{
+			if(!this.sensorComm.addUser(id))
+			{
+				logger.log(Level.WARNING, "잘못된 아이디의 센서 등록 시도 " + id);
+			}
 		}
-		s.alartDataReceive(data.X_GRADIANT, data.Y_GRADIANT, data.X_ACCEL, data.Y_ACCEL, data.Z_ACCEL, data.Altitiude);
-	}
-	
-	private void checkTimeoutTask()
-	{
-		Date compareTime = new Date();
 		
-		for(Sensor sensor : this._sensorMap.values())
-		{
-			sensor.checkDeviceTimeout(compareTime);
-		}
-	}
-	
-	public synchronized Sensor registerSensor(int id)
-	{
-		if(this._sensorMap.containsKey(id))
-		{
-			logger.log(Level.SEVERE, "이미 있는 장치"+id);
-			return null;
-		}
-		Sensor s = new Sensor(id, this.dbAccess, this.configAccess, this.publicDataReceiveObservable, this.publicSensorOnlineObservable);
-		s.init();
-		this._sensorMap.put(id, s);
-		logger.log(Level.INFO, "새 센서 접근:"+s.id);
-		SensorRegisterEvent e = new SensorRegisterEvent(true, s);
-		this.notifyObservers(e);
-		return s;
+		return true;
 	}
 	
 	public synchronized void removeSensor(int id)
 	{
-		Sensor s = this._sensorMap.getOrDefault(id, null);
-		if(s == null)
-		{
-			logger.log(Level.SEVERE, "존재하지 않는 장치"+id);
-			return;
-		}
-		s.destroy();
-		this._sensorMap.remove(s.id);
-		logger.log(Level.INFO, "센서 삭제:"+s.id);
-		SensorRegisterEvent e = new SensorRegisterEvent(false, s);
-		this.notifyObservers(e);
+		
 	}
-	
-	private void timeoutCheck()
-	{
-		while(this.isRun)
-		{
-			this.checkTimeoutTask();
-			try
-			{
-				Thread.sleep(this.checkInterval);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-	}
+
 }

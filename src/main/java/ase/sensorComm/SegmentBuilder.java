@@ -1,4 +1,4 @@
-package ase.sensorComm.protocolSerial;
+package ase.sensorComm;
 
 import java.nio.ByteBuffer;
 
