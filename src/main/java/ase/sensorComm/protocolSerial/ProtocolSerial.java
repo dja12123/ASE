@@ -227,7 +227,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 		{
 			logger.log(Level.WARNING, "수신 크기 오류 " + receiveData.length);
 		}
-		
+		logger.log(Level.WARNING, "수신 크기:" + receiveData.length);
 		ByteBuffer buffer = ByteBuffer.wrap(receiveData);
 
 		byte command = buffer.get();
