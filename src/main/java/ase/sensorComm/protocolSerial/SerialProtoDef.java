@@ -12,9 +12,9 @@ public class SerialProtoDef
 	public static final byte SERIAL_PACKET_HEADERSIZE = 3;
 	public static final byte SERIAL_PACKET_MAXVALSIZE = ProtoDef.PACKET_MAXSIZE - SERIAL_PACKET_HEADERSIZE - ProtoDef.SERIAL_PACKET_KEYSIZE;
 
-	public static final byte SERIAL_PACKET_SEG_ENDFROMSERVER = 0x01;
-	public static final byte SERIAL_PACKET_SEG_NODATASERVER = 0x02;
-	public static final byte SERIAL_PACKET_SEG_TRANSFROMSERVER = 0x03;
+	public static final byte SERIAL_PACKET_SEG_TRANSFROMSERVER = 0x01;
+	public static final byte SERIAL_PACKET_SEG_ENDFROMSERVER = 0x02;
+	public static final byte SERIAL_PACKET_SEG_NODATASERVER = 0x03;
 
 	public static final byte SERIAL_PACKET_SEG_NODATACLIENT = 0x11;
 	public static final byte SERIAL_PACKET_SEG_TRANSFROMCLIENT = 0x12;
