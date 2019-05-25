@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.pi4j.io.serial.Serial;
+import com.sun.media.jfxmedia.logging.Logger;
 
 public class SerialWriter
 {
@@ -64,6 +65,7 @@ public class SerialWriter
 					synchronized (this.serial)
 					{
 						this.serial.write(packet);
+						System.out.println("기록");
 					}
 					
 				}
