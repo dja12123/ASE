@@ -64,7 +64,6 @@ public class SerialWriter
 					synchronized (this.serial)
 					{
 						this.serial.write(packet);
-						System.out.println("기록");
 					}
 					
 				}
