@@ -23,6 +23,7 @@ import com.pi4j.io.serial.StopBits;
 import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.ISensorCommManager;
+import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
 import ase.util.observer.KeyObservable;
 
@@ -41,11 +42,11 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	private Thread commManageThread;
 	private final Runnable commManageTask;
 	
-	private final Map<Integer, CommUser> _users;
-	private final List<CommUser> _userList;
-	private final Map<Integer, CommUser> users;
+	private final Map<Integer, SerialTransmitter> _users;
+	private final List<SerialTransmitter> _userList;
+	private final Map<Integer, SerialTransmitter> users;
 	
-	private TransactionUnit nowTransaction;
+	private SerialReceiver nowTransaction;
 	private int nowUserIndex;
 
 	public ProtocolSerial()
@@ -120,7 +121,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 		}
 		byte id = (byte)intid;
 		if(this._users.containsKey(intid)) return false;
-		CommUser user = new CommUser(id);
+		SerialTransmitter user = new SerialTransmitter(id);
 		this._users.put(intid, user);
 		this._userList.add(user);
 		return true;
@@ -130,7 +131,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	public synchronized void removeUser(int intid)
 	{
 		byte id = (byte)intid;
-		CommUser user = this._users.getOrDefault(id, null);
+		SerialTransmitter user = this._users.getOrDefault(id, null);
 		if(user != null)
 		{
 			if(this.nowTransaction != null && this.nowTransaction.user == user)
@@ -143,7 +144,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	}
 	
 	@Override
-	public Map<Integer, CommUser> getUserMap()
+	public Map<Integer, SerialTransmitter> getUserMap()
 	{
 		return this.users;
 	}
@@ -187,20 +188,27 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			{
 				this.nowUserIndex = 0;
 			}
-			CommUser nowUser = this._userList.get(this.nowUserIndex);
-			this.nowTransaction = new TransactionUnit(System.currentTimeMillis(), nowUser);
+			SerialTransmitter nowUser = this._userList.get(this.nowUserIndex);
+			this.nowTransaction = new SerialReceiver(System.currentTimeMillis(), nowUser);
 			List<byte[]> packetList = nowUser.popData();
 			if(packetList.size() == 0)
 			{
-				byte[] packet = new byte[2];
-				packet[0] = nowUser.ID;
-				packet[1] = SerialProtoDef.SERIAL_PACKET_SEG_NODATASERVER;
+				byte[] packet = new byte[3];
+				packet[0] = 3;
+				packet[1] = nowUser.ID;
+				packet[2] = SerialProtoDef.SERIAL_PACKET_SEG_NODATASERVER;
 				this.serialWriter.write(packet);
 			}
 			else
 			{
-				for(byte[] packet : packetList)
+				for(int i = 0; i < packetList.size() - 1; ++i)
 				{
+					this.serialWriter.write(packetList.get(i));
+				}
+				if(!packetList.isEmpty())
+				{
+					byte[] packet = packetList.get(packetList.size() - 1);
+					packet[2] = SerialProtoDef.SERIAL_PACKET_SEG_ENDFROMSERVER;
 					this.serialWriter.write(packet);
 				}
 			}
@@ -212,10 +220,10 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	
 	private synchronized void dataReceived(SerialDataEvent event)
 	{
-		byte[] receiveData;
+		byte[] packet;
 		try
 		{
-			receiveData = event.getBytes();
+			packet = event.getBytes();
 		}
 		catch (IOException e)
 		{
@@ -223,48 +231,37 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			return;
 		}
 
-		if(receiveData.length > SerialProtoDef.SERIAL_PACKET_MAXSIZE || receiveData.length < 1 + 1 + 1)
+		if(packet.length > ProtoDef.PACKET_MAXSIZE)
 		{
-			logger.log(Level.WARNING, "수신 크기 오류 " + receiveData.length);
-			return;
-		}
-		ByteBuffer buffer = ByteBuffer.wrap(receiveData);
-
-		byte command = buffer.get();
-		byte id = buffer.get();
-		byte totalSize = buffer.get();
-		
-		if(receiveData.length != totalSize)
-		{
-			logger.log(Level.WARNING, "잘못된 데이터 입력");
+			logger.log(Level.WARNING, "수신 크기 오류 " + packet.length);
 			return;
 		}
 		
-		if(this.nowTransaction == null || this.nowTransaction.user.ID != id)
+		if(this.nowTransaction == null)
 		{
 			return;
 		}
 		
-		byte[] payload = new byte[receiveData.length - 1 - 1];
-		buffer.get(payload, 1 + 1, payload.length);
-		if(command == SerialProtoDef.SERIAL_PACKET_SEG_NODATACLIENT)
+		if(!this.nowTransaction.putReceiveData(packet))
 		{
+			return;
+		}
+		
+		if(this.nowTransaction.isReceiveFinish())
+		{
+			for(byte[] data : this.nowTransaction.getReceiveData())
+			{
+				ByteBuffer buf = ByteBuffer.wrap(data);
+				buf.position(SerialProtoDef.SERIAL_PACKET_HEADERSIZE);
+				short key = buf.getShort();
+				byte[] value = new byte[data.length - SerialProtoDef.SERIAL_PACKET_HEADERSIZE - ProtoDef.SERIAL_PACKET_KEYSIZE];
+				buf.get(value);
+				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, key, value);
+				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
+			}
 			this.nowTransaction = null;
 		}
-		else
-		{
-			if(!this.nowTransaction.putReceiveData(command, payload))
-			{
-				return;
-			}
-			
-			if(this.nowTransaction.isReceiveFinish())
-			{
-				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, this.nowTransaction.getkey(), this.nowTransaction.getPayload());
-				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
-				this.nowTransaction = null;
-			}
-		}
+		
 		this.commManageThread.interrupt();
 	}
 
