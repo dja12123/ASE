@@ -27,6 +27,7 @@ public class SerialTransmitter implements ISensorTransmitter
 		buf.put(sendSize);
 		buf.put(this.ID);
 		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER);
+		buf.putShort(key);
 		buf.put(value);
 		this.packetList.add(buf.array());
 		return true;
@@ -40,6 +41,7 @@ public class SerialTransmitter implements ISensorTransmitter
 		buf.put(sendSize);
 		buf.put(this.ID);
 		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER);
+		buf.putShort(key);
 		this.packetList.add(buf.array());
 		return true;
 	}
