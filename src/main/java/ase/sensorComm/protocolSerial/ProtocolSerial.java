@@ -204,11 +204,9 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 				for(int i = 0; i < packetList.size() - 1; ++i)
 				{
 					this.serialWriter.write(packetList.get(i));
-					logger.log(Level.INFO, "큐잉");
 				}
 				if(!packetList.isEmpty())
 				{
-					logger.log(Level.INFO, "큐잉");
 					byte[] packet = packetList.get(packetList.size() - 1);
 					packet[2] = SerialProtoDef.SERIAL_PACKET_SEG_ENDFROMSERVER;
 					this.serialWriter.write(packet);

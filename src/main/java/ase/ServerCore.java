@@ -87,7 +87,6 @@ public class ServerCore
 				String[] arr = read.split("\\s+");
 				int index = Integer.parseInt(arr[0]);
 				mainInst.protocolSerial.getUserMap().get(index).putSegment((short)Integer.parseInt(arr[1]));
-				mainInst.protocolSerial.getUserMap().get(index).putSegment((short)Integer.parseInt(arr[1]));
 			}
 			catch(Exception e)
 			{
