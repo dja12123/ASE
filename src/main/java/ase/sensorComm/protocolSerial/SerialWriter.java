@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.pi4j.io.serial.Serial;
+
 public class SerialWriter
 {
 	private final Serial serial;
