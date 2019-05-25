@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,17 +78,25 @@ public class ServerCore
 			logger.log(Level.SEVERE, "초기화 실패");
 			return;
 		}
+		Scanner sc = new Scanner(System.in);
 		while(true)
 		{
+			String read = sc.nextLine();
 			try
 			{
-				Thread.sleep(1000);
+				String[] arr = read.split("\\s+");
+				int index = Integer.parseInt(arr[0]);
+				mainInst.protocolSerial.getUserMap().get(index).putSegment((short)Integer.parseInt(arr[0]));
 			}
-			catch (InterruptedException e)
+			catch(Exception e)
 			{
-				break;
+				e.printStackTrace();
 			}
+			
+			
+			if(Thread.interrupted()) break;
 		}
+		sc.close();
 		System.out.println("메인 쓰레드 종료");
 	}
 	

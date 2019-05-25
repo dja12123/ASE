@@ -32,6 +32,18 @@ public class SerialTransmitter implements ISensorTransmitter
 		return true;
 	}
 	
+	@Override
+	public boolean putSegment(short key)
+	{
+		byte sendSize = (byte) (SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE);
+		ByteBuffer buf = ByteBuffer.allocate(sendSize);
+		buf.put(sendSize);
+		buf.put(this.ID);
+		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER);
+		this.packetList.add(buf.array());
+		return true;
+	}
+	
 	public synchronized List<byte[]> popData()
 	{
 		List<byte[]> result = new ArrayList<>(this.packetList.size());
@@ -39,4 +51,6 @@ public class SerialTransmitter implements ISensorTransmitter
 		this.packetList.clear();
 		return result;
 	}
+
+
 }
