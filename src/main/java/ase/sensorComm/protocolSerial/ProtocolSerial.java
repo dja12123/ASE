@@ -257,6 +257,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 				byte[] value = new byte[data.length - SerialProtoDef.SERIAL_PACKET_HEADERSIZE - ProtoDef.SERIAL_PACKET_KEYSIZE];
 				buf.get(value);
 				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, key, value);
+				System.out.printf("receive: id%d key%d\n", e.ID, e.key);
 				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
 			}
 			this.nowTransaction = null;
