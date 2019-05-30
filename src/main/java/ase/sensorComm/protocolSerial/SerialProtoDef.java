@@ -6,7 +6,7 @@ public class SerialProtoDef
 {
 	public static final int SEND_BUFFER_SIZE = 400;
 	
-	public static final int SERIAL_DELAY = 150;
+	public static final int SERIAL_DELAY = 100;
 	public static final int SERIAL_TRANSACTION_TIMEOUT = 2000;
 	
 	public static final byte SERIAL_PACKET_HEADERSIZE = 3;
