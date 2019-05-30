@@ -159,11 +159,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			}
 			catch (InterruptedException e1)
 			{
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch (InterruptedException e2) {}
+
 				synchronized (this)
 				{
 					if(this.nowTransaction == null)
