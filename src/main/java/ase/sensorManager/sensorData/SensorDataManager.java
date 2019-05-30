@@ -1,5 +1,7 @@
 package ase.sensorManager.sensorData;
 
+import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +44,11 @@ public class SensorDataManager extends Observable<DataReceiveEvent>
 	{
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
 		if(sensor == null) return;
-		logger.log(Level.INFO, key + " sensor data receive");
+		ByteBuffer buf = ByteBuffer.wrap(event.payload);
+		int xa = buf.getInt();
+		int ya = buf.getInt();
+		int za = buf.getInt();
+		SensorData sensorData = new SensorData(new Date(), xa, ya, za);
+		logger.log(Level.INFO, key + " sensor data receive" + sensorData.toString());
 	}
 }

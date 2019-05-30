@@ -212,15 +212,12 @@ public class SensorDataInUSBManager
 			DataReceiveEvent data = this.sensorDataQueue.poll();
 			try
 			{
-				bufferedWriter.write(String.format("%s,%d,%f,%f,%f,%f,%f,%f"
+				bufferedWriter.write(String.format("%s,%d,%d,%d,%d"
 						, DataDateFormat.format(data.data.time)
 						, data.sensorInst.ID
-						, data.data.X_GRADIANT
-						, data.data.Y_GRADIANT
 						, data.data.X_ACCEL
 						, data.data.Y_ACCEL
-						, data.data.Z_ACCEL
-						, data.data.Altitiude));
+						, data.data.Z_ACCEL));
 				bufferedWriter.newLine();
 			}
 			catch (IOException e)
