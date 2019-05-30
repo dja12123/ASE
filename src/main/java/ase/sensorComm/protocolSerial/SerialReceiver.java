@@ -40,6 +40,7 @@ public class SerialReceiver
 			
 		case SerialProtoDef.SERIAL_PACKET_SEG_ENDFROMCLIENT:
 			this.receiveData.add(packet);
+			System.out.println("dataReceive");
 			this.isEnd = true;
 			break;
 		}
