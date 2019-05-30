@@ -54,7 +54,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 		this.serial = SerialFactory.createInstance();
 		this.serial.addListener(this::dataReceived);
 		this.config = new SerialConfig();
-		this.config.baud(Baud._19200).dataBits(DataBits._8).parity(Parity.NONE).stopBits(StopBits._1)
+		this.config.baud(Baud._9600).dataBits(DataBits._8).parity(Parity.NONE).stopBits(StopBits._1)
 				.flowControl(FlowControl.NONE);
 		this.serialWriter = new SerialWriter(this.serial);
 		this.commManageTask = this::commManageTask;
