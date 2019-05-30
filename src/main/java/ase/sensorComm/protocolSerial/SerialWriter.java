@@ -54,11 +54,6 @@ public class SerialWriter
 		{
 			while(!this.writeQueue.isEmpty())
 			{
-				try
-				{
-					Thread.sleep(SerialProtoDef.SERIAL_DELAY);
-				}
-				catch (InterruptedException e){ }
 				byte[] packet;
 				synchronized (this)
 				{
@@ -76,6 +71,11 @@ public class SerialWriter
 				{
 					e.printStackTrace();
 				}
+				try
+				{
+					Thread.sleep(SerialProtoDef.SERIAL_DELAY);
+				}
+				catch (InterruptedException e){ }
 			}
 			try
 			{
