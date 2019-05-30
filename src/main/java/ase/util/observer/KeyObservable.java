@@ -81,10 +81,9 @@ public class KeyObservable<Key, Event>
 		List<KeyObserver<Key, Event>> list = this._observers.getOrDefault(key, null);
 		if(list == null)
 		{
-			System.out.println("ERROR 옵저버없음" + event.toString());
 			return;
 		}
-		
+		System.out.println("이벤트" + event.toString());
 		for (KeyObserver<Key, Event> obs : list)
 		{
 			pool.submit(()->{obs.update(key, event);});
