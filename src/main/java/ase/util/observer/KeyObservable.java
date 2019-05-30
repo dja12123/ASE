@@ -25,12 +25,13 @@ public class KeyObservable<Key, Event>
 		if(observerList == null)
 		{
 			observerList = new ArrayList<>();
+			this._observers.put(key, observerList);
 		}
 		else if(observerList.contains(observer))
 		{
 			return;
 		}
-		this._observers.put(key, observerList);
+		observerList.add(observer);
 		
 	}
 	
@@ -85,7 +86,6 @@ public class KeyObservable<Key, Event>
 		}
 		for (KeyObserver<Key, Event> obs : list)
 		{
-			System.out.println("이벤트알림" + obs.toString() + " "+event.toString());
 			pool.submit(()->{obs.update(key, event);});
 		}
 	}
