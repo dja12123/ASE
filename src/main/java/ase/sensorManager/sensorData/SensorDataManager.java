@@ -42,7 +42,6 @@ public class SensorDataManager extends Observable<DataReceiveEvent>
 	
 	private void sensorReadObserver(Short key, ReceiveEvent event)
 	{
-		System.out.println("receive");
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
 		if(sensor == null) return;
 		ByteBuffer buf = ByteBuffer.wrap(event.payload);
@@ -50,6 +49,8 @@ public class SensorDataManager extends Observable<DataReceiveEvent>
 		int ya = buf.getInt();
 		int za = buf.getInt();
 		SensorData sensorData = new SensorData(new Date(), xa, ya, za);
-		logger.log(Level.INFO, key + " sensor data receive" + sensorData.toString());
+		DataReceiveEvent dataReceiveEvent = new DataReceiveEvent(sensor, sensorData);
+		this.notifyObservers(dataReceiveEvent);
+		logger.log(Level.INFO, dataReceiveEvent.toString());
 	}
 }
