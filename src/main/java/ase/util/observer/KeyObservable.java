@@ -83,9 +83,9 @@ public class KeyObservable<Key, Event>
 		{
 			return;
 		}
-		System.out.println("이벤트" + event.toString());
 		for (KeyObserver<Key, Event> obs : list)
 		{
+			System.out.println("이벤트알림" + obs.toString() + " "+event.toString());
 			pool.submit(()->{obs.update(key, event);});
 		}
 	}
