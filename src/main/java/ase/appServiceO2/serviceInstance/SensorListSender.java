@@ -32,7 +32,6 @@ public class SensorListSender extends ServiceInstance
 		JsonObject json = new JsonObject();
 		JsonArray dataSensorList = new JsonArray();
 
-		json.addProperty("count", this.sensorManager.sensorMap.size());
 		json.add("data", dataSensorList);
 		for (Sensor sensor : this.sensorManager.sensorMap.values())
 		{

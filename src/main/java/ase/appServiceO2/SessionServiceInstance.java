@@ -17,7 +17,6 @@ import ase.clientSession.IChannel;
 import ase.clientSession.ISession;
 import ase.console.LogWriter;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.util.observer.Observer;
 
 public class SessionServiceInstance
