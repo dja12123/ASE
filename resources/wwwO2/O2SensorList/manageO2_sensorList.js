@@ -1,3 +1,4 @@
+import * from '/js/CommModule.js';
 
 // 모든 센서 삭제
 function removeAllItem() {
@@ -50,19 +51,8 @@ function addItem(key, on) {
 	setTotal();
 }
 
-// "센서" 지우기
-// ＊delItem(String) 센서 키
-function delItem(key) {
-	document.getElementById(key).remove();
-	setTotal();
-}
 
-//  "작동상태" 변경(on/off)
-// ＊state(String, Boolean) 센서 키, 작동상태(on/off)
-function state(key, on) {
-	var sensor = document.getElementById("stat"+key);
-	if(sensor.checked != on) sensor.checked = on;
-}
+
 
 // *연결 끊김
 function listDisconnect() {

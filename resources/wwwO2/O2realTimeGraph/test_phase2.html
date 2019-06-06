@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>시간별 공기 농도 검사 현황</title>
+	
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+	
+	<!-- Bootstrap Scripts -->
+	
+	<link rel="stylesheet" href="../O2SensorList/bootstrap.min.css" />
+	<script src="../O2SensorList/jquery-3.4.1.slim.min" />
+	<script src="../O2SensorList/popper.min.js" />
+	<script src="../O2SensorList/bootstrap.min.js" />
+
+	<!-- graph related scripts-->
+	<script src="./moment.min.js"></script>
+	<script src="./moment.js"></script>
+	<script src="./Chart.min.js"></script>
+	<script src="./Chart.js"></script>
+	<script src="./utils.js"></script>
+	<script src="./chartjs-plugin-streaming.js"></script>
+	<style>
+		canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	<button type="button" class="btn btn-primary">
+		O2 Status : <span class="badge badge-light" id="O2S"></span>
+	<button type="button" class="btn btn-secondary">
+		CO2 Status : <span class="badge badge-light" id="CO2S"></span>
+	</button>
+	</div>
+	<div style="width:75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<br>
+	<br>
+	<button id="addData" type="button" class="btn btn-secondary btn-sm btn btn-dark"> Insert Data </button>
+	<button id="removeData" type="button" class="btn btn-secondary btn-sm btn btn-dark"> Remove Data </button>
+	<br>
+	<br>
+	<div id="SensorStat"></div>
+		
+		<!-- 참고 자료 : https://stackoverflow.com/questions/41126430/how-to-display-different-html-elements-in-if-statement-->
+	
+	<script>
+	
+		var sensor1, sensor2, sensor3, sensor4;
+		var ChemicalStatus=document.getElementById('ChemicalStat');
+		var SensorStatus=document.getElementById('SensorStat');
+		var S;
+		var i;
+		var stats;
+		var prefix,content;
+		
+		<!-- GRAPH RELATED SCRIPT-->
+		
+		// Graph Adding Data 
+		function Update() {
+	
+			document.getElementById('O2S').innerHTML='';
+			document.getElementById('SensorStat').innerHTML='';
+			
+			sensor1=randomScalingFactor();
+			sensor2=randomScalingFactor();
+			sensor3=randomScalingFactor();
+			sensor4=randomScalingFactor();
+			S=[sensor1,sensor2,sensor3,sensor4];
+			if (config.data.datasets.length > 0) {
+				config.data.datasets[0].data.push({
+					x: Date.now(),
+					y: sensor1
+				});
+				config.data.datasets[1].data.push({
+					x: Date.now(),
+					y: sensor2
+				});
+				
+				config.data.datasets[2].data.push({
+					x: Date.now(),
+					y: sensor3
+				});
+				
+				config.data.datasets[3].data.push({
+					x: Date.now(),
+					y: sensor4
+				});
+				window.myLine.update();
+			}
+			
+			
+			<!-- Checmical Status Head Part-->
+			var ChemicalStatus=document.getElementById('O2S');
+			stats= sensor1 + '%';
+			ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+			
+			<!-- All Sensor Status -->
+			for(i=1;i<5;i++) {
+				prefix= '<h5> Sensor '+ i +' Status '; 
+				checkSafety(S[i-1])
+			}
+		
+			function checkSafety(value) {	
+				if(value>=21)
+					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
+				else if(value>=18 && value<21)
+					content= '<span class="badge badge-warning">Warning/주의</span> </h5>';
+				else if(value<18)
+					content= '<span class="badge badge-danger">Danger/경보</span> </h5>';
+				
+				SensorStatus.insertAdjacentHTML('beforeend',prefix+content);
+			}
+		}
+		
+		// Graph Initial Settings
+		
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Sensor 1',
+					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.red,
+					data: [{
+						x: Date.now(),
+						y: 0
+					}],
+					fill: false,
+					lineTension: 0
+				}, {
+					label: 'Sensor 2',
+					backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.blue,
+					data: [{
+						x: Date.now(),
+						y: 0
+					}],
+					fill: false,
+					lineTension: 0
+				}, {
+					label: 'Sensor 3',
+					backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.green,
+					data: [{
+						x: Date.now(),
+						y: 0
+					}],
+					fill: false,
+					lineTension: 0
+				}, {
+					label: 'Sensor 4',
+					backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.yellow,
+					data: [{
+						x: Date.now(),
+						y: 0
+					}],
+					fill: false,
+					lineTension: 0
+				}]
+			},
+			options: {
+                responsive: true,
+				title: {
+					display: true,
+					text: '공기 농도 측정도'
+				},
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							refresh: 2000,
+							delay: 0000,
+							onRefresh: Update
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+						
+					}]
+				},
+				
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+		};
+		
+		// Add Manual point to show the current Air Measurement
+		document.getElementById('addData').addEventListener('click', Update);
+		
+		// Automatically add points in the graph every second.
+		//window.setInterval(Update,2000);
+		
+		// Delete Last Pin point.
+		document.getElementById('removeData').addEventListener('click', function() {
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data.pop();
+			});
+
+			window.myLine.update();
+		});
+		
+		
+		<!-- Sensor Status -->
+		for(i=1;i<5;i++) {
+			prefix= '<h5> Sensor '+ i +' Status '; 
+			checkSafety(S[i-1])
+		}
+		
+	</script>
+</body>
+
+</html>
