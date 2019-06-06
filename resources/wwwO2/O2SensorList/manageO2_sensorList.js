@@ -1,4 +1,4 @@
-import * from '/js/CommModule.js';
+import * from '../../www/js/CommModule.js';
 
 // 모든 센서 삭제
 function removeAllItem() {
@@ -17,7 +17,14 @@ function setTotal() {
 	document.getElementById("total").innerHTML = msg;
 }
 
-
+function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
+	var uniqueID=key;
+	var getData=data;
+	
+	document.getElementById(uniqueID).innerHTML='';
+	
+	
+	//id랑 비교하여 데이터 값 업데이트
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) {
@@ -27,23 +34,10 @@ function addItem(key, on) {
 	eItem.className = 'item';
 	eItem.innerHTML = [
 		'<tbody><tr><td class="title">',
-		key,
+		'<button type="button" class="btn btn-primary">',
+			key, ': <span class="badge badge-light" id="', key,'"></span>',
 		'</td>',
 		'<td></td>',
-		'<td>',
-		'<label class="switch">',
-		'<input id="stat',
-		key,
-		'" type="checkbox"',
-		state,
-		'>',
-		'<div class="slider round"></div>',
-		'</label>',
-		'</td>',
-		'<td>',
-		'<button class="item-btn" onclick="location.href=\'/sensor_info/sensor_info.html?key=',
-		key,
-		'\'">VIEW</button>',
 		'</td>',
 		'</tr></tbody>',
 	].join("");
