@@ -16,14 +16,26 @@ function reconnect(){
 
 window.onload = function()
 {
+	// O2SensorListRequestChannel
 	var O2sensorListCh = commModule.createChannel("O2SensorListRequest", null, (e) =>
 	{
 		var data = JSON.parse(e.data);
 
 		for(var i in data.data) // 센서 수 만큼 반복문
 		{
-			addItem(data.data[i].id, true);
+			addItem(data.data[i].id, true);	// 임시로 sensor On 상태
 		}
 		sensorListCh.close();
+	});
+	
+	// Realtime Value of each O2sensor Request
+	var O2SensorRealTimeValue = commModule.createChannel("RealtimeAllO2ValueRequest", null, (e) =>
+	{
+		var data = JSON.parse(e.data);
+
+		
+		// 값 업데이트 함수에다 ID와 value를 넘겨줌
+		
+		
 	});
 }
