@@ -45,7 +45,7 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
 		if(sensor == null) return;
 		ByteBuffer buf = ByteBuffer.wrap(event.payload);
-		double value = buf.getDouble();
+		float value = buf.getFloat();
 		SensorO2Data sensorData = new SensorO2Data(new Date(), value);
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
 		this.notifyObservers(dataReceiveEvent);
