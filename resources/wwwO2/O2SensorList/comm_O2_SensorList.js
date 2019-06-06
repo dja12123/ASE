@@ -33,8 +33,7 @@ window.onload = function()
 	{
 		var data = JSON.parse(e.data);
 
-		
-		// 값 업데이트 함수에다 ID와 value를 넘겨줌
+		updateValue(data.id, data.value);	// 값 업데이트 함수에다 ID와 value를 넘겨줌
 		
 		
 	});
