@@ -20,7 +20,7 @@ public class HTTPServer extends NanoHTTPD
 	private static final Logger logger = LogWriter.createLogger(HTTPServer.class, "HTTPServer");
 	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
-	public static final String WEB_RES_DIR = "/www";
+	public static final String WEB_RES_DIR = "/wwwO2";
 	public static final String PROP_HTTP_DEFAULT_PAGE = "HttpDefaultPage";
 	private String httpDefaultPage;
 	

@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ase.appService.AppServiceManager;
+import ase.appServiceO2.O2AppServiceManager;
 import ase.bash.CommandExecutor;
 import ase.clientSession.ClientSessionManager;
 import ase.console.LogWriter;
@@ -249,8 +250,8 @@ public class ServerCore
 	private WebManager webManager;
 	private ClientSessionManager clientSessionManager;
 	private DisplayDeviceState displayDeviceState;
-	
-	private AppServiceManager appServiceManager;
+	//private AppServiceManager appServiceManager;
+	private O2AppServiceManager appServiceManager;
 	
 	private TestVirtualSensorManager testSensor;
 
@@ -265,7 +266,8 @@ public class ServerCore
 		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
-		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
+		//this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
+		this.appServiceManager = new O2AppServiceManager(this.clientSessionManager, this.sensorManager);
 		this.displayDeviceState = new DisplayDeviceState(this.sensorManager, this.clientSessionManager);
 		//this.testSensor = new TestVirtualSensorManager(this.sensorManager);
 	}
