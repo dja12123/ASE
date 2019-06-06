@@ -20,10 +20,12 @@ function setTotal() {
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data;
+	var ChemicalStatus=document.getElementById(uniqueID);
 	
-	document.getElementById(uniqueID).innerHTML='';
+	ChemicalStatus.innerHTML='';
+	stats= data + '%';
 	
-	
+	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
 	//id랑 비교하여 데이터 값 업데이트
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
