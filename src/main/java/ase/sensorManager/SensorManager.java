@@ -14,6 +14,7 @@ import ase.db.DB_Installer;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
+import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
@@ -26,7 +27,8 @@ public class SensorManager
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
 	private final ISensorCommManager sensorComm;
-	public final SensorAccelDataManager dataManager;
+	public final SensorAccelDataManager dataAccelManager;
+	public final SensorO2DataManager dataO2Manager;
 	private SensorConfigAccess configAccess;
 	
 	private boolean isRun;
@@ -38,7 +40,8 @@ public class SensorManager
 	public SensorManager(ISensorCommManager sensorReader)
 	{
 		this.sensorComm = sensorReader;
-		this.dataManager = new SensorAccelDataManager(this, sensorReader);
+		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
+		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		this.registerObservable = new Observable<>();
@@ -53,7 +56,8 @@ public class SensorManager
 
 		this.configAccess = new SensorConfigAccess();
 		
-		this.dataManager.startModule();
+		this.dataO2Manager.startModule();
+		this.dataAccelManager.startModule();
 		
 		String sensorID = ServerCore.getProp(PROP_SENSOR_ID_LIST);
 		
@@ -72,7 +76,8 @@ public class SensorManager
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
-		this.dataManager.stopModule();
+		this.dataO2Manager.stopModule();
+		this.dataAccelManager.stopModule();
 		this._sensorMap.clear();
 	}
 

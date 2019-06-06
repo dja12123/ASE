@@ -5,16 +5,12 @@ import java.util.Date;
 public class SensorO2Data
 {
 	public final Date time;
-	public final int X_ACCEL;
-	public final int Y_ACCEL;
-	public final int Z_ACCEL;
+	public final double value;
 	
-	public SensorO2Data(Date time, int xa, int ya, int za)
+	public SensorO2Data(Date time, double value)
 	{
 		this.time = time;
-		this.X_ACCEL = xa;
-		this.Y_ACCEL = ya;
-		this.Z_ACCEL = za;
+		this.value = value;
 	}
 	
 	@Override
@@ -23,9 +19,8 @@ public class SensorO2Data
 		StringBuffer buffer = new StringBuffer();
 		
 		buffer.append("TIME: "); buffer.append(this.time.toString()); buffer.append('\n');
-		buffer.append("X_ACCEL: "); buffer.append(this.X_ACCEL); buffer.append('\n');
-		buffer.append("Y_ACCEL: "); buffer.append(this.Y_ACCEL); buffer.append('\n');
-		buffer.append("Z_ACCEL: "); buffer.append(this.Z_ACCEL); buffer.append('\n');
+		buffer.append("value: "); buffer.append(this.value); buffer.append('\n');
+
 		
 		return buffer.toString();
 	}

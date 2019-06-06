@@ -27,13 +27,13 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
-		this.sensorManager.dataManager.addObserver(this.sensorDataObserver);
+		this.sensorManager.dataAccelManager.addObserver(this.sensorDataObserver);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		this.sensorManager.dataManager.removeObserver(this.sensorDataObserver);
+		this.sensorManager.dataAccelManager.removeObserver(this.sensorDataObserver);
 	}
 
 	@Override

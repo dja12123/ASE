@@ -145,7 +145,7 @@ public class SensorDataInUSBManager
 	private void startTask()
 	{
 		if(this.isRunSaveTask) return;
-		this.sensorManager.dataManager.addObserver(this.sensorDataReceiveObserver);
+		this.sensorManager.dataAccelManager.addObserver(this.sensorDataReceiveObserver);
 		this.taskThread = new Thread(this.task);
 		this.taskThread.setDaemon(true);
 		this.isRunSaveTask = true;
@@ -155,7 +155,7 @@ public class SensorDataInUSBManager
 	private void stopTask()
 	{
 		if(!this.isRunSaveTask) return;
-		this.sensorManager.dataManager.removeObserver(this.sensorDataReceiveObserver);
+		this.sensorManager.dataAccelManager.removeObserver(this.sensorDataReceiveObserver);
 		this.isRunSaveTask = false;
 		if(this.taskThread != null) this.taskThread.interrupt();
 		this.usbFullCapKB = 0;

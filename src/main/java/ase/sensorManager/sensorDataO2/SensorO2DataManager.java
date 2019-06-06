@@ -16,7 +16,7 @@ import ase.util.observer.Observable;
 
 public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 {
-	public static final Logger logger = LogWriter.createLogger(SensorO2DataManager.class, "SensorDataManager");
+	public static final Logger logger = LogWriter.createLogger(SensorO2DataManager.class, "SensorO2DataManager");
 	
 	private final SensorManager sensorManager;
 	private final ISensorCommManager commManager;
@@ -31,12 +31,12 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 	
 	public synchronized void startModule()
 	{
-		this.commManager.addObserver(ProtoDef.KEY_C2S_SENSOR_DATA, this.sensorReadObserver);
+		this.commManager.addObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
 	}
 	
 	public synchronized void stopModule()
 	{
-		this.commManager.removeObserver(ProtoDef.KEY_C2S_SENSOR_DATA, this.sensorReadObserver);
+		this.commManager.removeObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
 		this.clearObservers();
 	}
 	
@@ -45,10 +45,8 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
 		if(sensor == null) return;
 		ByteBuffer buf = ByteBuffer.wrap(event.payload);
-		int xa = buf.getInt();
-		int ya = buf.getInt();
-		int za = buf.getInt();
-		SensorO2Data sensorData = new SensorO2Data(new Date(), xa, ya, za);
+		double value = buf.getDouble();
+		SensorO2Data sensorData = new SensorO2Data(new Date(), value);
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
 		this.notifyObservers(dataReceiveEvent);
 		logger.log(Level.INFO, dataReceiveEvent.toString());
