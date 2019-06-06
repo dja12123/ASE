@@ -32,7 +32,6 @@ window.onload = function()
 	var O2SensorRealTimeValue = commModule.createChannel("RealtimeAllO2ValueRequest", null, (e) =>
 	{
 		var data = JSON.parse(e.data);
-
 		updateValue(data.id, data.value);	// 값 업데이트 함수에다 ID와 value를 넘겨줌
 		
 		
