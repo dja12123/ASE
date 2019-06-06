@@ -23,10 +23,24 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	var ChemicalStatus=document.getElementById(uniqueID);
 	
 	ChemicalStatus.innerHTML='';
-	stats= data + '%';
-	
+	stats= (data*100) + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+	checkSafety(data);
+	
 	//id랑 비교하여 데이터 값 업데이트
+	
+}
+function checkSafety(value) {	
+				if(value>=21)
+					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
+				else if(value>=18 && value<21)
+					content= '<span class="badge badge-warning">Warning/주의</span> </h5>';
+				else if(value<18)
+					content= '<span class="badge badge-danger">Danger/경보</span> </h5>';
+				
+				SensorStatus.insertAdjacentHTML('beforeend',prefix+content);
+			}
+
 // "센서" 추가
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) {
@@ -38,6 +52,7 @@ function addItem(key, on) {
 		'<tbody><tr><td class="title">',
 		'<button type="button" class="btn btn-primary">',
 			key, ': <span class="badge badge-light" id="', key,'"></span>',
+			'<div id="SensorStat"></div>'
 		'</td>',
 		'<td></td>',
 		'</td>',
