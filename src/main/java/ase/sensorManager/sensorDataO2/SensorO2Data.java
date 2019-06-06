@@ -1,15 +1,15 @@
-package ase.sensorManager.sensorData;
+package ase.sensorManager.sensorDataO2;
 
 import java.util.Date;
 
-public class SensorData
+public class SensorO2Data
 {
 	public final Date time;
 	public final int X_ACCEL;
 	public final int Y_ACCEL;
 	public final int Z_ACCEL;
 	
-	public SensorData(Date time, int xa, int ya, int za)
+	public SensorO2Data(Date time, int xa, int ya, int za)
 	{
 		this.time = time;
 		this.X_ACCEL = xa;

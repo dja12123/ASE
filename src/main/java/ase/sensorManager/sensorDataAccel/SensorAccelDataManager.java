@@ -1,4 +1,4 @@
-package ase.sensorManager.sensorData;
+package ase.sensorManager.sensorDataAccel;
 
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -14,15 +14,15 @@ import ase.sensorManager.sensor.Sensor;
 import ase.util.observer.KeyObserver;
 import ase.util.observer.Observable;
 
-public class SensorDataManager extends Observable<DataReceiveEvent>
+public class SensorAccelDataManager extends Observable<AccelDataReceiveEvent>
 {
-	public static final Logger logger = LogWriter.createLogger(SensorDataManager.class, "SensorDataManager");
+	public static final Logger logger = LogWriter.createLogger(SensorAccelDataManager.class, "SensorDataManager");
 	
 	private final SensorManager sensorManager;
 	private final ISensorCommManager commManager;
 	private final KeyObserver<Short, ReceiveEvent> sensorReadObserver;
 	
-	public SensorDataManager(SensorManager sensorManager, ISensorCommManager commManager)
+	public SensorAccelDataManager(SensorManager sensorManager, ISensorCommManager commManager)
 	{
 		this.sensorManager = sensorManager;
 		this.commManager = commManager;
@@ -48,8 +48,8 @@ public class SensorDataManager extends Observable<DataReceiveEvent>
 		int xa = buf.getInt();
 		int ya = buf.getInt();
 		int za = buf.getInt();
-		SensorData sensorData = new SensorData(new Date(), xa, ya, za);
-		DataReceiveEvent dataReceiveEvent = new DataReceiveEvent(sensor, sensorData);
+		SensorAccelData sensorData = new SensorAccelData(new Date(), xa, ya, za);
+		AccelDataReceiveEvent dataReceiveEvent = new AccelDataReceiveEvent(sensor, sensorData);
 		this.notifyObservers(dataReceiveEvent);
 		logger.log(Level.INFO, dataReceiveEvent.toString());
 	}

@@ -13,7 +13,7 @@ import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensorData.SensorDataManager;
+import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
 import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
@@ -26,7 +26,7 @@ public class SensorManager
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
 	private final ISensorCommManager sensorComm;
-	public final SensorDataManager dataManager;
+	public final SensorAccelDataManager dataManager;
 	private SensorConfigAccess configAccess;
 	
 	private boolean isRun;
@@ -38,7 +38,7 @@ public class SensorManager
 	public SensorManager(ISensorCommManager sensorReader)
 	{
 		this.sensorComm = sensorReader;
-		this.dataManager = new SensorDataManager(this, sensorReader);
+		this.dataManager = new SensorAccelDataManager(this, sensorReader);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		this.registerObservable = new Observable<>();

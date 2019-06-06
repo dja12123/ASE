@@ -6,7 +6,7 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensorData.DataReceiveEvent;
+import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorDataSender extends ServiceInstance
@@ -14,7 +14,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	public static final String KEY = "RealtimeSensorDataRequest";
 	private final SensorManager sensorManager;
 	private Sensor sensor;
-	private Observer<DataReceiveEvent> sensorDataObserver;
+	private Observer<AccelDataReceiveEvent> sensorDataObserver;
 	
 	public RealtimeSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
@@ -68,7 +68,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		this.channel.sendData(json.toString());
 	}
 
-	private void sensorDataObserver(DataReceiveEvent event)
+	private void sensorDataObserver(AccelDataReceiveEvent event)
 	{
 		if(this.sensor == null) return;
 		if(event.sensorInst.ID != this.sensor.ID) return;

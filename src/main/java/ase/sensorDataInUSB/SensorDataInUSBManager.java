@@ -29,7 +29,7 @@ import ase.hardware.DisplayControl;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.sensorData.DataReceiveEvent;
+import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class SensorDataInUSBManager
@@ -46,7 +46,7 @@ public class SensorDataInUSBManager
 	public static final Logger logger = LogWriter.createLogger(SensorDataInUSBManager.class, "SensorDataInUSB");
 	
 	private final SensorManager sensorManager;
-	private final Observer<DataReceiveEvent> sensorDataReceiveObserver;
+	private final Observer<AccelDataReceiveEvent> sensorDataReceiveObserver;
 	private final Runnable task;
 	
 	private String propUsbDevice;
@@ -57,7 +57,7 @@ public class SensorDataInUSBManager
 	private String mountDirStr;
 	private boolean isMountingTask;
 	private boolean ismounted;
-	private Queue<DataReceiveEvent> sensorDataQueue;
+	private Queue<AccelDataReceiveEvent> sensorDataQueue;
 	private Thread taskThread;
 	private boolean isRunSaveTask;
 	private int saveTaskInterval;
@@ -209,7 +209,7 @@ public class SensorDataInUSBManager
 
 		while(!this.sensorDataQueue.isEmpty())
 		{
-			DataReceiveEvent data = this.sensorDataQueue.poll();
+			AccelDataReceiveEvent data = this.sensorDataQueue.poll();
 			try
 			{
 				bufferedWriter.write(String.format("%s,%d,%d,%d,%d"
@@ -483,7 +483,7 @@ public class SensorDataInUSBManager
 		return useSize;
 	}
 	
-	private void sensorDataReceiveObserver(DataReceiveEvent e)
+	private void sensorDataReceiveObserver(AccelDataReceiveEvent e)
 	{
 		this.sensorDataQueue.add(e);
 	}

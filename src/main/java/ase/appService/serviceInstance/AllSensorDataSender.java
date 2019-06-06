@@ -7,7 +7,7 @@ import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensorData.SensorData;
+import ase.sensorManager.sensorDataAccel.SensorAccelData;
 
 public class AllSensorDataSender extends ServiceInstance
 {

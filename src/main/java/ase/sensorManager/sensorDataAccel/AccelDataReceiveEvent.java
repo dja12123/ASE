@@ -1,13 +1,13 @@
-package ase.sensorManager.sensorData;
+package ase.sensorManager.sensorDataAccel;
 
 import ase.sensorManager.sensor.Sensor;
 
-public class DataReceiveEvent
+public class AccelDataReceiveEvent
 {
 	public final Sensor sensorInst;
-	public final SensorData data;
+	public final SensorAccelData data;
 	
-	DataReceiveEvent(Sensor sensor, SensorData data)
+	AccelDataReceiveEvent(Sensor sensor, SensorAccelData data)
 	{
 		this.sensorInst = sensor;
 		this.data = data;
