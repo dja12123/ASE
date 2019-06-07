@@ -103,11 +103,10 @@ function initGraph(xTime, yValue)	{
 				},
 				scales: {
 					xAxes: [{
-						type: 'realtime',
-						realtime: {
-							duration: 20000,
-							//refresh: 2000,
-							delay: 0000
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
 						}
 					}],
 					yAxes: [{
