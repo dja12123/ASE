@@ -74,11 +74,8 @@ function changeButtonColor(key, value)	{
 					ButtonColorStatus.className="btn btn-danger"
 				
 	
-}
-
-
-function initGraph(xTime, yValue)	{
-				
+}	
+// Graph		
 		var color = Chart.helpers.color;
 		var config = {
 			type: 'line',
