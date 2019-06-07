@@ -20,7 +20,7 @@ function setTotal() {
 function addItem(key, on) {
 	var state = on ? "checked" : "";
 	var eItem = document.createElement('div');
-	eItem.id = key;
+	//eItem.id = key;
 	eItem.className = 'item';
 	eItem.innerHTML = [
 		'<button type="button" class="btn btn-primary" >',
