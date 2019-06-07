@@ -63,8 +63,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 }
 
 // 버튼 색깔 변경
-function changeButtonColor(key, value)
-{
+function changeButtonColor(key, value)	{
 	var ButtonID=document.getElementById("ButtonStat");
 	var ButtonColorStatus=document.getElementById(ButtonID);
 				
@@ -118,7 +117,7 @@ function initGraph(xTime, yValue)	{
 						scaleLabel: {
 							display: true,
 							labelString: 'value'
-						}
+						},
 						ticks:	{
 							min: 10,
 							max: 30
