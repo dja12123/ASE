@@ -34,6 +34,8 @@ function addGraphValue(key, on) {
 	setTotal();
 }
 
+func
+
 
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
@@ -41,7 +43,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	
 	getData=Number.parseFloat(getData).toFixed(2);
 	
-	var ChemicalStatus=document.getElementById(uniqueID);
+	var ChemicalStatus=document.getElementById(ButtonValue);
 	
 	if (config.data.datasets.length > 0) {
 			config.data.datasets[0].data.push({
@@ -55,7 +57,6 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	stats= getData + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
 	changeButtonColor(key, getData);
-	checkSafety(key, getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
@@ -64,7 +65,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 // 버튼 색깔 변경
 function changeButtonColor(key, value)
 {
-	var ButtonID='b'+key;
+	var ButtonID=document.getElementById("ButtonStat");
 	var ButtonColorStatus=document.getElementById(ButtonID);
 				
 				if(value>=21)
@@ -76,22 +77,6 @@ function changeButtonColor(key, value)
 				
 	
 }
-
-function checkSafety(key, value) {
-				var SensorStatusID= 'ss' + key;
-				var SensorStatus=document.getElementById(SensorStatusID);
-				var content;
-				SensorStatus.innerHTML='';
-				
-				if(value>=21)
-					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
-				else if(value>=18 && value<21)
-					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
-				else if(value<18)
-					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
-				
-				SensorStatus.insertAdjacentHTML('beforeend',content);
-			}
 
 
 function initGraph(xTime, yValue)	{
