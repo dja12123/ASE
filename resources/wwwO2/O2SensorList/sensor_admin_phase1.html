@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Oxygen Level Administrator Page</title>
+	
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+	
+	<!-- Bootstrap Scripts -->
+	
+	<link rel="stylesheet" href="./bootstrap.min.css" />
+	<script src="./jquery-3.4.1.slim.min" />
+	<script src="./popper.min.js" />
+	<script src="./bootstrap.min.js" />
+
+	<!-- graph related scripts-->
+	<script src="../O2realTimeGraph/moment.min.js"></script>
+	<script src="../O2realTimeGraph/moment.js"></script>
+	<script src="../O2realTimeGraph/Chart.min.js"></script>
+	<script src="../O2realTimeGraph/Chart.js"></script>
+	<script src="../O2realTimeGraph/utils.js"></script>
+	<script src="../O2realTimeGraph/chartjs-plugin-streaming"></script>
+	<style>
+		canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	
+	<div id = "createSensor">
+	<div>
+		<button type="button" class="btn btn-primary">
+			Sensor 1 : <span class="badge badge-light" id="Sensor1_O2"></span>
+	</div>
+	<div>
+		<button type="button" class="btn btn-secondary">
+			Sensor 2 : <span class="badge badge-light" id="Sensor2_O2"></span>
+		</button>
+	</div>
+	<div>
+		<button type="button" class="btn btn-primary">
+			Sensor 3 : <span class="badge badge-light" id="Sensor3_O2"></span>
+		</button>
+	</div>
+	<div>
+		<button type="button" class="btn btn-secondary">
+			Sensor 4 : <span class="badge badge-light" id="Sensor4_O2"></span>
+		</button>
+	</div>
+	<br>
+	<div id="SensorStat"></div>
+		
+		<!-- 참고 자료 : https://stackoverflow.com/questions/41126430/how-to-display-different-html-elements-in-if-statement-->
+	
+	<script>
+	
+		var sensor1, sensor2, sensor3, sensor4;
+		var ChemicalStatus=document.getElementById('ChemicalStat');
+		var SensorStatus=document.getElementById('SensorStat');
+		var SensorName;
+		var S;
+		var i;
+		var stats;
+		var prefix,content;
+		
+		<!-- GRAPH RELATED SCRIPT-->
+		
+		// Graph Adding Data 
+		function Update() {
+	
+			
+			document.getElementById('Sensor1_O2').innerHTML='';
+			document.getElementById('Sensor2_O2').innerHTML='';
+			document.getElementById('Sensor3_O2').innerHTML='';
+			document.getElementById('Sensor4_O2').innerHTML='';
+			document.getElementById('SensorStat').innerHTML='';
+			
+			sensor1=randomScalingFactor();
+			sensor2=randomScalingFactor();
+			sensor3=randomScalingFactor();
+			sensor4=randomScalingFactor();
+			S=[sensor1,sensor2,sensor3,sensor4];
+			
+			
+			<!-- Checmical Status Head Part-->
+			var ChemicalStatus=document.getElementById('Sensor1_O2');
+			stats= S[0] + '%';
+			ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+			
+			ChemicalStatus=document.getElementById('Sensor2_O2');
+			stats= S[1] + '%';
+			ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+			
+			ChemicalStatus=document.getElementById('Sensor3_O2');
+			stats= S[2] + '%';
+			ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+			
+			ChemicalStatus=document.getElementById('Sensor4_O2');
+			stats= S[3] + '%';
+			ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+			
+			<!-- All Sensor Status -->
+			for(i=1;i<5;i++) {
+				prefix= '<h5> Sensor '+ i +' Status == ' + S[i-1]; 
+				checkSafety(S[i-1])
+			}
+		
+			function checkSafety(value) {	
+				if(value>=21)
+					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
+				else if(value>=18 && value<21)
+					content= '<span class="badge badge-warning">Warning/주의</span> </h5>';
+				else if(value<18)
+					content= '<span class="badge badge-danger">Danger/경보</span> </h5>';
+				
+				SensorStatus.insertAdjacentHTML('beforeend',prefix+content);
+			}
+		}
+		window.setInterval(Update,2000);
+		
+		<!-- Sensor Status -->
+		for(i=1;i<5;i++) {
+			prefix= '<h5> Sensor '+ i +' Status '; 
+			checkSafety(S[i-1])
+		}
+		
+	</script>
+</body>
+</html>
