@@ -54,7 +54,7 @@ function addItem(key, on) {
 		'<tbody><tr><td class="title">',
 		'<button type="button" class="btn btn-primary" >',
 			key, ': <span class="badge badge-light" id="',key,'"></span>',
-			'<div id="SensorStat"></div>',
+			'<div id="SensorStat"></div></button>',
 		'</td>',
 		'<td></td>',
 		'</td>',
