@@ -24,9 +24,9 @@ function addItem(key, on) {
 	eItem.className = 'item'; 
 	eItem.innerHTML = [
 		'<button type="button" class="btn btn-primary" style="display: inline-block" >',
-				key, ': <span class="badge badge-light" id="',key,'"></span>',
-		'</button>',
-			'<span id="SensorStat" />'
+				key, ': <span class="badge badge-light" id="',key,'" /> <span id="SensorStat" />',
+		'</button>'
+			//,'<span id="SensorStat" />'
 	].join("");
 	document.getElementById('items').append(eItem);
 	setTotal();
