@@ -231,3 +231,14 @@ header>div {
         width: 85%;
     }
 }
+
+canvas {
+  border: 1px dotted red;
+}
+
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: 180vh;
+  width: 80vw;
+}
