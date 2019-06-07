@@ -23,12 +23,12 @@ function addItem(key, on) {
 	eItem.id = key;
 	eItem.className = 'item';
 	eItem.innerHTML = [
-		'<tbody><tr><td class="title">',
+	'<div>',
 		'<button type="button" class="btn btn-primary" >',
-			key, ': <span class="badge badge-light" id="',key,'"></span>',
-			'</button><div id="SensorStat"></div>',
-		'</td>',
-		'</tr></tbody>',
+				key, ': <span class="badge badge-light" id="',key,'"></span>',
+			'</button>',
+			'<div id="SensorStat" />',
+	'</div>'
 	].join("");
 	document.getElementById('items').append(eItem);
 	setTotal();
