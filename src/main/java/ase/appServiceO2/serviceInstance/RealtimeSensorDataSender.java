@@ -7,6 +7,7 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
+import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorDataSender extends ServiceInstance
@@ -14,7 +15,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	public static final String KEY = "RealtimeSensorDataRequest";
 	private final SensorManager sensorManager;
 	private Sensor sensor;
-	private Observer<AccelDataReceiveEvent> sensorDataObserver;
+	private Observer<O2DataReceiveEvent> sensorDataObserver;
 	
 	public RealtimeSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
@@ -27,13 +28,13 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
-		this.sensorManager.dataAccelManager.addObserver(this.sensorDataObserver);
+		this.sensorManager.dataO2Manager.addObserver(this.sensorDataObserver);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		this.sensorManager.dataAccelManager.removeObserver(this.sensorDataObserver);
+		this.sensorManager.dataO2Manager.removeObserver(this.sensorDataObserver);
 	}
 
 	@Override
@@ -63,21 +64,19 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		else
 		{
 			json.addProperty("result", false);
-			this.destroy();
 		}
 		this.channel.sendData(json.toString());
 	}
 
-	private void sensorDataObserver(AccelDataReceiveEvent event)
+	private void sensorDataObserver(O2DataReceiveEvent event)
 	{
 		if(this.sensor == null) return;
 		if(event.sensorInst.ID != this.sensor.ID) return;
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.data.time));
-		json.addProperty("value", event.data.X_ACCEL);
-		json.addProperty("ya", event.data.Y_ACCEL);
-		json.addProperty("za", event.data.Z_ACCEL);
+		json.addProperty("value", event.data.value);
+
 		this.channel.sendData(json.toString());
 	}
 }

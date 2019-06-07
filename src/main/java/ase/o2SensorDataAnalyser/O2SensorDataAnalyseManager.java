@@ -1,27 +1,26 @@
 package ase.o2SensorDataAnalyser;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
-import ase.sensorManager.sensorDataO2.SensorO2Data;
 import ase.util.observer.Observer;
 
-public class O2SensorDataAnalyser
+public class O2SensorDataAnalyseManager
 {
+	public static final float SAFE_THRESHOLD = 0.20F;
+	public static final float WARNING_THRESHOLD = 0.18F;
+	
 	private final Observer<O2DataReceiveEvent> o2DataObserver;
 	private final Observer<SensorRegisterEvent> sensorRegisterObserver;
 	private final SensorManager sensorManager;
 	
 	private Map<Sensor, SafetyStatus> safeMap;
 	
-	public O2SensorDataAnalyser(SensorManager sensorManager)
+	public O2SensorDataAnalyseManager(SensorManager sensorManager)
 	{
 		this.sensorManager = sensorManager;
 		this.o2DataObserver = this::o2DataObserver;
@@ -51,6 +50,23 @@ public class O2SensorDataAnalyser
 	private void o2DataObserver(O2DataReceiveEvent e)
 	{
 	
+	}
+	
+	private SafetyStatus checkSafe(float o2Percent)
+	{
+		if(o2Percent >= SAFE_THRESHOLD)
+		{//안전
+			
+		}
+		else if(o2Percent >= WARNING_THRESHOLD)
+		{//주의
+			
+		}
+		else
+		{//위험
+			
+		}
+		return null;
 	}
 	
 	private synchronized void sensorRegisterObserver(SensorRegisterEvent e)
