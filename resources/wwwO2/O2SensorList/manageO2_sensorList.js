@@ -52,26 +52,35 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 }
 
 // 버튼 색깔 변경
-/*function changeButtonColor(value)
+function changeButtonColor(key, value)
 {
-	var ButtonID='b'+value;
-	var ButtonColorStatus=document.getElementById();
-				var content;
-				SensorStatus.innerHTML='';
+	var ButtonID='b'+key;
+	var ButtonColorStatus=document.getElementById(ButtonID);
+	var content;
+	ButtonColorStatus.innerHTML='';
 				
 				if(value>=21)
-					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
+					content= 	'<button type="button" class="btn btn-success" style="display: inline-block" id="',ButtonID,'">',
+									key, ': <span class="badge badge-light" id="',key,'"></span>',
+									'<span id="ss', key,'"></span>',
+								'</button>';
 				else if(value>=18 && value<21)
-					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
+					content= '<button type="button" class="btn btn-warning" style="display: inline-block" id="',ButtonID,'">',
+									key, ': <span class="badge badge-light" id="',key,'"></span>',
+									'<span id="ss', key,'"></span>',
+								'</button>';
 				else if(value<18)
-					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
+					content= '<button type="button" class="btn btn-danger" style="display: inline-block" id="',ButtonID,'">',
+									key, ': <span class="badge badge-light" id="',key,'"></span>',
+									'<span id="ss', key,'"></span>',
+								'</button>';
 				
-				SensorStatus.insertAdjacentHTML('beforeend',content);
+				ButtonColorStatus.insertAdjacentHTML('beforeend',content);
 	
-}*/
+}
 
 function checkSafety(key, value) {
-				var SensorStatusID= "ss" + key;
+				var SensorStatusID= 'ss' + key;
 				var SensorStatus=document.getElementById(SensorStatusID);
 				var content;
 				SensorStatus.innerHTML='';
