@@ -16,9 +16,6 @@ function reconnect(){
 
 window.onload = function()
 {
-	var ctx = document.getElementById('canvas').getContext('2d');
-	window.myLine = new Chart(ctx, config);
-	
 	console.log("window onload");
 	var sensorID = getParameter("key"); //GET 방식으로 붙인 key 값을 가져옴
 
