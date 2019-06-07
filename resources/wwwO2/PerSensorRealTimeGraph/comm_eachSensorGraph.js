@@ -41,9 +41,20 @@ window.onload = function()
         {
             beforeSensorData.close();
         }
+		
 	});
 	
-	
-	//var perSensorRealTimeCh = 	// 센서 실시간 데이터 요청 채널
+	var RealTimeDataRequestCh = commModule.createChannel("RealtimeSensorDataRequest",()=>
+	{
+		RealTimeDataRequestCh.send(sensorID); //request sensor
+		
+	}, (e)=>
+	{
+		var data = JSON.parse(e.data);
+		console.log(data);
+		
+		
+		
+	});
 	
 }
