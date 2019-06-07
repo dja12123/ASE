@@ -46,7 +46,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	
 	if (config.data.datasets.length > 0) {
 			config.data.datasets[0].data.push({
-				x: Date.now(),
+				x: xTime,
 				y: getData
 			});
 			window.myLine.update();
@@ -88,8 +88,8 @@ function initGraph(xTime, yValue)	{
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
 					data: [{
-						x: xTime,
-						y: yValue*100
+						x: 0,
+						y: 10
 					}],
 					fill: false,
 					lineTension: 0
@@ -106,7 +106,7 @@ function initGraph(xTime, yValue)	{
 						display: true,
 						scaleLabel: {
 							display: true,
-							labelString: 'value'
+							labelString: 'time'
 						}
 					}],
 					yAxes: [{
