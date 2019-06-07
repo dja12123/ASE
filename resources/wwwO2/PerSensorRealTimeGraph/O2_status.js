@@ -108,6 +108,10 @@ function changeButtonColor(key, value)	{
 							display: true,
 							labelString: 'time'
 						}
+						ticks:	{
+							autoskip: true,
+							maxTicksLimit: 20
+						}
 					}],
 					yAxes: [{
 						display: true,
