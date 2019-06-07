@@ -22,15 +22,17 @@ window.onload = function()
 	}, (e) =>
 	{
 		var data = JSON.parse(e.data);
+		
+		
 		console.log(data);
-        if(data.result = true)
+        /*if(data.result = true)
 		{
 			
 			// 진우오빠가 만든 홈페이지 셋팅 함수의 인자에 맞게 넣어줌 initgraph()
-		}
+		}*/
 	});
 	
 	
-	var perSensorRealTimeCh = 	// 센서 실시간 데이터 요청 채널
+	//var perSensorRealTimeCh = 	// 센서 실시간 데이터 요청 채널
 	
 }
