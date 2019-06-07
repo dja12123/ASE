@@ -29,9 +29,8 @@ window.onload = function()
 		
 		if(data.result = true)
         {		
-			for(var i in data.sensorData)
+			for(var i in data.sensorData.length)
 			{
-				
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
 				var xTime = splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]; //
