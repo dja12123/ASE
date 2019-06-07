@@ -1,5 +1,3 @@
-import * from '../../www/js/CommModule.js';
-
 // 모든 센서 삭제
 function removeAllItem() {
 	var items = document.getElementById("items");
@@ -56,7 +54,7 @@ function addItem(key, on) {
 		'<tbody><tr><td class="title">',
 		'<button type="button" class="btn btn-primary">',
 			key, ': <span class="badge badge-light" id="', key,'"></span>',
-			'<div id="SensorStat"></div>'
+			'<div id="SensorStat"></div>',
 		'</td>',
 		'<td></td>',
 		'</td>',
