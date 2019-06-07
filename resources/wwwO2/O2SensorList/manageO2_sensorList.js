@@ -20,7 +20,7 @@ function setTotal() {
 function addItem(key, on) {
 	var state = on ? "checked" : "";
 	var eItem = document.createElement('div');
-	//eItem.id = key;
+	//eItem.id = key; //키값 중복
 	eItem.className = 'item';
 	eItem.innerHTML = [
 		'<button type="button" class="btn btn-primary" >',
@@ -35,13 +35,13 @@ function addItem(key, on) {
 
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
-	var getData=data;
+	var getData=data*100;
 	var ChemicalStatus=document.getElementById(uniqueID);
 	
 	ChemicalStatus.innerHTML='';
-	stats= (data*100) + '%';
+	stats= getData + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	checkSafety(data);
+	checkSafety(getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
