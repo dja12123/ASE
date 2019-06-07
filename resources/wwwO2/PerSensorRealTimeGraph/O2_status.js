@@ -107,8 +107,8 @@ function changeButtonColor(key, value)	{
 						scaleLabel: {
 							display: true,
 							labelString: 'time'
-						}
-						ticks:	{
+						},
+						ticks:{
 							autoskip: true,
 							maxTicksLimit: 20
 						}
