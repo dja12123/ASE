@@ -105,7 +105,7 @@ function changeButtonColor(key, value)	{
 			},
 			options: {
 				maintainAspectRatio: false,
-                responsive: false,
+                responsive: true,
 				title: {
 					display: true,
 					text: '공기 농도 측정도'
