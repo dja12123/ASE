@@ -139,21 +139,9 @@ function initGraph(xTime, yValue)	{
 			var ctx = document.getElementById('canvas').getContext('2d');
 			window.myLine = new Chart(ctx, config);
 		};
-		
-		// Add Manual point to show the current Air Measurement
-		document.getElementById('addData').addEventListener('click', Update);
-		
 		// Automatically add points in the graph every second.
 		//window.setInterval(Update,2000);
 		
-		// Delete Last Pin point.
-		document.getElementById('removeData').addEventListener('click', function() {
-			config.data.datasets.forEach(function(dataset) {
-				dataset.data.pop();
-			});
-
-			window.myLine.update();
-		});
 }
 			
 function getParameter(name){ // 키값 가지고 오는 함수
