@@ -60,16 +60,12 @@ window.onload = function()
 		// 진우오빠가 만든 함수에 값 넣어주기
 		if(data.result = true)
         {		
-			for(var i in data.sensorData)
-			{
-				var sensorData = data.sensorData[i];
-				var splitTime = sensorData.time.split("/");
+				var splitTime = data.time.split("/");
 				var xTime = new Date(splitTime[6], splitTime[5],splitTime[4],splitTime[3],splitTime[2],splitTime[1],splitTime[0]);
 				//console.log(xTime);
-				console.log(sensorData.value);
+				console.log(data.value);
 				console.log(xTime);
-				updateValue(sensorID, xTime, sensorData.value);
-			}
+				updateValue(sensorID, xTime, data.value);
         }
         else
         {
