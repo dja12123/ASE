@@ -58,7 +58,7 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	//ChemicalStatus.innerHTML='';
 	//stats= getData + '%';
 	//ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(key, getData);
+	//changeButtonColor(key, getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
