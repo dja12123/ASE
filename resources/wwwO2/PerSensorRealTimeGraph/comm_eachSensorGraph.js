@@ -25,14 +25,22 @@ window.onload = function()
 	}, (e) =>
 	{
 		var data = JSON.parse(e.data);
-		
-		
 		console.log(data);
-        /*if(data.result = true)
-		{
-			
-			// 진우오빠가 만든 홈페이지 셋팅 함수의 인자에 맞게 넣어줌 initgraph()
-		}*/
+		
+		if(data.result = true)
+        {		
+			for(var i in data.sensorData)
+			{
+				var sensorData = data.sensorData[i];
+				var splitTime = sensorData.time.split("/");
+				var xTime = time[3] + "시" + time[4] + "분" + time[5] + "::" + time[6]; //
+				initGraph(xTime, sensorData.value);
+			}
+        }
+        else
+        {
+            beforeSensorData.close();
+        }
 	});
 	
 	
