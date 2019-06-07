@@ -40,6 +40,9 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	var uniqueID=key;
 	var getData=data*100;
 	
+	var ctx = document.getElementById('canvas').getContext('2d');
+	window.myLine = new Chart(ctx, config);
+	
 	getData=Number.parseFloat(getData).toFixed(2);
 	
 	var ChemicalStatus=document.getElementById(ButtonValue);
@@ -130,9 +133,6 @@ function changeButtonColor(key, value)	{
 			}
 		};
 
-	
-			var ctx = document.getElementById('canvas').getContext('2d');
-			window.myLine = new Chart(ctx, config);
 		// Automatically add points in the graph every second.
 		//window.setInterval(Update,2000);
 		
