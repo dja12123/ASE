@@ -75,7 +75,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.data.time));
-		json.addProperty("xa", event.data.X_ACCEL);
+		json.addProperty("value", event.data.X_ACCEL);
 		json.addProperty("ya", event.data.Y_ACCEL);
 		json.addProperty("za", event.data.Z_ACCEL);
 		this.channel.sendData(json.toString());

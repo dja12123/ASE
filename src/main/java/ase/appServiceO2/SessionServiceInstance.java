@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ase.appServiceO2.serviceInstance.AllSensorDataSender;
+import ase.appServiceO2.serviceInstance.PreviouseO2DataSender;
 import ase.appServiceO2.serviceInstance.RealtimeAllO2ValueSender;
 import ase.appServiceO2.serviceInstance.RealtimeSensorDataSender;
 import ase.appServiceO2.serviceInstance.SensorListSender;
@@ -58,8 +58,8 @@ public class SessionServiceInstance
 			ServiceInstance serviceInst = null;
 			switch(event.channel.getKey())
 			{
-			case AllSensorDataSender.KEY:
-				serviceInst = new AllSensorDataSender(event.channel, this.sensorManager);
+			case PreviouseO2DataSender.KEY:
+				serviceInst = new PreviouseO2DataSender(event.channel, this.sensorManager);
 				break;
 			case RealtimeAllO2ValueSender.KEY:
 				serviceInst = new RealtimeAllO2ValueSender(event.channel, this.sensorManager);
