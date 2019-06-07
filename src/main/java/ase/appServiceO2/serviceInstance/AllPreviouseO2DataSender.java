@@ -12,12 +12,12 @@ import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
 import ase.sensorManager.sensorDataO2.SensorO2Data;
 
-public class PreviouseO2DataSender extends ServiceInstance
+public class AllPreviouseO2DataSender extends ServiceInstance
 {
-	public static final String KEY = "PreviouseO2DataRequest";
+	public static final String KEY = "AllPreviouseO2DataRequest";
 	private final SensorManager sensorManager;
 
-	public PreviouseO2DataSender(IChannel channel, SensorManager sensorManager)
+	public AllPreviouseO2DataSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
@@ -39,12 +39,10 @@ public class PreviouseO2DataSender extends ServiceInstance
 	protected void onDataReceive(ChannelDataEvent event)
 	{
 		JsonObject json = new JsonObject();
-		String[] input;
+		String input = event.getStringPayload();
 		try
 		{
-			input = event.getStringPayload().split("/");
-			Integer.valueOf(input[0]);
-			Integer.valueOf(input[1]);
+			Integer.valueOf(input);
 		}
 		catch (Exception e)
 		{
@@ -53,14 +51,14 @@ public class PreviouseO2DataSender extends ServiceInstance
 			this.destroy();
 			return;
 		}
-		int id = Integer.parseInt(input[0]);
-		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
-
-		if(sensor != null)
+		int size = Integer.parseInt(input);
+		json.addProperty("result", true);
+		
+		JsonArray sensorArray = new JsonArray();
+		for(Sensor sensor : this.sensorManager.sensorMap.values())
 		{
-			json.addProperty("result", true);
-			JsonArray dataArray = new JsonArray();
-			int size = Integer.parseInt(input[1]);
+			JsonArray sensorDataArray = new JsonArray();
+			
 			List<SensorO2Data> dataList = this.sensorManager.dataO2Manager.getPreviouseSensorData(sensor);
 			int sendStart = dataList.size() - size;
 			if(sendStart < 0) sendStart = 0;
@@ -70,14 +68,10 @@ public class PreviouseO2DataSender extends ServiceInstance
 				JsonObject data = new JsonObject();
 				data.addProperty("time", DATE_FORMAT.format(sensorData.time));
 				data.addProperty("value", sensorData.value);
-				dataArray.add(data);
+				sensorDataArray.add(data);
 			}
-			json.add("sensorData", dataArray);
+			sensorArray.add(sensorDataArray);
 		}
-		else
-		{
-			json.addProperty("result", false);
-		}
-		this.channel.sendData(json.toString());
+		json.add("sensors", sensorArray);
 	}
 }

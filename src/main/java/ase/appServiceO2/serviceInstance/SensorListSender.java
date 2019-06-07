@@ -29,6 +29,17 @@ public class SensorListSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
+
+	}
+
+	@Override
+	protected void onDataReceive(ChannelDataEvent event)
+	{
+		String s = event.getStringPayload();
+		if(!s.equals("getdata"))
+		{
+			return;
+		}
 		JsonObject json = new JsonObject();
 		JsonArray dataSensorList = new JsonArray();
 
@@ -40,13 +51,5 @@ public class SensorListSender extends ServiceInstance
 			dataSensorList.add(data);
 		}
 		this.channel.sendData(json.toString());
-		this.destroy();
-	}
-
-	@Override
-	protected void onDataReceive(ChannelDataEvent event)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }
