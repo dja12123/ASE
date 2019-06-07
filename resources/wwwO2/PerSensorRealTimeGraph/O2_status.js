@@ -110,7 +110,8 @@ function changeButtonColor(key, value)	{
 						},
 						ticks:{
 							autoskip: true,
-							maxTicksLimit: 20
+							autoSkipPadding: 10,
+							maxTicksLimit: 10
 						}
 					}],
 					yAxes: [{
