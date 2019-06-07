@@ -29,10 +29,11 @@ window.onload = function()
 		
 		if(data.result = true)
         {		
-			console.log(data.sensorData);
 			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
+				console.log("확인해야 하는 값이야"+i);
+				console.log(sensorData);
 				var splitTime = sensorData.time.split("/");
 				var xTime = "'" + splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]+"'"; //
 				console.log(xTime);
