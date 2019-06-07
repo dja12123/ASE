@@ -89,7 +89,7 @@ function initGraph(xTime, yValue)	{
 					borderColor: window.chartColors.red,
 					data: [{
 						x: xTime,
-						y: yValue
+						y: yValue*100
 					}],
 					fill: false,
 					lineTension: 0
@@ -106,7 +106,7 @@ function initGraph(xTime, yValue)	{
 						type: 'realtime',
 						realtime: {
 							duration: 20000,
-							refresh: 2000,
+							//refresh: 2000,
 							delay: 0000
 						}
 					}],
@@ -133,11 +133,12 @@ function initGraph(xTime, yValue)	{
 				}
 			}
 		};
-}
-		/*window.onload = function() {
+
+	
 			var ctx = document.getElementById('canvas').getContext('2d');
 			window.myLine = new Chart(ctx, config);
-		};*/
+	
+}
 		// Automatically add points in the graph every second.
 		//window.setInterval(Update,2000);
 		
