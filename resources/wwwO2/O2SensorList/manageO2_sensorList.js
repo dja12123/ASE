@@ -51,6 +51,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 function checkSafety(value) {
 	
 				var SensorStatus=document.getElementById('SensorStat');
+				var content;
 				SensorStatus.innerHTML='';
 				
 				if(value>=21)
