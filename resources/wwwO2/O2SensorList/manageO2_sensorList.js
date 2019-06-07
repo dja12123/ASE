@@ -20,7 +20,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	var getData=data;
 	var ChemicalStatus=document.getElementById(uniqueID);
 	
-	ChemicalStatus.innerHTML='';
+	//ChemicalStatus.innerHTML='';
 	stats= (data*100) + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
 	checkSafety(data);
@@ -31,7 +31,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 function checkSafety(value) {
 	
 				var SensorStatus=document.getElementById('SensorStat');
-				SensorStatus.innerHTML='';
+				//SensorStatus.innerHTML='';
 				
 				if(value>=21)
 					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
