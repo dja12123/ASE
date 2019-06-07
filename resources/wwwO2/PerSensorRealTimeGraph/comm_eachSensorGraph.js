@@ -29,7 +29,8 @@ window.onload = function()
 		
 		if(data.result = true)
         {		
-			for(var i in data.sensorData.length)
+			console.log(data.sensorData);
+			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
