@@ -24,6 +24,7 @@ public class O2AppServiceManager
 	public O2AppServiceManager(ClientSessionManager sessionManager, SensorManager sensorManager)
 	{
 		this.sessionManager = sessionManager;
+		this.sensorManager = sensorManager;
 		this.serviceMap = new HashMap<ISession, SessionServiceInstance>();
 		this.sessionObserver = this::sessionObserver;
 	}

@@ -29,7 +29,7 @@ public class SensorManager
 	private final ISensorCommManager sensorComm;
 	public final SensorAccelDataManager dataAccelManager;
 	public final SensorO2DataManager dataO2Manager;
-	private SensorConfigAccess configAccess;
+	public final SensorConfigAccess configAccess;
 	
 	private boolean isRun;
 	private HashMap<Integer, Sensor> _sensorMap;
@@ -42,6 +42,7 @@ public class SensorManager
 		this.sensorComm = sensorReader;
 		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
+		this.configAccess = new SensorConfigAccess();
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		this.registerObservable = new Observable<>();
@@ -54,7 +55,7 @@ public class SensorManager
 		
 		logger.log(Level.INFO, "SensorManager 시작");
 
-		this.configAccess = new SensorConfigAccess();
+		this.configAccess.loadConfig();
 		
 		this.dataO2Manager.startModule();
 		this.dataAccelManager.startModule();
@@ -85,22 +86,34 @@ public class SensorManager
 	public synchronized boolean registerSensor(int id)
 	{
 		if(this._sensorMap.containsKey(id)) return false;
-		Sensor sensor = new Sensor(id);
-		this._sensorMap.put(id, sensor);
+
 		if(!this.sensorComm.getUserMap().containsKey(id))
 		{
 			if(!this.sensorComm.addUser(id))
 			{
 				logger.log(Level.WARNING, "잘못된 아이디의 센서 등록 시도 " + id);
+				return false;
 			}
 		}
-		
+		else
+		{
+			return false;
+		}
+		Sensor sensor = new Sensor(id);
+		this._sensorMap.put(id, sensor);
+		SensorRegisterEvent e = new SensorRegisterEvent(true, sensor);
+		this.registerObservable.notifyObservers(e);
 		return true;
 	}
 	
-	public synchronized void removeSensor(int id)
+	public synchronized boolean removeSensor(int id)
 	{
+		if(!this._sensorMap.containsKey(id)) return false;
 		
+		SensorRegisterEvent e = new SensorRegisterEvent(false, this._sensorMap.get(id));
+		this._sensorMap.remove(id);
+		this.registerObservable.notifyObservers(e);
+		return true;
 	}
 
 }

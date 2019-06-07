@@ -14,7 +14,6 @@ public class SensorConfigAccess
 	
 	public SensorConfigAccess()
 	{
-		this.loadConfig();
 	}
 	
 	public void loadConfig()
