@@ -105,6 +105,7 @@ function changeButtonColor(key, value)	{
 				},
 				scales: {
 					xAxes: [{
+						type='time',
 						display: true,
 						scaleLabel: {
 							display: true,
