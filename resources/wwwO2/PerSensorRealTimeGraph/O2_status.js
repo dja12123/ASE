@@ -49,13 +49,10 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	//var ChemicalStatus=document.getElementById(ButtonValue);
 	
 	if (config.data.datasets.length > 0) {
-			config.data.datasets[0].data.push({
-				x: xTime,
-				y: getData
-			});
-			window.myLine.update();
+			config.data.labels.push(xTime);
+			config.data.datasets[0].data.push(getData);
 		}
-		
+		window.myLine.update();
 	//ChemicalStatus.innerHTML='';
 	//stats= getData + '%';
 	//ChemicalStatus.insertAdjacentHTML('beforeend',stats);
