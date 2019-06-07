@@ -36,6 +36,9 @@ function addItem(key, on) {
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
+	
+	getData=Number.parseFloat(getData).toFixed(2);
+	
 	var ChemicalStatus=document.getElementById(uniqueID);
 	
 	ChemicalStatus.innerHTML='';
