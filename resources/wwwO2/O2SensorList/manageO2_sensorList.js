@@ -15,6 +15,26 @@ function setTotal() {
 	document.getElementById("total").innerHTML = msg;
 }
 
+// "센서" 추가
+// * addItem(String, Boolean) 센서 키, 작동상태(on/off)
+function addItem(key, on) {
+	var state = on ? "checked" : "";
+	var eItem = document.createElement("table");
+	eItem.id = key;
+	eItem.className = 'item';
+	eItem.innerHTML = [
+		'<tbody><tr><td class="title">',
+		'<button type="button" class="btn btn-primary" >',
+			key, ': <span class="badge badge-light" id="',key,'"></span>',
+			'</button><div id="SensorStat"></div>',
+		'</td>',
+		'</tr></tbody>',
+	].join("");
+	document.getElementById('items').append(eItem);
+	setTotal();
+}
+
+
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data;
@@ -42,27 +62,6 @@ function checkSafety(value) {
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
 			}
-
-// "센서" 추가
-// * addItem(String, Boolean) 센서 키, 작동상태(on/off)
-function addItem(key, on) {
-	var state = on ? "checked" : "";
-	var eItem = document.createElement("table");
-	eItem.id = key;
-	eItem.className = 'item';
-	eItem.innerHTML = [
-		'<tbody><tr><td class="title">',
-		'<button type="button" class="btn btn-primary" >',
-			key, ': <span class="badge badge-light" id="',key,'"></span>',
-			'</button><div id="SensorStat"></div>',
-		'</td>',
-		'</tr></tbody>',
-	].join("");
-	document.getElementById('items').append(eItem);
-	setTotal();
-}
-
-
 
 
 // *연결 끊김
