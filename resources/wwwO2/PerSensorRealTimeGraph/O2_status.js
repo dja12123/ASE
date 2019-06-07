@@ -129,8 +129,10 @@ function changeButtonColor(key, value)	{
 							labelString: 'value'
 						},
 						ticks:	{
-							min: 10,
-							max: 30
+							min: 15,
+							max: 25,
+							stepSize: 0.1,
+							fixedStepSize: 0.1
 						}
 					}]
 				},
