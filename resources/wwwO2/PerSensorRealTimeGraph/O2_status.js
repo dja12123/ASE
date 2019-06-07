@@ -104,7 +104,6 @@ function changeButtonColor(key, value)	{
 				}]
 			},
 			options: {
-				maintainAspectRatio: false,
                 responsive: true,
 				title: {
 					display: true,
@@ -118,7 +117,9 @@ function changeButtonColor(key, value)	{
 							labelString: 'time'
 						},
 						ticks:{
-							autoskip: true
+							autoskip: true,
+							autoSkipPadding: 10,
+							maxTicksLimit: 10
 						}
 					}],
 					yAxes: [{
