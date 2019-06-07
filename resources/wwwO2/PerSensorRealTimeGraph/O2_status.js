@@ -118,12 +118,15 @@ function changeButtonColor(key, value)	{
 						},
 						ticks:{
 							autoskip: true,
-							autoSkipPadding: 10,
-							maxTicksLimit: 10
+							maxRotation: 90,
+							minRotation: 80
 						},
 						gridLines: {
 							display:false
-						} 
+						},
+						time:	{
+							unit=	'second',
+							stepSize=10
 					}],
 					yAxes: [{
 						display: true,
