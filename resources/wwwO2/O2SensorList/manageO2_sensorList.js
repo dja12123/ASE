@@ -19,16 +19,14 @@ function setTotal() {
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) {
 	var state = on ? "checked" : "";
-	var eItem = document.createElement("table");
+	var eItem = document.createElement('div');
 	eItem.id = key;
 	eItem.className = 'item';
 	eItem.innerHTML = [
-	'<div>',
 		'<button type="button" class="btn btn-primary" >',
 				key, ': <span class="badge badge-light" id="',key,'"></span>',
-			'</button>',
-			'<div id="SensorStat" />',
-	'</div>'
+		'</button>',
+			'<div id="SensorStat" />'
 	].join("");
 	document.getElementById('items').append(eItem);
 	setTotal();
