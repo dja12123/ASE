@@ -30,7 +30,11 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	//id랑 비교하여 데이터 값 업데이트
 	
 }
-function checkSafety(value) {	
+function checkSafety(value) {
+	
+				var SensorStatus=document.getElementById('SensorStat');
+				SensorStatus.innerHTML='';
+				
 				if(value>=21)
 					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
 				else if(value>=18 && value<21)
@@ -38,7 +42,7 @@ function checkSafety(value) {
 				else if(value<18)
 					content= '<span class="badge badge-danger">Danger/경보</span> </h5>';
 				
-				SensorStatus.insertAdjacentHTML('beforeend',prefix+content);
+				SensorStatus.insertAdjacentHTML('beforeend',content);
 			}
 
 // "센서" 추가
