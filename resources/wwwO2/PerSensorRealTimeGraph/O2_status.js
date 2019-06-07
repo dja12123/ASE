@@ -155,7 +155,7 @@ function initGraph(xTime, yValue)	{
 
 			window.myLine.update();
 		});
-			
+}
 			
 function getParameter(name){ // 키값 가지고 오는 함수
     search=location.search;
