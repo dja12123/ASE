@@ -34,7 +34,6 @@ function addGraphValue(key, on) {
 	setTotal();
 }
 
-func
 
 
 function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
@@ -134,15 +133,15 @@ function initGraph(xTime, yValue)	{
 				}
 			}
 		};
-
-		window.onload = function() {
+}
+		/*window.onload = function() {
 			var ctx = document.getElementById('canvas').getContext('2d');
 			window.myLine = new Chart(ctx, config);
-		};
+		};*/
 		// Automatically add points in the graph every second.
 		//window.setInterval(Update,2000);
 		
-}
+
 			
 function getParameter(name){ // 키값 가지고 오는 함수
     search=location.search;
