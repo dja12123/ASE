@@ -1,4 +1,4 @@
-package ase.o2SensorDataAnalyser;
+package ase.sensorManager.o2SensorDataAnalyser;
 
 public enum SafetyStatus
 {

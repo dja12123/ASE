@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ProtoDef;
@@ -81,7 +82,7 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 			}
 		}
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
-		this.notifyObservers(dataReceiveEvent);
+		this.notifyObservers(ServerCore.mainThreadPool, dataReceiveEvent);
 		logger.log(Level.INFO, dataReceiveEvent.toString());
 	}
 	
@@ -89,6 +90,19 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 	{
 		List<SensorO2Data> dataList = this._umPreviousSensorData.get(sensor);
 		return dataList;
+	}
+	
+	public SensorO2Data getLastSensorData(Sensor sensor)
+	{
+		List<SensorO2Data> dataList = this._umPreviousSensorData.get(sensor);
+		if(dataList != null)
+		{
+			if(!dataList.isEmpty())
+			{
+				return dataList.get(dataList.size() - 1);
+			}
+		}
+		return null;
 	}
 	
 	private synchronized void sensorRegisterObserver(SensorRegisterEvent e)

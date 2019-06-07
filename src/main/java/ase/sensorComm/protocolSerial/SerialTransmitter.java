@@ -34,6 +34,20 @@ public class SerialTransmitter implements ISensorTransmitter
 	}
 	
 	@Override
+	public boolean putSegment(short key, int value)
+	{
+		byte sendSize = (byte) (SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE + 4);
+		ByteBuffer buf = ByteBuffer.allocate(sendSize);
+		buf.put(sendSize);
+		buf.put(this.ID);
+		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_TRANSFROMSERVER);
+		buf.putShort(key);
+		buf.putInt(value);
+		this.packetList.add(buf.array());
+		return true;
+	}
+	
+	@Override
 	public boolean putSegment(short key)
 	{
 		byte sendSize = (byte) (SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE);

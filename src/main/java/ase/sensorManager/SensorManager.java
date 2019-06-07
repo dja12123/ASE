@@ -12,7 +12,9 @@ import ase.console.LogWriter;
 import ase.db.DB_Handler;
 import ase.db.DB_Installer;
 import ase.sensorComm.ISensorCommManager;
+import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
 import ase.sensorManager.sensor.Sensor;
+import ase.sensorManager.sensorControl.SensorSafetyControl;
 import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
 import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.sensorReader.DevicePacket;
@@ -30,6 +32,8 @@ public class SensorManager
 	public final SensorAccelDataManager dataAccelManager;
 	public final SensorO2DataManager dataO2Manager;
 	public final SensorConfigAccess configAccess;
+	public final O2SensorDataAnalyseManager dataAnalyseManager;
+	public final SensorSafetyControl sensorSafetyControl;
 	
 	private boolean isRun;
 	private HashMap<Integer, Sensor> _sensorMap;
@@ -43,6 +47,8 @@ public class SensorManager
 		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
 		this.configAccess = new SensorConfigAccess();
+		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this);
+		this.sensorSafetyControl = new SensorSafetyControl(this, this.sensorComm);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 		this.registerObservable = new Observable<>();
@@ -67,6 +73,8 @@ public class SensorManager
 		
 		this.dataO2Manager.startModule();
 		this.dataAccelManager.startModule();
+		this.dataAnalyseManager.startModule();
+		this.sensorSafetyControl.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		return true;
@@ -76,6 +84,8 @@ public class SensorManager
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
+		this.sensorSafetyControl.stopModule();
+		this.dataAccelManager.stopModule();
 		this.dataO2Manager.stopModule();
 		this.dataAccelManager.stopModule();
 		this._sensorMap.clear();
