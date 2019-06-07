@@ -16,6 +16,9 @@ function reconnect(){
 
 window.onload = function()
 {
+	var ctx = document.getElementById('canvas').getContext('2d');
+	window.myLine = new Chart(ctx, config);
+	
 	console.log("window onload");
 	var sensorID = getParameter("key"); //GET 방식으로 붙인 key 값을 가져옴
 
@@ -35,6 +38,7 @@ window.onload = function()
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
 				var xTime = splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]; //
+				console.log(xTime);
 				console.log(sensorData.value);
 				initGraph(xTime, sensorData.value);
 			}
