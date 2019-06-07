@@ -45,7 +45,7 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	
 	getData=Number.parseFloat(getData).toFixed(2);
 	
-	var ChemicalStatus=document.getElementById(ButtonValue);
+	//var ChemicalStatus=document.getElementById(ButtonValue);
 	
 	if (config.data.datasets.length > 0) {
 			config.data.datasets[0].data.push({
@@ -56,8 +56,8 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 		}
 		
 	//ChemicalStatus.innerHTML='';
-	stats= getData + '%';
-	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+	//stats= getData + '%';
+	//ChemicalStatus.insertAdjacentHTML('beforeend',stats);
 	changeButtonColor(key, getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
