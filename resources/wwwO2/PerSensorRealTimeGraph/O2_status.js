@@ -104,7 +104,7 @@ function changeButtonColor(key, value)	{
 				}]
 			},
 			options: {
-                responsive: true,
+                responsive: false,
 				title: {
 					display: true,
 					text: '공기 농도 측정도'
