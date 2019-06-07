@@ -34,12 +34,11 @@ window.onload = function()
 			{
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
-				var xTime = "'" + splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]+"'"; //
+				var xTime = new Date(splitTime[6], splitTime[5],splitTime[4],splitTime[3],splitTime[2],splitTime[1],splitTime[0]);
 				//console.log(xTime);
 				console.log(sensorData.value);
-				var time = Date.now();
-				console.log(time);
-				updateValue(sensorID, time, sensorData.value);
+				console.log(xTime);
+				updateValue(sensorID, xTime, sensorData.value);
 			}
         }
         else
