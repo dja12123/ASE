@@ -31,9 +31,11 @@ window.onload = function()
         {		
 			for(var i in data.sensorData)
 			{
+				
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
 				var xTime = splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]; //
+				console.log(sensorData.value);
 				initGraph(xTime, sensorData.value);
 			}
         }
