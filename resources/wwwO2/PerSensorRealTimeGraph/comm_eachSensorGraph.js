@@ -16,6 +16,7 @@ function reconnect(){
 
 window.onload = function()
 {
+	initCanvas();
 	console.log("window onload");
 	var sensorID = getParameter("key"); //GET 방식으로 붙인 key 값을 가져옴
 
