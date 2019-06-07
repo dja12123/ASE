@@ -1,5 +1,5 @@
 //통신모듈
-import * as COMM from '/js/CommModule.js';
+import * as COMM from '../js/CommModule.js';
 
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
