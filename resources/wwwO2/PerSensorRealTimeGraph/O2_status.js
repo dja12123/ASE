@@ -127,6 +127,7 @@ function changeButtonColor(key, value)	{
 						time:	{
 							unit=	'second',
 							stepSize=10
+						}
 					}],
 					yAxes: [{
 						display: true,
