@@ -15,7 +15,7 @@ function reconnect(){
 window.onload = function()
 {
     var sensorID = getParameter("key");
-    dataSetKey(sensorID);
+    dataSetKey(sensorID); // manage에서 구현한 함수
 
     // 이전 센서 데이터 요청
     var beforeSensorData = commModule.createChannel("AllSensorDataRequest", ()=>
