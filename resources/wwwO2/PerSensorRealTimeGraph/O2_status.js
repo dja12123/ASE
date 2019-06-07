@@ -133,11 +133,12 @@ function initGraph(xTime, yValue)	{
 				}
 			}
 		};
-}
+
 		window.onload = function() {
 			var ctx = document.getElementById('canvas').getContext('2d');
 			window.myLine = new Chart(ctx, config);
 		};
+}
 		// Automatically add points in the graph every second.
 		//window.setInterval(Update,2000);
 		
