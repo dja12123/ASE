@@ -53,7 +53,7 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 			config.data.datasets[0].data.push(getData);
 		}
 		
-	 if (config.data.datasets[0].data.length > 5) {
+	 if (config.data.datasets[0].data.length > 20) {
 		config.data.labels.shift();
 		config.data.datasets.forEach(dataset => {
 			dataset.data[0] = dataset.data[1];
