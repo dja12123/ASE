@@ -147,7 +147,7 @@ function changeButtonColor(key, value)	{
 		};
 
 		// Automatically add points in the graph every second.
-		//window.setInterval(Update,2000);
+		//window.setInterval(updateValue,1000);
 		
 
 			
