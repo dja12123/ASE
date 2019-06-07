@@ -23,7 +23,7 @@ function addItem(key, on) {
 	//eItem.id = key; //키값 중복
 	eItem.className = 'item'; 
 	eItem.innerHTML = [
-		'<button type="button" class="btn btn-light" style="display: inline-block" id="b', key,'">',
+		'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
 				key, ': <span class="badge badge-light" id="',key,'"></span>',
 				'<span id="ss', key,'"></span>',
 		'</button>',
@@ -57,26 +57,14 @@ function changeButtonColor(key, value)
 {
 	var ButtonID='b'+key;
 	var ButtonColorStatus=document.getElementById(ButtonID);
-	var content;
-	ButtonColorStatus.innerHTML='';
 				
 				if(value>=21)
-					content= 	'<button type="button" class="btn btn-success" style="display: inline-block" id="',ButtonID,'">',
-									key, ': <span class="badge badge-light" id="',key,'"></span>',
-									'<span id="ss', key,'"></span>',
-								'</button>';
+					ButtonColorStatus.className="btn btn-success"
 				else if(value>=18 && value<21)
-					content= '<button type="button" class="btn btn-warning" style="display: inline-block" id="',ButtonID,'">',
-									key, ': <span class="badge badge-light" id="',key,'"></span>',
-									'<span id="ss', key,'"></span>',
-								'</button>';
+					ButtonColorStatus.className="btn btn-warning"
 				else if(value<18)
-					content= '<button type="button" class="btn btn-danger" style="display: inline-block" id="',ButtonID,'">',
-									key, ': <span class="badge badge-light" id="',key,'"></span>',
-									'<span id="ss', key,'"></span>',
-								'</button>';
+					ButtonColorStatus.className="btn btn-danger"
 				
-				ButtonColorStatus.insertAdjacentHTML('beforeend',content);
 	
 }
 
