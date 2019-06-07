@@ -108,8 +108,7 @@ function initGraph(xTime, yValue)	{
 						realtime: {
 							duration: 20000,
 							refresh: 2000,
-							delay: 0000,
-							onRefresh: Update
+							delay: 0000
 						}
 					}],
 					yAxes: [{
