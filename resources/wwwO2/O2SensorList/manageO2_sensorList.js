@@ -52,8 +52,8 @@ function addItem(key, on) {
 	eItem.className = 'item';
 	eItem.innerHTML = [
 		'<tbody><tr><td class="title">',
-		'<button type="button" class="btn btn-primary">',
-			key, ': <span class="badge badge-light" id="', key,'"></span>',
+		'<button type="button" class="btn btn-primary" >',
+			key, ': <span class="badge badge-light" id="',key,'"></span>',
 			'<div id="SensorStat"></div>',
 		'</td>',
 		'<td></td>',
