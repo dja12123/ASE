@@ -26,7 +26,7 @@ function addItem(key, on) {
 		'<button type="button" class="btn btn-primary" style="display: inline-block" >',
 				key, ': <span class="badge badge-light" id="',key,'"></span>',
 		'</button>',
-			'<div id="SensorStat" />'
+			'<span id="SensorStat" />'
 	].join("");
 	document.getElementById('items').append(eItem);
 	setTotal();
