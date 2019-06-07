@@ -1,3 +1,4 @@
+// 통신모듈
 import * as COMM from '/js/CommModule.js';
 
 // 서버로부터 데이터를 받은 모듈
@@ -12,6 +13,7 @@ function disconnect(){
 function reconnect(){
     infoReconnect();
 });
+
 window.onload = function()
 {
 	console.log("window onload");

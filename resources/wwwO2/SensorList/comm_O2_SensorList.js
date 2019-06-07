@@ -29,7 +29,7 @@ window.onload = function()
 			addItem(data.data[i].id, true);	// 임시로 sensor On 상태
 		}
 		
-		sensorListCh.close();
+		O2sensorListCh.close();
 	});
 	
 	// Realtime Value of each O2sensor Request
