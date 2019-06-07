@@ -44,8 +44,14 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 	
 	public synchronized void startModule()
 	{
-		this.commManager.addObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
+		for(Sensor sensor : this.sensorManager.sensorMap.values())
+		{
+			List<SensorO2Data> dataList = new ArrayList<>();
+			this._previousSensorData.put(sensor, dataList);
+			this._umPreviousSensorData.put(sensor, Collections.unmodifiableList(dataList));
+		}
 		this.sensorManager.registerObservable.addObserver(this.sensorRegisterObserver);
+		this.commManager.addObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
 	}
 	
 	public synchronized void stopModule()

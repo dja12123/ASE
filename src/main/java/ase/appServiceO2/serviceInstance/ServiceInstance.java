@@ -9,7 +9,7 @@ import ase.util.observer.Observer;
 
 public abstract class ServiceInstance
 {
-	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
+	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss/SSS");
 	
 	public final String key;
 	public final IChannel channel;

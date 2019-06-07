@@ -56,10 +56,7 @@ public class SensorManager
 		logger.log(Level.INFO, "SensorManager 시작");
 
 		this.configAccess.loadConfig();
-		
-		this.dataO2Manager.startModule();
-		this.dataAccelManager.startModule();
-		
+				
 		String sensorID = ServerCore.getProp(PROP_SENSOR_ID_LIST);
 		
 		for(String idstr : sensorID.split(","))
@@ -68,6 +65,8 @@ public class SensorManager
 			this.registerSensor(id);
 		}
 		
+		this.dataO2Manager.startModule();
+		this.dataAccelManager.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		return true;
