@@ -36,7 +36,7 @@ function addGraphValue(key, on) {
 
 
 
-function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
+function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
 	
