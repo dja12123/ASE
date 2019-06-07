@@ -21,9 +21,9 @@ function addItem(key, on) {
 	var state = on ? "checked" : "";
 	var eItem = document.createElement('div');
 	//eItem.id = key; //키값 중복
-	eItem.className = 'item';
+	eItem.className = 'item'; 
 	eItem.innerHTML = [
-		'<button type="button" class="btn btn-primary" >',
+		'<button type="button" class="btn btn-primary" style="display: inline-block" >',
 				key, ': <span class="badge badge-light" id="',key,'"></span>',
 		'</button>',
 			'<div id="SensorStat" />'
@@ -56,11 +56,11 @@ function checkSafety(value) {
 				SensorStatus.innerHTML='';
 				
 				if(value>=21)
-					content= '<span class="badge badge-primary">Safe/안전</span> </h5>';
+					content= '<span class="badge badge-primary" style="display: inline-block">Safe/안전</span> </h5>';
 				else if(value>=18 && value<21)
-					content= '<span class="badge badge-warning">Warning/주의</span> </h5>';
+					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
 				else if(value<18)
-					content= '<span class="badge badge-danger">Danger/경보</span> </h5>';
+					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
 			}
