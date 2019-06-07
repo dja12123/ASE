@@ -37,7 +37,7 @@ window.onload = function()
 				var xTime = splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]; //
 				console.log(xTime);
 				console.log(sensorData.value);
-				initGraph(xTime, sensorData.value);
+				updateValue(sensorID, xTime, sensorData.value);
 			}
         }
         else
@@ -47,7 +47,7 @@ window.onload = function()
 		
 	});
 	
-	var RealTimeDataRequestCh = commModule.createChannel("RealtimeSensorDataRequest",()=>
+	var RealTimeDataRequestCh = commModule.createChannel("RealtimeO2ValueRequest",()=>
 	{
 		RealTimeDataRequestCh.send(sensorID); //request sensor
 		
@@ -55,6 +55,8 @@ window.onload = function()
 	{
 		var data = JSON.parse(e.data);
 		console.log(data);
+		
+		// 진우오빠가 만든 함수에 값 넣어주기
 		
 		
 		

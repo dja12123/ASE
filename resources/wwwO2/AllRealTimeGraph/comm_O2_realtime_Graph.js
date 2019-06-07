@@ -1,44 +1,21 @@
-// 관리자 전체 센서 그래프 통신 모듈
-
-// 선용이한테 프로토콜 받아야함
-// realtimeGraph
-//통신모듈
+// 통신모듈
 import * as COMM from '/js/CommModule.js';
 
 // 서버로부터 데이터를 받은 모듈
 var commModule = new COMM.CommModule(function()
-{
+{//최초연결
 },
 // 연결 끊김
 function disconnect(){
-    listDisconnect();
+    infoDisconnect();
 },
 // 재접속
 function reconnect(){
-    listReconnect();
+    infoReconnect();
 });
-
 
 window.onload = function()
 {
 	// O2SensorListRequestChannel
-	var O2sensorListCh = commModule.createChannel("RealtimeAllO2ValueSender", null, (e) =>
-	{
-		var data = JSON.parse(e.data);
-
-		for(var i in data.data) // 센서 수 만큼 반복문
-		{
-			addItem(data.data[i].id, true);	// 임시로 sensor On 상태
-		}
-		sensorListCh.close();
-	});
-	
-	// Realtime Value of each O2sensor Request
-	var O2SensorRealTimeValue = commModule.createChannel("RealtimeAllO2ValueRequest", null, (e) =>
-	{
-		var data = JSON.parse(e.data);
-		updateValue(data.id, data.value);	// 값 업데이트 함수에다 ID와 value를 넘겨줌
-		
-		
-	});
+	var O2sensorListCh = commModule.createChannel("RealtimeAllO2ValueSender", 
 }
