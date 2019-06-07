@@ -120,7 +120,10 @@ function changeButtonColor(key, value)	{
 							autoskip: true,
 							autoSkipPadding: 10,
 							maxTicksLimit: 10
-						}
+						},
+						gridLines: {
+							display:false
+						} 
 					}],
 					yAxes: [{
 						display: true,
