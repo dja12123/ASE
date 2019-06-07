@@ -104,6 +104,7 @@ function changeButtonColor(key, value)	{
 				}]
 			},
 			options: {
+				maintainAspectRatio: false,
                 responsive: false,
 				title: {
 					display: true,
