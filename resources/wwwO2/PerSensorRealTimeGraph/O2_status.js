@@ -131,8 +131,8 @@ function changeButtonColor(key, value)	{
 						ticks:	{
 							min: 15,
 							max: 25,
-							stepSize: 0.1,
-							fixedStepSize: 0.1
+							stepSize: 0.5,
+							fixedStepSize: 0.5
 						}
 					}]
 				},
