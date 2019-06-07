@@ -7,6 +7,7 @@ public class SensorConfigAccess
 	public static final String PROP_SENSOR_LOG_MAX = "SensorLogMax";
 	public static final String PROP_SENSOR_DATA_CHACHE_MAX = "SensorCacheMax";
 	public static final String PROP_SENSOR_TIMEOUT = "SensorTimeout";
+	public static final String PROP_SENSOR_ANALYSE = "SensorTimeout";
 	
 	private int maxLog; 
 	private int maxData;

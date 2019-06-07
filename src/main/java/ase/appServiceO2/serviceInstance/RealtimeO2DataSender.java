@@ -10,14 +10,14 @@ import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.util.observer.Observer;
 
-public class RealtimeSensorDataSender extends ServiceInstance
+public class RealtimeO2DataSender extends ServiceInstance
 {
-	public static final String KEY = "RealtimeSensorDataRequest";
+	public static final String KEY = "RealtimeO2ValueRequest";
 	private final SensorManager sensorManager;
 	private Sensor sensor;
 	private Observer<O2DataReceiveEvent> sensorDataObserver;
 	
-	public RealtimeSensorDataSender(IChannel channel, SensorManager sensorManager)
+	public RealtimeO2DataSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
