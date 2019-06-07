@@ -19,7 +19,7 @@ function setTotal() {
 // * addItem(String, Boolean) 센서 키, 작동상태(on/off)
 function addItem(key, on) {
 	var state = on ? "checked" : "";
-	var eItem = document.createElement('div');
+	var eItem = document.createElement('span');
 	//eItem.id = key; //키값 중복
 	eItem.className = 'item'; 
 	eItem.innerHTML = [
