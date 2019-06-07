@@ -32,13 +32,11 @@ window.onload = function()
 			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
-				console.log("확인해야 하는 값이야"+i);
-				console.log(sensorData);
 				var splitTime = sensorData.time.split("/");
 				var xTime = "'" + splitTime[3] + "시" + splitTime[4] + "분" + splitTime[5] + "::" + splitTime[6]+"'"; //
 				console.log(xTime);
 				console.log(sensorData.value);
-				updateValue(sensorID, xTime, sensorData.value);
+				updateValue(sensorID, Date.now(), sensorData.value);
 			}
         }
         else
