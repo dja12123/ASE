@@ -17,6 +17,7 @@ public class RealtimeAllSensorOnOffSender extends ServiceInstance
 	public RealtimeAllSensorOnOffSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
+		System.out.println("서비스 인스턴스 생성");
 		this.sensorManager = sensorManager;
 		this.onlineCheck = this.sensorManager.sensorOnlineCheck;
 		this.sensorOnlineEventObserver = this::sensorOnlineEventObserver;
@@ -42,7 +43,6 @@ public class RealtimeAllSensorOnOffSender extends ServiceInstance
 	
 	private void sensorOnlineEventObserver(SensorOnlineEvent event)
 	{
-		System.out.println("온오프 서비스");
 		this.channel.sendData(event.sensor.ID+"/"+event.isOnline);
 	}
 
