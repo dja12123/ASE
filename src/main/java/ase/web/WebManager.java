@@ -25,14 +25,14 @@ public class WebManager
 	public final WebSocketHandler webSocketHandler;
 	public final WebSessionManager webSessionManager;
 
-	public WebManager()
+	public WebManager(String resDir)
 	{
 		this.webServerPort = Integer.parseInt(ServerCore.getProp(PROP_WEBSERVERPORT));
 		this.webSocketPort = Integer.parseInt(ServerCore.getProp(PROP_WEBSOCKETPORT));
 		
 		this.webSocketHandler = new WebSocketHandler(this.webSocketPort);
 		this.webSessionManager = new WebSessionManager(this.webSocketHandler.channelObservable);
-		this.httpServer = new HTTPServer(this.webServerPort, this.webSessionManager);
+		this.httpServer = new HTTPServer(this.webServerPort, this.webSessionManager, resDir);
 		
 		
 	}

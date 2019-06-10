@@ -20,15 +20,16 @@ public class HTTPServer extends NanoHTTPD
 	private static final Logger logger = LogWriter.createLogger(HTTPServer.class, "HTTPServer");
 	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
-	public static final String WEB_RES_DIR = "/wwwO2";
 	public static final String PROP_HTTP_DEFAULT_PAGE = "HttpDefaultPage";
+	public final String resDir;
 	private String httpDefaultPage;
 	
 	private final WebSessionManager webSessionManager;
 
-	public HTTPServer(int port, WebSessionManager webSessionManager)
+	public HTTPServer(int port, WebSessionManager webSessionManager, String resDir)
 	{
 		super(port);
+		this.resDir = resDir;
 		this.webSessionManager = webSessionManager;
 	}
 
@@ -75,7 +76,7 @@ public class HTTPServer extends NanoHTTPD
 			}
 			else
 			{
-				dir = WEB_RES_DIR+uri;
+				dir = this.resDir+uri;
 			}
 			
 			if(!FileHandler.isExistResFile(dir))
