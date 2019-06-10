@@ -1,26 +1,24 @@
 package ase.sensorManager;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
-import ase.db.DB_Handler;
-import ase.db.DB_Installer;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
 import ase.sensorManager.sensor.Sensor;
-import ase.sensorManager.sensorControl.SensorSafetyControl;
+import ase.sensorManager.sensorControl.SensorControlInterface;
 import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
 import ase.sensorManager.sensorDataO2.SensorO2DataManager;
+import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.sensorManager.sensorOnline.SensorOnlineCheck;
-import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
-import ase.util.observer.Observer;
 
 public class SensorManager extends Observable<SensorRegisterEvent>
 {
@@ -30,12 +28,13 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
 	private final ISensorCommManager sensorComm;
+	public final SensorLogManager sensorLogManager;
 	public final SensorOnlineCheck sensorOnlineCheck;
 	public final SensorAccelDataManager dataAccelManager;
 	public final SensorO2DataManager dataO2Manager;
 	public final SensorConfigAccess configAccess;
 	public final O2SensorDataAnalyseManager dataAnalyseManager;
-	public final SensorSafetyControl sensorSafetyControl;
+	public final SensorControlInterface sensorControl;
 	
 	private boolean isRun;
 	private HashMap<Integer, Sensor> _sensorMap;
@@ -44,17 +43,18 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public SensorManager(ISensorCommManager sensorReader)
 	{
 		this.sensorComm = sensorReader;
-		this.sensorOnlineCheck = new SensorOnlineCheck(this, this.sensorComm);
-		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
-		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
 		this.configAccess = new SensorConfigAccess();
-		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this, this.dataO2Manager);
-		this.sensorSafetyControl = new SensorSafetyControl(this, this.sensorComm);
+		this.sensorLogManager = new SensorLogManager(this, this.configAccess);
+		this.sensorOnlineCheck = new SensorOnlineCheck(this, this.sensorComm, this.sensorLogManager);
+		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
+		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm, this.configAccess);
+		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this, this.dataO2Manager, this.sensorLogManager);
+		this.sensorControl = new SensorControlInterface(this, this.sensorComm, this.sensorLogManager);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 	}
 	
-	public boolean startModule()
+	public synchronized boolean startModule()
 	{
 		if(this.isRun) return true;
 		this.isRun = true;
@@ -70,28 +70,35 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 			int id = Integer.parseInt(idstr.trim());
 			this.registerSensor(id);
 		}
+		this.sensorLogManager.startModule();
 		this.sensorOnlineCheck.startModule();
 		this.dataO2Manager.startModule();
 		this.dataAccelManager.startModule();
 		this.dataAnalyseManager.startModule();
-		this.sensorSafetyControl.startModule();
+		this.sensorControl.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		return true;
 	}
 	
-	public void stopModule()
+	public synchronized void stopModule()
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
-		this.sensorSafetyControl.stopModule();
+		this.sensorControl.stopModule();
+		this.dataAnalyseManager.stopModule();
 		this.dataAccelManager.stopModule();
 		this.dataO2Manager.stopModule();
-		this.dataAccelManager.stopModule();
 		this.sensorOnlineCheck.stopModule();
-		this._sensorMap.clear();
+		this.sensorLogManager.stopModule();
+		Set<Integer> keySet = new HashSet<>();
+		keySet.addAll(this._sensorMap.keySet());
+		for(int key : keySet)
+		{
+			this.removeSensor(key);
+		}
+		this.clearObservers();
 	}
-
 
 	public synchronized boolean registerSensor(int id)
 	{

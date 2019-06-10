@@ -7,12 +7,14 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorLog.SensorLog;
+import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.observer.Observer;
 
 public class RealtimeLogDataSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeLogDataRequest";
 	private final SensorManager sensorManager;
+	private final SensorLogManager logManager;
 	private Sensor sensor;
 	private Observer<SensorLog> sensorDataObserver;
 	
@@ -20,6 +22,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
+		this.logManager = this.sensorManager.sensorLogManager;
 		this.sensor = null;
 		this.sensorDataObserver = this::sensorDataObserver;
 	}
@@ -27,7 +30,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
-		
+		this.logManager.addObserver(this.sensorDataObserver);
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public class RealtimeLogDataSender extends ServiceInstance
 	{
 		if(this.sensor != null)
 		{
-			//this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
+			this.logManager.removeObserver(this.sensorDataObserver);
 		}
 	}
 
@@ -52,31 +55,25 @@ public class RealtimeLogDataSender extends ServiceInstance
 		{
 			json.addProperty("result", false);
 			this.channel.sendData(json.toString());
-			this.destroy();
 			return;
 		}
 		int id = Integer.parseInt(data);
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 		if(sensor != null)
 		{
-			if(this.sensor != null)
-			{
-				//this.sensor.sensorLogObservable.removeObserver(this.sensorDataObserver);
-			}
 			this.sensor = sensor;
-			//this.sensor.sensorLogObservable.addObserver(this.sensorDataObserver);
 			json.addProperty("result", true);
 		}
 		else
 		{
 			json.addProperty("result", false);
-			this.destroy();
 		}
 		this.channel.sendData(json.toString());
 	}
 	
 	private void sensorDataObserver(SensorLog event)
 	{
+		if(event.sensor != this.sensor) return;
 		JsonObject json = new JsonObject();
 		json.addProperty("result", true);
 		json.addProperty("time", DATE_FORMAT.format(event.time));

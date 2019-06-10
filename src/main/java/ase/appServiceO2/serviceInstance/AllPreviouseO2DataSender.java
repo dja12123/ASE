@@ -48,7 +48,6 @@ public class AllPreviouseO2DataSender extends ServiceInstance
 		{
 			json.addProperty("result", false);
 			this.channel.sendData(json.toString());
-			this.destroy();
 			return;
 		}
 		int size = Integer.parseInt(input);

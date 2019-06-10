@@ -1,5 +1,7 @@
 package ase.sensorManager.o2SensorDataAnalyser;
 
+import java.util.logging.Level;
+
 import ase.ServerCore;
 import ase.sensorManager.AbsSensorStateManager;
 import ase.sensorManager.SensorManager;
@@ -7,6 +9,7 @@ import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.sensorManager.sensorDataO2.SensorO2Data;
 import ase.sensorManager.sensorDataO2.SensorO2DataManager;
+import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.observer.Observer;
 
 public class O2SensorDataAnalyseManager extends AbsSensorStateManager<SafeStateChangeEvent, SafetyStatus>
@@ -16,12 +19,14 @@ public class O2SensorDataAnalyseManager extends AbsSensorStateManager<SafeStateC
 	
 	private final Observer<O2DataReceiveEvent> o2DataObserver;
 	private final SensorO2DataManager dataManager;
+	private final SensorLogManager sensorLogManager;
 	
-	public O2SensorDataAnalyseManager(SensorManager sensorManager, SensorO2DataManager dataManager)
+	public O2SensorDataAnalyseManager(SensorManager sensorManager, SensorO2DataManager dataManager, SensorLogManager sensorLogManager)
 	{
 		super(sensorManager);
 		this.o2DataObserver = this::o2DataObserver;
 		this.dataManager = dataManager;
+		this.sensorLogManager = sensorLogManager;
 	}
 	
 	private void o2DataObserver(O2DataReceiveEvent e)
@@ -35,6 +40,7 @@ public class O2SensorDataAnalyseManager extends AbsSensorStateManager<SafeStateC
 				SafeStateChangeEvent event = new SafeStateChangeEvent(e.sensorInst, nowStatus);
 				this.changeState(e.sensorInst, nowStatus);
 				this.provideEvent(ServerCore.mainThreadPool, e.sensorInst, event);
+				this.sensorLogManager.appendLog(e.sensorInst, Level.INFO, "Safety State Change ("+beforeStatus+"->"+nowStatus+")");
 			}
 		}
 	}

@@ -10,7 +10,7 @@ import ase.sensorManager.sensor.Sensor;
 
 public class SensorListSender extends ServiceInstance
 {
-	public static final String KEY = "SensorListRequest";
+	public static final String KEY = "O2SensorListRequest";
 
 	private final SensorManager sensorManager;
 
@@ -29,10 +29,19 @@ public class SensorListSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
+
+	}
+
+	@Override
+	protected void onDataReceive(ChannelDataEvent event)
+	{
+		if(!event.getStringPayload().equals("getdata"))
+		{
+			return;
+		}
 		JsonObject json = new JsonObject();
 		JsonArray dataSensorList = new JsonArray();
 
-		json.addProperty("count", this.sensorManager.sensorMap.size());
 		json.add("data", dataSensorList);
 		for (Sensor sensor : this.sensorManager.sensorMap.values())
 		{
@@ -41,13 +50,5 @@ public class SensorListSender extends ServiceInstance
 			dataSensorList.add(data);
 		}
 		this.channel.sendData(json.toString());
-		this.destroy();
-	}
-
-	@Override
-	protected void onDataReceive(ChannelDataEvent event)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

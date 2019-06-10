@@ -17,6 +17,7 @@ import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
 import ase.sensorManager.AbsCommSensorStateManager;
 import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;
 import ase.sensorManager.sensor.Sensor;
@@ -27,12 +28,14 @@ import ase.util.observer.Observer;
 public class SensorO2DataManager extends AbsCommSensorStateManager<O2DataReceiveEvent, List<SensorO2Data>>
 {
 	public static final Logger logger = LogWriter.createLogger(SensorO2DataManager.class, "SensorO2DataManager");
-
+	
+	private final SensorConfigAccess config;
 	private final Map<Sensor, List<SensorO2Data>> _previousSensorData;
 
-	public SensorO2DataManager(SensorManager sensorManager, ISensorCommManager commManager)
+	public SensorO2DataManager(SensorManager sensorManager, ISensorCommManager commManager, SensorConfigAccess config)
 	{
 		super(sensorManager, commManager, ProtoDef.KEY_C2S_O2SENSOR_DATA);
+		this.config = config;
 		this._previousSensorData = new HashMap<>();
 	}
 	
@@ -81,19 +84,18 @@ public class SensorO2DataManager extends AbsCommSensorStateManager<O2DataReceive
 	@Override
 	protected void onReceive(Sensor sensor, byte[] payload)
 	{
+		List<SensorO2Data> dataList = this._previousSensorData.getOrDefault(sensor, null);
+		if(dataList == null) return;
 		ByteBuffer buf = ByteBuffer.wrap(payload);
 		float value = buf.getFloat();
 		SensorO2Data sensorData = new SensorO2Data(new Date(), value);
-		List<SensorO2Data> dataList = this._previousSensorData.getOrDefault(sensor, null);
-		if(dataList != null)
+		dataList.add(sensorData);
+		int maxData = this.config.getMaxData();
+		while(dataList.size() > maxData)
 		{
-			dataList.add(sensorData);
-			int maxData = this.sensorManager.configAccess.getMaxData();
-			while(dataList.size() > maxData)
-			{
-				dataList.remove(0);
-			}
+			dataList.remove(0);
 		}
+		
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
 		this.provideEvent(ServerCore.mainThreadPool, sensor, dataReceiveEvent);
 		logger.log(Level.INFO, dataReceiveEvent.toString());

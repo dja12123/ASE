@@ -7,12 +7,15 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
+import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
+import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.util.observer.Observer;
 
 public class RealtimeSensorDataSender extends ServiceInstance
 {
 	public static final String KEY = "RealtimeSensorDataRequest";
 	private final SensorManager sensorManager;
+	private final SensorAccelDataManager sensorAccelDataManager;
 	private Sensor sensor;
 	private Observer<AccelDataReceiveEvent> sensorDataObserver;
 	
@@ -20,6 +23,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
+		this.sensorAccelDataManager = this.sensorManager.dataAccelManager;
 		this.sensor = null;
 		this.sensorDataObserver = this::sensorDataObserver;
 	}
@@ -27,13 +31,13 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	@Override
 	protected void onStartService()
 	{
-		this.sensorManager.dataAccelManager.addObserver(this.sensorDataObserver);
+		this.sensorAccelDataManager.addObserver(this.sensorDataObserver);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		this.sensorManager.dataAccelManager.removeObserver(this.sensorDataObserver);
+		this.sensorAccelDataManager.removeObserver(this.sensorDataObserver);
 	}
 
 	@Override
@@ -63,7 +67,6 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		else
 		{
 			json.addProperty("result", false);
-			this.destroy();
 		}
 		this.channel.sendData(json.toString());
 	}
@@ -78,6 +81,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 		json.addProperty("xa", event.data.X_ACCEL);
 		json.addProperty("ya", event.data.Y_ACCEL);
 		json.addProperty("za", event.data.Z_ACCEL);
+
 		this.channel.sendData(json.toString());
 	}
 }

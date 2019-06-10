@@ -35,8 +35,7 @@ public class SensorListSender extends ServiceInstance
 	@Override
 	protected void onDataReceive(ChannelDataEvent event)
 	{
-		String s = event.getStringPayload();
-		if(!s.equals("getdata"))
+		if(!event.getStringPayload().equals("getdata"))
 		{
 			return;
 		}

@@ -1,5 +1,7 @@
 package ase.appService.serviceInstance;
 
+import java.util.List;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -8,16 +10,20 @@ import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
+import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
+import ase.sensorManager.sensorDataO2.SensorO2Data;
 
 public class AllSensorDataSender extends ServiceInstance
 {
 	public static final String KEY = "AllSensorDataRequest";
 	private final SensorManager sensorManager;
+	private final SensorAccelDataManager dataManager;
 
 	public AllSensorDataSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
+		this.dataManager = this.sensorManager.dataAccelManager;
 	}
 	
 	@Override
@@ -47,31 +53,27 @@ public class AllSensorDataSender extends ServiceInstance
 		{
 			json.addProperty("result", false);
 			this.channel.sendData(json.toString());
-			this.destroy();
 			return;
 		}
 		int id = Integer.parseInt(input[0]);
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
 
-		/*
 		if(sensor != null)
 		{
 			json.addProperty("result", true);
 			JsonArray dataArray = new JsonArray();
 			int size = Integer.parseInt(input[1]);
-			int sendStart = sensor.data.size() - size;
+			List<SensorAccelData> dataList = this.dataManager.getPreviouseSensorData(sensor);
+			int sendStart = dataList.size() - size;
 			if(sendStart < 0) sendStart = 0;
-			for(int i = sendStart; i < sensor.data.size(); ++i)
+			for(int i = sendStart; i < dataList.size(); ++i)
 			{
-				SensorData sensorData = sensor.data.get(i);
+				SensorAccelData sensorData = dataList.get(i);
 				JsonObject data = new JsonObject();
 				data.addProperty("time", DATE_FORMAT.format(sensorData.time));
-				data.addProperty("xg", sensorData.X_GRADIANT);
-				data.addProperty("yg", sensorData.Y_GRADIANT);
 				data.addProperty("xa", sensorData.X_ACCEL);
 				data.addProperty("ya", sensorData.Y_ACCEL);
 				data.addProperty("za", sensorData.Z_ACCEL);
-				data.addProperty("al", sensorData.Altitiude);
 				dataArray.add(data);
 			}
 			json.add("sensorData", dataArray);
@@ -79,8 +81,7 @@ public class AllSensorDataSender extends ServiceInstance
 		else
 		{
 			json.addProperty("result", false);
-		}*/
+		}
 		this.channel.sendData(json.toString());
-		this.destroy();
 	}
 }

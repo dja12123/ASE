@@ -3,14 +3,18 @@ package ase.sensorManager.sensorLog;
 import java.util.Date;
 import java.util.logging.Level;
 
+import ase.sensorManager.sensor.Sensor;
+
 public class SensorLog
 {
+	public final Sensor sensor;
 	public final Level level;
 	public final Date time;
 	public final String message;
 	
-	public SensorLog(Level level, Date time, String message)
+	public SensorLog(Sensor sensor, Level level, Date time, String message)
 	{
+		this.sensor = sensor;
 		this.level = level;
 		this.time = time;
 		this.message = message;
