@@ -28,20 +28,20 @@ public class SensorSafetyControl
 	
 	public synchronized void startModule()
 	{
-		for(Sensor sensor : this.dataAnalyseManager.safeMap.keySet())
+		for(Sensor sensor : this.dataAnalyseManager.state.keySet())
 		{
-			SafetyStatus stat = this.dataAnalyseManager.safeMap.get(sensor);
+			SafetyStatus stat = this.dataAnalyseManager.state.get(sensor);
 			if(stat != null)
 			{
 				this.sendData(sensor, stat);
 			}
 		}
-		this.dataAnalyseManager.safeStateChangeObservable.addObserver(this.safeStateChangeObserver);
+		this.dataAnalyseManager.addObserver(this.safeStateChangeObserver);
 	}
 	
 	public synchronized void stopModule()
 	{
-		this.dataAnalyseManager.safeStateChangeObservable.removeObserver(this.safeStateChangeObserver);
+		this.dataAnalyseManager.removeObserver(this.safeStateChangeObserver);
 	}
 	
 	public void safeStateChangeObserver(SafeStateChangeEvent event)

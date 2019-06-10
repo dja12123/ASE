@@ -11,11 +11,30 @@ public class SerialTransmitter implements ISensorTransmitter
 {
 	public final byte ID;
 	private List<byte[]> packetList;
+	private boolean isOnline;
 	
 	public SerialTransmitter(byte id)
 	{
 		this.ID = id;
 		this.packetList = new ArrayList<>();
+		this.isOnline = false;
+	}
+	
+	@Override
+	public int getID()
+	{
+		return this.ID;
+	}
+
+	@Override
+	public boolean isOnline()
+	{
+		return this.isOnline;
+	}
+	
+	public void setOnline(boolean isOnline)
+	{
+		this.isOnline = isOnline;
 	}
 	
 	@Override
@@ -67,6 +86,8 @@ public class SerialTransmitter implements ISensorTransmitter
 		this.packetList.clear();
 		return result;
 	}
+
+
 
 
 }

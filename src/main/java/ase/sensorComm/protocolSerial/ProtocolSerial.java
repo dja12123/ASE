@@ -22,10 +22,13 @@ import com.pi4j.io.serial.StopBits;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
+import ase.sensorComm.CommOnlineEvent;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
 import ase.util.observer.KeyObservable;
+import ase.util.observer.Observable;
+import ase.util.observer.Observer;
 
 public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implements ISensorCommManager
 {
@@ -33,6 +36,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	public static final String PROP_SerialDevice = "SerialDevice";
 	public static final String PROP_SerialRate = "SerialRate";
 	
+	private final Observable<CommOnlineEvent> onlineObservable;
 	private final Serial serial;
 	private final SerialConfig config;
 	private final SerialWriter serialWriter;
@@ -51,6 +55,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 
 	public ProtocolSerial()
 	{
+		this.onlineObservable = new Observable<>();
 		this.serial = SerialFactory.createInstance();
 		this.serial.addListener(this::dataReceived);
 		this.config = new SerialConfig();
@@ -173,7 +178,13 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			{
 				if(this.nowTransaction != null)
 				{
-					logger.log(Level.WARNING, "트랜잭션 타임아웃 " + this.nowTransaction.user.ID);
+					if(this.nowTransaction.user.isOnline())
+					{
+						logger.log(Level.WARNING, "센서 오프라인 " + this.nowTransaction.user.ID);
+						this.nowTransaction.user.setOnline(false);
+						CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, false);
+						this.onlineObservable.notifyObservers(onlineEvent);
+					}
 					this.nowTransaction = null;
 				}
 				this.startTransaction();
@@ -260,10 +271,30 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, key, value);
 				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
 			}
+			if(!this.nowTransaction.user.isOnline())
+			{
+				logger.log(Level.INFO, "센서 온라인 " + this.nowTransaction.user.ID);
+				this.nowTransaction.user.setOnline(true);
+				CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, true);
+				this.onlineObservable.notifyObservers(onlineEvent);
+			}
 			this.nowTransaction = null;
 		}
 		
 		this.commManageThread.interrupt();
+	}
+
+	@Override
+	public void addOnlineObserver(Observer<CommOnlineEvent> observer)
+	{
+		this.onlineObservable.addObserver(observer);
+		
+	}
+
+	@Override
+	public void removeOnlineObserver(Observer<CommOnlineEvent> observer)
+	{
+		this.onlineObservable.removeObserver(observer);
 	}
 
 }

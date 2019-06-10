@@ -15,6 +15,8 @@ import ase.console.LogWriter;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
+import ase.sensorManager.AbsCommSensorStateManager;
+import ase.sensorManager.AbsSensorStateManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;
 import ase.sensorManager.sensor.Sensor;
@@ -22,53 +24,64 @@ import ase.util.observer.KeyObserver;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
+public class SensorO2DataManager extends AbsCommSensorStateManager<O2DataReceiveEvent, List<SensorO2Data>>
 {
 	public static final Logger logger = LogWriter.createLogger(SensorO2DataManager.class, "SensorO2DataManager");
-	
-	private final SensorManager sensorManager;
-	private final ISensorCommManager commManager;
-	private final KeyObserver<Short, ReceiveEvent> sensorReadObserver;
-	private final Observer<SensorRegisterEvent> sensorRegisterObserver;
+
 	private final Map<Sensor, List<SensorO2Data>> _previousSensorData;
-	private final Map<Sensor, List<SensorO2Data>> _umPreviousSensorData;
 
 	public SensorO2DataManager(SensorManager sensorManager, ISensorCommManager commManager)
 	{
-		this.sensorManager = sensorManager;
-		this.commManager = commManager;
-		this.sensorReadObserver = this::sensorReadObserver;
-		this.sensorRegisterObserver = this::sensorRegisterObserver;
+		super(sensorManager, commManager, ProtoDef.KEY_C2S_O2SENSOR_DATA);
 		this._previousSensorData = new HashMap<>();
-		this._umPreviousSensorData = new HashMap<>();
 	}
 	
-	public synchronized void startModule()
+	public List<SensorO2Data> getPreviouseSensorData(Sensor sensor)
 	{
-		for(Sensor sensor : this.sensorManager.sensorMap.values())
+		List<SensorO2Data> dataList = this.state.get(sensor);
+		return dataList;
+	}
+	
+	public SensorO2Data getLastSensorData(Sensor sensor)
+	{
+		List<SensorO2Data> dataList = this.state.get(sensor);
+		if(!dataList.isEmpty())
 		{
-			List<SensorO2Data> dataList = new ArrayList<>();
-			this._previousSensorData.put(sensor, dataList);
-			this._umPreviousSensorData.put(sensor, Collections.unmodifiableList(dataList));
+			return dataList.get(dataList.size() - 1);
 		}
-		this.sensorManager.registerObservable.addObserver(this.sensorRegisterObserver);
-		this.commManager.addObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
+		return null;
 	}
-	
-	public synchronized void stopModule()
+
+	@Override
+	protected void onStart()
 	{
-		this.commManager.removeObserver(ProtoDef.KEY_C2S_O2SENSOR_DATA, this.sensorReadObserver);
-		this.sensorManager.registerObservable.removeObserver(this.sensorRegisterObserver);
-		this._previousSensorData.clear();
-		this._umPreviousSensorData.clear();
-		this.clearObservers();
+		logger.log(Level.INFO, "산소 센서 리더 활성화");
 	}
-	
-	private void sensorReadObserver(short key, ReceiveEvent event)
+
+	@Override
+	protected void onStop()
 	{
-		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
-		if(sensor == null) return;
-		ByteBuffer buf = ByteBuffer.wrap(event.payload);
+		logger.log(Level.INFO, "산소 센서 리더 비활성화");
+	}
+
+	@Override
+	protected List<SensorO2Data> onRegisterSensor(Sensor sensor)
+	{
+		List<SensorO2Data> dataList = new ArrayList<>();
+		this._previousSensorData.put(sensor, dataList);
+		return Collections.unmodifiableList(dataList);
+	}
+
+	@Override
+	protected void onRemoveSensor(Sensor sensor)
+	{
+		this._previousSensorData.remove(sensor);
+	}
+
+	@Override
+	protected void onReceive(Sensor sensor, byte[] payload)
+	{
+		ByteBuffer buf = ByteBuffer.wrap(payload);
 		float value = buf.getFloat();
 		SensorO2Data sensorData = new SensorO2Data(new Date(), value);
 		List<SensorO2Data> dataList = this._previousSensorData.getOrDefault(sensor, null);
@@ -82,41 +95,7 @@ public class SensorO2DataManager extends Observable<O2DataReceiveEvent>
 			}
 		}
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
-		this.notifyObservers(ServerCore.mainThreadPool, dataReceiveEvent);
+		this.provideEvent(ServerCore.mainThreadPool, sensor, dataReceiveEvent);
 		logger.log(Level.INFO, dataReceiveEvent.toString());
-	}
-	
-	public List<SensorO2Data> getPreviouseSensorData(Sensor sensor)
-	{
-		List<SensorO2Data> dataList = this._umPreviousSensorData.get(sensor);
-		return dataList;
-	}
-	
-	public SensorO2Data getLastSensorData(Sensor sensor)
-	{
-		List<SensorO2Data> dataList = this._umPreviousSensorData.get(sensor);
-		if(dataList != null)
-		{
-			if(!dataList.isEmpty())
-			{
-				return dataList.get(dataList.size() - 1);
-			}
-		}
-		return null;
-	}
-	
-	private synchronized void sensorRegisterObserver(SensorRegisterEvent e)
-	{
-		if(e.isActive)
-		{
-			List<SensorO2Data> dataList = new ArrayList<>();
-			this._previousSensorData.put(e.sensor, dataList);
-			this._umPreviousSensorData.put(e.sensor, Collections.unmodifiableList(dataList));
-		}
-		else
-		{
-			this._previousSensorData.remove(e.sensor);
-			this._umPreviousSensorData.remove(e.sensor);
-		}
 	}
 }

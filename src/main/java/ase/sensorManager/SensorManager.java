@@ -21,7 +21,7 @@ import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public class SensorManager
+public class SensorManager extends Observable<SensorRegisterEvent>
 {
 	public static final String PROP_SENSOR_CHECK_INTERVAL = "SensorCheckInterval";
 	public static final String PROP_SENSOR_ID_LIST = "SensorIDList";
@@ -39,19 +39,16 @@ public class SensorManager
 	private HashMap<Integer, Sensor> _sensorMap;
 	public Map<Integer, Sensor> sensorMap;
 	
-	public final Observable<SensorRegisterEvent> registerObservable;
-	
 	public SensorManager(ISensorCommManager sensorReader)
 	{
 		this.sensorComm = sensorReader;
 		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
 		this.configAccess = new SensorConfigAccess();
-		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this);
+		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this, this.dataO2Manager);
 		this.sensorSafetyControl = new SensorSafetyControl(this, this.sensorComm);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
-		this.registerObservable = new Observable<>();
 	}
 	
 	public boolean startModule()
@@ -111,7 +108,7 @@ public class SensorManager
 		Sensor sensor = new Sensor(id);
 		this._sensorMap.put(id, sensor);
 		SensorRegisterEvent e = new SensorRegisterEvent(true, sensor);
-		this.registerObservable.notifyObservers(e);
+		this.notifyObservers(e);
 		return true;
 	}
 	
@@ -121,7 +118,7 @@ public class SensorManager
 		
 		SensorRegisterEvent e = new SensorRegisterEvent(false, this._sensorMap.get(id));
 		this._sensorMap.remove(id);
-		this.registerObservable.notifyObservers(e);
+		this.notifyObservers(e);
 		return true;
 	}
 

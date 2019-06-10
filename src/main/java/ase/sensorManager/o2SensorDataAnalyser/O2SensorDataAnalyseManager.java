@@ -1,79 +1,40 @@
 package ase.sensorManager.o2SensorDataAnalyser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import ase.ServerCore;
+import ase.sensorManager.AbsSensorStateManager;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.SensorRegisterEvent;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.sensorManager.sensorDataO2.SensorO2Data;
-import ase.util.observer.Observable;
+import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.util.observer.Observer;
 
-public class O2SensorDataAnalyseManager
+public class O2SensorDataAnalyseManager extends AbsSensorStateManager<SafeStateChangeEvent, SafetyStatus>
 {
 	public static final float SAFE_THRESHOLD = 0.20F;
 	public static final float WARNING_THRESHOLD = 0.18F;
 	
-	public final Observable<SafeStateChangeEvent> safeStateChangeObservable;
 	private final Observer<O2DataReceiveEvent> o2DataObserver;
-	private final Observer<SensorRegisterEvent> sensorRegisterObserver;
-	private final SensorManager sensorManager;
+	private final SensorO2DataManager dataManager;
 	
-	private Map<Sensor, SafetyStatus> _safeMap;
-	public Map<Sensor, SafetyStatus> safeMap;
-	
-	public O2SensorDataAnalyseManager(SensorManager sensorManager)
+	public O2SensorDataAnalyseManager(SensorManager sensorManager, SensorO2DataManager dataManager)
 	{
-		this.sensorManager = sensorManager;
-		this.safeStateChangeObservable = new Observable<SafeStateChangeEvent>();
-		this.safeMap = Collections.synchronizedMap(this._safeMap);
+		super(sensorManager);
 		this.o2DataObserver = this::o2DataObserver;
-		this.sensorRegisterObserver = this::sensorRegisterObserver;
-		this._safeMap = new HashMap<>();
-	}
-	
-	public void startModule()
-	{
-		for(Sensor sensor : this.sensorManager.sensorMap.values())
-		{
-			SensorO2Data data = this.sensorManager.dataO2Manager.getLastSensorData(sensor);
-			if(data != null)
-			{
-				this._safeMap.put(sensor, this.checkSafe(data));
-			}
-			else
-			{
-				this._safeMap.put(sensor, SafetyStatus.Safe);
-			}
-		}
-		this.sensorManager.registerObservable.addObserver(this.sensorRegisterObserver);
-		this.sensorManager.dataO2Manager.addObserver(this.o2DataObserver);
-	}
-	
-	public void stopModule()
-	{
-		this.sensorManager.dataO2Manager.removeObserver(this.o2DataObserver);
-		this.sensorManager.registerObservable.removeObserver(this.sensorRegisterObserver);
-
-		this._safeMap.clear();
+		this.dataManager = dataManager;
 	}
 	
 	private void o2DataObserver(O2DataReceiveEvent e)
 	{
-		SafetyStatus beforeStatus = this._safeMap.getOrDefault(e.sensorInst, null);
+		SafetyStatus beforeStatus = this.state.getOrDefault(e.sensorInst, null);
 		if(beforeStatus != null)
 		{
 			SafetyStatus nowStatus = this.checkSafe(e.data);
 			if(beforeStatus != nowStatus)
 			{
 				SafeStateChangeEvent event = new SafeStateChangeEvent(e.sensorInst, nowStatus);
-				this._safeMap.put(e.sensorInst, nowStatus);
-				this.safeStateChangeObservable.notifyObservers(ServerCore.mainThreadPool, event);
+				this.changeState(e.sensorInst, nowStatus);
+				this.provideEvent(ServerCore.mainThreadPool, e.sensorInst, event);
 			}
 		}
 	}
@@ -93,16 +54,34 @@ public class O2SensorDataAnalyseManager
 			return SafetyStatus.Danger;
 		}
 	}
-	
-	private synchronized void sensorRegisterObserver(SensorRegisterEvent e)
+
+	@Override
+	protected void onStart()
 	{
-		if(e.isActive)
-		{
-			this._safeMap.put(e.sensor, SafetyStatus.Safe);
-		}
-		else
-		{
-			this._safeMap.remove(e.sensor);
-		}
+		this.dataManager.addObserver(this.o2DataObserver);
 	}
+
+	@Override
+	protected void onStop()
+	{
+		this.dataManager.removeObserver(this.o2DataObserver);
+	}
+
+	@Override
+	protected SafetyStatus onRegisterSensor(Sensor sensor)
+	{
+		SensorO2Data o2Data = this.dataManager.getLastSensorData(sensor);
+		if(o2Data != null)
+		{
+			return this.checkSafe(o2Data);
+		}
+		return SafetyStatus.Safe;
+	}
+
+	@Override
+	protected void onRemoveSensor(Sensor sensor)
+	{
+		
+	}
+
 }
