@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ase.appService.AppServiceManager;
-import ase.appServiceO2.O2AppServiceManager;
 import ase.bash.CommandExecutor;
 import ase.clientSession.ClientSessionManager;
 import ase.console.LogWriter;
