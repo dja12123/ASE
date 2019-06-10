@@ -16,7 +16,10 @@ function reconnect(){
 
 window.onload = function()
 {
-	var sensorListCh = commModule.createChannel("SensorListRequest", null, (e) =>
+	var sensorListCh = commModule.createChannel("SensorListRequest", ()=>
+	{
+		sensorListCh.send("getdata");
+	}, (e) =>
 	{
 		var data = JSON.parse(e.data);
 

@@ -10,7 +10,7 @@ import ase.sensorManager.sensor.Sensor;
 
 public class SensorListSender extends ServiceInstance
 {
-	public static final String KEY = "O2SensorListRequest";
+	public static final String KEY = "SensorListRequest";
 
 	private final SensorManager sensorManager;
 
