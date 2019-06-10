@@ -4,7 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import ase.console.LogWriter;
 import ase.sensorComm.CommOnlineEvent;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ISensorTransmitter;
@@ -12,10 +15,13 @@ import ase.sensorManager.AbsCommSensorStateManager;
 import ase.sensorManager.AbsSensorStateManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
+import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.util.observer.Observer;
 
 public class SensorOnlineCheck extends AbsSensorStateManager<SensorOnlineEvent, Boolean>
 {
+	public static final Logger logger = LogWriter.createLogger(SensorOnlineCheck.class, "SensorOnlineCheck");
+	
 	private final ISensorCommManager commManager;
 	private final Observer<CommOnlineEvent> onlineObserver;
 	
@@ -57,6 +63,14 @@ public class SensorOnlineCheck extends AbsSensorStateManager<SensorOnlineEvent, 
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
 		if(sensor != null)
 		{
+			if(event.isOnline)
+			{
+				logger.log(Level.INFO, "센서 온라인");
+			}
+			else
+			{
+				logger.log(Level.INFO, "센서 오프라인");
+			}
 			SensorOnlineEvent onlineEvent = new SensorOnlineEvent(sensor, event.isOnline);
 			this.provideEvent(sensor, onlineEvent);
 		}

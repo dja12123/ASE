@@ -17,6 +17,7 @@ import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorControl.SensorSafetyControl;
 import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
 import ase.sensorManager.sensorDataO2.SensorO2DataManager;
+import ase.sensorManager.sensorOnline.SensorOnlineCheck;
 import ase.sensorReader.DevicePacket;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
@@ -29,6 +30,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public static final Logger logger = LogWriter.createLogger(SensorManager.class, "sensorManager");
 
 	private final ISensorCommManager sensorComm;
+	public final SensorOnlineCheck sensorOnlineCheck;
 	public final SensorAccelDataManager dataAccelManager;
 	public final SensorO2DataManager dataO2Manager;
 	public final SensorConfigAccess configAccess;
@@ -42,6 +44,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public SensorManager(ISensorCommManager sensorReader)
 	{
 		this.sensorComm = sensorReader;
+		this.sensorOnlineCheck = new SensorOnlineCheck(this, this.sensorComm);
 		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm);
 		this.configAccess = new SensorConfigAccess();
@@ -67,7 +70,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 			int id = Integer.parseInt(idstr.trim());
 			this.registerSensor(id);
 		}
-		
+		this.sensorOnlineCheck.startModule();
 		this.dataO2Manager.startModule();
 		this.dataAccelManager.startModule();
 		this.dataAnalyseManager.startModule();
@@ -85,6 +88,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.dataAccelManager.stopModule();
 		this.dataO2Manager.stopModule();
 		this.dataAccelManager.stopModule();
+		this.sensorOnlineCheck.stopModule();
 		this._sensorMap.clear();
 	}
 
