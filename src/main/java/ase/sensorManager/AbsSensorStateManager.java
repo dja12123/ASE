@@ -33,7 +33,7 @@ public abstract class AbsSensorStateManager<Event, State> extends Observable<Eve
 		for(Sensor sensor : this.sensorManager.sensorMap.values())
 		{
 			State state = this.onRegisterSensor(sensor);
-			this.state.put(sensor, state);
+			this._state.put(sensor, state);
 		}
 	}
 	
