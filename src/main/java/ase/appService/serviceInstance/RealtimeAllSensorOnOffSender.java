@@ -42,6 +42,7 @@ public class RealtimeAllSensorOnOffSender extends ServiceInstance
 	
 	private void sensorOnlineEventObserver(SensorOnlineEvent event)
 	{
+		System.out.println("온오프 서비스");
 		this.channel.sendData(event.sensor.ID+"/"+event.isOnline);
 	}
 
