@@ -7,6 +7,7 @@ window.onload = function()
     })
 
 	console.log("service worker install 1");
+	console.dir(navigator);
 	// 서비스 워커 등록
 	if ('serviceWorker' in navigator)
 	{
