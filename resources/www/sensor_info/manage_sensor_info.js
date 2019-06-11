@@ -68,11 +68,11 @@ function giveNick()	{
 	var id=getParameter("key");
 	
 	var btn = document.getElementById("updateNick");
-	var nickname=input.split(" ");
 	
 	btn.addEventListener("click",function()	{
 		var result=null;
 		var input = document.getElementById("input_nick").value;
+		var nickname=input.split(" ");
 		
 		console.log(typeof(input));
 		for (var i=0 ; i < input.length ; i++)	{ 
