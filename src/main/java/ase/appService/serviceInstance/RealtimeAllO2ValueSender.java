@@ -1,4 +1,4 @@
-package ase.appServiceO2.serviceInstance;
+package ase.appService.serviceInstance;
 
 import com.google.gson.JsonObject;
 

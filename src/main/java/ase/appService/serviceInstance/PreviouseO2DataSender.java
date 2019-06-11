@@ -1,4 +1,4 @@
-package ase.appServiceO2.serviceInstance;
+package ase.appService.serviceInstance;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
 import ase.sensorManager.sensorDataO2.SensorO2Data;
 
-public class AllPreviouseO2DataSender extends ServiceInstance
+public class PreviouseO2DataSender extends ServiceInstance
 {
-	public static final String KEY = "AllPreviouseO2DataRequest";
+	public static final String KEY = "PreviouseO2DataRequest";
 	private final SensorManager sensorManager;
 
-	public AllPreviouseO2DataSender(IChannel channel, SensorManager sensorManager)
+	public PreviouseO2DataSender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
@@ -39,25 +39,28 @@ public class AllPreviouseO2DataSender extends ServiceInstance
 	protected void onDataReceive(ChannelDataEvent event)
 	{
 		JsonObject json = new JsonObject();
-		String input = event.getStringPayload();
+		String[] input;
 		try
 		{
-			Integer.valueOf(input);
+			input = event.getStringPayload().split("/");
+			Integer.valueOf(input[0]);
+			Integer.valueOf(input[1]);
 		}
 		catch (Exception e)
 		{
 			json.addProperty("result", false);
 			this.channel.sendData(json.toString());
+			this.destroy();
 			return;
 		}
-		int size = Integer.parseInt(input);
-		json.addProperty("result", true);
-		
-		JsonArray sensorArray = new JsonArray();
-		for(Sensor sensor : this.sensorManager.sensorMap.values())
+		int id = Integer.parseInt(input[0]);
+		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(id, null);
+
+		if(sensor != null)
 		{
-			JsonArray sensorDataArray = new JsonArray();
-			
+			json.addProperty("result", true);
+			JsonArray dataArray = new JsonArray();
+			int size = Integer.parseInt(input[1]);
 			List<SensorO2Data> dataList = this.sensorManager.dataO2Manager.getPreviouseSensorData(sensor);
 			int sendStart = dataList.size() - size;
 			if(sendStart < 0) sendStart = 0;
@@ -67,10 +70,14 @@ public class AllPreviouseO2DataSender extends ServiceInstance
 				JsonObject data = new JsonObject();
 				data.addProperty("time", DATE_FORMAT.format(sensorData.time));
 				data.addProperty("value", sensorData.value);
-				sensorDataArray.add(data);
+				dataArray.add(data);
 			}
-			sensorArray.add(sensorDataArray);
+			json.add("sensorData", dataArray);
 		}
-		json.add("sensors", sensorArray);
+		else
+		{
+			json.addProperty("result", false);
+		}
+		this.channel.sendData(json.toString());
 	}
 }
