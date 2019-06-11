@@ -130,8 +130,24 @@ window.onload = function()
     {
         var data = JSON.parse(e.data);
 		var dataSplit = data.split('/'); 
-		updateValue(dataSplit[0], dataSplit[1]); // 진우오빠 함수 변경
+		updateValue(dataSplit[0], dataSplit[1]);
     });
+	
+	// 센서 아이디 서버에 전송
+	var sendSensorID = commModule.createChannel("SensorSetting", () =>
+	{
+		var rawData = giveNick().split(); 
+		var byteArray = new ArrayBuffer(11);
+		// 2바이트(0x0010), 4바이트(센서ID), 값(5바이트)
+		byteArray[0] = 0x0010;
+		byteArray[2] = rawData[0];
+		byteArray[6] = rawData[1];
+		
+		console.log(byteArray);
+		sendSensorID.send(byteArray);
+		
+	}
+	);
 
     window.scrollTo(0,document.body.scrollHeight);
 }
