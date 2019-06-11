@@ -38,7 +38,7 @@ window.onload = function()
 				var splitTime = sensorData.time.split("/"); //오류 터짐
 				//console.log("xTime:", xTime);
 				//console.log(sensorData.value);
-				updateValue(sensorID, splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6], sensorData.value);
+				updateValue(sensorID, splitTime[0], splitTime[1] ,splitTime[2], splitTime[3], splitTime[4], splitTime[5], splitTime[6], sensorData.value);
 			}
         }
         else
@@ -61,9 +61,8 @@ window.onload = function()
 		if(data.result = true)
         {		
 				var splitTime = data.time.split("/");
-				var xTime = new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
-				console.log(xTime);
-				updateValue(sensorID, xTime, data.value);
+				
+				updateValue(sensorID, splitTime[0], splitTime[1] ,splitTime[2], splitTime[3], splitTime[4], splitTime[5], splitTime[6], data.value);
         }
         else
         {
