@@ -76,7 +76,7 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
      * @param max the max of the range to search
      * @return the index of the item in the list
      */
-    public  int binaryFind(T item, int min, int max) {
+    public int binaryFind(T item, int min, int max) {
         try{
         if (max < min) {
             throw new IllegalArgumentException("Item not found in list");
