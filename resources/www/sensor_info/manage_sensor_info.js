@@ -90,7 +90,7 @@ function giveNick()	{
 			if(i==0)
 				firLet=nickname[i];
 			else if(i<input.length)
-				rest+=nickname[i];
+				rest.concat('',nickname[i]);
 			console.log(rest);
 		}
 		
