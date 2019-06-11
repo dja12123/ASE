@@ -137,16 +137,21 @@ window.onload = function()
 	var sendSensorID = commModule.createChannel("SensorSetting", () =>
 	{
 		var rawData = giveNick();
-		console.log(rawData);
-		//var rawData = giveNick().split('/');
-		var byteArray = new ArrayBuffer(11);
-		// 2바이트(0x0010), 4바이트(센서ID), 값(5바이트)
-		byteArray[0] = 0x0010;
-		byteArray[2] = rawData[0];
-		byteArray[6] = rawData[1];
-		
-		console.log(byteArray);
-		sendSensorID.send(byteArray);
+		if(typeof str == "undefined" || str == null || str == "")
+            console.log("data undefined");
+        else
+		{
+			console.log(rawData);
+			//var rawData = giveNick().split('/');
+			var byteArray = new ArrayBuffer(11);
+			// 2바이트(0x0010), 4바이트(센서ID), 값(5바이트)
+			byteArray[0] = 0x0010;
+			byteArray[2] = rawData[0];
+			byteArray[6] = rawData[1];
+			
+			console.log(byteArray);
+			sendSensorID.send(byteArray);
+		}
 		
 	}
 	);
