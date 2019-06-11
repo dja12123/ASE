@@ -92,12 +92,7 @@ function giveNick()	{
 			
 			return rawData;
 		}
-		
-		
-			
 	}
-	// a1234 validation check
-	return 
 }
 
 
