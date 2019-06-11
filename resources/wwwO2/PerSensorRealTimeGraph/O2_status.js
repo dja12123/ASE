@@ -112,19 +112,19 @@ function changeButtonColor(key, value)	{
 				scales: {
 					xAxes: [{
 						display: true,
-						type: 'time',
+						//type: 'time',
 						scaleLabel: {
 							display: true,
 							labelString: 'time'
 						},
 						ticks:{
 							autoskip: true
-						}/*,
+						},
 						time:	{
 							displayFormats:	{
 								quarter: 'h:mm:ss.SSS'
 							}
-						}*/
+						}
 					}],
 					yAxes: [{
 						display: true,
