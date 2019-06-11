@@ -31,6 +31,7 @@ window.onload = function()
 				var sensorData = data.sensorData[i];
 				var time = sensorData.time.split("/");
 				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xa, sensorData.ya, sensorData.za);
+				
 			}
         }
         else
@@ -76,7 +77,7 @@ window.onload = function()
 			if(Object.keys(data).length > 1)
 			{
 				var time = data.time.split("/");
-				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xg, data.yg, data.xa, data.ya, data.za, data.al);
+				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.xa, data.ya, data.za);
 			}
 		}
 		else
@@ -119,6 +120,17 @@ window.onload = function()
 			var time = data.time.split("/");
             addLog(data.level, new Date(time[0], time[1], time[2], time[3], time[4], time[5]), data.message);
         }
+    });
+	
+	
+	// 상태 정보 업데이트
+	var statInfo = commModule.createChannel("",()=> // 선용이한테 키값 받기
+    {
+        sensorLog.send(sensorID);
+    },(e) =>
+    {
+        var data = JSON.parse(e.data);
+		updateValue(sensorID, data);
     });
 
     window.scrollTo(0,document.body.scrollHeight);
