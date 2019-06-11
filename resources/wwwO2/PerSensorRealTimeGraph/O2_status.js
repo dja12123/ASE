@@ -42,7 +42,8 @@ function initCanvas()	{
 function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
-	var StringDate= moment(xTime,"YYYY-MM-DD HH:mm:ss.SS");
+	var StringDate= moment(xTime).format('YYYY-MM-DD HH:mm:ss');
+	// StringDate.toISOString().substring(0,10);
 	
 	
 	getData=Number.parseFloat(getData).toFixed(2);
