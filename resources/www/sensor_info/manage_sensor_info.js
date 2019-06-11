@@ -26,14 +26,14 @@ function removeAllLogs() {
 // 페이지 시작시 표시할 "센서 키"
 // * dateSetKey(String) // 센서 키
 function dataSetKey(key) {
-    document.title = "SENSER " + key;
+    document.title = "SENSOR " + key;
     document.getElementById("state_name").innerHTML = key;
 }
 
 // 센서의 안전 or 경고 표시
 function setState(key) {
-    document.getElementById("state").innerHTML = (
-		'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'", key, ': <span class="badge badge-light" id="',key,'"></span>',
+    docu'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
+				key, ': <span class="badge badge-light" id="',key,'"></span>',
 				'<span id="ss', key,'"></span>',
 		'</button>',
 	].join("");
