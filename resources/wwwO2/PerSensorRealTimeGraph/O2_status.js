@@ -43,6 +43,7 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	var uniqueID=key;
 	var getData=data*100;
 	var StringDate= new String(xTime);
+	console.log(xTime);
 	console.log(StringDate);
 	
 	
