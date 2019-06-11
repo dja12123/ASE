@@ -56,7 +56,6 @@ public class SortedLinkedList<T> extends LinkedList<T>
 			}
 			++index;
 		}
-		System.out.println("add data");
 		return true;
 	}
 
