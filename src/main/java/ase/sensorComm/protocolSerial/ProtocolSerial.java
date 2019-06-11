@@ -260,12 +260,14 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			byte packetSize = packet[nowIndex];
 			if(packetSize > ProtoDef.PACKET_MAXSIZE)
 			{
+				logger.log(Level.INFO, "걸림1");
 				return;
 			}
 			byte[] splitPacket = new byte[packetSize];
 			System.arraycopy(packet, nowIndex, splitPacket, 0, packetSize);
 			if(!this.nowTransaction.putReceiveData(splitPacket))
 			{
+				logger.log(Level.INFO, "걸림2");
 				return;
 			}
 			logger.log(Level.INFO, "패킷길이: " +splitPacket.length);
