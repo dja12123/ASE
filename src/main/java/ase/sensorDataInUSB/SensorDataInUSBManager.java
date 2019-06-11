@@ -30,6 +30,7 @@ import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensorDataAccel.AccelDataReceiveEvent;
+import ase.sensorManager.sensorDataAccel.SensorAccelDataManager;
 import ase.util.observer.Observer;
 
 public class SensorDataInUSBManager
@@ -46,6 +47,7 @@ public class SensorDataInUSBManager
 	public static final Logger logger = LogWriter.createLogger(SensorDataInUSBManager.class, "SensorDataInUSB");
 	
 	private final SensorManager sensorManager;
+	private final SensorAccelDataManager accelDataManager;
 	private final Observer<AccelDataReceiveEvent> sensorDataReceiveObserver;
 	private final Runnable task;
 	
@@ -70,6 +72,7 @@ public class SensorDataInUSBManager
 	public SensorDataInUSBManager(SensorManager sensorManager)
 	{
 		this.sensorManager = sensorManager;
+		this.accelDataManager = this.sensorManager.dataAccelManager;
 		this.btnListener = this::btnListener;
 		this.sensorDataReceiveObserver = this::sensorDataReceiveObserver;
 		this.task = this::task;
@@ -125,7 +128,7 @@ public class SensorDataInUSBManager
 		}
 		
 		this.displayMount();
-		
+		this.accelDataManager.addObserver(this.sensorDataReceiveObserver);;
 
 		return true;
 	}
@@ -133,6 +136,7 @@ public class SensorDataInUSBManager
 	public void stopModule()
 	{
 		logger.log(Level.INFO, "USB 센서 정보 저장기 종료");
+		this.accelDataManager.removeObserver(this.sensorDataReceiveObserver);;
 		DisplayControl.inst().removeShape(this.dispUsbState);
 		this.recordData();
 		this.stopTask();
