@@ -34,7 +34,8 @@ window.onload = function()
 			{
 				var sensorData = data.sensorData[i];
 				var splitTime = sensorData.time.split("/");
-				console.log("splitTime:", splitTime);
+				console.log("check");
+				console.log(splitTime);
 				
 				//var xTime = new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
 				//console.log("xTime:", xTime);
