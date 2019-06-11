@@ -49,7 +49,7 @@ public class SensorDataAnalyser
 		SensorAccelData peekData = this.dataQueue.peek();
 		if(peekData != null)
 		{
-			while(data.time.getTime() - peekData.time.getTime() < this.configAccess.getAnalyseInterval())
+			while(data.time.getTime() - peekData.time.getTime() > this.configAccess.getAnalyseInterval())
 			{
 				this.dataQueue.poll();
 				this.xSortedList.remove(peekData);
