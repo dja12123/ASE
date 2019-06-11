@@ -36,10 +36,10 @@ public abstract class AbsCommSensorStateManager<Event, State> extends AbsSensorS
 	private void sensorReadObserver(short key, ReceiveEvent event)
 	{
 		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(event.ID, null);
-		if(sensor != null)
-		{
-			this.onReceive(sensor, event.payload);
-		}
+		if(sensor == null) return;
+		
+		this.onReceive(sensor, event.payload);
+		
 	}
 	
 	protected abstract void onReceive(Sensor sensor, byte[] payload);
