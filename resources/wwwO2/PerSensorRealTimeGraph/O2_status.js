@@ -39,10 +39,11 @@ function initCanvas()	{
 	window.myLine = new Chart(ctx, config);
 }
 
-function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋팅 함수
+function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
-	console.log(typeof(xTime));
+	
+	
 	getData=Number.parseFloat(getData).toFixed(2);
 	// Set millisecond 자릿수 to 2
 	
