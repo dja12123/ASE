@@ -82,9 +82,10 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
             throw new IllegalArgumentException("Item not found in list");
         } else {
             int mid = (max - min) / 2 + min;
-            if (comparator.compare(this.get(mid), item) == 1) {
+            int compareResult = comparator.compare(this.get(mid), item);
+            if (compareResult > 0) {
                 return binaryFind(item, min, mid - 1);
-            } else if (comparator.compare(this.get(mid), item) == -1) {
+            } else if (compareResult < 0) {
                 return binaryFind(item, mid + 1, max);
             } else {
                 return mid;
