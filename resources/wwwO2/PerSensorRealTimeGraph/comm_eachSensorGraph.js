@@ -33,7 +33,9 @@ window.onload = function()
 			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
-				var splitTime = sensorData.time.split("/");
+				var sensorTime = sensorData.time;
+				console.log(typeof(sensorTime));
+				var splitTime = sensorData.time.split("/"); //오류 터짐
 				console.log("check");
 				console.log(splitTime);
 				
