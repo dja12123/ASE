@@ -90,7 +90,7 @@ window.onload = function()
     // 센서 전원 상태
     var sensorOnOff = commModule.createChannel("RealtimeSensorOnOffRequest",()=>
     {
-		sensorOnOff.send(sensorID);
+		//sensorOnOff.send(sensorID);
     }, (e)=>
     {
 		var data = e.data.split("/");
@@ -108,7 +108,7 @@ window.onload = function()
     // 실시간 센서 로그 요청
     var sensorLog = commModule.createChannel("RealtimeLogDataRequest",()=>
     {
-        sensorLog.send(sensorID);
+        //sensorLog.send(sensorID);
     },(e) =>
     {
         var data = JSON.parse(e.data);
@@ -127,7 +127,7 @@ window.onload = function()
 	// 상태 정보 업데이트
 	var statInfo = commModule.createChannel("",()=> // 선용이한테 키값 받기
     {
-        sensorLog.send(sensorID);
+        //sensorLog.send(sensorID);
     },(e) =>
     {
         var data = JSON.parse(e.data);
