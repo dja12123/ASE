@@ -43,6 +43,11 @@ public class SensorDataAnalyser
 		int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
 		int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
 		
+		for(SensorAccelData d : this.xSortedList)
+		{
+			System.out.printf("%d ",d.X_ACCEL);
+		}
+		System.out.println();
 		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
 		System.out.println();
 		
