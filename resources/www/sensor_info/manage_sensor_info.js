@@ -87,9 +87,9 @@ function giveNick()	{
 				firLet=nickname[i];
 			else if(i<input.length)
 				rest+=nickname[i];
-			console.log("test");
 		}
-		console.log(rest);
+		
+		console.log(typeof(rest));
 		
 		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
 		{
