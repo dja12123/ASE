@@ -15,7 +15,7 @@ public class SerialReceiver
 		this.time = time;
 		this.user = user;
 		this.receiveData = new ArrayList<>();
-		this.isEnd = true;
+		this.isEnd = false;
 	}
 	
 	public boolean putReceiveData(byte[] packet)
