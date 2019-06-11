@@ -112,7 +112,7 @@ function changeButtonColor(key, value)	{
 				scales: {
 					xAxes: [{
 						display: true,
-						//type: 'time',
+						type: 'time',
 						scaleLabel: {
 							display: true,
 							labelString: 'time'
