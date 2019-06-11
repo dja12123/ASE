@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.ISensorCommManager;
+import ase.sensorManager.accelSensorDataAnalyser.AccelSensorDataAnalyser;
 import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorControl.SensorControlInterface;
@@ -35,6 +36,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public final SensorConfigAccess configAccess;
 	public final O2SensorDataAnalyseManager dataAnalyseManager;
 	public final SensorControlInterface sensorControl;
+	public final AccelSensorDataAnalyser accelSensorDataAnalyser;
 	
 	private boolean isRun;
 	private HashMap<Integer, Sensor> _sensorMap;
@@ -50,6 +52,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm, this.configAccess);
 		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this, this.dataO2Manager, this.sensorLogManager);
 		this.sensorControl = new SensorControlInterface(this, this.sensorComm, this.sensorLogManager);
+		this.accelSensorDataAnalyser = new AccelSensorDataAnalyser(this, this.configAccess, this.dataAccelManager, this.sensorLogManager);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 	}
@@ -76,6 +79,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.dataAccelManager.startModule();
 		this.dataAnalyseManager.startModule();
 		this.sensorControl.startModule();
+		this.accelSensorDataAnalyser.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		return true;
@@ -85,6 +89,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
+		this.accelSensorDataAnalyser.stopModule();
 		this.sensorControl.stopModule();
 		this.dataAnalyseManager.stopModule();
 		this.dataAccelManager.stopModule();

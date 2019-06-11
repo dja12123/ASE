@@ -90,6 +90,5 @@ public class SensorAccelDataManager extends AbsCommSensorStateManager<AccelDataR
 		}
 		AccelDataReceiveEvent dataReceiveEvent = new AccelDataReceiveEvent(sensor, sensorData);
 		this.provideEvent(ServerCore.mainThreadPool, sensor, dataReceiveEvent);
-		logger.log(Level.INFO, dataReceiveEvent.toString());
 	}
 }

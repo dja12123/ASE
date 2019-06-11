@@ -1,8 +1,8 @@
-package ase.sensorManager.o2SensorDataAnalyser;
+package ase.sensorManager.accelSensorDataAnalyser;
 
 public enum SafetyStatus
 {
-	Safe(1), Warning(2), Danger(3);
+	Safe(0), Danger(2);
 	
 	public final int code;
 	private SafetyStatus(int code)

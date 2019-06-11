@@ -98,6 +98,5 @@ public class SensorO2DataManager extends AbsCommSensorStateManager<O2DataReceive
 		
 		O2DataReceiveEvent dataReceiveEvent = new O2DataReceiveEvent(sensor, sensorData);
 		this.provideEvent(ServerCore.mainThreadPool, sensor, dataReceiveEvent);
-		logger.log(Level.INFO, dataReceiveEvent.toString());
 	}
 }
