@@ -79,7 +79,7 @@ function giveNick()	{
 			var rest   = testwd.substr(1, testwd.length -1) 
 		}
 		
-		if(firLet.match(/[^a-zA-Z]/)!=true || !isNaN(rest))
+		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
 		{
 			nickname=null;
 			input=null;
