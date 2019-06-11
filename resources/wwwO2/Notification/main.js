@@ -10,6 +10,7 @@ window.onload = function()
 	// 서비스 워커 등록
 	if ('serviceWorker' in navigator)
 	{
+		console.log("service worker install");
 		window.addEventListener('load', function()
 		{
 			navigator.serviceWorker.register('/sw.js').then(function(registration)
