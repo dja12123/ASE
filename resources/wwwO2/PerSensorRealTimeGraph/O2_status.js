@@ -96,7 +96,7 @@ function changeButtonColor(key, value)	{
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
 					data: [{
-						x: 0,
+						x: ,
 						y: 10
 					}],
 					fill: false,
@@ -112,22 +112,18 @@ function changeButtonColor(key, value)	{
 				scales: {
 					xAxes: [{
 						display: true,
+						type: 'time',
 						scaleLabel: {
 							display: true,
 							labelString: 'time'
 						},
 						ticks:{
-							autoskip: true,
-							maxRotation: 90,
-							minRotation: 80
-						},
-						gridLines: {
-							display:false
-						},
-						time:	{
-							unit=	'second',
-							stepSize=10
-						}
+							autoskip: true
+						/*time:	{
+							displayFormats:	{
+								quarter: 'h:mm:ss.SSS'
+							}
+						}*/
 					}],
 					yAxes: [{
 						display: true,
