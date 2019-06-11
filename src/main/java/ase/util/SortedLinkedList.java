@@ -45,10 +45,11 @@ public class SortedLinkedList<T> extends LinkedList<T>
 			if (compare > 0)
 			{
 				this.add(index, e);
-				break;
+				return true;
 			}
 			++index;
 		}
+		this.addLast(e);
 		return true;
 	}
 
