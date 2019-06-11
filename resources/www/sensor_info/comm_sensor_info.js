@@ -136,7 +136,7 @@ window.onload = function()
 	// 센서 아이디 서버에 전송
 	var sendSensorID = commModule.createChannel("SensorSetting", () =>
 	{
-		var rawdata = giveNick();
+		var rawData = giveNick();
 		console.log(rawData);
 		//var rawData = giveNick().split('/');
 		var byteArray = new ArrayBuffer(11);
