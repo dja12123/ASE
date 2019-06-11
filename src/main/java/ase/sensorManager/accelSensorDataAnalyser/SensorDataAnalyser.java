@@ -29,42 +29,50 @@ public class SensorDataAnalyser
 	
 	public void pushData(SensorAccelData data)
 	{
-		this.dataQueue.add(data);
+		try
+		{
+			this.dataQueue.add(data);
 
-		this.xSortedList.add(data);
-		this.ySortedList.add(data);
-		this.zSortedList.add(data);
-		System.out.println("block0");
-		if(dataQueue.size() < 2)
-		{
-			return;
-		}
-		int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
-		int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
-		int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
-		System.out.println("block1");
-		for(SensorAccelData d : this.xSortedList)
-		{
-			System.out.printf("%d ",d.X_ACCEL);
-		}
-		System.out.println("block2");
-		System.out.println();
-		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
-		System.out.println();
-		
-		SensorAccelData peekData = this.dataQueue.peek();
-		if(peekData != null)
-		{
-			while(data.time.getTime() - peekData.time.getTime() > this.configAccess.getAnalyseInterval())
+			this.xSortedList.add(data);
+			this.ySortedList.add(data);
+			this.zSortedList.add(data);
+			System.out.println("block0");
+			if(dataQueue.size() < 2)
 			{
-				this.dataQueue.poll();
-				this.xSortedList.remove(peekData);
-				this.ySortedList.remove(peekData);
-				this.zSortedList.remove(peekData);
-				peekData = this.dataQueue.peek();
+				return;
 			}
+			int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
+			int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
+			int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
+			System.out.println("block1");
+			for(SensorAccelData d : this.xSortedList)
+			{
+				System.out.printf("%d ",d.X_ACCEL);
+			}
+			System.out.println("block2");
+			System.out.println();
+			System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
+			System.out.println();
+			
+			SensorAccelData peekData = this.dataQueue.peek();
+			if(peekData != null)
+			{
+				while(data.time.getTime() - peekData.time.getTime() > this.configAccess.getAnalyseInterval())
+				{
+					this.dataQueue.poll();
+					this.xSortedList.remove(peekData);
+					this.ySortedList.remove(peekData);
+					this.zSortedList.remove(peekData);
+					peekData = this.dataQueue.peek();
+				}
+			}
+			System.out.println("block3");
 		}
-		System.out.println("block3");
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 	
 
