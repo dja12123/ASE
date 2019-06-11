@@ -71,18 +71,24 @@ function giveNick()	{
 	
 	btn.addEventListener("click",function()	{
 		var result=null;
+		var firLet, rest;
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split(" ");
 		
 		console.log(typeof(input));
-		//for (var i=0 ; i < input.length ; i++)	{ 
-			var testwd = nickname; 
-			console.log(testwd);
-			var firLet = testwd.substr(0,1);
+		for (var i=0 ; i < input.length ; i++)	{ 
+			var testwd = nickname[i]; 
+			/*
+			firLet = testwd.substr(0,1);
 			console.log(firLet);
-			var rest   = testwd.substr(1, testwd.length -1);
+			rest   = testwd.substr(1, testwd.length -1);
+			*/
+			if(i==0)
+				firLet=nickname[i];
+			else
+				rest=nickname[i];
 			console.log(rest);
-	//	}
+		}
 		
 		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
 		{
