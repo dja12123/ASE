@@ -30,15 +30,10 @@ function dataSetKey(key) {
     document.getElementById("state_name").innerHTML = key;
 }
 
-// 센서의 안전 or 경고 표시
-function setState(key) {
-    docu'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
-				key, ': <span class="badge badge-light" id="',key,'"></span>',
-				'<span id="ss', key,'"></span>',
-		'</button>',
-	].join("");
-	
-	);
+// 센서의 상태 표시 및 변경 "작동상태"
+// ＊setState(Boolean) // 작동상태(on/off)
+function setState(on) {
+    document.getElementById("state").innerHTML = (on ? "작동중" : "중지");
 }
 
 // "센서 데이터 값" 설정
