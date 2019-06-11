@@ -6,11 +6,11 @@ window.onload = function()
         alert('Hello world');
     })
 
-
+	console.log("service worker install 1");
 	// 서비스 워커 등록
 	if ('serviceWorker' in navigator)
 	{
-		console.log("service worker install");
+		console.log("service worker install 2");
 		window.addEventListener('load', function()
 		{
 			navigator.serviceWorker.register('/sw.js').then(function(registration)
