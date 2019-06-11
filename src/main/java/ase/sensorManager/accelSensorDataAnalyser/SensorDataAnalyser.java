@@ -33,7 +33,6 @@ public class SensorDataAnalyser
 	
 	public void pushData(SensorAccelData data)
 	{
-		System.out.println("putData");
 		this.dataQueue.add(data);
 
 		this.xSortedList.add(data);
