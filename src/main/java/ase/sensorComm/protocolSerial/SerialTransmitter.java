@@ -88,6 +88,4 @@ public class SerialTransmitter implements ISensorTransmitter
 	}
 
 
-
-
 }

@@ -5,8 +5,12 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +44,8 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	private final Serial serial;
 	private final SerialConfig config;
 	private final SerialWriter serialWriter;
-
+	private final Queue<byte[]> broadcastPacket;
+	
 	private boolean isRun;
 	
 	private Thread commManageThread;
@@ -62,6 +67,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 		this.config.baud(Baud._9600).dataBits(DataBits._8).parity(Parity.NONE).stopBits(StopBits._1)
 				.flowControl(FlowControl.NONE);
 		this.serialWriter = new SerialWriter(this.serial);
+		this.broadcastPacket = new LinkedBlockingQueue<>();
 		this.commManageTask = this::commManageTask;
 		this._users = new HashMap<>();
 		this._userList = new ArrayList<>();
@@ -108,6 +114,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			this.commManageThread.interrupt();
 		}
 		this.serialWriter.stopModule();
+		this.broadcastPacket.clear();
 		this._users.clear();
 		this._userList.clear();
 		this.clearObservers();
@@ -120,7 +127,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	@Override
 	public synchronized boolean addUser(int intid)
 	{
-		if(intid > Byte.MAX_VALUE)
+		if(intid > Byte.MAX_VALUE || intid == ProtoDef.SERIAL_PACKET_BROADCAST_ADDR)
 		{
 			return false;
 		}
@@ -205,7 +212,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			List<byte[]> packetList = nowUser.popData();
 			if(packetList.size() == 0)
 			{
-				byte[] packet = new byte[3];
+				byte[] packet = new byte[SerialProtoDef.SERIAL_PACKET_HEADERSIZE];
 				packet[0] = 3;
 				packet[1] = nowUser.ID;
 				packet[2] = SerialProtoDef.SERIAL_PACKET_SEG_NODATASERVER;
@@ -295,6 +302,19 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	public void removeOnlineObserver(Observer<CommOnlineEvent> observer)
 	{
 		this.onlineObservable.removeObserver(observer);
+	}
+
+	@Override
+	public void sendBroadcast(short key, byte[] value)
+	{
+		if(!this.isRun) return;
+		ByteBuffer buf = ByteBuffer.allocate(SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE + value.length);
+		buf.put((byte)buf.array().length);
+		buf.put((byte) ProtoDef.SERIAL_PACKET_BROADCAST_ADDR);
+		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_BROADCAST);
+		buf.putShort(key);
+		buf.put(value);
+		this.broadcastPacket.add(buf.array());
 	}
 
 }

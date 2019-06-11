@@ -26,7 +26,7 @@ public class SensorAccelDataManager extends AbsCommSensorStateManager<AccelDataR
 
 	public SensorAccelDataManager(SensorManager sensorManager, ISensorCommManager commManager)
 	{
-		super(sensorManager, commManager, ProtoDef.KEY_C2S_O2SENSOR_DATA);
+		super(sensorManager, commManager, ProtoDef.KEY_C2S_ACCELSENSOR_DATA);
 		this._previousSensorData = new HashMap<>();
 	}
 	

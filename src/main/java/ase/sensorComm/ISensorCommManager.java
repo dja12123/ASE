@@ -15,4 +15,5 @@ public interface ISensorCommManager
 	public void removeObserver(Short key, KeyObserver<Short, ReceiveEvent> observer);
 	public void addOnlineObserver(Observer<CommOnlineEvent> observer);
 	public void removeOnlineObserver(Observer<CommOnlineEvent> observer);
+	public void sendBroadcast(short key, byte[] value);
 }
