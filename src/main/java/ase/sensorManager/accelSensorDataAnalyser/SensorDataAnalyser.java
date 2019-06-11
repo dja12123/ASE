@@ -39,11 +39,11 @@ public class SensorDataAnalyser
 		this.ySortedList.add(data);
 		this.zSortedList.add(data);
 		
-		int xdiff = this.xSortedList.getLast().X_ACCEL - this.xSortedList.getFirst().X_ACCEL;
-		int ydiff = this.xSortedList.getLast().Y_ACCEL - this.xSortedList.getFirst().Y_ACCEL;
-		int zdiff = this.xSortedList.getLast().Z_ACCEL - this.xSortedList.getFirst().Z_ACCEL;
+		int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
+		int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
+		int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
 		
-		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.getFirst().X_ACCEL, this.xSortedList.getLast().X_ACCEL);
+		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
 		System.out.println();
 		
 		SensorAccelData peekData = this.dataQueue.peek();
