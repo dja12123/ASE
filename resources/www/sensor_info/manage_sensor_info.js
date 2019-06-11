@@ -73,6 +73,7 @@ function giveNick()	{
 	btn.addEventListener("click",function()	{
 		var result=null;
 		
+		console.log(typeof(input));
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
 			var firLet = testwd.substr(0,1); 
