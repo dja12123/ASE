@@ -30,32 +30,8 @@ function dataSetKey(key) {
     document.getElementById("state_name").innerHTML = key;
 }
 
-// 센서의 안전 or 경고 표시
-function setState(key) {
-		document.getElementById("state").innerHTML = ['<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
-				key, ': <span class="badge badge-light" id="',key,'"></span>',
-				'<span id="ss', key,'"></span>',
-		'</button>',
-	].join("");
-}
-
-
-function updateValue(key, state)	{
-	var uniqueID=key;
-	var ChemicalStatus=document.getElementById(uniqueID);
-	
-	ChemicalStatus.innerHTML='';
-	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(key, state);
-	checkSafety(key, state);
-	//id랑 비교하여 데이터 값 업데이트
-	
-}
-
-
-function checkSafety(key, state) {
-				var SensorStatusID= 'ss' + key;
-				var SensorStatus=document.getElementById(SensorStatusID);
+function checkSafety(state) {
+				var SensorStatus=document.getElementById("sensor_stats");
 				var content;
 				SensorStatus.innerHTML='';
 				
@@ -66,20 +42,6 @@ function checkSafety(key, state) {
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
 			}
-
-// 버튼 색깔 변경
-function changeButtonColor(key, state)
-{
-	var ButtonID='b'+key;
-	var ButtonColorStatus=document.getElementById(ButtonID);
-				
-				if(state==0)
-					ButtonColorStatus.className="btn btn-success";
-				else if(state==1)
-					ButtonColorStatus.className="btn btn-danger";
-				
-	
-}
 
 // "센서 데이터 값" 설정
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
