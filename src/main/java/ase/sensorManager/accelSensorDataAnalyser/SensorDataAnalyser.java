@@ -1,14 +1,10 @@
 package ase.sensorManager.accelSensorDataAnalyser;
 
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
-import ase.sensorManager.sensorDataO2.SensorO2Data;
 import ase.util.SortedLinkedList;
 
 public class SensorDataAnalyser
@@ -39,6 +35,10 @@ public class SensorDataAnalyser
 		this.ySortedList.add(data);
 		this.zSortedList.add(data);
 		System.out.println("block0");
+		if(dataQueue.size() < 2)
+		{
+			return;
+		}
 		int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
 		int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
 		int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
