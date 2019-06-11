@@ -82,6 +82,7 @@ function giveNick()	{
 		console.log(typeof(input));
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
+			console.log(typeof(nickname));
 			console.log(nickname[i]);
 			/*
 			firLet = testwd.substr(0,1);
