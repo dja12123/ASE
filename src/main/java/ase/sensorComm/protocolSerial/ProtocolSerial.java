@@ -249,44 +249,51 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			e.printStackTrace();
 			return;
 		}
-
-		if(packet.length > ProtoDef.PACKET_MAXSIZE)
-		{
-			logger.log(Level.WARNING, "수신 크기 오류 " + packet.length);
-			return;
-		}
-		
 		if(this.nowTransaction == null)
 		{
 			return;
 		}
 		
-		if(!this.nowTransaction.putReceiveData(packet))
+		int nowIndex = 0;
+		while(nowIndex < packet.length)
 		{
-			return;
-		}
-		logger.log(Level.INFO, "패킷길이: " +packet.length);
-		if(this.nowTransaction.isReceiveFinish())
-		{
-			for(byte[] data : this.nowTransaction.getReceiveData())
+			byte packetSize = packet[nowIndex];
+			if(packetSize > ProtoDef.PACKET_MAXSIZE)
 			{
-				ByteBuffer buf = ByteBuffer.wrap(data);
-				buf.position(SerialProtoDef.SERIAL_PACKET_HEADERSIZE);
-				short key = buf.getShort();
-				byte[] value = new byte[data.length - SerialProtoDef.SERIAL_PACKET_HEADERSIZE - ProtoDef.SERIAL_PACKET_KEYSIZE];
-				buf.get(value);
-				ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, key, value);
-				this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
+				return;
 			}
-			if(!this.nowTransaction.user.isOnline())
+			byte[] splitPacket = new byte[packetSize];
+			System.arraycopy(packet, nowIndex, splitPacket, 0, packetSize);
+			if(!this.nowTransaction.putReceiveData(splitPacket))
 			{
-				logger.log(Level.INFO, "센서 온라인 " + this.nowTransaction.user.ID);
-				this.nowTransaction.user.setOnline(true);
-				CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, true);
-				this.onlineObservable.notifyObservers(onlineEvent);
+				return;
 			}
-			this.nowTransaction = null;
+			logger.log(Level.INFO, "패킷길이: " +splitPacket.length);
+			if(this.nowTransaction.isReceiveFinish())
+			{
+				for(byte[] data : this.nowTransaction.getReceiveData())
+				{
+					ByteBuffer buf = ByteBuffer.wrap(data);
+					buf.position(SerialProtoDef.SERIAL_PACKET_HEADERSIZE);
+					short key = buf.getShort();
+					byte[] value = new byte[data.length - SerialProtoDef.SERIAL_PACKET_HEADERSIZE - ProtoDef.SERIAL_PACKET_KEYSIZE];
+					buf.get(value);
+					ReceiveEvent e = new ReceiveEvent(this.nowTransaction.user.ID, key, value);
+					this.notifyObservers(ServerCore.mainThreadPool, e.key, e);
+				}
+				if(!this.nowTransaction.user.isOnline())
+				{
+					logger.log(Level.INFO, "센서 온라인 " + this.nowTransaction.user.ID);
+					this.nowTransaction.user.setOnline(true);
+					CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, true);
+					this.onlineObservable.notifyObservers(onlineEvent);
+				}
+				this.nowTransaction = null;
+			}
+			nowIndex += packetSize;
 		}
+		
+		
 		
 		this.commManageThread.interrupt();
 	}
