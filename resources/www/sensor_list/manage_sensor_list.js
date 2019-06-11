@@ -25,7 +25,7 @@ function addItem(key, on) {
 	eItem.id = key;
 	eItem.className = 'item';
 	eItem.innerHTML = [
-		'<tbody><tr><td class="title">',
+		'<tbody id=tb',key,'><tr><td class="title">',
 		key,
 		'</td>',
 		'<td></td>',
