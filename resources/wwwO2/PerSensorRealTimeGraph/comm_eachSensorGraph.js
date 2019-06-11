@@ -63,7 +63,7 @@ window.onload = function()
 		if(data.result = true)
         {		
 				var splitTime = data.time.split("/");
-				var xTime = data.time; //new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
+				var xTime = new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
 				console.log(xTime);
 				updateValue(sensorID, xTime, data.value);
         }
