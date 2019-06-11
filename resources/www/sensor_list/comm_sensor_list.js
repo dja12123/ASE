@@ -48,6 +48,12 @@ window.onload = function()
 			delItem(key[0]);
 		}
 	});
+	
+	var perSensorStat = commModule.createChannel("RealtimeAllSensorSafetyRequest", null, (e) =>
+	{
+		var data = e.data.split("/");
+		updateTableColor(data[0], data[1]);
+	});
 
 	setTotal(total);
 }
