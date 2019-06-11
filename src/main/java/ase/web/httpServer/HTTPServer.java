@@ -32,6 +32,7 @@ public class HTTPServer extends NanoHTTPD
 		super(port);
 		this.webSessionManager = webSessionManager;
 		this.docRoot = ServerCore.getProp(PROP_DOCROOT);
+		logger.log(Level.INFO, "HTTP Document Root:"+this.docRoot);
 	}
 
 	private static Response serveImage(MIME_TYPE imageType, String dir)
