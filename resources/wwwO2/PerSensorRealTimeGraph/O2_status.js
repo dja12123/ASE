@@ -43,6 +43,8 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	var uniqueID=key;
 	var getData=data*100;
 	
+	console.log(xTime);
+	
 	
 	getData=Number.parseFloat(getData).toFixed(2);
 	
@@ -95,10 +97,6 @@ function changeButtonColor(key, value)	{
 					label: 'O2 Level',
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
-					/*data: [{
-						x: 0,
-						y: 10
-					}],*/
 					fill: false,
 					lineTension: 0
 				}]
