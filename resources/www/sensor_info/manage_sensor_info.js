@@ -75,12 +75,12 @@ function giveNick()	{
 		var nickname=input.split(" ");
 		
 		console.log(typeof(input));
-		for (var i=0 ; i < input.length ; i++)	{ 
-			var testwd = nickname[i]; 
+		//for (var i=0 ; i < input.length ; i++)	{ 
+			var testwd = nickname; 
 			console.log(testwd);
 			var firLet = testwd.substr(0,1);
 			var rest   = testwd.substr(1, testwd.length -1);
-		}
+	//	}
 		
 		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
 		{
