@@ -47,9 +47,9 @@ function checkSafety(state) {
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
 function setSensorData(date, xa, ya, za) {
 	setDate(date);
-	document.getElementById("accX").innerHTML = math.floor(xa);
-	document.getElementById("accY").innerHTML = math.floor(ya);
-	document.getElementById("accZ").innerHTML = math.floor(za);
+	document.getElementById("accX").innerHTML = Math.floor(xa);
+	document.getElementById("accY").innerHTML = Math.floor(ya);
+	document.getElementById("accZ").innerHTML = Math.floor(za);
 }
 
 // "데이터 수집 시간" 설정
