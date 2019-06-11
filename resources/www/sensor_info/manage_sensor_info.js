@@ -41,7 +41,7 @@ function checkSafety(state) {
 					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경고</span> </h5>';
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
-			}
+}
 
 // "센서 데이터 값" 설정
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
@@ -62,6 +62,56 @@ function setDate(date) {
 	date.getHours()+"시 "+
 	date.getMinutes()+"분 "+
 	date.getSeconds()+"초");
+}
+
+function giveNick()	{
+	var id=getParameter("key");
+	var input = document.getElementById("input_nick").value;
+	var btn = document.getElementById("updateNick");
+	var nickname=input.split(" ");
+	
+	btn.addEventListener("click",function()	{
+		var result=null;
+		
+		for (var i=0 ; i < input.length ; i++)	{ 
+			var testwd = nickname[i]; 
+			var firLet = testwd.substr(0,1); 
+			var rest   = testwd.substr(1, testwd.length -1) 
+		}
+			result   = firLet.toUpperCase() + rest 
+		
+		if(firLet.match(/[a-z]/i)!=true || !isNaN(rest))
+		{
+			nickname=null;
+			input=null;
+		}
+		else
+		{
+			result	= firLet + rest ;
+			rawData	= id + '/' + result;
+			
+			return rawData;
+		}
+		
+		
+			
+	}
+	// a1234 validation check
+	return 
+}
+
+
+function addNickname(key)	{
+	
+	var e = event || window.event;  // get event object
+    var key = e.keyCode || e.which; // get key cross-browser
+
+    if (key < 48 || key > 57) { //if it is not a number ascii code
+        //Prevent default action, which is inserting character
+        if (e.preventDefault) e.preventDefault(); //normal browsers
+            e.returnValue = false; //IE
+    }
+	
 }
 
 const logMax = 99;

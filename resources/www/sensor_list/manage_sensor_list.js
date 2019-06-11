@@ -50,6 +50,18 @@ function addItem(key, on) {
 	setTotal();
 }
 
+function updateTableColor(key, state)	{
+	var tableKey= 'tb'+key;
+	var targetTable=document.getElementById(tableKey)
+	
+	if(state==0)
+		targetTable.style.backgroundColor=blue;
+	else if(state==1)
+		targetTable.style.backgorundColor=red;
+	
+}
+
+
 // "센서" 지우기
 // ＊delItem(String) 센서 키
 function delItem(key) {
