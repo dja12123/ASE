@@ -16,8 +16,29 @@ function reconnect(){
 
 window.onload = function()
 {
+	function ServiceWorkerUseCheck()
+	{
+		if ('serviceWorker' in navigator)
+		{
+			window.addEventListener('load', function()
+			{
+				navigator.serviceWorker.register('/sw.js').then(function(registration)
+				{
+					// Registration was successful
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				},
+				function(err)
+				{
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				});
+			});
+		}
+		
+	}
+	
 	// O2SensorListRequestChannel
-	var O2sensorListCh = commModule.createChannel("O2SensorListRequest", ()=>
+	var O2sensorListCh = commModule.createChannel("SensorListRequest", ()=>
 	{
 		O2sensorListCh.send("getdata");
 	}, (e) =>
@@ -40,4 +61,5 @@ window.onload = function()
 		
 		
 	});
+	
 }
