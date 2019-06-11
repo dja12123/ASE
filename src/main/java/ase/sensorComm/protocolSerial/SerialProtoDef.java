@@ -15,7 +15,7 @@ public class SerialProtoDef
 	public static final byte SERIAL_PACKET_SEG_NODATASERVER = 0x01;
 	public static final byte SERIAL_PACKET_SEG_TRANSFROMSERVER = 0x02;
 	public static final byte SERIAL_PACKET_SEG_ENDFROMSERVER = 0x03;
-	public static final byte SERIAL_PACKET_SEG_BROADCAST = 0x04;
+	public static final byte SERIAL_PACKET_SEG_ENDBROADCAST = 0x04;
 	
 	public static final byte SERIAL_PACKET_SEG_NODATACLIENT = 0x11;
 	public static final byte SERIAL_PACKET_SEG_TRANSFROMCLIENT = 0x12;

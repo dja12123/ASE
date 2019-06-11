@@ -28,6 +28,7 @@ import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.CommOnlineEvent;
 import ase.sensorComm.ISensorCommManager;
+import ase.sensorComm.ISensorTransmitter;
 import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
 import ase.util.observer.KeyObservable;
@@ -44,7 +45,6 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	private final Serial serial;
 	private final SerialConfig config;
 	private final SerialWriter serialWriter;
-	private final Queue<byte[]> broadcastPacket;
 	
 	private boolean isRun;
 	
@@ -54,6 +54,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	private final Map<Integer, SerialTransmitter> _users;
 	private final List<SerialTransmitter> _userList;
 	private final Map<Integer, SerialTransmitter> users;
+	private final SerialTransmitter broadcastTransmitter;
 	
 	private SerialReceiver nowTransaction;
 	private int nowUserIndex;
@@ -67,11 +68,11 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 		this.config.baud(Baud._9600).dataBits(DataBits._8).parity(Parity.NONE).stopBits(StopBits._1)
 				.flowControl(FlowControl.NONE);
 		this.serialWriter = new SerialWriter(this.serial);
-		this.broadcastPacket = new LinkedBlockingQueue<>();
 		this.commManageTask = this::commManageTask;
 		this._users = new HashMap<>();
 		this._userList = new ArrayList<>();
 		this.users = Collections.unmodifiableMap(this._users);
+		this.broadcastTransmitter = new SerialTransmitter(ProtoDef.SERIAL_PACKET_BROADCAST_ADDR);
 	}
 	
 	public synchronized boolean startModule()
@@ -114,7 +115,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			this.commManageThread.interrupt();
 		}
 		this.serialWriter.stopModule();
-		this.broadcastPacket.clear();
+		this.broadcastTransmitter.popData();
 		this._users.clear();
 		this._userList.clear();
 		this.clearObservers();
@@ -206,12 +207,16 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			if(this.nowUserIndex >= this._userList.size())
 			{
 				this.nowUserIndex = 0;
-				if(!this.broadcastPacket.isEmpty())
+				List<byte[]> broadcastPacket = this.broadcastTransmitter.popData();
+				if(!broadcastPacket.isEmpty())
 				{
+					byte[] lastPacket = broadcastPacket.get(broadcastPacket.size() - 1);
+					lastPacket[2] = SerialProtoDef.SERIAL_PACKET_SEG_ENDBROADCAST;
 					this.serialWriter.registerWriteCallback(()->{this.commManageThread.interrupt();});
-					while(!this.broadcastPacket.isEmpty())
+					
+					for(byte[] packet : broadcastPacket)
 					{
-						this.serialWriter.write(this.broadcastPacket.poll());
+						this.serialWriter.write(packet);
 					}
 					return;
 				}
@@ -316,30 +321,12 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	{
 		this.onlineObservable.removeObserver(observer);
 	}
+
+	@Override
+	public ISensorTransmitter getBroadcast()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	@Override
-	public void sendBroadcast(short key)
-	{
-		if(!this.isRun) return;
-		ByteBuffer buf = ByteBuffer.allocate(SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE);
-		buf.put((byte)buf.array().length);
-		buf.put((byte) ProtoDef.SERIAL_PACKET_BROADCAST_ADDR);
-		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_BROADCAST);
-		buf.putShort(key);
-		this.broadcastPacket.add(buf.array());
-	}
-
-	@Override
-	public void sendBroadcast(short key, byte[] value)
-	{
-		if(!this.isRun) return;
-		ByteBuffer buf = ByteBuffer.allocate(SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE + value.length);
-		buf.put((byte)buf.array().length);
-		buf.put((byte) ProtoDef.SERIAL_PACKET_BROADCAST_ADDR);
-		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_BROADCAST);
-		buf.putShort(key);
-		buf.put(value);
-		this.broadcastPacket.add(buf.array());
-	}
-
 }

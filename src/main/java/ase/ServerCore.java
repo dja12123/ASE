@@ -88,7 +88,7 @@ public class ServerCore
 				int index = Integer.parseInt(arr[0]);
 				if(index == 0)
 				{
-					mainInst.protocolSerial.sendBroadcast((short)Integer.parseInt(arr[1]));
+					mainInst.protocolSerial.getBroadcast().putSegment((short)Integer.parseInt(arr[1]));
 				}
 				else
 				{
