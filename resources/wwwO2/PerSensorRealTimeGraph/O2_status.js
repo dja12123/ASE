@@ -116,6 +116,9 @@ function changeButtonColor(key, value)	{
 							display: true,
 							labelString: 'time'
 						},
+						gridLines: {
+							display:false
+						},
 						ticks:{
 							autoskip: true
 						},
