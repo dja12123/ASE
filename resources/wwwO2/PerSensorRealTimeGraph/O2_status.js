@@ -11,7 +11,7 @@ function setTotal() {
 	var total = document.getElementById("items").childElementCount;
 	var msg;
 	if(total > 0) msg = total + "개의 센서 확인";
-	else msg = "확인된 센서가 없습니다"
+	else msg = "확인된 센서가 없습니다";
 	document.getElementById("total").innerHTML = msg;
 }
 
@@ -119,7 +119,7 @@ function changeButtonColor(key, value)	{
 						},
 						ticks:{
 							autoskip: true
-						}
+						},
 						time:	{
 							displayFormats:	{
 								quarter: 'h:mm:ss.SSS'
