@@ -109,19 +109,9 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
      * @return the index to in the list where the item was inserted
      */
     private  int binaryFindInsert(T item, int min, int max) {
-        if(flaggedAddFirst(item))
-            return 0;
-        else if(flaggedAddLast(item))
-            return this.size()-1;
-        else{
-            int index = recursFindInsert(item, min, max);
-            super.add(index, item);
-            for(int i=1;i<this.size();i++){
-                if(comparator.compare(this.get(i-1), this.get(i))==1)
-                    System.out.println("");
-            }
-            return index;
-        }
+    	int index = recursFindInsert(item, min, max);
+        super.add(index, item);
+        return index;
     }
     
     private  int recursFindInsert(T item, int min, int max){
@@ -135,9 +125,10 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
 //            }
         } else {
             int mid = (max - min) / 2 + min;
-            if (comparator.compare(this.get(mid), item) == 1) {
+            int compare = comparator.compare(this.get(mid), item);
+            if (compare > 0) {
                 return recursFindInsert(item, min, mid);
-            } else if (comparator.compare(this.get(mid), item) == -1) {
+            } else if (compare < 0) {
                 return recursFindInsert(item, mid, max);
             } else {
                 return mid + 1;
@@ -174,65 +165,5 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable{
         return true;
     }
 
-    @Override
-    /**
-     * Can add to end of list if order is maintained. Otherwise, item is not inserted.
-     */
-    public void addLast(T e) {
-        flaggedAddLast(e);
-    }
-    
-    /**
-     * Adds to end of list if order is maintained. Boolean returned true if item was added. Else false;
-     * @param e
-     * @return 
-     */
-    private  boolean flaggedAddLast(T e){
-        int compare = comparator.compare(this.getLast(), e);
-        if(compare!=1){
-            super.addLast(e);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    /**
-     * Can add to head of list if order is maintained. Otherwise, item is not inserted.
-     */
-    public void addFirst(T e) {
-        flaggedAddFirst(e);
-    }
-    
-    /**
-     * Adds to head of list if order is maintained. Boolean returned true if item was added. Else false;
-     * @param e
-     * @return 
-     */
-    private  boolean flaggedAddFirst(T e) {
-        if(this.size()==0){
-            this.add(0, e);
-            return true;
-        }
-        int compare = comparator.compare(this.get(0), e);
-        if (compare != -1) {
-            super.addFirst(e);
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Copies the elements within the list to a new list
-     * @return 
-     */
-    @Override
-    public  SortedLinkedList<T> clone(){
-        SortedLinkedList<T> out = new SortedLinkedList(comparator);
-        for(int i=0;i<this.size();i++){
-            out.add(i, this.get(i));
-        }
-        return out;
-    }
 
 }
