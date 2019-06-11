@@ -71,7 +71,7 @@ function giveNick()	{
 	
 	btn.addEventListener("click",function()	{
 		var result=null;
-		var firLet, rest;
+		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split(" ");
 		
@@ -90,7 +90,7 @@ function giveNick()	{
 			if(i==0)
 				firLet=nickname[i];
 			else if(i<input.length)
-				rest=nickname[i];
+				rest+=nickname[i];
 			console.log(rest);
 		}
 		
