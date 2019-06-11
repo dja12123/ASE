@@ -66,18 +66,21 @@ function setDate(date) {
 
 function giveNick()	{
 	var id=getParameter("key");
-	var input = document.getElementById("input_nick").value;
+	
 	var btn = document.getElementById("updateNick");
-	var nickname=input.split(" ");
 	
 	btn.addEventListener("click",function()	{
 		var result=null;
+		var input = document.getElementById("input_nick").value;
+		var nickname=input.split(" ");
 		
 		console.log(typeof(input));
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
-			var firLet = testwd.substr(0,1); 
-			var rest   = testwd.substr(1, testwd.length -1) 
+			var firLet = testwd.substr(0,1);
+				console.log(firLet);
+			var rest   = testwd.substr(1, testwd.length -1);
+			console.log(rest);
 		}
 		
 		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
