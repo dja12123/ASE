@@ -80,7 +80,7 @@ function giveNick()	{
 		}
 			result   = firLet.toUpperCase() + rest 
 		
-		if(firLet.match(/[a-z]/i)!=true || !isNaN(rest))
+		if(firLet.match(/[^a-zA-Z]/)!=true || !isNaN(rest))
 		{
 			nickname=null;
 			input=null;
@@ -90,14 +90,11 @@ function giveNick()	{
 			result	= firLet + rest ;
 			rawData	= id + '/' + result;
 			
+			console.log(rawData); // testing purpose
+			
 			return rawData;
 		}
-		
-		
-			
 	}
-	// a1234 validation check
-	return 
 }
 
 
