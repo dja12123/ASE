@@ -7,16 +7,8 @@ import java.util.LinkedList;
 
 public class SortedLinkedList<T> extends LinkedList<T>
 {
-
 	private static final long serialVersionUID = 1L;
 	private final Comparator<T> comparator;
-
-	public SortedLinkedList(Collection<T> unSortedList, Comparator<T> comparator)
-	{
-		super(unSortedList);
-		this.sort();
-		this.comparator = comparator;
-	}
 
 	public SortedLinkedList(Comparator<T> comparator)
 	{

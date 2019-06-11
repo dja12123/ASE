@@ -36,14 +36,14 @@ public class SensorDataAnalyser
 			this.xSortedList.add(data);
 			this.ySortedList.add(data);
 			this.zSortedList.add(data);
-			System.out.println("block0");
+			System.out.println("block0" + this.xSortedList.peekLast());
 			if(dataQueue.size() < 2)
 			{
 				return;
 			}
 			int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
-			int ydiff = this.xSortedList.peekLast().Y_ACCEL - this.xSortedList.peekFirst().Y_ACCEL;
-			int zdiff = this.xSortedList.peekLast().Z_ACCEL - this.xSortedList.peekFirst().Z_ACCEL;
+			int ydiff = this.ySortedList.peekLast().Y_ACCEL - this.ySortedList.peekFirst().Y_ACCEL;
+			int zdiff = this.zSortedList.peekLast().Z_ACCEL - this.zSortedList.peekFirst().Z_ACCEL;
 			System.out.println("block1");
 			for(SensorAccelData d : this.xSortedList)
 			{
