@@ -16,26 +16,6 @@ function reconnect(){
 
 window.onload = function()
 {
-	function ServiceWorkerUseCheck()
-	{
-		if ('serviceWorker' in navigator)
-		{
-			window.addEventListener('load', function()
-			{
-				navigator.serviceWorker.register('/sw.js').then(function(registration)
-				{
-					// Registration was successful
-					console.log('ServiceWorker registration successful with scope: ', registration.scope);
-				},
-				function(err)
-				{
-					// registration failed :(
-					console.log('ServiceWorker registration failed: ', err);
-				});
-			});
-		}
-		
-	}
 	
 	// O2SensorListRequestChannel
 	var O2sensorListCh = commModule.createChannel("SensorListRequest", ()=>
@@ -61,5 +41,15 @@ window.onload = function()
 		
 		
 	});
+	
+	
+	// 센서 데이터와 이전 데이터 불러옴
+	/*var O2SensorRealTimeValue = commModule.createChannel("RealtimeAllO2ValueRequest", null, (e) =>
+	{
+		var data = JSON.parse(e.data);
+		updateValue(data.id, data.value);	// 값 업데이트 함수에다 ID와 value를 넘겨줌
+		
+		
+	});*/
 	
 }
