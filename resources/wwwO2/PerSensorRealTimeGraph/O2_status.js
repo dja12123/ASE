@@ -45,7 +45,7 @@ function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋�
 	getData=Number.parseFloat(getData).toFixed(2);
 	// Set millisecond 자릿수 to 2
 	
-	var StringDate= moment(xTime,"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+	var StringDate= getData.toISOString();
 	console.log(StringDate);
 	
 	//var ChemicalStatus=document.getElementById(ButtonValue);
