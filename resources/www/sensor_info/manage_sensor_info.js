@@ -80,7 +80,7 @@ function giveNick()	{
 		}
 			result   = firLet.toUpperCase() + rest 
 		
-		if(firLet.match(/[a-z]/i)!=true || !isNaN(rest))
+		if(firLet.match(/[^a-zA-Z]/)!=true || !isNaN(rest))
 		{
 			nickname=null;
 			input=null;
