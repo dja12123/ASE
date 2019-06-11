@@ -26,9 +26,9 @@ public class SensorDataAnalyser
 		this.configAccess = configAccess;
 		this.dataQueue = new LinkedList<>();
 
-		this.xSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o1.X_ACCEL - o2.X_ACCEL;});
-		this.ySortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o1.Y_ACCEL - o2.Y_ACCEL;});
-		this.zSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o1.Z_ACCEL - o2.Z_ACCEL;});
+		this.xSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o2.X_ACCEL - o1.X_ACCEL;});
+		this.ySortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o2.Y_ACCEL - o1.Y_ACCEL;});
+		this.zSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o2.Z_ACCEL - o1.Z_ACCEL;});
 	}
 	
 	public void pushData(SensorAccelData data)
