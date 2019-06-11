@@ -18,19 +18,20 @@ import ase.web.webSocket.WebSessionManager;
 public class HTTPServer extends NanoHTTPD
 {
 	private static final Logger logger = LogWriter.createLogger(HTTPServer.class, "HTTPServer");
+	public static final String PROP_DOCROOT = "WebServerDocRoot";
 	
 	public static final String rootDirectory = FileHandler.getExtResourceFile("www").toString();
 	public static final String PROP_HTTP_DEFAULT_PAGE = "HttpDefaultPage";
-	public final String resDir;
+	public final String docRoot;
 	private String httpDefaultPage;
 	
 	private final WebSessionManager webSessionManager;
 
-	public HTTPServer(int port, WebSessionManager webSessionManager, String resDir)
+	public HTTPServer(int port, WebSessionManager webSessionManager)
 	{
 		super(port);
-		this.resDir = resDir;
 		this.webSessionManager = webSessionManager;
+		this.docRoot = ServerCore.getProp(PROP_DOCROOT);
 	}
 
 	private static Response serveImage(MIME_TYPE imageType, String dir)
@@ -76,7 +77,7 @@ public class HTTPServer extends NanoHTTPD
 			}
 			else
 			{
-				dir = this.resDir+uri;
+				dir = this.docRoot+uri;
 			}
 			
 			if(!FileHandler.isExistResFile(dir))

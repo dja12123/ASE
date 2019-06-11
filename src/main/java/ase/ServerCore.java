@@ -42,7 +42,6 @@ public class ServerCore
 	private static final Properties properties = new Properties();
 	public static final Logger logger = LogWriter.createLogger(ServerCore.class, "main");// 메인 로거
 	public static final ExecutorService mainThreadPool = Executors.newCachedThreadPool();
-	public static final String FRONTEND_DIR = "/www";
 
 	private static List<Thread> shutdownThreads;
 	
@@ -263,7 +262,7 @@ public class ServerCore
 		//this.tcpSensorReadManager = new TcpSensorReadManager();
 		this.sensorManager = new SensorManager(this.protocolSerial);
 		this.sensorDataInUSBManager = new SensorDataInUSBManager(this.sensorManager);
-		this.webManager = new WebManager(FRONTEND_DIR);
+		this.webManager = new WebManager();
 		this.clientSessionManager = new ClientSessionManager();
 		this.clientSessionManager.addSessionProvider(this.webManager.webSessionManager);
 		this.appServiceManager = new AppServiceManager(this.clientSessionManager, this.sensorManager);
