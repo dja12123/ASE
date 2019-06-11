@@ -41,48 +41,6 @@ function setState(key) {
 	);
 }
 
-
-function updateValue(key, state)	{
-	var uniqueID=key;
-	var ChemicalStatus=document.getElementById(uniqueID);
-	
-	ChemicalStatus.innerHTML='';
-	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(key, state);
-	checkSafety(key, state);
-	//id랑 비교하여 데이터 값 업데이트
-	
-}
-
-
-function checkSafety(key, state) {
-				var SensorStatusID= 'ss' + key;
-				var SensorStatus=document.getElementById(SensorStatusID);
-				var content;
-				SensorStatus.innerHTML='';
-				
-				if(state==0)
-					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
-				else if(state==1)
-					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경고</span> </h5>';
-				
-				SensorStatus.insertAdjacentHTML('beforeend',content);
-			}
-
-// 버튼 색깔 변경
-function changeButtonColor(key, state)
-{
-	var ButtonID='b'+key;
-	var ButtonColorStatus=document.getElementById(ButtonID);
-				
-				if(state==0)
-					ButtonColorStatus.className="btn btn-success";
-				else if(state==1)
-					ButtonColorStatus.className="btn btn-danger";
-				
-	
-}
-
 // "센서 데이터 값" 설정
 // ＊setElem(Date, Number...) // 날짜, 데이터 6개
 function setSensorData(date, xa, ya, za) {
