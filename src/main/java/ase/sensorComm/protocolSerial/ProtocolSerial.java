@@ -325,8 +325,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	@Override
 	public ISensorTransmitter getBroadcast()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.broadcastTransmitter;
 	}
 	
 }
