@@ -43,7 +43,7 @@ window.onload = function()
     }
     );
 
-    // 이전 데이터 로그 요청e
+    // 이전 데이터 로그 요청
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
         beforeSensorLog.send(sensorID + "/" + String(100));
@@ -126,11 +126,11 @@ window.onload = function()
 	
 	
 	// 상태 정보 업데이트
-	var statInfo = commModule.createChannel("", null, (e) =>	// 선용이한테 키값 받기
+	var statInfo = commModule.createChannel("RealtimeAllSensorSafetyRequest", null, (e) =>	// 선용이한테 키값 받기
     {
         var data = JSON.parse(e.data);
 		var dataSplit = data.split('/'); 
-		updateValue(dataSplit[0], dataSplit[1]);
+		checkSafety(dataSplit[1]); // 진우오빠 함수 변경
     });
 
     window.scrollTo(0,document.body.scrollHeight);
