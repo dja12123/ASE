@@ -95,10 +95,10 @@ function changeButtonColor(key, value)	{
 					label: 'O2 Level',
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
-					data: [{
+					/*data: [{
 						x: 0,
 						y: 10
-					}],
+					}],*/
 					fill: false,
 					lineTension: 0
 				}]
