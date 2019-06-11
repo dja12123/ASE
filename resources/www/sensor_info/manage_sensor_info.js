@@ -30,10 +30,57 @@ function dataSetKey(key) {
     document.getElementById("state_name").innerHTML = key;
 }
 
-// 센서의 상태 표시 및 변경 "작동상태"
-// ＊setState(Boolean) // 작동상태(on/off)
-function setState(on) {
-    document.getElementById("state").innerHTML = (on ? "작동중" : "중지");
+// 센서의 안전 or 경고 표시
+function setState(key) {
+    docu'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
+				key, ': <span class="badge badge-light" id="',key,'"></span>',
+				'<span id="ss', key,'"></span>',
+		'</button>',
+	].join("");
+	
+	);
+}
+
+
+function updateValue(key, state)	{
+	var uniqueID=key;
+	var ChemicalStatus=document.getElementById(uniqueID);
+	
+	ChemicalStatus.innerHTML='';
+	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+	changeButtonColor(key, state);
+	checkSafety(key, state);
+	//id랑 비교하여 데이터 값 업데이트
+	
+}
+
+
+function checkSafety(key, state) {
+				var SensorStatusID= 'ss' + key;
+				var SensorStatus=document.getElementById(SensorStatusID);
+				var content;
+				SensorStatus.innerHTML='';
+				
+				if(state==0)
+					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
+				else if(state==1)
+					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경고</span> </h5>';
+				
+				SensorStatus.insertAdjacentHTML('beforeend',content);
+			}
+
+// 버튼 색깔 변경
+function changeButtonColor(key, state)
+{
+	var ButtonID='b'+key;
+	var ButtonColorStatus=document.getElementById(ButtonID);
+				
+				if(state==0)
+					ButtonColorStatus.className="btn btn-success";
+				else if(state==1)
+					ButtonColorStatus.className="btn btn-danger";
+				
+	
 }
 
 // "센서 데이터 값" 설정
