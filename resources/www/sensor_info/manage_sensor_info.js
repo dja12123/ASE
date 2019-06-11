@@ -90,6 +90,8 @@ function giveNick()	{
 			result	= firLet + rest ;
 			rawData	= id + '/' + result;
 			
+			console.log(rawData); // testing purpose
+			
 			return rawData;
 		}
 	}
