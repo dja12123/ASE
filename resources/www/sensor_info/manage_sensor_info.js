@@ -85,7 +85,7 @@ function giveNick()	{
 			*/
 			if(i==0)
 				firLet=nickname[i];
-			else
+			else if(i<input.length)
 				rest=nickname[i];
 			console.log(rest);
 		}
