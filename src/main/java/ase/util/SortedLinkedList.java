@@ -42,7 +42,7 @@ public class SortedLinkedList<T> extends LinkedList<T>
 		while (index < this.size())
 		{
 			int compare = this.comparator.compare(this.get(index), e);
-			if (compare > 0)
+			if (compare < 0)
 			{
 				this.add(index, e);
 				return true;

@@ -42,19 +42,14 @@ public class SensorDataAnalyser
 				return;
 			}
 			
-			System.out.println("block0" + this.xSortedList.getLast() + " " + this.xSortedList.size());
-			int xdiff = this.xSortedList.getLast().X_ACCEL - this.xSortedList.getFirst().X_ACCEL;
-			int ydiff = this.ySortedList.getLast().Y_ACCEL - this.ySortedList.getFirst().Y_ACCEL;
-			int zdiff = this.zSortedList.getLast().Z_ACCEL - this.zSortedList.getFirst().Z_ACCEL;
-			System.out.println("block1");
+			int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
+			int ydiff = this.ySortedList.peekLast().Y_ACCEL - this.ySortedList.peekFirst().Y_ACCEL;
+			int zdiff = this.zSortedList.peekLast().Z_ACCEL - this.zSortedList.peekFirst().Z_ACCEL;
 			for(SensorAccelData d : this.xSortedList)
 			{
 				System.out.printf("%d ",d.X_ACCEL);
 			}
-			System.out.println("block2");
-			System.out.println();
-			System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
-			System.out.println();
+			System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d\n", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
 			
 			SensorAccelData peekData = this.dataQueue.peek();
 			if(peekData != null)
