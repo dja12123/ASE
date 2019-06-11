@@ -42,7 +42,8 @@ function initCanvas()	{
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
-	var xTime= xYear+"년 "+xMonth+"월 "+xDay+ "일 " + xHour +":"+ xMin +":"+ xSec +"."+ xMSec;
+	var xTime= xYear+"-"+xMonth+"-"+xDay+ " " + xHour +":"+ xMin +":"+ xSec +"."+ xMSec;
+	console.log(xTime);
 	getData=Number.parseFloat(getData).toFixed(2);
 	// Decimal set to 2nd place
 	
