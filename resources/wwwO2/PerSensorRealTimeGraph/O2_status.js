@@ -120,11 +120,11 @@ function changeButtonColor(key, value)	{
 						ticks:{
 							autoskip: true
 						}
-						/*time:	{
+						time:	{
 							displayFormats:	{
 								quarter: 'h:mm:ss.SSS'
 							}
-						}*/
+						}
 					}],
 					yAxes: [{
 						display: true,
