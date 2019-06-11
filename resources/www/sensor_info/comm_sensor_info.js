@@ -96,10 +96,10 @@ window.onload = function()
 		{
 			sensorOnOff.close();
 		}
-		else if(data[0] == "state")
+		/*else if(data[0] == "state")
 		{
 			setState(data[1] == "true");
-		}
+		}*/
     });
 
     // log Bottom
