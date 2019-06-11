@@ -9,7 +9,7 @@ import com.pi4j.io.serial.Serial;
 public class SerialWriter
 {
 	private final Serial serial;
-	
+	private Runnable writeFinishCallback;
 	private Thread serialWriteThread;
 	private final Runnable serialWriteTask;
 	private Queue<byte[]> writeQueue;
@@ -48,6 +48,11 @@ public class SerialWriter
 		this.notify();
 	}
 	
+	public synchronized void registerWriteCallback(Runnable cb)
+	{
+		this.writeFinishCallback = cb;
+	}
+	
 	private void serialWriteTask()
 	{
 		while(this.isRun)
@@ -76,6 +81,11 @@ public class SerialWriter
 					Thread.sleep(SerialProtoDef.SERIAL_DELAY);
 				}
 				catch (InterruptedException e){ }
+			}
+			if(this.writeFinishCallback != null)
+			{
+				this.writeFinishCallback.run();
+				this.writeFinishCallback = null;
 			}
 			try
 			{

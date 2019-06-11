@@ -206,6 +206,15 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			if(this.nowUserIndex >= this._userList.size())
 			{
 				this.nowUserIndex = 0;
+				if(!this.broadcastPacket.isEmpty())
+				{
+					this.serialWriter.registerWriteCallback(()->{this.commManageThread.interrupt();});
+					while(!this.broadcastPacket.isEmpty())
+					{
+						this.serialWriter.write(this.broadcastPacket.poll());
+					}
+					return;
+				}
 			}
 			SerialTransmitter nowUser = this._userList.get(this.nowUserIndex);
 			this.nowTransaction = new SerialReceiver(System.currentTimeMillis(), nowUser);
@@ -260,17 +269,14 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			byte packetSize = packet[nowIndex];
 			if(packetSize > ProtoDef.PACKET_MAXSIZE)
 			{
-				logger.log(Level.INFO, "걸림1");
 				return;
 			}
 			byte[] splitPacket = new byte[packetSize];
 			System.arraycopy(packet, nowIndex, splitPacket, 0, packetSize);
 			if(!this.nowTransaction.putReceiveData(splitPacket))
 			{
-				logger.log(Level.INFO, "걸림2");
 				return;
 			}
-			logger.log(Level.INFO, "패킷길이: " +splitPacket.length);
 			if(this.nowTransaction.isReceiveFinish())
 			{
 				for(byte[] data : this.nowTransaction.getReceiveData())
@@ -295,8 +301,6 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 			nowIndex += packetSize;
 		}
 		
-		
-		
 		this.commManageThread.interrupt();
 	}
 
@@ -311,6 +315,18 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 	public void removeOnlineObserver(Observer<CommOnlineEvent> observer)
 	{
 		this.onlineObservable.removeObserver(observer);
+	}
+	
+	@Override
+	public void sendBroadcast(short key)
+	{
+		if(!this.isRun) return;
+		ByteBuffer buf = ByteBuffer.allocate(SerialProtoDef.SERIAL_PACKET_HEADERSIZE + ProtoDef.SERIAL_PACKET_KEYSIZE);
+		buf.put((byte)buf.array().length);
+		buf.put((byte) ProtoDef.SERIAL_PACKET_BROADCAST_ADDR);
+		buf.put(SerialProtoDef.SERIAL_PACKET_SEG_BROADCAST);
+		buf.putShort(key);
+		this.broadcastPacket.add(buf.array());
 	}
 
 	@Override
