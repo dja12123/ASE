@@ -30,7 +30,7 @@ window.onload = function()
 			{
 				var sensorData = data.sensorData[i];
 				var time = sensorData.time.split("/");
-				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xg, sensorData.yg, sensorData.xa, sensorData.ya, sensorData.za, sensorData.al);
+				setSensorData(new Date(time[0], time[1], time[2], time[3], time[4], time[5]), sensorData.xa, sensorData.ya, sensorData.za);
 			}
         }
         else
