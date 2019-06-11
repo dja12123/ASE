@@ -75,6 +75,10 @@ function giveNick()	{
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split(" ");
 		
+		
+		console.log(input);
+		console.log(input.length);
+		
 		console.log(typeof(input));
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
