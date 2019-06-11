@@ -78,7 +78,7 @@ function changeButtonColor(key, state)
 				if(state==0)
 					ButtonColorStatus.className="btn btn-success";
 				else if(state==1)
-					ButtonColorStatus.className="btn btn-danger"
+					ButtonColorStatus.className="btn btn-danger";
 				
 	
 }
