@@ -11,7 +11,7 @@ function setTotal() {
 	var total = document.getElementById("items").childElementCount;
 	var msg;
 	if(total > 0) msg = total + "개의 센서 확인";
-	else msg = "확인된 센서가 없습니다"
+	else msg = "확인된 센서가 없습니다";
 	document.getElementById("total").innerHTML = msg;
 }
 
@@ -42,6 +42,9 @@ function initCanvas()	{
 function updateValue(key, xTime, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
+	var StringDate= new String(xTime);
+	console.log(xTime);
+	console.log(StringDate);
 	
 	
 	getData=Number.parseFloat(getData).toFixed(2);
@@ -95,10 +98,6 @@ function changeButtonColor(key, value)	{
 					label: 'O2 Level',
 					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 					borderColor: window.chartColors.red,
-					data: [{
-						x: 0,
-						y: 10
-					}],
 					fill: false,
 					lineTension: 0
 				}]
@@ -112,21 +111,18 @@ function changeButtonColor(key, value)	{
 				scales: {
 					xAxes: [{
 						display: true,
+						//type: 'time',
 						scaleLabel: {
 							display: true,
 							labelString: 'time'
 						},
 						ticks:{
-							autoskip: true,
-							maxRotation: 90,
-							minRotation: 80
-						},
-						gridLines: {
-							display:false
+							autoskip: true
 						},
 						time:	{
-							unit=	'second',
-							stepSize=10
+							displayFormats:	{
+								quarter: 'h:mm:ss.SSS'
+							}
 						}
 					}],
 					yAxes: [{

@@ -33,11 +33,13 @@ window.onload = function()
 			for(var i in data.sensorData)
 			{
 				var sensorData = data.sensorData[i];
-				var splitTime = sensorData.time.split("/");
+				var sensorTime = sensorData.time;
+				console.log(typeof(sensorTime));
+				var splitTime = sensorData.time.split("/"); //오류 터짐
+				
 				var xTime = new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
-				//console.log(xTime);
-				console.log(sensorData.value);
-				console.log(xTime);
+				console.log("xTime:", xTime);
+				//console.log(sensorData.value);
 				updateValue(sensorID, xTime, sensorData.value);
 			}
         }
@@ -60,12 +62,10 @@ window.onload = function()
 		// 진우오빠가 만든 함수에 값 넣어주기
 		if(data.result = true)
         {		
-				var splitTime = data.time.split("/");
-				var xTime = new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
+				//var splitTime = data.time.split("/");
+				//var xTime = data.time; //new Date(splitTime[0], splitTime[1],splitTime[2],splitTime[3],splitTime[4],splitTime[5],splitTime[6]);
 				//console.log(xTime);
-				console.log(data.value);
-				console.log(xTime);
-				updateValue(sensorID, xTime, data.value);
+				//updateValue(sensorID, xTime, data.value);
         }
         else
         {

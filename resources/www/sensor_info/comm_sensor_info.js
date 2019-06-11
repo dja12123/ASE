@@ -40,7 +40,7 @@ window.onload = function()
     }
     );
 
-    // 이전 데이터 로그 요청
+    // 이전 데이터 로그 요청e
     var beforeSensorLog = commModule.createChannel("AllSensorLogRequest", ()=>
     {
         beforeSensorLog.send(sensorID + "/" + String(100));
