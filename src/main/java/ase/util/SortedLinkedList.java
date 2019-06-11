@@ -35,6 +35,7 @@ public class SortedLinkedList<T> extends LinkedList<T>
 		return flag;
 	}
 
+	@Override
 	public boolean add(T e)
 	{
 		int index = 0;
