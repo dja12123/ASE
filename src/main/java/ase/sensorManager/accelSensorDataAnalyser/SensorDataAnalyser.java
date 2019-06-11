@@ -27,7 +27,7 @@ public class SensorDataAnalyser
 		this.zSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o1.Z_ACCEL - o2.Z_ACCEL;});
 	}
 	
-	public void pushData(SensorAccelData data)
+	public synchronized void pushData(SensorAccelData data)
 	{
 		try
 		{
