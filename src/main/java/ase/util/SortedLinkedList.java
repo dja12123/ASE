@@ -92,6 +92,7 @@ public class SortedLinkedList<T> extends LinkedList<T> implements Cloneable
     			this.add(index, e);
     			break;
     		}
+    		++index;
     	}
        
         return true;
