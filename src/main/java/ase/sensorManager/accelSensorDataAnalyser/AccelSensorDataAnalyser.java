@@ -1,8 +1,10 @@
 package ase.sensorManager.accelSensorDataAnalyser;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ase.ServerCore;
+import ase.console.LogWriter;
 import ase.sensorManager.AbsSensorStateManager;
 import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
@@ -18,6 +20,8 @@ import ase.util.observer.Observer;
 
 public class AccelSensorDataAnalyser extends AbsSensorStateManager<SafeStateChangeEvent, SensorDataAnalyser>
 {
+	public static final Logger logger = LogWriter.createLogger(AccelSensorDataAnalyser.class, "AccelSensorDataAnalyser");
+	
 	public static final float SAFE_THRESHOLD = 0.20F;
 	public static final float WARNING_THRESHOLD = 0.18F;
 	
@@ -45,12 +49,14 @@ public class AccelSensorDataAnalyser extends AbsSensorStateManager<SafeStateChan
 	protected void onStart()
 	{
 		this.dataManager.addObserver(this.o2DataObserver);
+		logger.log(Level.INFO, "센서 가속도 안전상태 분석기 시작");
 	}
 
 	@Override
 	protected void onStop()
 	{
 		this.dataManager.removeObserver(this.o2DataObserver);
+		logger.log(Level.INFO, "센서 가속도 안전상태 분석기 종료");
 	}
 
 	@Override
