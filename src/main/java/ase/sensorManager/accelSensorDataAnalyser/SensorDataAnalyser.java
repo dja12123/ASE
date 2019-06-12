@@ -65,8 +65,10 @@ public class SensorDataAnalyser
 		int zdiff = this.zSortedList.peekLast().Z_ACCEL - this.zSortedList.peekFirst().Z_ACCEL;
 		if(xdiff > Threshold || ydiff > Threshold || zdiff > Threshold)
 		{
+			System.out.println("if1");
 			if(this.safetyStatus == SafetyStatus.Safe)
 			{
+				System.out.println("if2");
 				this.safetyStatus = SafetyStatus.Danger;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
@@ -76,8 +78,10 @@ public class SensorDataAnalyser
 		}
 		else
 		{
+			System.out.println("if3");
 			if(this.safetyStatus == SafetyStatus.Danger)
 			{
+				System.out.println("if4");
 				this.safetyStatus = SafetyStatus.Safe;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
