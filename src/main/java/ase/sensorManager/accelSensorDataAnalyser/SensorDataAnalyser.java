@@ -11,6 +11,7 @@ import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
+import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.SortedLinkedList;
 
 public class SensorDataAnalyser
@@ -22,6 +23,7 @@ public class SensorDataAnalyser
 	private final Sensor sensor;
 	private final AccelSensorDataAnalyser manager;
 	private final SensorConfigAccess configAccess;
+	private final SensorLogManager logManager;
 	private final Queue<SensorAccelData> dataQueue;
 	
 	private SortedLinkedList<SensorAccelData> xSortedList;
@@ -30,11 +32,12 @@ public class SensorDataAnalyser
 	
 	private SafetyStatus safetyStatus;
 
-	public SensorDataAnalyser(Sensor sensor, AccelSensorDataAnalyser manager, SensorConfigAccess configAccess)
+	public SensorDataAnalyser(Sensor sensor, AccelSensorDataAnalyser manager, SensorConfigAccess configAccess, SensorLogManager logManager)
 	{
 		this.sensor = sensor;
 		this.manager = manager;
 		this.configAccess = configAccess;
+		this.logManager = logManager;
 		this.dataQueue = new LinkedList<>();
 
 		this.xSortedList = new SortedLinkedList<>((SensorAccelData o1, SensorAccelData o2)->{ return o1.X_ACCEL - o2.X_ACCEL;});
@@ -68,7 +71,8 @@ public class SensorDataAnalyser
 				this.safetyStatus = SafetyStatus.Danger;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
-				logger.log(Level.INFO, this.sensor.ID+" 센서 안전상태");
+				logger.log(Level.INFO, this.sensor.ID+" 센서 위험상태");
+				this.logManager.appendLog(this.sensor, Level.INFO, "Change Safety State: " + this.safetyStatus);
 			}
 		}
 		else
@@ -78,7 +82,8 @@ public class SensorDataAnalyser
 				this.safetyStatus = SafetyStatus.Safe;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
-				logger.log(Level.INFO, this.sensor.ID+" 센서 위험상태");
+				logger.log(Level.INFO, this.sensor.ID+" 센서 안전상태");
+				this.logManager.appendLog(this.sensor, Level.INFO, "Change Safety State: " + this.safetyStatus);
 			}
 		}
 		SensorAccelData peekData = this.dataQueue.peek();

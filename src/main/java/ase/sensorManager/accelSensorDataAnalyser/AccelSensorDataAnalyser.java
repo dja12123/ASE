@@ -56,7 +56,7 @@ public class AccelSensorDataAnalyser extends AbsSensorStateManager<SafeStateChan
 	@Override
 	protected SensorDataAnalyser onRegisterSensor(Sensor sensor)
 	{
-		return new SensorDataAnalyser(sensor, this, this.configAccess);
+		return new SensorDataAnalyser(sensor, this, this.configAccess, this.sensorLogManager);
 	}
 
 	@Override
