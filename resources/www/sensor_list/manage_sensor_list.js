@@ -55,7 +55,7 @@ function updateTableColor(key, state)	{
 	var targetTable=document.getElementById(tableKey)
 	
 	if(state==0)
-		targetTable.style.backgroundColor="blue";
+		targetTable.style.backgroundColor="green";
 	else if(state==2)
 		targetTable.style.backgroundColor="red";
 	
