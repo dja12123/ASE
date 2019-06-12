@@ -188,7 +188,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 				{
 					if(this.nowTransaction.user.isOnline())
 					{
-						logger.log(Level.WARNING, "센서 오프라인 " + this.nowTransaction.user.ID);
+						logger.log(Level.WARNING, "센서 통신 오프라인 " + this.nowTransaction.user.ID);
 						this.nowTransaction.user.setOnline(false);
 						CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, false);
 						this.onlineObservable.notifyObservers(onlineEvent);
@@ -296,7 +296,7 @@ public class ProtocolSerial extends KeyObservable<Short, ReceiveEvent> implement
 				}
 				if(!this.nowTransaction.user.isOnline())
 				{
-					logger.log(Level.INFO, "센서 온라인 " + this.nowTransaction.user.ID);
+					logger.log(Level.INFO, "센서 통신 온라인 " + this.nowTransaction.user.ID);
 					this.nowTransaction.user.setOnline(true);
 					CommOnlineEvent onlineEvent = new CommOnlineEvent(this.nowTransaction.user.ID, true);
 					this.onlineObservable.notifyObservers(onlineEvent);
