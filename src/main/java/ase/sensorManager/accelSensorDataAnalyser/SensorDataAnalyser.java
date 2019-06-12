@@ -60,15 +60,13 @@ public class SensorDataAnalyser
 			return;
 		}
 		
-		int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
-		int ydiff = this.ySortedList.peekLast().Y_ACCEL - this.ySortedList.peekFirst().Y_ACCEL;
-		int zdiff = this.zSortedList.peekLast().Z_ACCEL - this.zSortedList.peekFirst().Z_ACCEL;
+		int xdiff = this.xSortedList.peekFirst().X_ACCEL - this.xSortedList.peekLast().X_ACCEL;
+		int ydiff = this.ySortedList.peekFirst().Y_ACCEL - this.ySortedList.peekLast().Y_ACCEL;
+		int zdiff = this.zSortedList.peekFirst().Z_ACCEL - this.zSortedList.peekLast().Z_ACCEL;
 		if(xdiff > Threshold || ydiff > Threshold || zdiff > Threshold)
 		{
-			System.out.println("if1");
 			if(this.safetyStatus == SafetyStatus.Safe)
 			{
-				System.out.println("if2");
 				this.safetyStatus = SafetyStatus.Danger;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
@@ -78,10 +76,8 @@ public class SensorDataAnalyser
 		}
 		else
 		{
-			System.out.println("if3 " + (xdiff > Threshold));
 			if(this.safetyStatus == SafetyStatus.Danger)
 			{
-				System.out.println("if4");
 				this.safetyStatus = SafetyStatus.Safe;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
@@ -101,7 +97,7 @@ public class SensorDataAnalyser
 				peekData = this.dataQueue.peek();
 			}
 		}
-		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d\n", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
+		//System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d\n", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
 	}
 
 	public SafetyStatus getState()
