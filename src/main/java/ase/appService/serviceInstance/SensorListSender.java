@@ -50,7 +50,8 @@ public class SensorListSender extends ServiceInstance
 		{
 			JsonObject data = new JsonObject();
 			data.addProperty("id", sensor.ID);
-			data.addProperty("on", this.onlineCheck.state.get(sensor));
+			boolean isOnline = this.onlineCheck.state.get(sensor);
+			data.addProperty("on", isOnline);
 			dataSensorList.add(data);
 		}
 
