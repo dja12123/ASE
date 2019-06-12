@@ -56,6 +56,5 @@ public class SensorListSender extends ServiceInstance
 		}
 
 		this.channel.sendData(json.toString());
-		this.channel.sendData(json.toString());
 	}
 }
