@@ -25,10 +25,10 @@ function addItem(key, on) {
 	eItem.id = key;
 	eItem.className = 'item';
 	eItem.innerHTML = [
-		'<table><tr id="tb',key,'"><td class="title">',
+		'<table><tr><td class="title">',
 		key,
 		'</td>',
-		'<td></td>',
+		'<td><span class="stat_dot" id="tb',key,'"></span></td>',
 		'<td>',
 		'<label class="switch">',
 		'<input id="stat',
@@ -55,7 +55,7 @@ function updateTableColor(key, state)	{
 	var targetTable=document.getElementById(tableKey)
 	
 	if(state==0)
-		targetTable.style.backgroundColor="";
+		targetTable.style.backgroundColor="blue";
 	else if(state==2)
 		targetTable.style.backgroundColor="red";
 	
