@@ -25,7 +25,7 @@ window.onload = function()
 
 		for(var i in data.data) // 센서 수 만큼 반복문
 		{
-			addItem(data.data[i].id, true);
+			addItem(data.data[i].id, data.data[i].on);
 		}
 		sensorListCh.close();
 	});
