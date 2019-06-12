@@ -124,7 +124,7 @@ header>div {
 .stat_dot {
   height: 15px;
   width: 15px;
-  background-color: #bbb;
+  background-color: green;
   border-radius: 50%;
   display: inline-block;
 }
