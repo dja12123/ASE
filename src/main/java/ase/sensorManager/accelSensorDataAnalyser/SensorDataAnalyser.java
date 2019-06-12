@@ -2,15 +2,21 @@ package ase.sensorManager.accelSensorDataAnalyser;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ase.ServerCore;
+import ase.console.LogWriter;
 import ase.sensorManager.SensorConfigAccess;
+import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataAccel.SensorAccelData;
 import ase.util.SortedLinkedList;
 
 public class SensorDataAnalyser
 {
+	public static final Logger logger = LogWriter.createLogger(SensorDataAnalyser.class, "SensorDataAnalyser");
+	
 	public static final int Threshold = 15;
 	
 	private final Sensor sensor;
@@ -54,7 +60,7 @@ public class SensorDataAnalyser
 		int xdiff = this.xSortedList.peekLast().X_ACCEL - this.xSortedList.peekFirst().X_ACCEL;
 		int ydiff = this.ySortedList.peekLast().Y_ACCEL - this.ySortedList.peekFirst().Y_ACCEL;
 		int zdiff = this.zSortedList.peekLast().Z_ACCEL - this.zSortedList.peekFirst().Z_ACCEL;
-		System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d\n", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
+		//System.out.printf("X:%d, Y:%d, Z:%d 비교대상:%d XMax:%d, XMin:%d\n", xdiff, ydiff, zdiff, dataQueue.size(), this.xSortedList.peekFirst().X_ACCEL, this.xSortedList.peekLast().X_ACCEL);
 		if(xdiff > Threshold || ydiff > Threshold || zdiff > Threshold)
 		{
 			if(this.safetyStatus == SafetyStatus.Safe)
@@ -62,6 +68,7 @@ public class SensorDataAnalyser
 				this.safetyStatus = SafetyStatus.Danger;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
+				logger.log(Level.INFO, this.sensor.ID+" 센서 안전상태");
 			}
 		}
 		else
@@ -71,6 +78,7 @@ public class SensorDataAnalyser
 				this.safetyStatus = SafetyStatus.Safe;
 				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
 				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
+				logger.log(Level.INFO, this.sensor.ID+" 센서 위험상태");
 			}
 		}
 		SensorAccelData peekData = this.dataQueue.peek();
