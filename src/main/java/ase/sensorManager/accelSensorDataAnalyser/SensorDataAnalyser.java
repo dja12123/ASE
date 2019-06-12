@@ -78,7 +78,7 @@ public class SensorDataAnalyser
 		}
 		else
 		{
-			System.out.println("if3");
+			System.out.println("if3 " + (xdiff > Threshold));
 			if(this.safetyStatus == SafetyStatus.Danger)
 			{
 				System.out.println("if4");
