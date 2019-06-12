@@ -87,6 +87,7 @@ public class SensorDataInUSBManager
 		{
 			ServerCore.mainThreadPool.execute(()->
 			{
+				logger.log(Level.INFO, "버튼누름");
 				if(this.ismounted)
 				{
 					if(this.ismounted) this.recordData();
