@@ -71,6 +71,7 @@ public class SensorOnlineCheck extends AbsSensorStateManager<SensorOnlineEvent, 
 				logger.log(Level.INFO, "센서 오프라인");
 			}
 			SensorOnlineEvent onlineEvent = new SensorOnlineEvent(sensor, event.isOnline);
+			this.changeState(sensor, event.isOnline);
 			this.provideEvent(sensor, onlineEvent);
 		}
 	}
