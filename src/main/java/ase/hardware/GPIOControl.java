@@ -34,7 +34,7 @@ public class GPIOControl
 	{
 		logger.log(Level.INFO, "gpio 제어기 활성화");
 		this.gpio = GpioFactory.getInstance();
-		this.btn1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, "btn1", PinPullResistance.PULL_DOWN);
+		this.btn1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04, "btn1", PinPullResistance.PULL_DOWN);
 		this.btn1.setDebounce(100);
 	}
 }
