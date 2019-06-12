@@ -10,10 +10,6 @@ html, body {
     user-select: none;
 }
 
-tbody {
-  display: block;
-}
-
 .main {
     opacity: 1;
 }
