@@ -57,7 +57,7 @@ function updateTableColor(key, state)	{
 	if(state==0)
 		targetTable.style.backgroundColor="";
 	else if(state==2)
-		targetTable.style.backgorundColor="red";
+		targetTable.style.backgroundColor="red";
 	
 }
 
