@@ -103,6 +103,7 @@ public class AccelSafetyControlManager
 		ISensorTransmitter transmitter = this.commManager.getUserMap().getOrDefault(event.sensor.ID, null);
 		if(transmitter != null)
 		{
+			System.out.println("전송완료");
 			transmitter.putSegment(ProtoDef.KEY_S2C_SET_SAFETY_STATE, event.status.code);
 		}
 		
