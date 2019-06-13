@@ -2,10 +2,10 @@ package ase.sensorManager.accelSensorDataAnalyser;
 
 public enum SafetyStatus
 {
-	Safe(0), Danger(2);
+	Safe((byte)0), Danger((byte)2);
 	
-	public final int code;
-	private SafetyStatus(int code)
+	public final byte code;
+	private SafetyStatus(byte code)
 	{
 		this.code = code;
 	}
