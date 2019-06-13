@@ -84,9 +84,11 @@ public class AccelSafetyControlManager
 		}
 		else if(event.status == SafetyStatus.Danger)
 		{
+			System.out.println("p");
 			this.speakList.add(event.sensor);
 			if(this.speakList.size() == 1)
 			{
+				System.out.println("register");
 				this.timerTask = new TimerTask()
 				{
 					@Override
