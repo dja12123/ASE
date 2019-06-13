@@ -57,6 +57,14 @@ public class SensorDataAnalyser
 
 		if(dataQueue.size() < 2)
 		{
+			if(this.safetyStatus == SafetyStatus.Danger)
+			{
+				this.safetyStatus = SafetyStatus.Safe;
+				SafeStateChangeEvent event = new SafeStateChangeEvent(this.sensor, this.safetyStatus);
+				this.manager.notifyObservers(ServerCore.mainThreadPool, event);
+				logger.log(Level.INFO, this.sensor.ID+" 센서 안전상태");
+				this.logManager.appendLog(this.sensor, Level.INFO, "Change Safety State: " + this.safetyStatus);
+			}
 			return;
 		}
 		
