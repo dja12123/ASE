@@ -121,6 +121,14 @@ header>div {
     border-radius: 9px;
 }
 
+.stat_dot {
+  height: 15px;
+  width: 15px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .login_btn:focus {
     outline: 0;
 }
