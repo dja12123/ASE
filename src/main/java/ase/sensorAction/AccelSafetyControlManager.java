@@ -73,7 +73,6 @@ public class AccelSafetyControlManager
 	
 	private synchronized void safeObserver(SafeStateChangeEvent event)
 	{
-		System.out.println(event.sensor.ID + " " + event.status);
 		if(event.status == SafetyStatus.Safe)
 		{
 			this.speakList.remove(event.sensor);
@@ -84,11 +83,10 @@ public class AccelSafetyControlManager
 		}
 		else if(event.status == SafetyStatus.Danger)
 		{
-			System.out.println("p");
 			this.speakList.add(event.sensor);
 			if(this.speakList.size() == 1)
 			{
-				System.out.println("register");
+				this.timer = new Timer();
 				this.timerTask = new TimerTask()
 				{
 					@Override
