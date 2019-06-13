@@ -73,6 +73,7 @@ public class AccelSafetyControlManager
 	
 	private synchronized void safeObserver(SafeStateChangeEvent event)
 	{
+		logger.log(Level.INFO, "안전상태 옵저버 작동");
 		if(event.status == SafetyStatus.Safe)
 		{
 			this.speakList.remove(event.sensor);
@@ -109,6 +110,7 @@ public class AccelSafetyControlManager
 	
 	private void sound()
 	{
+		logger.log(Level.INFO, "경고음 알람 "+this.speakList.size()+"개");
 		for(Sensor s : this.speakList)
 		{
 			ISensorTransmitter transmitter = this.commManager.getBroadcast();
