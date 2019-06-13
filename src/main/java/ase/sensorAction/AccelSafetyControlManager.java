@@ -73,6 +73,7 @@ public class AccelSafetyControlManager
 	
 	private synchronized void safeObserver(SafeStateChangeEvent event)
 	{
+		System.out.println(event.sensor.ID + " " + event.status);
 		if(event.status == SafetyStatus.Safe)
 		{
 			this.speakList.remove(event.sensor);
