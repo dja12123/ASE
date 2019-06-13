@@ -45,7 +45,7 @@ public class AccelSafetyControlManager
 		this.commManager = commManager;
 		this.safeObserver = this::safeObserver;
 		this.speakList = new ArrayList<>();
-		this.isRun = true;
+		this.isRun = false;
 	}
 	
 	public synchronized boolean startModule()
@@ -73,7 +73,6 @@ public class AccelSafetyControlManager
 	
 	private synchronized void safeObserver(SafeStateChangeEvent event)
 	{
-		logger.log(Level.INFO, "안전상태 옵저버 작동");
 		if(event.status == SafetyStatus.Safe)
 		{
 			this.speakList.remove(event.sensor);
