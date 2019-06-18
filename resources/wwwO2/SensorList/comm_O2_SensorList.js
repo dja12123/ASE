@@ -47,6 +47,7 @@ window.onload = function()
 	var O2SensorRealStatus = commModule.createChannel("RealtimeAllO2SensorSafetyRequest", null, (e) =>
 	{
 		var data = e.data.split("/");
+		console.log(data);
 		updateButtonState(data[0], data[1])
 	});
 	
