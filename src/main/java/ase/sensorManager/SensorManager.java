@@ -12,6 +12,7 @@ import ase.ServerCore;
 import ase.console.LogWriter;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorManager.accelSensorDataAnalyser.AccelSensorDataAnalyser;
+import ase.sensorManager.alias.SensorAliasManager;
 import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorControl.SensorControlInterface;
@@ -37,6 +38,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public final O2SensorDataAnalyseManager o2SensorDataAnalyser;
 	public final SensorControlInterface sensorControl;
 	public final AccelSensorDataAnalyser accelSensorDataAnalyser;
+	public final SensorAliasManager sensorAliasManager;
 	
 	private boolean isRun;
 	private HashMap<Integer, Sensor> _sensorMap;
@@ -53,6 +55,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.o2SensorDataAnalyser = new O2SensorDataAnalyseManager(this, this.dataO2Manager, this.sensorLogManager);
 		this.sensorControl = new SensorControlInterface(this, this.sensorComm, this.sensorLogManager);
 		this.accelSensorDataAnalyser = new AccelSensorDataAnalyser(this, this.configAccess, this.dataAccelManager, this.sensorLogManager);
+		this.sensorAliasManager = new SensorAliasManager(this);
 		this._sensorMap = new HashMap<Integer, Sensor>();
 		this.sensorMap = Collections.unmodifiableMap(this._sensorMap);
 	}
@@ -80,6 +83,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.o2SensorDataAnalyser.startModule();
 		this.sensorControl.startModule();
 		this.accelSensorDataAnalyser.startModule();
+		this.sensorAliasManager.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
 		
 		return true;
@@ -89,6 +93,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	{
 		if(!this.isRun) return;
 		this.isRun = false;
+		this.sensorAliasManager.stopModule();
 		this.accelSensorDataAnalyser.stopModule();
 		this.sensorControl.stopModule();
 		this.o2SensorDataAnalyser.stopModule();

@@ -11,12 +11,12 @@ import java.util.logging.Logger;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 
-public class SensorLogManager extends AbsSensorStateManager<SensorLog, List<SensorLog>>
+public class SensorLogManager extends AbsSensorEventStateManager<SensorLog, List<SensorLog>>
 {
 	public static final Logger logger = LogWriter.createLogger(SensorLogManager.class, "SensorLogManager");
 	

@@ -12,7 +12,7 @@ import ase.sensorComm.protocolSerial.ProtocolSerial;
 import ase.sensorComm.protocolSerial.SerialProtoDef;
 import ase.sensorComm.protocolSerial.SerialTransmitter;
 import ase.sensorManager.AbsCommSensorStateManager;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
 import ase.sensorManager.o2SensorDataAnalyser.SafeStateChangeEvent;

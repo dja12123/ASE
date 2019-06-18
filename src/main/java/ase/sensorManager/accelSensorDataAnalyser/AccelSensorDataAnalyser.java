@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import ase.ServerCore;
 import ase.console.LogWriter;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
@@ -18,7 +18,7 @@ import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.observer.Observer;
 
-public class AccelSensorDataAnalyser extends AbsSensorStateManager<SafeStateChangeEvent, SensorDataAnalyser>
+public class AccelSensorDataAnalyser extends AbsSensorEventStateManager<SafeStateChangeEvent, SensorDataAnalyser>
 {
 	public static final Logger logger = LogWriter.createLogger(AccelSensorDataAnalyser.class, "AccelSensorDataAnalyser");
 	

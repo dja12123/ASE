@@ -7,13 +7,13 @@ import ase.console.LogWriter;
 import ase.sensorComm.CommOnlineEvent;
 import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ISensorTransmitter;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.observer.Observer;
 
-public class SensorOnlineCheck extends AbsSensorStateManager<SensorOnlineEvent, Boolean>
+public class SensorOnlineCheck extends AbsSensorEventStateManager<SensorOnlineEvent, Boolean>
 {
 	public static final Logger logger = LogWriter.createLogger(SensorOnlineCheck.class, "SensorOnlineCheck");
 	

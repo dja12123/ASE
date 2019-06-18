@@ -5,7 +5,7 @@ import ase.sensorComm.ReceiveEvent;
 import ase.sensorManager.sensor.Sensor;
 import ase.util.observer.KeyObserver;
 
-public abstract class AbsCommSensorStateManager<Event, State> extends AbsSensorStateManager<Event, State>
+public abstract class AbsCommSensorStateManager<Event, State> extends AbsSensorEventStateManager<Event, State>
 {
 	private final short commKey;
 	protected final ISensorCommManager commManager;

@@ -21,6 +21,7 @@ import ase.appService.serviceInstance.RealtimeSensorAddRemoveSender;
 import ase.appService.serviceInstance.RealtimeSensorDataSender;
 import ase.appService.serviceInstance.RealtimeSensorOnOffSender;
 import ase.appService.serviceInstance.SensorListSender;
+import ase.appService.serviceInstance.SensorOptionChange;
 import ase.clientSession.ChannelEvent;
 import ase.clientSession.IChannel;
 import ase.clientSession.ISession;
@@ -108,6 +109,9 @@ public class SessionServiceInstance
 				break;
 			case RealtimeAllO2SensorSafetySender.KEY:
 				serviceInst = new RealtimeAllO2SensorSafetySender(event.channel, this.sensorManager);
+				break;
+			case SensorOptionChange.KEY:
+				serviceInst = new SensorOptionChange(event.channel, this.sensorManager);
 				break;
 
 			}

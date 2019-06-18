@@ -46,6 +46,7 @@ public class RealtimeSensorDataSender extends ServiceInstance
 	{
 		String data = event.getStringPayload();
 		JsonObject json = new JsonObject();
+		
 		try
 		{
 			Integer.valueOf(data);

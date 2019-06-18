@@ -1,37 +1,75 @@
 package ase.appService.serviceInstance;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import ase.appService.ServiceInstance;
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
+import ase.sensorManager.SensorManager;
+import ase.sensorManager.alias.SensorAliasManager;
+import ase.sensorManager.sensor.Sensor;
 
 public class SensorOptionChange extends ServiceInstance
 {
-
-	public SensorOptionChange(String key, IChannel channel)
+	public static final String KEY = "SensorSetting";
+	
+	private final SensorManager sensorManager;
+	private final SensorAliasManager aliasManager;
+	
+	public SensorOptionChange(IChannel channel, SensorManager sensorManager)
 	{
-		super(key, channel);
-		// TODO Auto-generated constructor stub
+		super(KEY, channel);
+		this.sensorManager = sensorManager;
+		this.aliasManager = this.sensorManager.sensorAliasManager;
 	}
 
 	@Override
 	protected void onStartService()
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void onDataReceive(ChannelDataEvent event)
 	{
-		// TODO Auto-generated method stub
+		JsonParser parser = new JsonParser();
+		JsonObject json = parser.parse(event.getStringPayload()).getAsJsonObject();
+		if(json.get("getValue").getAsBoolean())
+		{
+			return;
+		}
+		switch(json.get("settingKey").getAsString())
+		{
+		case "sensorAlias":
+			this.sensorAlias(json.get("settingValue"));
+			break;
 		
+		}
+	}
+	
+	private void sensorAlias(JsonElement jsonElement)
+	{
+		JsonObject valueObj = jsonElement.getAsJsonObject();
+		int sensorID = valueObj.get("sensorID").getAsInt();
+		String alias = valueObj.get("sensorAlias").getAsString();
+		Sensor sensor = this.sensorManager.sensorMap.getOrDefault(sensorID, null);
+		if(sensor == null)
+		{
+			return;
+		}
+		
+		if(!this.aliasManager.setAlias(sensor, alias))
+		{
+			return;
+		}
 	}
 	
 }

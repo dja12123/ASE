@@ -11,14 +11,14 @@ import ase.sensorManager.sensor.Sensor;
 import ase.util.observer.Observable;
 import ase.util.observer.Observer;
 
-public abstract class AbsSensorStateManager<State>
+public abstract class AbsSensorEventStateManager<Event, State> extends Observable<Event>
 {
 	protected final SensorManager sensorManager;
 	private final Map<Sensor, State> _state;
 	public final Map<Sensor, State> state;
 	private final Observer<SensorRegisterEvent> sensorRegisterObserver;
 	
-	public AbsSensorStateManager(SensorManager sensorManager)
+	public AbsSensorEventStateManager(SensorManager sensorManager)
 	{
 		this.sensorManager = sensorManager;
 		this._state = new HashMap<>();
@@ -74,5 +74,15 @@ public abstract class AbsSensorStateManager<State>
 		{
 			this._state.put(sensor, state);
 		}
+	}
+	
+	protected final void provideEvent(Sensor sensor, Event state)
+	{
+		this.notifyObservers(state);
+	}
+	
+	protected final void provideEvent(ExecutorService pool, Sensor sensor, Event state)
+	{
+		this.notifyObservers(pool, state);
 	}
 }

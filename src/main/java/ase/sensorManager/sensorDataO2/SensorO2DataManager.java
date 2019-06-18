@@ -16,7 +16,7 @@ import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ProtoDef;
 import ase.sensorComm.ReceiveEvent;
 import ase.sensorManager.AbsCommSensorStateManager;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorConfigAccess;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.SensorRegisterEvent;

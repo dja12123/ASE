@@ -3,7 +3,7 @@ package ase.sensorManager.o2SensorDataAnalyser;
 import java.util.logging.Level;
 
 import ase.ServerCore;
-import ase.sensorManager.AbsSensorStateManager;
+import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
@@ -12,7 +12,7 @@ import ase.sensorManager.sensorDataO2.SensorO2DataManager;
 import ase.sensorManager.sensorLog.SensorLogManager;
 import ase.util.observer.Observer;
 
-public class O2SensorDataAnalyseManager extends AbsSensorStateManager<SafeStateChangeEvent, SafetyStatus>
+public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeStateChangeEvent, SafetyStatus>
 {
 	public static final float SAFE_THRESHOLD = 0.20F;
 	public static final float WARNING_THRESHOLD = 0.18F;
