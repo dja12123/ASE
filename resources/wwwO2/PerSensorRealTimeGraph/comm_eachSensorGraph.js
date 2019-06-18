@@ -84,9 +84,13 @@ window.onload = function()
 		O2SensorRealStatusCh.send("getData");
 	}, (e) =>
 	{
+		
 		var data = e.data.split("/");
+		if(sensorID == data[0])
+			updateButtonState(data[1]);
+		
 		console.log(data);
-		updateButtonState(data[1])
+		
 	});
 	
 	sendSensorID = commModule.createChannel("SensorSetting");
