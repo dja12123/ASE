@@ -144,7 +144,7 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // �
 	
 	
 	
-	//var ChemicalStatus=document.getElementById(ButtonValue);
+	var ChemicalStatus=document.getElementById("ButtonValue");
 	
 	if (config.data.datasets.length > 0) {
 			config.data.labels.push(xTime);
@@ -159,27 +159,25 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // �
 		})
     }
 		window.myLine.update();
-	//ChemicalStatus.innerHTML='';
-	//stats= getData + '%';
-	//ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	//changeButtonColor(key, getData);
+	ChemicalStatus.innerHTML='';
+	stats= getData + '%';
+	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
+	changeButtonColor(state);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
 }
 
 // 버튼 색깔 변경
-/*
-function changeButtonColor(key, value)	{
+function changeButtonColor(state)	{
 	var ButtonID=document.getElementById("ButtonStat");
-	var ButtonColorStatus=document.getElementById(ButtonID);
 				
-				if(value>=21)
-					ButtonColorStatus.className="btn btn-success"
-				else if(value>=18 && value<21)
-					ButtonColorStatus.className="btn btn-warning"
-				else if(value<18)
-					ButtonColorStatus.className="btn btn-danger"
+				if(state==1)
+					ButtonID.className="btn btn-success"
+				else if(state==2)
+					ButtonID.className="btn btn-warning"
+				else if(state==3)
+					ButtonID.className="btn btn-danger"
 				
 	
 }	
