@@ -40,6 +40,7 @@ public class SensorOptionChange extends ServiceInstance
 	@Override
 	protected void onDataReceive(ChannelDataEvent event)
 	{
+		System.out.println("data: " + event.getStringPayload());
 		JsonParser parser = new JsonParser();
 		JsonObject json = parser.parse(event.getStringPayload()).getAsJsonObject();
 		if(json.get("getValue").getAsBoolean())
