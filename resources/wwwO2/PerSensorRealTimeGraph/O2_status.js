@@ -125,10 +125,13 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // �
 	var uniqueID=key;
 	var getData=data*100;
 	var xTime= xYear+"-"+xMonth+"-"+xDay+ " " + xHour +":"+ xMin +":"+ xSec +"."+ xMSec;
+	var SIDText='<h4> Sensor ID : ',uniqueID,'</h4>';
 	getData=Number.parseFloat(getData).toFixed(2);
 	// Decimal set to 2nd place
 	
 	
+	var SID=document.getElementById("SID");
+	SID.insertAdjacentHTML('beforeend',SIDText);
 	
 	var ChemicalStatus=document.getElementById("ButtonValue");
 	
@@ -199,7 +202,7 @@ function checkSafety(state) {
                 responsive: true,
 				title: {
 					display: true,
-					text: '공기 농도 측정도'
+					text: '산소 농도 측정도'
 				},
 				scales: {
 					xAxes: [{
