@@ -112,12 +112,11 @@ function giveNick()	{
 		}
 		
 		rest=parseInt(rest);
-		console.log(rest);
+		
 		if(english.test(firLet)==true && isNaN(rest)==false)
 		{
 			//rest=rest.toString();
 			result	= firLet + rest ;
-			console.log(result);
 			sendNick(id, result);
 		}
 		else
