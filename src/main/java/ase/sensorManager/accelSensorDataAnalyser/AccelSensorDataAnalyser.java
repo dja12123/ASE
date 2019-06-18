@@ -22,10 +22,8 @@ public class AccelSensorDataAnalyser extends AbsSensorEventStateManager<SafeStat
 {
 	public static final Logger logger = LogWriter.createLogger(AccelSensorDataAnalyser.class, "AccelSensorDataAnalyser");
 	
-	public static final float SAFE_THRESHOLD = 0.20F;
-	public static final float WARNING_THRESHOLD = 0.18F;
-	
-	private final Observer<AccelDataReceiveEvent> o2DataObserver;
+
+	private final Observer<AccelDataReceiveEvent> accelDataObserver;
 	private final SensorConfigAccess configAccess;
 	private final SensorAccelDataManager dataManager;
 	private final SensorLogManager sensorLogManager;
@@ -34,7 +32,7 @@ public class AccelSensorDataAnalyser extends AbsSensorEventStateManager<SafeStat
 	{
 		super(sensorManager);
 		this.configAccess = configAccess;
-		this.o2DataObserver = this::accelDataObserver;
+		this.accelDataObserver = this::accelDataObserver;
 		this.dataManager = dataManager;
 		this.sensorLogManager = sensorLogManager;
 	}
@@ -48,14 +46,14 @@ public class AccelSensorDataAnalyser extends AbsSensorEventStateManager<SafeStat
 	@Override
 	protected void onStart()
 	{
-		this.dataManager.addObserver(this.o2DataObserver);
+		this.dataManager.addObserver(this.accelDataObserver);
 		logger.log(Level.INFO, "센서 가속도 안전상태 분석기 시작");
 	}
 
 	@Override
 	protected void onStop()
 	{
-		this.dataManager.removeObserver(this.o2DataObserver);
+		this.dataManager.removeObserver(this.accelDataObserver);
 		logger.log(Level.INFO, "센서 가속도 안전상태 분석기 종료");
 	}
 

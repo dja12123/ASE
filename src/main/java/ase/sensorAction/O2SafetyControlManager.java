@@ -78,7 +78,7 @@ public class O2SafetyControlManager
 	
 	private synchronized void safeObserver(SafeStateChangeEvent event)
 	{
-		if(event.status == SafetyStatus.Safe)
+		if(event.status == SafetyStatus.Safe || event.status == SafetyStatus.Warning)
 		{
 			this.speakList.remove(event.sensor);
 			if(this.speakList.isEmpty())
