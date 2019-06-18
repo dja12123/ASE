@@ -77,7 +77,7 @@ window.onload = function()
 	
 	
 	var sendSensorID = commModule.createChannel("SensorSetting");
-	
+	callFunc(sendNick);
 }
 
 

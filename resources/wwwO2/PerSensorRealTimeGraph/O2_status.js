@@ -90,6 +90,14 @@ function giveNick()	{
 	});
 }
 */
+var sendNick;
+
+function callFunc(callback)
+{
+	 sendNick = callback;
+	
+}
+
 
 function giveNick()	{
 	var id=targetKey;
