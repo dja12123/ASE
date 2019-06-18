@@ -43,10 +43,6 @@ public class SensorOptionChange extends ServiceInstance
 		String data = event.getStringPayload();
 		JsonParser parser = new JsonParser();
 		JsonObject json = parser.parse(data).getAsJsonObject();
-		if(json.get("getValue").getAsBoolean())
-		{
-			return;
-		}
 		switch(json.get("settingKey").getAsString())
 		{
 		case "sensorAlias":
