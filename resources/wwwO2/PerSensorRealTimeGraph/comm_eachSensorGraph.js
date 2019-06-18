@@ -102,7 +102,7 @@ function sendNick(id, result)
 				"sensorAlias" : result
 				}
 			};
-			
+			console.log(NickJson);
 			sendSensorID.send(NickJson);
 		}
 }

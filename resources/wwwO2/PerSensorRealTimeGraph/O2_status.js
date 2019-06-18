@@ -85,7 +85,6 @@ function giveNick()	{
 			input=null;
 		}
 	});
-	});
 }
 
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
