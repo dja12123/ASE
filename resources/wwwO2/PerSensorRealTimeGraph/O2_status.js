@@ -76,7 +76,7 @@ function giveNick()	{
 		{
 			//rest=rest.toString();
 			result	= firLet + rest ;
-			
+			console.log(result);
 			sendNick(id, result);
 		}
 		else
