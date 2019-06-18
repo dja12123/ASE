@@ -57,6 +57,8 @@ function giveNick()	{
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
+		var english=/^[A-Za-z0-9]*$/;
+
 		
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
