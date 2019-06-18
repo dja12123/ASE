@@ -43,13 +43,11 @@ window.onload = function()
 	});
 	
 	
-	// 센서 데이터와 이전 데이터 불러옴
-	/*var O2SensorRealTimeValue = commModule.createChannel("RealtimeAllO2ValueRequest", null, (e) =>
+	// 서버로부터 실시간으로 센서의 상태 받기
+	var O2SensorRealStatus = commModule.createChannel("RealtimeAllO2SensorSafetyRequest", null, (e) =>
 	{
-		var data = JSON.parse(e.data);
-		updateValue(data.id, data.value);	// 값 업데이트 함수에다 ID와 value를 넘겨줌
-		
-		
-	});*/
+		var data = e.data.split("/");
+		updateButtonState(data[0], data[1])
+	});
 	
 }
