@@ -34,7 +34,7 @@ function addItem(key, on) {
 }
 
 
-function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함수
+function updateValue(key, data, state)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
 	
@@ -45,7 +45,7 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	ChemicalStatus.innerHTML='';
 	stats= getData + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(key, getData);
+	changeButtonColor(key, state);
 	checkSafety(key, getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
@@ -53,16 +53,16 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 }
 
 // 버튼 색깔 변경
-function changeButtonColor(key, value)
+function changeButtonColor(key, state)
 {
 	var ButtonID='b'+key;
 	var ButtonColorStatus=document.getElementById(ButtonID);
 				
-				if(value>=21)
+				if(state==0)
 					ButtonColorStatus.className="btn btn-success"
-				else if(value>=18 && value<21)
+				else if(state==1)
 					ButtonColorStatus.className="btn btn-warning"
-				else if(value<18)
+				else if(state==2)
 					ButtonColorStatus.className="btn btn-danger"
 				
 	
