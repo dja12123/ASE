@@ -72,4 +72,31 @@ window.onload = function()
 		
 	});
 	
+	// 센서 아이디 서버에 전송
+	var sendSensorID = commModule.createChannel("SensorSetting");
+	
+
+	
+	}
+	
+}
+
+
+function sendNick(id, result)
+{
+		console.log(id);
+		console.log(result);
+		
+		if(typeof str == "undefined" || str == null || str == "")
+            console.log("data undefined");
+        else
+		{
+			var NickJson = 
+			{
+				settingKey : id
+				sensorAlias : result
+			}
+			
+			sendSensorID.send(NickJson);
+		}
 }
