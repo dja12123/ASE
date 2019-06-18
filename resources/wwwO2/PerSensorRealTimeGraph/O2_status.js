@@ -230,7 +230,7 @@ function changeButtonColor(key, value)	{
 							labelString: 'value'
 						},
 						ticks:	{
-							min: 15,
+							min: 5,
 							max: 25,
 							stepSize: 0.5,
 							fixedStepSize: 0.5
