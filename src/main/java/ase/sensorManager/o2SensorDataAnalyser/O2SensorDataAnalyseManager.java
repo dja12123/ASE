@@ -46,7 +46,7 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 				this.changeState(e.sensorInst, nowStatus);
 				this.provideEvent(ServerCore.mainThreadPool, e.sensorInst, event);
 				this.sensorLogManager.appendLog(e.sensorInst, Level.INFO, "Safety State Change ("+beforeStatus+"->"+nowStatus+")");
-				logger.log(Level.INFO, "산소레벨 상태변경" + nowStatus);
+				logger.log(Level.INFO, e.sensorInst.ID + " 산소레벨 상태변경" + nowStatus);
 			}
 		}
 	}
