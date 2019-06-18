@@ -19,8 +19,10 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 {
 	public static final Logger logger = LogWriter.createLogger(O2SensorDataAnalyseManager.class, "O2SensorDataAnalyser");
 
-	public static final float SAFE_THRESHOLD = 0.20F;
-	public static final float WARNING_THRESHOLD = 0.18F;
+	public static final float DOWN_SAFE_THRESHOLD = 0.20F;
+	public static final float DOWN_WARNING_THRESHOLD = 0.18F;
+	public static final float UP_SAFE_THRESHOLD = 0.205F;
+	public static final float UP_WARNING_THRESHOLD = 0.19F;
 	
 	private final Observer<O2DataReceiveEvent> o2DataObserver;
 	private final SensorO2DataManager dataManager;
@@ -39,7 +41,7 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 		SafetyStatus beforeStatus = this.state.getOrDefault(e.sensorInst, null);
 		if(beforeStatus != null)
 		{
-			SafetyStatus nowStatus = this.checkSafe(e.data);
+			SafetyStatus nowStatus = this.checkSafe(beforeStatus, e.data);
 			if(beforeStatus != nowStatus)
 			{
 				SafeStateChangeEvent event = new SafeStateChangeEvent(e.sensorInst, nowStatus);
@@ -51,14 +53,31 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 		}
 	}
 	
-	private SafetyStatus checkSafe(SensorO2Data data)
+	private SafetyStatus checkSafe(SafetyStatus before, SensorO2Data data)
 	{
-		if(data.value >= SAFE_THRESHOLD)
+
+		if(data.value >= DOWN_SAFE_THRESHOLD)
 		{//안전
+			if(before == SafetyStatus.Warning || before == SafetyStatus.Danger)
+			{
+				if(data.value >= UP_SAFE_THRESHOLD)
+				{
+					return SafetyStatus.Safe;
+				}
+				return before;
+			}
 			return SafetyStatus.Safe;
 		}
-		else if(data.value >= WARNING_THRESHOLD)
+		else if(data.value >= DOWN_WARNING_THRESHOLD)
 		{//주의
+			if(before == SafetyStatus.Danger)
+			{
+				if(data.value >= UP_WARNING_THRESHOLD)
+				{
+					return SafetyStatus.Warning;
+				}
+				return before;
+			}
 			return SafetyStatus.Warning;
 		}
 		else
@@ -85,7 +104,7 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 		SensorO2Data o2Data = this.dataManager.getLastSensorData(sensor);
 		if(o2Data != null)
 		{
-			return this.checkSafe(o2Data);
+			return this.checkSafe(this.state.get(sensor), o2Data);
 		}
 		return SafetyStatus.Safe;
 	}
