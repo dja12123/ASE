@@ -86,7 +86,7 @@ window.onload = function()
 	{
 		var data = e.data.split("/");
 		console.log(data);
-		updateButtonState(data[0], data[1])
+		updateButtonState(data[1])
 	});
 	
 	sendSensorID = commModule.createChannel("SensorSetting");
