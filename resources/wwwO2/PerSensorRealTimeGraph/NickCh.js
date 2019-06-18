@@ -14,14 +14,6 @@ function reconnect(){
     infoReconnect();
 });
 
-window.onload = function()
-{
-	var sendSensorID = commModule.createChannel("SensorSetting");
-	console.log("NickCh");
-	
-	
-}
-
 function sendNick(id, result)
 	{
 		console("inputSendNick");
@@ -44,3 +36,12 @@ function sendNick(id, result)
 			sendSensorID.send(NickJson);
 		}
 	}
+
+window.onload = function()
+{
+	var sendSensorID = commModule.createChannel("SensorSetting");
+	console.log("NickCh");
+	
+	
+}
+

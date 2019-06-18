@@ -76,7 +76,33 @@ window.onload = function()
 	});
 	
 	
+	var sendSensorID = commModule.createChannel("SensorSetting");
+	
 }
+
+
+function sendNick(id, result)
+	{
+		console("inputSendNick");
+		console.log(id);
+		console.log(result);
+		
+		if(typeof str == "undefined" || str == null || str == "")
+            console.log("data undefined");
+        else
+		{
+			var NickJson = 
+			{
+				"settingKey": "sensorAlias",
+				"settingValue" : {
+				"sensorID" : id,
+				"sensorAlias" : result
+				}
+			};
+			console.log("sendNick" + NickJson);
+			sendSensorID.send(NickJson);
+		}
+	}
 
 
 
