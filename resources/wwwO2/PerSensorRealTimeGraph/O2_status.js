@@ -1,4 +1,5 @@
 var targetKey;
+//var result;
 
 function dataSetKey(key) {
     targetKey=key;
@@ -112,7 +113,6 @@ function giveNick()	{
 		}
 		
 		rest=parseInt(rest);
-		console.log(id);
 		
 		if(english.test(firLet)==true && isNaN(rest)==false)
 		{
