@@ -1,10 +1,13 @@
 package ase.sensorManager.o2SensorDataAnalyser;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ase.ServerCore;
+import ase.console.LogWriter;
 import ase.sensorManager.AbsSensorEventStateManager;
 import ase.sensorManager.SensorManager;
+import ase.sensorManager.alias.SensorAliasManager;
 import ase.sensorManager.sensor.Sensor;
 import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
 import ase.sensorManager.sensorDataO2.SensorO2Data;
@@ -14,6 +17,8 @@ import ase.util.observer.Observer;
 
 public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeStateChangeEvent, SafetyStatus>
 {
+	public static final Logger logger = LogWriter.createLogger(O2SensorDataAnalyseManager.class, "O2SensorDataAnalyser");
+
 	public static final float SAFE_THRESHOLD = 0.20F;
 	public static final float WARNING_THRESHOLD = 0.18F;
 	
@@ -41,6 +46,7 @@ public class O2SensorDataAnalyseManager extends AbsSensorEventStateManager<SafeS
 				this.changeState(e.sensorInst, nowStatus);
 				this.provideEvent(ServerCore.mainThreadPool, e.sensorInst, event);
 				this.sensorLogManager.appendLog(e.sensorInst, Level.INFO, "Safety State Change ("+beforeStatus+"->"+nowStatus+")");
+				logger.log(Level.INFO, "산소레벨 상태변경" + nowStatus);
 			}
 		}
 	}
