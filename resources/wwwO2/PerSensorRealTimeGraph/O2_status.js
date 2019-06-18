@@ -49,6 +49,7 @@ function giveNick()	{
 	
 	btn.addEventListener("click",function()	{
 		var result=null;
+		var rawData;
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
