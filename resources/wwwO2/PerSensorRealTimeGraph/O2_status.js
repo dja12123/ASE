@@ -56,14 +56,14 @@ function giveNick()	{
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
 			console.log(nickname[i]);
-			/*
+			
 			firLet = testwd.substr(0,1);
 			console.log(firLet);
 			rest   = testwd.substr(1, testwd.length -1);
-			*/
+			
 			if(i==0)
 				firLet=nickname[i];
-			else if(i<input.length)
+			else if(i<input.length && i>0)
 				rest+=nickname[i];
 		}
 		

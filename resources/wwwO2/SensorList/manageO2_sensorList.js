@@ -45,40 +45,43 @@ function updateValue(key, data)	{ // 센서 아이디에 따른 값 셋팅 함�
 	ChemicalStatus.innerHTML='';
 	stats= getData + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(key, getData);
-	checkSafety(key, getData);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
 }
 
+function updateButtonState(key, state)	{
+	changeButtonColor(key, state);
+	checkSafety(key, state);
+}
+
 // 버튼 색깔 변경
-function changeButtonColor(key, value)
+function changeButtonColor(key, state)
 {
 	var ButtonID='b'+key;
 	var ButtonColorStatus=document.getElementById(ButtonID);
 				
-				if(value>=21)
-					ButtonColorStatus.className="btn btn-success"
-				else if(value>=18 && value<21)
-					ButtonColorStatus.className="btn btn-warning"
-				else if(value<18)
-					ButtonColorStatus.className="btn btn-danger"
+		if(state==0)
+			ButtonColorStatus.className="btn btn-success"
+		else if(state==1)
+			ButtonColorStatus.className="btn btn-warning"
+		else if(state==2)
+			ButtonColorStatus.className="btn btn-danger"
 				
 	
 }
 
-function checkSafety(key, value) {
+function checkSafety(key, state) {
 				var SensorStatusID= 'ss' + key;
 				var SensorStatus=document.getElementById(SensorStatusID);
 				var content;
 				SensorStatus.innerHTML='';
 				
-				if(value>=21)
+				if(state==0)
 					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
-				else if(value>=18 && value<21)
+				else if(state==1)
 					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
-				else if(value<18)
+				else if(state==2)
 					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
