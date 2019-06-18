@@ -46,8 +46,8 @@ function initCanvas()	{
 	window.myLine = new Chart(ctx, config);
 }
 
-
-//function giveNick()	{
+/*
+function giveNick()	{
 	var id=targetKey;
 	
 	var btn = document.getElementById("updateNick");
@@ -62,10 +62,10 @@ function initCanvas()	{
 		
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
-			/*
-			firLet = testwd.substr(0,1);
-			rest   = testwd.substr(1, testwd.length -1);
-			*/
+
+			//firLet = testwd.substr(0,1);
+			//rest   = testwd.substr(1, testwd.length -1);
+
 			if(i==0)
 				firLet=nickname[i];
 			else if(i<input.length && i>0)
@@ -87,7 +87,46 @@ function initCanvas()	{
 			input=null;
 		}
 	});
-//}
+}
+*/
+
+function giveNick()	{
+	var id=targetKey;
+	var result;
+	var firLet, rest="";
+	var input = document.getElementById("input_nick").value;
+	var nickname=input.split("");
+	var english=/^[A-Za-z]*$/;
+
+		
+		for (var i=0 ; i < input.length ; i++)	{ 
+			var testwd = nickname[i]; 
+
+			//firLet = testwd.substr(0,1);
+			//rest   = testwd.substr(1, testwd.length -1);
+
+			if(i==0)
+				firLet=nickname[i];
+			else if(i<input.length && i>0)
+				rest+=nickname[i];
+		}
+		
+		rest=parseInt(rest);
+		console.log(rest);
+		if(english.test(firLet)==true && isNaN(rest)==false)
+		{
+			//rest=rest.toString();
+			result	= firLet + rest ;
+			console.log(result);
+			sendNick(id, result);
+		}
+		else
+		{
+			nickname=null;
+			input=null;
+		}
+	});
+}
 
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
