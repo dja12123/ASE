@@ -39,6 +39,53 @@ function initCanvas()	{
 	window.myLine = new Chart(ctx, config);
 }
 
+
+function giveNick()	{
+	var id=getParameter("key");
+	
+	var btn = document.getElementById("updateNick");
+	
+	console.log(id);
+	
+	btn.addEventListener("click",function()	{
+		var result=null;
+		var firLet, rest="";
+		var input = document.getElementById("input_nick").value;
+		var nickname=input.split("");
+		
+		for (var i=0 ; i < input.length ; i++)	{ 
+			var testwd = nickname[i]; 
+			console.log(nickname[i]);
+			/*
+			firLet = testwd.substr(0,1);
+			console.log(firLet);
+			rest   = testwd.substr(1, testwd.length -1);
+			*/
+			if(i==0)
+				firLet=nickname[i];
+			else if(i<input.length)
+				rest+=nickname[i];
+		}
+		
+		rest=parseInt(rest);
+		
+		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
+		{
+			nickname=null;
+			input=null;
+		}
+		else
+		{
+			result	= firLet + rest ;
+			rawData	= id + '/' + result;
+			
+			console.log(rawData); // testing purpose
+			
+			return rawData;
+		}
+	});
+}
+
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
