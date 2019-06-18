@@ -19,7 +19,9 @@ window.onload = function()
 	initCanvas();
 	console.log("window onload");
 	var sensorID = getParameter("key"); //GET 방식으로 붙인 key 값을 가져옴
-
+	
+	dataSetKey(sensorID);
+	
 	var PreviouseDataRequestCh = commModule.createChannel("PreviouseO2DataRequest", ()=>	// 센서의 이전 데이터 요청
 	{
 		PreviouseDataRequestCh.send(sensorID + "/" + String(50)); 
