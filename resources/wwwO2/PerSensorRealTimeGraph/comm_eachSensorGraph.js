@@ -82,7 +82,7 @@ window.onload = function()
 
 
 function sendNick(id, result)
-	{
+{
 		console.log("inputSendNick");
 		console.log(id);
 		console.log(result);
@@ -97,8 +97,8 @@ function sendNick(id, result)
 			};
 			console.log("sendNick" + NickJson);
 			sendSensorID.send(NickJson);
-		}
-	}
+		
+}
 
 
 
