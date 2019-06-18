@@ -1,6 +1,7 @@
 package ase.sensorAction;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,6 +49,7 @@ public class O2SafetyControlManager
 		this.safeObserver = this::safeObserver;
 		this.commManager = commManager;
 		
+		this.speakList = new ArrayList<>();
 		this.isRun = false;
 	}
 	
