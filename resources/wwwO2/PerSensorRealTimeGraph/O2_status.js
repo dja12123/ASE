@@ -48,7 +48,7 @@ function giveNick()	{
 	console.log(id);
 	
 	btn.addEventListener("click",function()	{
-		var result, rawData;
+		var result;
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
@@ -77,11 +77,10 @@ function giveNick()	{
 		else
 		{
 			result	= firLet + rest ;
-			rawData	= id + '/' + result;
+
+
 			
-			console.log(rawData); // testing purpose
-			
-			return rawData;
+			sendNick(id, result);
 		}
 	});
 }
