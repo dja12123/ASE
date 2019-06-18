@@ -23,25 +23,6 @@ function setTotal() {
 	document.getElementById("total").innerHTML = msg;
 }
 
-// "센서" 추가
-// * addGraphValue(String, Boolean) 센서 키, 작동상태(on/off)
-function addGraphValue(key, on) {
-	var state = on ? "checked" : "";
-	var eItem = document.createElement('span');
-
-	//eItem.id = key; //키값 중복
-	eItem.className = 'item'; 
-	eItem.innerHTML = [
-		'<button type="button" class="btn btn-light" style="display: inline-block" id="b',key,'">',
-				key, ': <span class="badge badge-light" id="',key,'"></span>',
-				'<span id="ss', key,'"></span>',
-		'</button>',
-			//'<span id="SensorStat" />'
-	].join("");
-	document.getElementById('items').append(eItem);
-	setTotal();
-}
-
 function initCanvas()	{
 	var ctx = document.getElementById('canvas').getContext('2d');
 	window.myLine = new Chart(ctx, config);
@@ -135,6 +116,11 @@ function giveNick()	{
 		}
 }
 
+function updateButtonState(state)	{
+	changeButtonColor(state);
+	checkSafety(state);
+}
+
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
 	var getData=data*100;
@@ -162,7 +148,6 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // �
 	ChemicalStatus.innerHTML='';
 	stats= getData + '%';
 	ChemicalStatus.insertAdjacentHTML('beforeend',stats);
-	changeButtonColor(state);
 	
 	//id랑 비교하여 데이터 값 업데이트
 	
@@ -181,7 +166,22 @@ function changeButtonColor(state)	{
 				
 	
 }	
-*/
+
+function checkSafety(state) {
+				var SensorStatus=document.getElementById("info_data");
+				var content;
+				SensorStatus.innerHTML='';
+				
+				if(state==1)
+					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
+				else if(state==2)
+					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
+				else if(state==3)
+					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
+				
+				SensorStatus.insertAdjacentHTML('beforeend',content);
+			}
+
 // Graph		
 		var color = Chart.helpers.color;
 		var config = {
