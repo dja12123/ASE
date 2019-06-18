@@ -14,6 +14,8 @@ function reconnect(){
     infoReconnect();
 });
 
+var sendSensorID;
+
 window.onload = function()
 {
 	initCanvas();
@@ -76,7 +78,8 @@ window.onload = function()
 	});
 	
 	
-	var sendSensorID = commModule.createChannel("SensorSetting");
+	sendSensorID = commModule.createChannel("SensorSetting");
+	
 	callFunc(sendNick);
 }
 
