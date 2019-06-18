@@ -30,6 +30,7 @@ import ase.hardware.DisplayDeviceState;
 import ase.hardware.DisplayObject;
 import ase.hardware.GPIOControl;
 import ase.sensorAction.AccelSafetyControlManager;
+import ase.sensorAction.O2SafetyControlManager;
 import ase.sensorComm.protocolSerial.ProtocolSerial;
 import ase.sensorDataInUSB.SensorDataInUSBManager;
 import ase.sensorManager.SensorManager;
@@ -259,9 +260,8 @@ public class ServerCore
 	private ClientSessionManager clientSessionManager;
 	private DisplayDeviceState displayDeviceState;
 	private AppServiceManager appServiceManager;
-	//private O2AppServiceManager appServiceManager;
-	private AccelSafetyControlManager accelSafetyControl;
-	
+	//private AccelSafetyControlManager accelSafetyControl;
+	private O2SafetyControlManager o2SafetyControl;
 	private TestVirtualSensorManager testSensor;
 
 	private ServerCore()
@@ -279,7 +279,8 @@ public class ServerCore
 		//this.appServiceManager = new O2AppServiceManager(this.clientSessionManager, this.sensorManager);
 		this.displayDeviceState = new DisplayDeviceState(this.sensorManager, this.clientSessionManager);
 		//this.testSensor = new TestVirtualSensorManager(this.sensorManager);
-		this.accelSafetyControl = new AccelSafetyControlManager(this.sensorManager, this.protocolSerial);
+		//this.accelSafetyControl = new AccelSafetyControlManager(this.sensorManager, this.protocolSerial);
+		this.o2SafetyControl = new O2SafetyControlManager(this.sensorManager, this.protocolSerial);
 		
 	}
 
@@ -304,7 +305,8 @@ public class ServerCore
 		if(!this.appServiceManager.startModule()) return false;
 		//this.testSensor.start();
 		loadingText = DisplayControl.inst().replaceString(loadingText, "안전관리모듈 로드");
-		if(!this.accelSafetyControl.startModule()) return false;
+		//if(!this.accelSafetyControl.startModule()) return false;
+		if(!this.o2SafetyControl.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "상태 표시모듈 로드");
 		if(!this.displayDeviceState.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
@@ -318,7 +320,8 @@ public class ServerCore
 	{
 		DisplayObject endText = DisplayControl.inst().showString(-1, -1, "시스템 종료중");
 		logger.log(Level.INFO, "시스템 종료 시작");
-		this.accelSafetyControl.stopModule();
+		this.o2SafetyControl.stopModule();
+		//this.accelSafetyControl.stopModule();
 		this.displayDeviceState.stopModule();
 		//this.testSensor.stop();
 		this.appServiceManager.stopModule();
