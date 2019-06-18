@@ -1,3 +1,10 @@
+var targetKey;
+
+function dataSetKey(key) {
+    targetKey=key;
+}
+
+
 // 모든 센서 삭제
 function removeAllItem() {
 	var items = document.getElementById("items");
@@ -41,26 +48,22 @@ function initCanvas()	{
 
 
 function giveNick()	{
-	var id=getParameter("key");
+	var id=targetKey;
 	
 	var btn = document.getElementById("updateNick");
 	
-	console.log(id);
-	
 	btn.addEventListener("click",function()	{
-		var result;
+		var result, rawData;
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
 		
 		for (var i=0 ; i < input.length ; i++)	{ 
 			var testwd = nickname[i]; 
-			console.log(nickname[i]);
-			
+			/*
 			firLet = testwd.substr(0,1);
-			console.log(firLet);
 			rest   = testwd.substr(1, testwd.length -1);
-			
+			*/
 			if(i==0)
 				firLet=nickname[i];
 			else if(i<input.length && i>0)
@@ -69,19 +72,19 @@ function giveNick()	{
 		
 		rest=parseInt(rest);
 		
-		if(!/[^a-zA-Z]/.test(firLet) || !isNaN(rest))
+		if(english.test(firLet)==true && isNaN(rest)==false)
+		{
+			//rest=rest.toString();
+			result	= firLet + rest ;
+			
+			sendNick(id, result);
+		}
+		else
 		{
 			nickname=null;
 			input=null;
 		}
-		else
-		{
-			result	= firLet + rest ;
-
-
-			
-			sendNick(id, result);
-		}
+	});
 	});
 }
 
