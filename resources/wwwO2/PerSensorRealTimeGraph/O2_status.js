@@ -47,13 +47,13 @@ function initCanvas()	{
 }
 
 
-function giveNick()	{
+//function giveNick()	{
 	var id=targetKey;
 	
 	var btn = document.getElementById("updateNick");
 	
 	btn.addEventListener("click",function()	{
-		var result, rawData;
+		var result;
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
@@ -87,7 +87,7 @@ function giveNick()	{
 			input=null;
 		}
 	});
-}
+//}
 
 function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // 센서 아이디에 따른 값 셋팅 함수
 	var uniqueID=key;
