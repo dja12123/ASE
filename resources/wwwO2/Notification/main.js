@@ -1,27 +1,33 @@
-window.onload = function()
-{
-	Notification.requestPermission();
-	
-	var permission = Notification.permission;
-	if(permission == "granted")
-		console.log("알림이 허용되었습니다.");
-	else if(permission == "denied")
-		console.log("알림이 거부되었습니다.");
-	
-	
-    
-    // 데스크탑 알림 요청
-    var notification = new Notification("DororongJu", options);
-    
-	function notify(msg) {
-    var options = {
-        body: msg
-    }
-	
-    // 3초뒤 알람 닫기
-    setTimeout(function(){
-        notification.close();
-    }, 3000);
-}
 
+// 알림을 보내는 함수
+function mailMe()
+{
+  var parameter_noti = {
+	title:"[공유] Web Notification 공유",
+	icon:"http://img.naver.net/static/www/up/2014/0123/mat_19165764t.jpg",
+	body:"안녕하세요 김대현입니다. 오늘은 재밌는 Web Notification을 공유하려고 합니다~~~~"
+  };
+  
+  if (!"Notification" in window) {
+    alert("This browser does not support desktop notification");
+  }
+  else if (Notification.permission === "granted") {
+    var notification = new Notification(parameter_noti.title,{
+    	icon:parameter_noti.icon, 
+    	body:parameter_noti.body
+    });
+  }
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      if(!('permission' in Notification)) {
+        Notification.permission = permission;
+      }
+      if (permission === "granted") {
+        var notification = new Notification(parameter_noti.title,{
+        	icon:parameter_noti.icon,
+        	body:parameter_noti.body
+        });
+      }
+    });
+  }
 }
