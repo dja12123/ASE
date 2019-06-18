@@ -13,6 +13,7 @@ import ase.sensorComm.ISensorCommManager;
 import ase.sensorComm.ISensorTransmitter;
 import ase.sensorComm.ProtoDef;
 import ase.sensorManager.SensorManager;
+import ase.sensorManager.alias.SensorAliasManager;
 import ase.sensorManager.o2SensorDataAnalyser.SafeStateChangeEvent;
 import ase.sensorManager.o2SensorDataAnalyser.SafetyStatus;
 import ase.sensorManager.sensor.Sensor;
@@ -29,6 +30,7 @@ public class O2SafetyControlManager
 	private final SensorControlInterface sensorControl;
 	private final O2SensorDataAnalyseManager o2DataAnalyser;
 	private final ISensorCommManager commManager;
+	private final SensorAliasManager sensorAliasManager;
 	
 	private int alertDelay;
 	private boolean isRun;
@@ -42,6 +44,7 @@ public class O2SafetyControlManager
 		this.sensorManager = sensorManager;
 		this.sensorControl = this.sensorManager.sensorControl;
 		this.o2DataAnalyser = this.sensorManager.o2SensorDataAnalyser;
+		this.sensorAliasManager = this.sensorManager.sensorAliasManager;
 		this.safeObserver = this::safeObserver;
 		this.commManager = commManager;
 		
@@ -116,8 +119,20 @@ public class O2SafetyControlManager
 		{
 			ISensorTransmitter transmitter = this.commManager.getBroadcast();
 			ByteBuffer buf = ByteBuffer.allocate(4);
-			buf.put((byte)'A');
-			buf.putShort((short) s.ID);
+			
+			String alias = this.sensorAliasManager.state.getOrDefault(s, null);
+			if(alias == null) return;
+			buf.put((byte)alias.charAt(0));
+			if(alias.length() > 1)
+			{
+				short num = Short.valueOf(alias.substring(1, alias.length()));
+				buf.putShort(num);
+			}
+			else
+			{
+				buf.putShort((short) -1);
+			}
+			
 			buf.put(SafetyStatus.Danger.code);
 			transmitter.putSegment(ProtoDef.KEY_S2C_PLAY_ALERT_SOUND, buf.array());
 		}

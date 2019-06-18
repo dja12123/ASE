@@ -32,7 +32,7 @@ public class SensorAliasManager extends AbsSensorStateManager<String>
 	@Override
 	protected String onRegisterSensor(Sensor sensor)
 	{
-		return String.valueOf(sensor.ID);
+		return String.format("S%d", sensor.ID);
 	}
 
 	@Override
