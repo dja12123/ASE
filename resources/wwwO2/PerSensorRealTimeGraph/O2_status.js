@@ -57,7 +57,7 @@ function giveNick()	{
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
-		var english=/^[A-Za-z0-9]*$/;
+		var english=/^[A-Za-z]*$/;
 
 		
 		for (var i=0 ; i < input.length ; i++)	{ 
@@ -73,7 +73,7 @@ function giveNick()	{
 		}
 		
 		rest=parseInt(rest);
-		
+		console.log(rest);
 		if(english.test(firLet)==true && isNaN(rest)==false)
 		{
 			//rest=rest.toString();
