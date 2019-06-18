@@ -48,7 +48,7 @@ function giveNick()	{
 	console.log(id);
 	
 	btn.addEventListener("click",function()	{
-		var result=null;
+		var result;
 		var firLet, rest="";
 		var input = document.getElementById("input_nick").value;
 		var nickname=input.split("");
@@ -77,11 +77,10 @@ function giveNick()	{
 		else
 		{
 			result	= firLet + rest ;
-			rawData	= id + '/' + result;
+
+
 			
-			console.log(rawData); // testing purpose
-			
-			return rawData;
+			sendNick(id, result);
 		}
 	});
 }
@@ -90,7 +89,6 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // ì„
 	var uniqueID=key;
 	var getData=data*100;
 	var xTime= xYear+"-"+xMonth+"-"+xDay+ " " + xHour +":"+ xMin +":"+ xSec +"."+ xMSec;
-	console.log(xTime);
 	getData=Number.parseFloat(getData).toFixed(2);
 	// Decimal set to 2nd place
 	

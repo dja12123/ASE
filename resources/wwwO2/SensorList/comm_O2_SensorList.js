@@ -44,7 +44,10 @@ window.onload = function()
 	
 	
 	// 서버로부터 실시간으로 센서의 상태 받기
-	var O2SensorRealStatus = commModule.createChannel("RealtimeAllO2SensorSafetyRequest", null, (e) =>
+	var O2SensorRealStatusCh = commModule.createChannel("RealtimeAllO2SensorSafetyRequest", ()=>
+	{
+		O2SensorRealStatusCh.send("getData");
+	}, (e) =>
 	{
 		var data = e.data.split("/");
 		console.log(data);

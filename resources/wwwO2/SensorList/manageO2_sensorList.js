@@ -61,11 +61,11 @@ function changeButtonColor(key, state)
 	var ButtonID='b'+key;
 	var ButtonColorStatus=document.getElementById(ButtonID);
 				
-		if(state==0)
+		if(state==1)
 			ButtonColorStatus.className="btn btn-success"
-		else if(state==1)
-			ButtonColorStatus.className="btn btn-warning"
 		else if(state==2)
+			ButtonColorStatus.className="btn btn-warning"
+		else if(state==3)
 			ButtonColorStatus.className="btn btn-danger"
 				
 	
@@ -77,11 +77,11 @@ function checkSafety(key, state) {
 				var content;
 				SensorStatus.innerHTML='';
 				
-				if(state==0)
+				if(state==1)
 					content= '<span class="badge badge-success" style="display: inline-block">Safe/안전</span> </h5>';
-				else if(state==1)
-					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
 				else if(state==2)
+					content= '<span class="badge badge-warning" style="display: inline-block">Warning/주의</span> </h5>';
+				else if(state==3)
 					content= '<span class="badge badge-danger" style="display: inline-block">Danger/경보</span> </h5>';
 				
 				SensorStatus.insertAdjacentHTML('beforeend',content);
