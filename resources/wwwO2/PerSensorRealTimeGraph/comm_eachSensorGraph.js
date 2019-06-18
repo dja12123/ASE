@@ -83,7 +83,7 @@ window.onload = function()
 
 function sendNick(id, result)
 	{
-		console("inputSendNick");
+		console.log("inputSendNick");
 		console.log(id);
 		console.log(result);
 		
