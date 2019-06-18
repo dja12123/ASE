@@ -302,15 +302,15 @@ public class ServerCore
 		if(!this.clientSessionManager.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "사용자 서비스 로드");
 		if(!this.appServiceManager.startModule()) return false;
-		dbInstaller.complete();
-		loadingText = DisplayControl.inst().replaceString(loadingText, "상태 표시모듈 로드");
-		if(!this.displayDeviceState.startModule()) return false;
 		//this.testSensor.start();
 		loadingText = DisplayControl.inst().replaceString(loadingText, "안전관리모듈 로드");
 		if(!this.accelSafetyControl.startModule()) return false;
+		loadingText = DisplayControl.inst().replaceString(loadingText, "상태 표시모듈 로드");
+		if(!this.displayDeviceState.startModule()) return false;
 		loadingText = DisplayControl.inst().replaceString(loadingText, "시스템 시작 완료");
 		DisplayControl.inst().removeShapeTimer(loadingText, 3000);
 		logger.log(Level.INFO, "시스템 시작 완료");
+		dbInstaller.complete();
 		return true;
 	}
 

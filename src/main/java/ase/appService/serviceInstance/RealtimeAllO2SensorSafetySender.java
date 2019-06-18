@@ -1,31 +1,27 @@
 package ase.appService.serviceInstance;
 
-import com.google.gson.JsonObject;
-
 import ase.appService.ServiceInstance;
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;
-import ase.sensorManager.accelSensorDataAnalyser.AccelSensorDataAnalyser;
-import ase.sensorManager.accelSensorDataAnalyser.SafeStateChangeEvent;
-import ase.sensorManager.sensorDataO2.O2DataReceiveEvent;
-import ase.sensorManager.sensorDataO2.SensorO2DataManager;
-import ase.util.observer.Observable;
+
+import ase.sensorManager.o2SensorDataAnalyser.O2SensorDataAnalyseManager;
+import ase.sensorManager.o2SensorDataAnalyser.SafeStateChangeEvent;
 import ase.util.observer.Observer;
 
-public class RealtimeAllSensorSafetySender extends ServiceInstance
+public class RealtimeAllO2SensorSafetySender extends ServiceInstance
 {
-	public static final String KEY = "RealtimeAllSensorSafetyRequest";
+	public static final String KEY = "RealtimeAllO2SensorSafetyRequest";
 	
 	private final SensorManager sensorManager;
-	private final AccelSensorDataAnalyser dataAnalyser;
+	private final O2SensorDataAnalyseManager dataAnalyser;
 	private final Observer<SafeStateChangeEvent> observer;
 	
-	public RealtimeAllSensorSafetySender(IChannel channel, SensorManager sensorManager)
+	public RealtimeAllO2SensorSafetySender(IChannel channel, SensorManager sensorManager)
 	{
 		super(KEY, channel);
 		this.sensorManager = sensorManager;
-		this.dataAnalyser = this.sensorManager.accelSensorDataAnalyser;
+		this.dataAnalyser = this.sensorManager.o2SensorDataAnalyser;
 		this.observer = this::safeObserver;
 	}
 

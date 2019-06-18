@@ -34,7 +34,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 	public final SensorAccelDataManager dataAccelManager;
 	public final SensorO2DataManager dataO2Manager;
 	public final SensorConfigAccess configAccess;
-	public final O2SensorDataAnalyseManager dataAnalyseManager;
+	public final O2SensorDataAnalyseManager o2SensorDataAnalyser;
 	public final SensorControlInterface sensorControl;
 	public final AccelSensorDataAnalyser accelSensorDataAnalyser;
 	
@@ -50,7 +50,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.sensorOnlineCheck = new SensorOnlineCheck(this, this.sensorComm, this.sensorLogManager);
 		this.dataAccelManager = new SensorAccelDataManager(this, this.sensorComm);
 		this.dataO2Manager = new SensorO2DataManager(this, this.sensorComm, this.configAccess);
-		this.dataAnalyseManager = new O2SensorDataAnalyseManager(this, this.dataO2Manager, this.sensorLogManager);
+		this.o2SensorDataAnalyser = new O2SensorDataAnalyseManager(this, this.dataO2Manager, this.sensorLogManager);
 		this.sensorControl = new SensorControlInterface(this, this.sensorComm, this.sensorLogManager);
 		this.accelSensorDataAnalyser = new AccelSensorDataAnalyser(this, this.configAccess, this.dataAccelManager, this.sensorLogManager);
 		this._sensorMap = new HashMap<Integer, Sensor>();
@@ -77,7 +77,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.sensorOnlineCheck.startModule();
 		this.dataO2Manager.startModule();
 		this.dataAccelManager.startModule();
-		this.dataAnalyseManager.startModule();
+		this.o2SensorDataAnalyser.startModule();
 		this.sensorControl.startModule();
 		this.accelSensorDataAnalyser.startModule();
 		logger.log(Level.INFO, "SensorManager 시작 완료");
@@ -91,7 +91,7 @@ public class SensorManager extends Observable<SensorRegisterEvent>
 		this.isRun = false;
 		this.accelSensorDataAnalyser.stopModule();
 		this.sensorControl.stopModule();
-		this.dataAnalyseManager.stopModule();
+		this.o2SensorDataAnalyser.stopModule();
 		this.dataAccelManager.stopModule();
 		this.dataO2Manager.stopModule();
 		this.sensorOnlineCheck.stopModule();

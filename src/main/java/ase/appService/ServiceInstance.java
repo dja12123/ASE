@@ -1,4 +1,4 @@
-package ase.appService.serviceInstance;
+package ase.appService;
 
 import java.text.SimpleDateFormat;
 import java.util.function.Consumer;

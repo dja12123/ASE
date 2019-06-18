@@ -1,5 +1,6 @@
 package ase.appService.serviceInstance;
 
+import ase.appService.ServiceInstance;
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;

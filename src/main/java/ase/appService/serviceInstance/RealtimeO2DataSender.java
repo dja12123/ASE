@@ -2,6 +2,7 @@ package ase.appService.serviceInstance;
 
 import com.google.gson.JsonObject;
 
+import ase.appService.ServiceInstance;
 import ase.clientSession.ChannelDataEvent;
 import ase.clientSession.IChannel;
 import ase.sensorManager.SensorManager;

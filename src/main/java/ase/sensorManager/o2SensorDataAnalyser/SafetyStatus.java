@@ -2,10 +2,10 @@ package ase.sensorManager.o2SensorDataAnalyser;
 
 public enum SafetyStatus
 {
-	Safe(1), Warning(2), Danger(3);
+	Safe((byte)1), Warning((byte)2), Danger((byte)3);
 	
-	public final int code;
-	private SafetyStatus(int code)
+	public final byte code;
+	private SafetyStatus(byte code)
 	{
 		this.code = code;
 	}
