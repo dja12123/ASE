@@ -60,6 +60,7 @@ window.onload = function()
 		// 진우오빠가 만든 함수에 값 넣어주기
 		if(data.result = true)
         {		
+				console.log(data.time);
 				var splitTime = data.time.split("/");
 				
 				updateValue(sensorID, splitTime[0], splitTime[1] ,splitTime[2], splitTime[3], splitTime[4], splitTime[5], splitTime[6], data.value);
