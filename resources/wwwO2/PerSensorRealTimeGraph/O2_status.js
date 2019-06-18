@@ -132,6 +132,7 @@ function updateValue(key, xYear,xMonth,xDay,xHour,xMin,xSec,xMSec, data)	{ // ì„
 	
 	var SID=document.getElementById("SID");
 	SID.insertAdjacentHTML('beforeend',SIDText);
+	SID.innerHTML='';
 	
 	var ChemicalStatus=document.getElementById("ButtonValue");
 	
