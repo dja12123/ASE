@@ -93,11 +93,11 @@ function sendNick(id, result)
 		{
 			var NickJson = 
 			{
-				settingKey : "sensorAlias"
-				settingValue : {
-					sensorID : id
-					sensorAlias : result
-				};
+				"settingKey": "sensorAlias",
+				"settingValue" : {
+				"sensorID" : id,
+				"sensorAlias" : result
+				}
 			};
 			
 			sendSensorID.send(NickJson);
