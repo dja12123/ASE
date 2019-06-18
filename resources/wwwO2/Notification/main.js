@@ -1,33 +1,47 @@
+window.addEventListener('load', function () {
+  // At first, let's check if we have permission for notification
+  // If not, let's ask for it
+  if (Notification && Notification.permission !== "granted") {
+    Notification.requestPermission(function (status) {
+      if (Notification.permission !== status) {
+        Notification.permission = status;
+      }
+    });
+  }
 
-// 알림을 보내는 함수
-function mailMe()
-{
-  var parameter_noti = {
-	title:"[공유] Web Notification 공유",
-	icon:"http://img.naver.net/static/www/up/2014/0123/mat_19165764t.jpg",
-	body:"안녕하세요 김대현입니다. 오늘은 재밌는 Web Notification을 공유하려고 합니다~~~~"
-  };
-  
-  if (!"Notification" in window) {
-    alert("This browser does not support desktop notification");
-  }
-  else if (Notification.permission === "granted") {
-    var notification = new Notification(parameter_noti.title,{
-    	icon:parameter_noti.icon, 
-    	body:parameter_noti.body
-    });
-  }
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
-      if(!('permission' in Notification)) {
-        Notification.permission = permission;
-      }
-      if (permission === "granted") {
-        var notification = new Notification(parameter_noti.title,{
-        	icon:parameter_noti.icon,
-        	body:parameter_noti.body
-        });
-      }
-    });
-  }
-}
+  var button = document.getElementsByTagName('button')[0];
+
+  button.addEventListener('click', function () {
+    // If the user agreed to get notified
+    if (Notification && Notification.permission === "granted") {
+      var n = new Notification("Hi!");
+    }
+
+    // If the user haven't tell if he want to be notified or not
+    // Note: because of Chrome, we are not sure the permission property
+    // is set, therefore it's unsafe to check for the "default" value.
+    else if (Notification && Notification.permission !== "denied") {
+      Notification.requestPermission(function (status) {
+        if (Notification.permission !== status) {
+          Notification.permission = status;
+        }
+
+        // If the user said okay
+        if (status === "granted") {
+          var n = new Notification("Hi!");
+        }
+
+        // Otherwise, we can fallback to a regular modal alert
+        else {
+          alert("Hi!");
+        }
+      });
+    }
+
+    // If the user refuse to get notified
+    else {
+      // We can fallback to a regular modal alert
+      alert("Hi!");
+    }
+  });
+});
